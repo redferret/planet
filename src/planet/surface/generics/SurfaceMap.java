@@ -123,7 +123,8 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread {
     /**
      * Sets all the threads to this delay.
      *
-     * @param delay
+     * @param delay The amount of time to set all threads to delay each frame
+     * in milliseconds.
      */
     public final void setDelay(int delay) {
         for (int i = 0; i < threads.size(); i++) {
