@@ -302,7 +302,7 @@ public class GeoCell extends Cell {
     
     /**
      * Gets the sediment buffer for this GeoCell. 
-     * @return 
+     * @return The sediment buffer for this GeoCell.
      */
     public SedimentBuffer getSedimentBuffer(){
         return erosionBuffer;
@@ -512,7 +512,7 @@ public class GeoCell extends Cell {
     
     /**
      * Adds to the bottom of the strata.
-     * @param stratum 
+     * @param stratum The stratum being appended to this cell.
      */
     public void appendStratum(Stratum stratum){
         
@@ -577,16 +577,18 @@ public class GeoCell extends Cell {
        
        return updateRemoved(removed);
     }
-    
+ 
     /**
      * Updates the stratum being removed and performs additional clean up
+     *
+     * @param removed The stratum that is being removed.
+     * @return The removed stratum
      */
     private Stratum updateRemoved(Stratum removed){
-        
-        if (removed != null){
-            updateMV(removed, true);
+        if (removed == null){
+            throw new IllegalArgumentException("removed cannot be null");
         }
-        
+        updateMV(removed, true);
         return removed;
     }
     

@@ -63,7 +63,7 @@ public class Stratum {
     
     /**
      * Returns the mass of this stratum in kilograms.
-     * @return 
+     * @return The mass of this stratum.
      */
     public float getMass() {
         return mass;
@@ -71,16 +71,17 @@ public class Stratum {
     
     /**
      * Returns the volume of this stratum in cubic meters
-     * @return 
+     * @return The volume of this stratum
      */
     public float getVolume(){
         return mass / type.getDensity();
     }
     
     /**
-     * The height is calculated based on the volume of the stratum and the 
- Planet.self().getBase()_SQRD.
-     * @return 
+     * The height is calculated based on the volume of the stratum and the
+     * Planet.self().getBase()_SQRD.
+     *
+     * @return The height of this stratum.
      */
     public float getHeight() {
         return getVolume() / Planet.self().getBase();
@@ -119,7 +120,7 @@ public class Stratum {
      * Create a reference to the layer below this stratum. This
      * helps create another data structure for easier iteration through the
      * strata.
-     * @param stratum 
+     * @param stratum The stratum being referenced below this stratum.
      */
     public void setBottom(Stratum stratum){
         bottom = stratum;
@@ -131,7 +132,7 @@ public class Stratum {
     
     /**
      * The stratum below this stratum. 
-     * @return 
+     * @return The next stratum below this.
      */
     public Stratum next() {
         return bottom;

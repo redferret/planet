@@ -7,7 +7,7 @@ package planet.util;
  * cell to another each cell will contain a buffer that will hold information 
  * about what needs to be moved and then applied later after an
  * update has been made on a map.
- * @author Richard
+ * @author Richard DeSilvey
  */
 public abstract class TBuffer {
        
@@ -44,7 +44,7 @@ public abstract class TBuffer {
     
     /**
      * Changes the bufferSet flag.
-     * @param b 
+     * @param b Whether this buffer is set or not
      */
     public void bufferSet(boolean b){
         bufferSet = b;
@@ -52,7 +52,7 @@ public abstract class TBuffer {
     
     /**
      * Returns true if the buffer has been set.
-     * @return 
+     * @return True if this buffer is set.
      */
     public boolean bufferSet(){
         return bufferSet;

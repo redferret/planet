@@ -140,6 +140,12 @@ public final class Surface extends SurfaceMap<HydroCell> {
         waterDepthShale = 10;
     }
     
+    /**
+     * Constructs a new Surface.
+     * @param width The width of the surface
+     * @param height The height of the surface
+     * @param delay The amount of time to delay each frame in milliseconds.
+     */
     public Surface(int width, int height, int delay) {
         super(width, height, delay, "Geosphere");
         reset();
@@ -225,13 +231,7 @@ public final class Surface extends SurfaceMap<HydroCell> {
         }
     }
 
-    /**
-     * Finds a neighbor cell lower than the <code>spreadFrom</code> cell then
-     * spreads the sediments to that cell.
-     *
-     * @param spreadFrom
-     * @param geoScale
-     */
+
     public void spreadToLowest(GeoCell spreadFrom, boolean geoScale) {
 
         dust(spreadFrom);
@@ -249,14 +249,7 @@ public final class Surface extends SurfaceMap<HydroCell> {
         }
     }
 
-    /**
-     * Converts the top layer into sediments if the top layer is exposed rock
-     * due to exposure.
-     *
-     * @param spreadFrom The central cell to convert top layer
-     * @param height The amount to be converted into sediments from wind
-     * erosion.
-     */
+
     public void convertTopLayer(GeoCell spreadFrom, float height) {
 
         float rockMass, sandMass;
@@ -280,13 +273,7 @@ public final class Surface extends SurfaceMap<HydroCell> {
         }
     }
 
-    /**
-     * Populates the given list with the cells lower to spreadFrom.
-     *
-     * @param spreadFrom The central cell.
-     * @param lowestList The list of lowest cells.
-     * @param max The maximum number of cells to add to the list.
-     */
+
     public void getLowestCells(GeoCell spreadFrom,
             ArrayList<GeoCell> lowestList, int max) {
 

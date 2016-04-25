@@ -16,7 +16,7 @@ import planet.util.MThread;
  * may change in the future when new graphic rendering capabilities change.
  *
  * @author Richard DeSilvey
- * @param <CellType>
+ * @param <CellType> The high-level cell living in this map.
  */
 public abstract class SurfaceMap<CellType extends Cell> extends MThread {
 

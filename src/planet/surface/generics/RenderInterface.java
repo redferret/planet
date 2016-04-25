@@ -12,7 +12,7 @@ package planet.surface.generics;
  * used for height maps or maps that use data to map onto an array 
  * of colors.
  * 
- * @author Richard
+ * @author Richard DeSilvey
  */
 public interface RenderInterface {
     
@@ -20,9 +20,9 @@ public interface RenderInterface {
      * The data lookup value is used as an indexer to a data array that 
      * should hold information about rendering a cell for this map
      * 
-     * @param x
-     * @param y
-     * @return 
+     * @param x The x coordinate
+     * @param y The y coordinate
+     * @return The index that maps onto the render lookup array
      */
     public int getCellRenderIndex(int x, int y);
     
@@ -32,7 +32,7 @@ public interface RenderInterface {
      * look up value is used as a way to determine which object is
      * used for rendering.
      * 
-     * @return 
+     * @return The render data for this lookup.
      */
     public Object[] renderLookup();
     

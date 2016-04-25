@@ -1,13 +1,14 @@
 package planet.surface.generics;
 
-import planet.surface.generics.Cell;
+
 import planet.util.Boundaries;
 import planet.util.MThread;
 
 /**
- *
+ * A surface can be broken up into sections where a SurfaceThread can modify
+ * and control that section. 
  * @author Richard DeSilvey
- * @param <CellType>
+ * @param <CellType> The cell being worked on.
  */
 public abstract class SurfaceThread<CellType extends Cell> extends MThread {
 
@@ -18,6 +19,13 @@ public abstract class SurfaceThread<CellType extends Cell> extends MThread {
     private int curFrame;
     protected SurfaceMap<CellType> surface;
     
+    /**
+     * Constructs a new SurfaceThread.
+     * @param delay The amount of time to delay each frame in milliseconds
+     * @param bounds The surface boundaries
+     * @param name The name of this thread
+     * @param ref The reference to the surface being worked on
+     */
     public SurfaceThread(int delay, Boundaries bounds, String name, SurfaceMap<CellType> ref) {
         
         super(delay, name, false);
@@ -78,8 +86,8 @@ public abstract class SurfaceThread<CellType extends Cell> extends MThread {
     /**
      * This method is called with the coordinates for a cell location
      * that is ready to be updated.
-     * @param x
-     * @param y 
+     * @param x The x coordinate
+     * @param y The y coordinate
      */
     protected abstract void update(int x, int y);
     

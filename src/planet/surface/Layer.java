@@ -131,7 +131,7 @@ public enum Layer {
     /**
      * The rock type is a classification for this layer. The types are
      * Metamorphic, Igneous, Sedimentary, and Sediment.
-     * @return 
+     * @return The type this layer represents
      */
     public RockType getRockType() {
         return rockType;
@@ -144,7 +144,7 @@ public enum Layer {
     /**
      * The density is a set value for the type of rock this layer is. The
      * units are measured in kilograms per cubic meter.
-     * @return 
+     * @return The density of this layer
      */
     public float getDensity() {
         return density;
@@ -152,7 +152,7 @@ public enum Layer {
     
     /**
      * The name is used to display on the GUI the type of rock/layer this is.
-     * @return 
+     * @return The name of this layer
      */
     public String getName(){
         return name;
@@ -162,7 +162,7 @@ public enum Layer {
      * The erosion factor is based on an average and the value is between 
      * 1.0f and 0.0f Sand is 0.0f since it is already eroded into sediment.
      * The higher the value the longer it takes to erode.
-     * @return 
+     * @return The erosion factor for this layer
      */
     public float getErosionFactor() {
         return erosionFactor;
@@ -170,7 +170,7 @@ public enum Layer {
 
     /**
      * The color the stratum should appear on the UI.
-     * @return 
+     * @return The color representing this layer
      */
     public Color getColor() {
         return color;
@@ -178,7 +178,7 @@ public enum Layer {
     
     /**
      * This value is a unique ID for this layer type.
-     * @return 
+     * @return The layer ID
      */
     public int getID() {
         return typeid;

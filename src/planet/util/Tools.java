@@ -116,13 +116,6 @@ public class Tools {
         return (tx >= b) ? tx - b :(tx < 0)? b + tx : tx;
     }
 
-    
-    /**
-     * @see util.Tools#checkYBounds(int, java.lang.Object[][]) 
-     * @param ty The value being checked
-     * @param length
-     * @return
-     */
     public static int checkYBounds(int ty, int length){
         
         return (ty >= length) ? ty - length : (ty < 0) ? length + ty : ty;
@@ -189,13 +182,7 @@ public class Tools {
     public static float clamp(float heightDiff, float min, float max){
         return (heightDiff < min) ? min : (heightDiff > max ? max : heightDiff);
     }
-    
-    /**
-     * Returns the lowest cell from central
-     *
-     * @param central The central cell.
-     * @return
-     */
+
     public static GeoCell getLowestCellFrom(GeoCell central) {
 
         if (central == null) {
