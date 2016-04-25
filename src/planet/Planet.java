@@ -5,8 +5,8 @@ import planet.surface.Surface;
 import planet.util.MThread;
 
 /**
- *
- * @author Richard
+ * The class that encapsulates a surface and keeps track of the timescale.
+ * @author Richard DeSilvey
  */
 public abstract class Planet extends MThread {
     
