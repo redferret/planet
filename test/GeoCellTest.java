@@ -85,8 +85,7 @@ public class GeoCellTest {
     }
    
     /**
-     * Since the GeoCell has a method that asks if an ocean exists this test
-     * tests this method even though another object is now part of this test.
+     * Tests the hasOcean method.
      */
     @Test
     public void oceanTest(){
