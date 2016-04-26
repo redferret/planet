@@ -13,11 +13,11 @@ import planet.surface.generics.SurfaceMap;
  */
 public class World extends Planet {
 
-    private static final int CELL_SIZE_KM, MAIN_DELAY;
+    private static final int CELL_SIZE_M, MAIN_DELAY;
     private static boolean firstMsg = false;
     
     static{
-        CELL_SIZE_KM = 6;
+        CELL_SIZE_M = 6;
         MAIN_DELAY = 1;
     }
     /**
@@ -25,7 +25,7 @@ public class World extends Planet {
      * @param worldSize The size of the world squared.
      */
     public World(int worldSize) {
-        super(worldSize, CELL_SIZE_KM, MAIN_DELAY);
+        super(worldSize, CELL_SIZE_M, MAIN_DELAY);
         
         initPlanet();
         
