@@ -15,7 +15,7 @@ C:\Users\richard.desilvey\git\planet\nbproject\build-impl.xml:86: The J2SE Platf
 roperties file)
   or ant -Dplatforms.JDK_1.8.home=<path_to_JDK_home> jar (where no properties file is used)
 
-Simply add, to the project.properties file:
+Simply add, to the project.properties file:<br/>
 platforms.JDK_1.8.home=C:\\Program Files\\Java\\jdk1.8.0_73\\
 
 OR
