@@ -140,7 +140,7 @@ public class HydroCell extends GeoCell {
         if (mass < 0) mass = 0;
     }
     
-    public void setMass(float m){
+    public void setOceanMass(float m){
         mass = m;
     }
     
@@ -148,12 +148,12 @@ public class HydroCell extends GeoCell {
         return mass;
     }
     
-    public float getVolume(){
+    public float getOceanVolume(){
         return mass / OCEAN.getDensity();
     }
     
-    public float getHeight() {
-        return getVolume() / Planet.self().getBase();
+    public float getOceanHeight() {
+        return getOceanVolume() / Planet.self().getBase();
     }
     
     public int getRenderIndex(int settings) {
