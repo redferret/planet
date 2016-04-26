@@ -5,7 +5,7 @@ A simulation that simulates geological processes as well as hydrological, biolog
 Simply run Ant on the root directory where the build XML file is located. Newer versions of the project will eventually move to Maven
 
 There is currently a bug in the project's properties file where the JDK home is not set, if you get this error when building:
-
+<code>
 C:\Users\richard.desilvey\git\planet\nbproject\build-impl.xml:86: The J2SE Platform is not correctly set up.
  Your active platform is: JDK_1.8, but the corresponding property "platforms.JDK_1.8.home" is not found in the project's
  properties files.
@@ -14,7 +14,7 @@ C:\Users\richard.desilvey\git\planet\nbproject\build-impl.xml:86: The J2SE Platf
      ant -Duser.properties.file=<path_to_property_file> jar (where you put the property "platforms.JDK_1.8.home" in a .p
 roperties file)
   or ant -Dplatforms.JDK_1.8.home=<path_to_JDK_home> jar (where no properties file is used)
-
+</code>
 Simply add, to the project.properties file:<br/>
 platforms.JDK_1.8.home=C:\\Program Files\\Java\\jdk1.8.0_73\\
 
