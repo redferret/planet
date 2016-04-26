@@ -705,10 +705,6 @@ public class GeoCell extends Cell {
         return (hCell != null) ? hCell.getHeight() : 0;
     }
     
-    public float getTopLayerMass(){
-        return calcMass(peekTopStratum().getHeight(), Planet.self().getBase(), peekTopStratum().getLayer());
-    }
-    
     public int getRenderIndex(int settings) {
         
         switch(settings){
