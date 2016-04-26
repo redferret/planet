@@ -18,7 +18,7 @@ roperties file)
 </code></p>
 
 Simply add, to the project.properties file:<br/>
-platforms.JDK_1.8.home=C:\\Program Files\\Java\\jdk1.8.0_73\\
+platforms.JDK_1.8.home=C:\\\Program Files\\\Java\\\jdk1.8.0_73\\\
 
 OR
 
