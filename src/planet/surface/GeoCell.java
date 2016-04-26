@@ -393,12 +393,17 @@ public class GeoCell extends Cell {
         if (amount < 0 && type == null){ // Removing from the Stratum
             difference = mass + amount;// Take the difference (amount is negative)
             if (difference < 0){
-                if (workOnTop){
-                    removeTopStratum();
-                }else{
-                    removeBottomStratum();
+                addToStrata(null, amount - difference, workOnTop);
+                
+                if (topStratum.getMass() <= 0){
+                    if (workOnTop){
+                        removeTopStratum();
+                    }else{
+                        removeBottomStratum();
+                    }
                 }
-                return -difference;// Positive value, amount not removed
+                
+                return placeAmount(null, difference, workOnTop);
             }else{
                 /* not adding but subtracting the amounts from the
                    stratum since the amount is less than 0. */
