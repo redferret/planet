@@ -245,7 +245,7 @@ public class GeoCell extends Cell {
      */
     public float getDensity() {
 
-        float oceanMass = getOceanMass();
+        float oceanMass = ((HydroCell) this).getOceanMass();
         float oceanVolume = oceanMass / OCEAN.getDensity();
         
         float totalMassWithOceans = (totalMass + oceanMass);
@@ -269,6 +269,14 @@ public class GeoCell extends Cell {
         }
         
         return totalMass / totalVolume;
+    }
+    
+    public float getTotalMass(){
+        return totalMass;
+    }
+    
+    public float getTotalVolume(){
+        return totalVolume;
     }
     
                                                                                 /* %% Marked as another abstraction %%*/
@@ -628,7 +636,7 @@ public class GeoCell extends Cell {
      * @return The height of this cell without ocean depth.
      */
     public float getHeightWithoutOceans(){
-        return hasOcean() ? (getHeight() - getOceanHeight()) : getHeight();
+        return hasOcean() ? (getHeight() - ((HydroCell) this).getOceanHeight()) : getHeight();
     }
     
     /**
@@ -640,7 +648,7 @@ public class GeoCell extends Cell {
     public float getHeight(){
         
         float cellHeight;
-        float oceanVolume = getOceanVolume();
+        float oceanVolume = ((HydroCell) this).getOceanVolume();
         
         cellHeight = (oceanVolume + totalVolume) / Planet.self().getBase();
         
@@ -657,7 +665,7 @@ public class GeoCell extends Cell {
      */
     public void recalculateHeight(){
         float cellHeight, amountSubmerged, density = getDensity();
-        float oceanVolume = getOceanVolume();
+        float oceanVolume = ((HydroCell) this).getOceanVolume();
         
         cellHeight = (oceanVolume + totalVolume) / Planet.self().getBase();
         amountSubmerged = cellHeight * (density / mantel_density);
@@ -672,7 +680,7 @@ public class GeoCell extends Cell {
     public void updateHeight(){
         
         float cellHeight, amountSubmerged, density = getDensity();
-        float oceanVolume = getOceanVolume();
+        float oceanVolume = ((HydroCell) this).getOceanVolume();
         
         cellHeight = (oceanVolume + totalVolume) / Planet.self().getBase();
         amountSubmerged = cellHeight * (density / mantel_density);
@@ -687,22 +695,7 @@ public class GeoCell extends Cell {
     }
     
     public boolean hasOcean(){
-        return (getOceanMass() > 0);
-    }
-    
-    private float getOceanMass(){
-        HydroCell hCell = (HydroCell)this;
-        return (hCell != null) ? hCell.getOceanMass() : 0;
-    }
-    
-    private float getOceanVolume(){
-        HydroCell hCell = (HydroCell)this;
-        return (hCell != null) ? hCell.getVolume() : 0;
-    }
-    
-    private float getOceanHeight(){
-        HydroCell hCell = (HydroCell)this;
-        return (hCell != null) ? hCell.getHeight() : 0;
+        return ((HydroCell) this).getOceanMass() > 0;
     }
     
     public int getRenderIndex(int settings) {
