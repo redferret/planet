@@ -92,7 +92,6 @@ public class GeoCellTest {
 
         testCell.add(Layer.GRANITE, 10000, true);
         testCell.add(Layer.BASALT, 500, true);
-        testCell.recalculateHeight();
 
         Float expectedTotalMass = 10500f;
         Float actualTotalMass = testCell.getTotalMass();
@@ -112,9 +111,6 @@ public class GeoCellTest {
         assertTrue("Volume is out of accepted range", inRange);
 
         Float expectedHeight = expectedTotalMass / (cellBase * expectedDensity);
-        Float amountSubmerged = expectedHeight * (expectedDensity / mantel_density);
-
-        expectedHeight -= amountSubmerged;
 
         Float actualHeight = testCell.getHeight();
 
