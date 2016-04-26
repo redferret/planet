@@ -6,6 +6,7 @@ import planet.surface.test.World;
 
 import static org.junit.Assert.*;
 import planet.surface.HydroCell;
+import planet.surface.Stratum;
 import static planet.surface.Surface.mantel_density;
 
 /**
@@ -134,6 +135,12 @@ public class GeoCellTest {
         Layer expectedLayer = Layer.GRANITE;
         
         assertEquals("The top layer is incorrect", expectedLayer, topLayer);
+        
+        Stratum top = testCell.peekTopStratum();
+        Float expectedMass = 9950f;
+        Float actualMass = top.getMass();
+        
+        assertEquals("The last layer's mass is incorrect", expectedMass, actualMass);
     }
 
 
