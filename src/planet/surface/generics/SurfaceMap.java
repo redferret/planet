@@ -10,8 +10,7 @@ import planet.util.MThread;
 
 /**
  * The SurfaceMap is a generic map for all the systems on the planet. The map
- * contains generic cells. Each cell contains basic information like a reference
- * to the map and it's location. The RenderInterface is not required for this
+ * contains generic cells. The RenderInterface is not required for this
  * class but it gives two methods for rendering each map. This implementation
  * may change in the future when new graphic rendering capabilities change.
  *
