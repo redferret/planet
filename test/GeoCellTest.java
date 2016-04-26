@@ -6,6 +6,7 @@ import planet.surface.test.World;
 
 import static org.junit.Assert.*;
 import planet.surface.HydroCell;
+import static planet.surface.Surface.mantel_density;
 
 /**
  * Does basic unit testing on the GeoCell class.
@@ -71,6 +72,70 @@ public class GeoCellTest {
         assertEquals(expectedDensity, actualDensity);
     }
     
+    /**
+     * Performs a test on a cell by adding two types of stratum and checks to
+     * make sure that the density, volume, and mass are correct.
+     */
+    @Test
+    public void strataTest() {
+
+        boolean inRange;
+
+        float volumeRangeDiff = 0.0000005f;
+        float densityRangeDiff = 0.0005f;
+        float heightRangeDiff = 0.000005f;
+        long cellBase = testWorld.getBase();
+
+        GeoCell testCell = testWorld.getSurface().getCellAt(50, 50);
+
+        testCell.add(Layer.GRANITE, 10000, true);
+        testCell.add(Layer.BASALT, 500, true);
+        testCell.recalculateHeight();
+
+        Float expectedTotalMass = 10500f;
+        Float actualTotalMass = testCell.getTotalMass();
+
+        assertEquals("Total masses didn't match", expectedTotalMass, actualTotalMass);
+
+        Float actualTotalVolume = testCell.getTotalVolume();
+        Float expectedTotalVolume = 3.7514535f;
+
+        Float actualDensity = testCell.getGeoDensity();
+        Float expectedDensity = expectedTotalMass / expectedTotalVolume;
+
+        inRange = rangeTest(densityRangeDiff, actualDensity, expectedDensity);
+        assertTrue("Density is out of accepted range", inRange);
+
+        inRange = rangeTest(volumeRangeDiff, actualTotalVolume, expectedTotalVolume);
+        assertTrue("Volume is out of accepted range", inRange);
+
+        Float expectedHeight = expectedTotalMass / (cellBase * expectedDensity);
+        Float amountSubmerged = expectedHeight * (expectedDensity / mantel_density);
+
+        expectedHeight -= amountSubmerged;
+
+        Float actualHeight = testCell.getHeight();
+
+        inRange = rangeTest(heightRangeDiff, actualHeight, expectedHeight);
+        assertTrue("Height is out of accepted range", inRange);
+    }
+
+    /**
+     * Helper method for testing ranges.
+     *
+     * @param rangeDiff The amount of deviation
+     * @param testNumber The outcome
+     * @param expectedNumber The expected
+     * @return True if the outcome is within an accepted range based on the
+     * deviation.
+     */
+    private boolean rangeTest(Float rangeDiff, Float testNumber, Float expectedNumber) {
+        Float minimum = expectedNumber - rangeDiff;
+        Float maximum = expectedNumber + rangeDiff;
+
+        return testNumber >= minimum && testNumber <= maximum;
+    }
+
     /**
      * Performs simple add and remove of molten lava to a test cell.
      */
