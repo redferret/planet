@@ -5,7 +5,10 @@ import planet.util.TBuffer;
 import static planet.surface.Layer.OCEAN;
 
 /**
- *
+ * A HydroCell represents the hydrosphere of the planet. The class contains
+ * information about the amount of water that exists on the surface of this
+ * cell.
+ * 
  * @author Richard DeSilvey
  */
 public class HydroCell extends GeoCell {
