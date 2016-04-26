@@ -11,7 +11,7 @@ import planet.surface.Stratum;
 
 /**
  * Does basic unit testing on the GeoCell class.
- * @author Richard
+ * @author Richard DeSilvey
  */
 public class GeoCellTest {
     
