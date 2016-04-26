@@ -168,7 +168,36 @@ public class GeoCellTest {
         assertEquals(incorrectLayerMsg, expectedLayer, topLayer);
     }
 
-
+    /**
+     * Tests the removal of multiple strata.
+     */
+    @Test
+    public void multipleLayerRemovalTest(){
+        
+        Layer strata[] = {Layer.BASALT, Layer.GRANITE, Layer.SANDSTONE, Layer.SHALE,
+                          Layer.BASALT, Layer.GRANITE, Layer.SANDSTONE, Layer.SHALE};
+        GeoCell testCell = testWorld.getSurface().getCellAt(30, 30);
+        
+        for (Layer layer : strata){
+            testCell.add(layer, 1000, true);
+        }
+        
+        testCell.remove(3100, false, true);
+        
+        Layer expectedLayer = Layer.BASALT;
+        Layer actualLayer = testCell.peekTopStratum().getLayer();
+        
+        assertEquals("Incorrect layer", expectedLayer, actualLayer);
+        
+        testCell.removeTopStratum();
+        testCell.remove(1500, false, true);
+        
+        expectedLayer = Layer.SANDSTONE;
+        actualLayer = testCell.peekTopStratum().getLayer();
+        
+        assertEquals("Incorrect layer", expectedLayer, actualLayer);
+    }
+    
     /**
      * Helper method for testing ranges.
      *
