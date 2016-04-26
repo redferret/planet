@@ -75,6 +75,8 @@ public class GeoCellTest {
     /**
      * Performs a test on a cell by adding two types of stratum and checks to
      * make sure that the density, volume, and mass are correct.
+     * Volume, density, and height are tested in ranges with specified
+     * deviations.
      */
     @Test
     public void strataTest() {
