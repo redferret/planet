@@ -118,7 +118,7 @@ public class GeoCellTest {
         inRange = rangeTest(heightRangeDiff, actualHeight, expectedHeight);
         assertTrue("Height is out of accepted range", inRange);
         
-        System.out.println("Strata Test Results\n");
+        System.out.println("Strata Test Results");
         System.out.println("Height: " + actualHeight);
     }
 
