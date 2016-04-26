@@ -210,7 +210,7 @@ public class GeoCell extends Cell {
         
         totalMass = 0;
         totalVolume = 0;
-        moltenRockSurfaceMass = new Random().nextInt(10000);
+        moltenRockSurfaceMass = 0;
         curAmountSubmerged = 0;
         depositAgeTimeStamp = 0;
         
