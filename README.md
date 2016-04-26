@@ -19,10 +19,8 @@ roperties file)
 
 Simply add, to the project.properties file:<br/>
 platforms.JDK_1.8.home=C:\\\Program Files\\\Java\\\jdk1.8.0_73\\\
-
-OR
-
-platforms.JDK_1.8.home=<Path to your JDK home>
+<br/>
+Double \\\ is required otherwise it won't parse correctly.
 
 # IDE
 The current version is using NetBeans 8.0.2 hence the nbproject directory.
