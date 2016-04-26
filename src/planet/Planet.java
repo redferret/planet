@@ -21,6 +21,14 @@ public abstract class Planet extends MThread {
 
     public static enum TimeScale {Geological, Evolutionary, Civilization}
     
+    /**
+     * Constructs a new Planet.
+     *
+     * @param gridSize The number of cells
+     * @param sqrtBase The length of one side of a cell in meters.
+     * @param mainThreadDelay The time to delay between each frame in
+     * milliseconds.
+     */
     public Planet(int gridSize, int sqrtBase, int mainThreadDelay){
         
         super(mainThreadDelay, "Main~", true);
