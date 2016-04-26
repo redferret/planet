@@ -119,6 +119,12 @@ public class GeoCellTest {
         assertTrue("Height is out of accepted range", inRange);
     }
 
+    /**
+     * Tests removal of the strata with the special removal case of removing
+     * from the strata where the removal amount exceeds the top or bottom
+     * layer being removed from as well as checking to make sure that
+     * zero mass layers don't exist.
+     */
     @Test
     public void removeFromStrataTest() {
         
