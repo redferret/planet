@@ -2,7 +2,7 @@
 import org.junit.Test;
 import planet.surface.GeoCell;
 import planet.surface.Layer;
-import planet.surface.test.World;
+import planet.surface.test.TestWorld;
 
 import static org.junit.Assert.*;
 import planet.surface.HydroCell;
@@ -16,10 +16,10 @@ import planet.surface.Stratum;
 public class GeoCellTest {
     
     private static final int WORLD_SIZE = 100;
-    private static World testWorld;
+    private static TestWorld testWorld;
     
     static {
-        testWorld = new World(WORLD_SIZE);
+        testWorld = new TestWorld(WORLD_SIZE);
     }
     
     /**
