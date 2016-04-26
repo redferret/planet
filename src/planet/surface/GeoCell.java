@@ -366,18 +366,18 @@ public class GeoCell extends Cell {
      *
      * @param type The type of material to add
      * @param amount The amount to add/remove in kilograms
-     * @param placeTop Add/Remove to the top stratum/strata
+     * @param workOnTop Add/Remove to the top stratum/strata
      * @return The amount (positive) that could not be removed due to the
      * stratum being less than the amount, otherwise 0 is returned.
      */
-    public float placeAmount(Layer type, float amount, boolean placeTop) {
+    public float placeAmount(Layer type, float amount, boolean workOnTop) {
         
-        Stratum topStratum = placeTop ? peekTopStratum() : peekBottomStratum();
+        Stratum topStratum = workOnTop ? peekTopStratum() : peekBottomStratum();
         
         // Check to make sure that there is strata
         if (topStratum == null) { // If no strata exists
             if (amount > 0){ // if trying to add
-                addToStrata(type, amount, placeTop);
+                addToStrata(type, amount, workOnTop);
                 return 0;
             } else if (amount < 0){ // if trying to remove
                 return -amount; // Nothing to remove. Return a positive amount
@@ -391,9 +391,9 @@ public class GeoCell extends Cell {
         float mass = topStratum.getMass(), difference;
         
         if (amount < 0 && type == null){ // Removing from the Stratum
-            difference = mass + amount;// Take the difference (amount is < 0)
+            difference = mass + amount;// Take the difference (amount is negative)
             if (difference < 0){
-                if (placeTop){
+                if (workOnTop){
                     removeTopStratum();
                 }else{
                     removeBottomStratum();
@@ -402,18 +402,18 @@ public class GeoCell extends Cell {
             }else{
                 /* not adding but subtracting the amounts from the
                    stratum since the amount is less than 0. */
-                addToStrata(null, amount, placeTop);
+                addToStrata(null, amount, workOnTop);
             }
             
         }else if (amount > 0){ // Adding to the Stratum
             if (type != null){
                 if (type == sType){
-                    addToStrata(null, amount, placeTop);
+                    addToStrata(null, amount, workOnTop);
                 }else{
-                    addToStrata(type, amount, placeTop); 
+                    addToStrata(type, amount, workOnTop); 
                 }
             }else{ // Type not specified add to the top layer
-                addToStrata(null, amount, placeTop);
+                addToStrata(null, amount, workOnTop);
             }
         }
         
