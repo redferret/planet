@@ -2,7 +2,7 @@
 import org.junit.Test;
 import planet.surface.GeoCell;
 import planet.surface.Layer;
-import planet.surface.test.TestWorld;
+import planet.TestWorld;
 
 import static org.junit.Assert.*;
 import planet.surface.HydroCell;

@@ -1,6 +1,6 @@
 
 
-package planet.surface.test;
+package planet;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
