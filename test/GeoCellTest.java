@@ -146,12 +146,13 @@ public class GeoCellTest {
         GeoCell testCell = testWorld.getSurface().getCellAt(20, 10);
         
         testCell.putMoltenRockToSurface(1000);
-        
-        assertTrue("", testCell.getMoltenRockFromSurface() == 1000);
+        Float moltenMass = testCell.getMoltenRockFromSurface();
+        Float expected = 1000f;
+        assertEquals("Mass incorrect", expected, moltenMass);
         
         testCell.removeAllMoltenRock();
         
-        assertTrue("", testCell.getMoltenRockFromSurface() == 0);
+        assertTrue("No lava should exist", testCell.getMoltenRockFromSurface() == 0);
     }
    
     /**
