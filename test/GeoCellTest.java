@@ -146,9 +146,12 @@ public class GeoCellTest {
         GeoCell testCell = testWorld.getSurface().getCellAt(20, 10);
         
         testCell.putMoltenRockToSurface(1000);
+        
+        assertTrue("", testCell.getMoltenRockFromSurface() == 1000);
+        
         testCell.removeAllMoltenRock();
         
-        assertTrue(testCell.getMoltenRockFromSurface() == 0);
+        assertTrue("", testCell.getMoltenRockFromSurface() == 0);
     }
    
     /**
