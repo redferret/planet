@@ -11,10 +11,10 @@ package planet.surface.generics;
 public abstract class Cell {
 
     // The x coordinate
-    protected int x;
+    private int x;
     
     // The y coordinate
-    protected int y;
+    private int y;
 
 
     public Cell(int x, int y) {
