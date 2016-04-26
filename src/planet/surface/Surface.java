@@ -2,6 +2,7 @@
 package planet.surface;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -231,7 +232,6 @@ public final class Surface extends SurfaceMap<HydroCell> {
         }
     }
 
-
     public void spreadToLowest(GeoCell spreadFrom, boolean geoScale) {
 
         dust(spreadFrom);
@@ -248,7 +248,6 @@ public final class Surface extends SurfaceMap<HydroCell> {
             spread(lowestList, spreadFrom);
         }
     }
-
 
     public void convertTopLayer(GeoCell spreadFrom, float height) {
 
@@ -273,9 +272,7 @@ public final class Surface extends SurfaceMap<HydroCell> {
         }
     }
 
-
-    public void getLowestCells(GeoCell spreadFrom,
-            ArrayList<GeoCell> lowestList, int max) {
+    public void getLowestCells(GeoCell spreadFrom, List<GeoCell> lowestList, int max) {
 
         int tx, ty, mx, my;
         int x = spreadFrom.getX(), y = spreadFrom.getY();
@@ -473,7 +470,7 @@ public final class Surface extends SurfaceMap<HydroCell> {
             if ((curPlanetAge - strataBuoyancyStamp) > GEOUPDATE) {
 
                 spreadToLowest(cell, false);
-                cell.recalculateHeight();
+                cell.updateHeight();
                 strataBuoyancyStamp = curPlanetAge;
             }
         }
