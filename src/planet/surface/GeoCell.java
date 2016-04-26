@@ -378,13 +378,10 @@ public class GeoCell extends Cell {
         if (selectedStratum == null) { // If no strata exists
             if (amount > 0){ // if trying to add
                 addToStrata(type, amount, workOnTop);
-                return 0;
             } else if (amount < 0){ // if trying to remove
                 return -amount; // Nothing to remove. Return a positive amount
-            }else{ // nothing is being added or removed.
-                return 0;
             }
-            
+            return 0;
         }
             
         Layer sType = selectedStratum.getLayer();
