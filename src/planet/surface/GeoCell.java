@@ -581,6 +581,11 @@ public class GeoCell extends Cell {
        Stratum removed = strata.removeLast();
        
        Stratum bottom = peekBottomStratum();
+       
+       if (bottom == null){
+           throw new RuntimeException("No strata exists!");
+       }
+       
        peekBottomStratum().removeBottom();
        
        return updateRemoved(removed);
