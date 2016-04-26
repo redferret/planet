@@ -118,6 +118,25 @@ public class GeoCellTest {
         assertTrue("Height is out of accepted range", inRange);
     }
 
+    @Test
+    public void removeFromStrataTest() {
+        GeoCell testCell = testWorld.getSurface().getCellAt(50, 50);
+
+        testCell.add(Layer.GRANITE, 10000, true);
+        testCell.add(Layer.BASALT, 500, true);
+        
+        Float expectedRemoval = 550f;
+        Float removed = testCell.remove(expectedRemoval, false, true);
+        
+        assertEquals("The amount removed was incorrect", expectedRemoval, removed);
+        
+        Layer topLayer = testCell.peekTopStratum().getLayer();
+        Layer expectedLayer = Layer.GRANITE;
+        
+        assertEquals("The top layer is incorrect", expectedLayer, topLayer);
+    }
+
+
     /**
      * Helper method for testing ranges.
      *
