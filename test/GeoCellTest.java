@@ -125,7 +125,7 @@ public class GeoCellTest {
         String incorrectAmts = "The amount removed is incorrect";
         String incorrectLayer = "The top layer is incorrect";
         
-        GeoCell testCell = testWorld.getSurface().getCellAt(50, 50);
+        GeoCell testCell = testWorld.getSurface().getCellAt(25, 25);
 
         testCell.add(Layer.GRANITE, 10000, true);
         testCell.add(Layer.BASALT, 500, true);
