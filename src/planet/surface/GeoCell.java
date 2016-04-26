@@ -372,10 +372,10 @@ public class GeoCell extends Cell {
      */
     public float placeAmount(Layer type, float amount, boolean workOnTop) {
         
-        Stratum topStratum = workOnTop ? peekTopStratum() : peekBottomStratum();
+        Stratum selectedStratum = workOnTop ? peekTopStratum() : peekBottomStratum();
         
         // Check to make sure that there is strata
-        if (topStratum == null) { // If no strata exists
+        if (selectedStratum == null) { // If no strata exists
             if (amount > 0){ // if trying to add
                 addToStrata(type, amount, workOnTop);
                 return 0;
@@ -387,27 +387,21 @@ public class GeoCell extends Cell {
             
         }
             
-        Layer sType = topStratum.getLayer();
-        float mass = topStratum.getMass(), difference;
+        Layer sType = selectedStratum.getLayer();
+        float mass = selectedStratum.getMass(), difference;
         
-        if (amount < 0 && type == null){ // Removing from the Stratum
+        if (amount < 0){ // Removing from the Stratum
             difference = mass + amount;// Take the difference (amount is negative)
             if (difference < 0){
-                addToStrata(null, amount - difference, workOnTop);
+                addToStrata(type, amount - difference, workOnTop);
+                verifiyStratumNonZeroMass(selectedStratum, workOnTop);
                 
-                if (topStratum.getMass() <= 0){
-                    if (workOnTop){
-                        removeTopStratum();
-                    }else{
-                        removeBottomStratum();
-                    }
-                }
-                
-                return placeAmount(null, difference, workOnTop);
+                return placeAmount(type, difference, workOnTop);
             }else{
                 /* not adding but subtracting the amounts from the
                    stratum since the amount is less than 0. */
                 addToStrata(null, amount, workOnTop);
+                verifiyStratumNonZeroMass(selectedStratum, workOnTop);
             }
             
         }else if (amount > 0){ // Adding to the Stratum
@@ -425,6 +419,16 @@ public class GeoCell extends Cell {
         return 0;
     }
 
+    private void verifiyStratumNonZeroMass(Stratum stratum, boolean workOnTop){
+        if (stratum.getMass() <= 0){
+            if (workOnTop){
+                removeTopStratum();
+            }else{
+                removeBottomStratum();
+            }
+        }
+    }
+    
     /**
      * Adds a new stratum if a type is specified. If the type is null then the
      * top or bottom stratum receives the amount being added. Checking for
