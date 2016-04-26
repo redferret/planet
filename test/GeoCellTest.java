@@ -7,7 +7,7 @@ import planet.surface.test.World;
 import static org.junit.Assert.*;
 import planet.surface.HydroCell;
 import planet.surface.Stratum;
-import static planet.surface.Surface.mantel_density;
+
 
 /**
  * Does basic unit testing on the GeoCell class.
