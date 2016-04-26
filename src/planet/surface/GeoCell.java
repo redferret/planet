@@ -390,7 +390,7 @@ public class GeoCell extends Cell {
         if (amount < 0){ // Removing from the Stratum
             difference = mass + amount;// Take the difference (amount is negative)
             if (difference < 0){
-                addToStrata(type, amount - difference, workOnTop);
+                addToStrata(null, amount - difference, workOnTop);
                 verifiyStratumNonZeroMass(selectedStratum, workOnTop);
                 
                 return placeAmount(type, difference, workOnTop);
