@@ -121,6 +121,10 @@ public class GeoCellTest {
 
     @Test
     public void removeFromStrataTest() {
+        
+        String incorrectAmts = "The amount removed is incorrect";
+        String incorrectLayer = "The top layer is incorrect";
+        
         GeoCell testCell = testWorld.getSurface().getCellAt(50, 50);
 
         testCell.add(Layer.GRANITE, 10000, true);
@@ -129,18 +133,30 @@ public class GeoCellTest {
         Float expectedRemoval = 550f;
         Float removed = testCell.remove(expectedRemoval, false, true);
         
-        assertEquals("The amount removed was incorrect", expectedRemoval, removed);
+        assertEquals(incorrectAmts, expectedRemoval, removed);
         
         Layer topLayer = testCell.peekTopStratum().getLayer();
         Layer expectedLayer = Layer.GRANITE;
         
-        assertEquals("The top layer is incorrect", expectedLayer, topLayer);
+        assertEquals(incorrectLayer, expectedLayer, topLayer);
         
         Stratum top = testCell.peekTopStratum();
         Float expectedMass = 9950f;
         Float actualMass = top.getMass();
         
-        assertEquals("The last layer's mass is incorrect", expectedMass, actualMass);
+        assertEquals("The top layer's mass is incorrect", expectedMass, actualMass);
+        
+        testCell.add(Layer.GRAVEL, 1000, false);
+        expectedRemoval = 9950f;
+        removed = testCell.remove(expectedRemoval, false, true);
+        
+        assertEquals(incorrectAmts, expectedRemoval, removed);
+        
+        top = testCell.peekTopStratum();
+        expectedLayer = Layer.GRAVEL;
+        topLayer = top.getLayer();
+        
+        assertEquals(incorrectLayer, expectedLayer, topLayer);
     }
 
 
