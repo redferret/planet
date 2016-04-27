@@ -2,16 +2,14 @@
 
 package planet.surface;
 
-
 /**
  *
  * @author Richard DeSilvey
  */
-public class AtmoCell extends BioCell{
+public class BioCell extends HydroCell {
 
-    public AtmoCell(int x, int y) {
+    public BioCell(int x, int y) {
         super(x, y);
     }
-
 
 }

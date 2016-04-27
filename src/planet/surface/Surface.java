@@ -53,7 +53,7 @@ import static planet.util.Tools.getLowestCellFrom;
  *
  * @author Richard DeSilvey
  */
-public final class Surface extends SurfaceMap<HydroCell> {
+public final class Surface extends SurfaceMap<AtmoCell> {
 
     /**
      * The average density of the mantel. The units are in kilograms per cubic
@@ -514,8 +514,8 @@ public final class Surface extends SurfaceMap<HydroCell> {
     }
 
     @Override
-    public HydroCell generateCell(int x, int y) {
-        return new HydroCell(x, y);
+    public AtmoCell generateCell(int x, int y) {
+        return new AtmoCell(x, y);
     }
 
 }
