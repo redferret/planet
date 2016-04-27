@@ -1,8 +1,9 @@
 package planet.surface.generics;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import planet.Planet;
@@ -44,7 +45,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread {
      * The map containing the references to each data point on the surface.
      * Hashtable is used because it's thread safe.
      */
-    private Hashtable<Integer, Cell> map;
+    private Map<Integer, Cell> map;
 
     /**
      * Helper threads that would work on the map.
@@ -65,7 +66,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread {
 
         super(delay, threadName, true);
 
-        map = new Hashtable<>();
+        map = new ConcurrentHashMap<>();
         threads = new ArrayList<>();
         prevSubThreadAvg = 0;
     }
