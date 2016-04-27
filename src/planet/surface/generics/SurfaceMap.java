@@ -45,18 +45,6 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread {
      */
     private Hashtable<Integer, Cell> map;
 
-    /**
-     * Not all surface maps can be drawn at once, unless transparent maps are
-     * drawn.
-     */
-    protected boolean draw;
-
-    /**
-     * For scaling the surfaceImage, 1.0f = 100% of the surfaceImage size, 1.5f
-     * = 50% larger, 2.0f = 100% larger, etc.
-     */
-    private float drawSize;
-
     protected ArrayList<MThread> threads;
 
     private int prevSubThreadAvg;
@@ -74,8 +62,6 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread {
         super(delay, threadName, true);
 
         map = new Hashtable<>();
-        drawSize = 1.0f;
-        draw = false;
         threads = new ArrayList<>();
         prevSubThreadAvg = 0;
     }
@@ -169,7 +155,6 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread {
      * the map to function properly.
      */
     public void update() {
-
         checkSubThreads();
     }
 
@@ -251,22 +236,6 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread {
 
     public ArrayList<MThread> getThreads() {
         return threads;
-    }
-
-    public final void setDrawSize(float f) {
-        drawSize = f;
-    }
-
-    public final void drawMap(boolean b) {
-        draw = b;
-    }
-
-    public final boolean drawMap() {
-        return draw;
-    }
-
-    public final float getDrawSize() {
-        return drawSize;
     }
 
     /**
