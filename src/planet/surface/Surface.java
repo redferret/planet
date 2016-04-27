@@ -172,7 +172,7 @@ public final class Surface extends SurfaceMap<AtmoCell> {
         
         Stratum stratum;
         GeoCell cell = getCellAt(x, y);
-        cell.getSedimentBuffer().applyRockBuffer();
+        cell.getSedimentBuffer().applySedimentBuffer();
         stratum = cell.peekTopStratum();
 
         if (stratum == null) {

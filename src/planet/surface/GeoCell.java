@@ -67,7 +67,7 @@ public class GeoCell extends Cell {
          * Apply the changes that need to be made to this cell, if the buffer is
          * not set nothing will happen.
          */
-        public void applyRockBuffer() {
+        public void applySedimentBuffer() {
             if (bufferSet()) {
                 updateSurfaceSedimentMass(sediments);
                 resetBuffer();

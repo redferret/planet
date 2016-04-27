@@ -52,7 +52,7 @@ public class HydroCell extends GeoCell {
 
         }
 
-        public void applyBuffer(){
+        public void applyWaterBuffer(){
             if (waterBuffer.bufferSet()) {
                 addOceanMass(waterBuffer.mass);
 
