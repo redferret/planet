@@ -40,7 +40,8 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread {
     public static final int[] HDIR_Y_INDEX = {-1, 0, 1, 0};
 
     /**
-     * The map containing the references to each data point on the surface
+     * The map containing the references to each data point on the surface.
+     * Hashtable is used because it's thread safe.
      */
     private Hashtable<Integer, Cell> map;
 
