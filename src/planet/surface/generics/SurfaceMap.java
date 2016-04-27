@@ -276,13 +276,5 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread {
         map.put(index, cell);
     }
 
-    /**
-     * In some cases the map of this surface needs direct interaction.
-     *
-     * @return The reference to the map
-     */
-    public final Hashtable<Integer, Cell> getMap() {
-        return map;
-    }
 
 }
