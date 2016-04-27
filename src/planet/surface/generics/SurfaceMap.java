@@ -2,7 +2,6 @@ package planet.surface.generics;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import planet.Planet;
@@ -46,10 +45,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread {
      */
     private Hashtable<Integer, Cell> map;
 
-    /**
-     * Helper threads that can work on the map.
-     */
-    protected List<MThread> threads;
+    protected ArrayList<MThread> threads;
 
     private int prevSubThreadAvg;
 
