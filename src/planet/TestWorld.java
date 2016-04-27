@@ -13,13 +13,19 @@ import planet.surface.generics.SurfaceMap;
  */
 public class TestWorld extends Planet {
 
-    private static final int CELL_SIZE_M, MAIN_DELAY;
+    private static final int CELL_SIZE_M, MAIN_DELAY, DEFAULT_SIZE;
     private static boolean firstMsg = false;
     
     static{
         CELL_SIZE_M = 6;
         MAIN_DELAY = 1;
+        DEFAULT_SIZE = 256;
     }
+    
+    public TestWorld(){
+        this(DEFAULT_SIZE);
+    }
+    
     /**
      * Constructs a new test world for the simulation.
      * @param worldSize The size of the world squared.
