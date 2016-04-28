@@ -1,4 +1,3 @@
-
 package planet.gui;
 
 import java.awt.Color;
@@ -15,65 +14,53 @@ import planet.surface.generics.SurfaceMap;
  * Panel for the JFrame where all rendering takes place for SurfaceMaps
  */
 public class Frame extends JPanel {
-    
+
     private DisplayAdapter<Graphics2D> adapter;
     private ArrayList<SurfaceMap> maps;
-    
-    public Frame(int w, int h){
-        
+
+    public Frame(int w, int h) {
         super();
-        
         setup(w, h, null);
     }
-    
-    public Frame(int w, int h, DisplayAdapter adapter){
-        
+
+    public Frame(int w, int h, DisplayAdapter adapter) {
         super();
-        
         setup(w, h, adapter);
     }
-    
-    private void setup(int w, int h, DisplayAdapter adapter){
-        
-        setSize(w, h);
 
+    private void setup(int w, int h, DisplayAdapter adapter) {
+        setSize(w, h);
         setBackground(Color.WHITE);
-        
         maps = new ArrayList<>();
-        
         this.adapter = adapter;
-        
     }
-    
-    public void registerMap(SurfaceMap map){
+
+    public void registerMap(SurfaceMap map) {
         maps.add(map);
     }
-    
+
     @Override
     protected void paintComponent(Graphics graphics) {
 
         // Used for double buffering the screen reducing any flicker.
         super.paintComponent(graphics);
-        
+
         Graphics2D g2d = (Graphics2D) graphics;
-        
+
         if (maps != null) {
 
             maps.stream().map((map) -> {
-                
                 setRaster(map);
-                
                 return map;
-                
             }).forEach((SurfaceMap map) -> {
-                
                 g2d.drawImage(map.getImage(), 0, 0, getWidth(), getHeight(), null);
-                
             });
         }
-        
-        if (adapter != null) adapter.draw(g2d);
-        
+
+        if (adapter != null) {
+            adapter.draw(g2d);
+        }
+
         g2d.dispose();
     }
 
@@ -86,14 +73,16 @@ public class Frame extends JPanel {
     private void setRaster(SurfaceMap map) {
 
         Object[] colors = map.renderLookup();
-        
-        if (colors == null) return;
-        
+
+        if (colors == null) {
+            return;
+        }
+
         WritableRaster raster;
-        
+
         BufferedImage image = map.getImage();
         raster = image.getRaster();
-        
+
         Color color;
 
         int dataIndex, bounds = Planet.self().getGridSize();
@@ -103,16 +92,15 @@ public class Frame extends JPanel {
 
                 dataIndex = map.getCellRenderIndex(x, y);
 
-                if (dataIndex < 0 || dataIndex > colors.length - 1)
+                if (dataIndex < 0 || dataIndex > colors.length - 1) {
                     continue;
-                
-                color = (Color) colors[dataIndex];
+                }
 
+                color = (Color) colors[dataIndex];
                 int rgba[] = {color.getRed(), color.getGreen(),
                     color.getBlue(), color.getAlpha()};
 
                 raster.setPixel(x, y, rgba);
-
             }
         }
     }
