@@ -438,7 +438,8 @@ public final class Surface extends SurfaceMap<AtmoCell> {
                 toUpdateSSediments.transferSediment(-velocity);
             }
 
-            if (cellToUpdate.getOceanMass() > oceanSedimentCapacity) {
+            // Only evaporate if in oceans. Will probably be removed later.
+            else if (cellToUpdate.getOceanMass() > oceanSedimentCapacity) {
                 // Evaporate Water
                 toUpdateWaterBuffer.transferWater(-evapScale);
             }
