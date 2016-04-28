@@ -1,6 +1,7 @@
 
 package planet.surface;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -59,34 +60,6 @@ public final class Surface extends SurfaceMap<AtmoCell> {
      * meter.
      */
     public static float mantel_density = 3700f;
-    
-    /**
-     * The different color maps to represent the surface
-     */
-//    private Color[] heightMap, strataMap;
-    
-    /**
-     * The index for the Height map
-     */
-    public final static int HEIGHTMAP           = 0;
-            
-    /**
-     * The index for the Strata map
-     */
-    public final static int STRATAMAP           = 1; 
-    public final static int MAX_HEIGHT_INDEX    = 50;
-            
-    /**
-     * The maximum thickness a GeoCell should be (in meters)
-     */
-    public final static int MAX_THICKNESS       = 90000;
-            
-    /**
-     * The ratio for indexing onto the height map array,
-     * by taking a cell height and dividing it by this value will
-     * give the proper index to the height map.
-     */
-    public static int heightIndexRatio  = 50 / MAX_HEIGHT_INDEX;
     
     public static int waterDepthShale;
     
