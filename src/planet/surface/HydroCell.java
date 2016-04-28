@@ -1,4 +1,4 @@
-
+ 
 package planet.surface;
 import planet.Planet;
 import planet.util.TBuffer;
@@ -18,12 +18,17 @@ public class HydroCell extends GeoCell {
     
     public static int rainProb = 1000;
     public static float rainScale = 2.5f;
+    
+    /**
+     * The amount of water that will continue to hold any sediments. All
+     * sediments are dumped if the ocean mass reaches this capacity.
+     */
     public static float oceanSedimentCapacity;
 
     public static float evapScale = 2.5f;
     
     public static float erosionMul = 500f;
-    public static float sedimentCap = 0.01f;
+
     public static float MIN_ANGLE = 0.0002f;
     
     /**
@@ -128,8 +133,6 @@ public class HydroCell extends GeoCell {
         sedimentMap = new SuspendedSediments();
     }
     
-    
-
     public WaterBuffer getWaterBuffer() {
         return waterBuffer;
     }
