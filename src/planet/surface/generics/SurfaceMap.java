@@ -1,5 +1,7 @@
 package planet.surface.generics;
 
+import java.awt.Color;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +21,7 @@ import planet.util.MThread;
  * @author Richard DeSilvey
  * @param <CellType> The high-level cell living in this map.
  */
-public abstract class SurfaceMap<CellType extends Cell> extends MThread {
+public abstract class SurfaceMap<CellType extends Cell> extends MThread implements RenderInterface{
 
     /**
      * The direction look up list for X values
@@ -42,6 +44,23 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread {
     public static final int[] HDIR_Y_INDEX = {-1, 0, 1, 0};
 
     /**
+     * The different color maps to represent the surface
+     */
+    private Color[] heightMap, strataMap;
+    
+    public final static int HEIGHTMAP = 0;
+    public final static int STRATAMAP = 1;
+    public final static int LANDOCEAN = 2;
+    public final static int MAX_HEIGHT_INDEX = 50;
+
+    /**
+     * The ratio for indexing onto the height map array,
+     * by taking a cell height and dividing it by this value will
+     * give the proper index to the height map.
+     */
+    public static int heightIndexRatio  = 50 / MAX_HEIGHT_INDEX;
+    
+    /**
      * The map containing the references to each data point on the surface.
      * Hashtable is used because it's thread safe.
      */
@@ -54,6 +73,8 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread {
 
     private int prevSubThreadAvg;
 
+    private BufferedImage mapImage;
+    
     /**
      * Create a new map
      *
@@ -277,5 +298,22 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread {
         map.put(index, cell);
     }
 
+    public BufferedImage getImage(){
+        return mapImage;
+    }
+    
+    @Override
+    public int getCellRenderIndex(int x, int y) {
+        return 0;
+    }
 
+    @Override
+    public Object[] renderLookup() {
+        return null;
+    }
+
+    public void setDisplaySettings(int setting) {
+    
+    }
+    
 }
