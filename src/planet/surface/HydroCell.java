@@ -27,6 +27,7 @@ public class HydroCell extends GeoCell {
 
     public static float evapScale = 2.5f;
 
+    public static float sedimentCapacity = 0.25f;
     public static float MIN_ANGLE = 0.0002f;
     
     /**
@@ -101,7 +102,7 @@ public class HydroCell extends GeoCell {
 
             if (bufferSet()) {
 
-                float cap = (getOceanMass() * .25f);
+                float cap = (getOceanMass() * sedimentCapacity);
                 SedimentBuffer eb = getSedimentBuffer();
                 if (getOceanMass() < oceanSedimentCapacity) {
 
