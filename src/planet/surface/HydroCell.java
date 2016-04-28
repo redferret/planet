@@ -27,6 +27,9 @@ public class HydroCell extends GeoCell {
 
     public static float evapScale = 2.5f;
 
+    /**
+     * The percentage of water that can dissolve sediments.
+     */
     public static float sedimentCapacity = 0.25f;
     public static float MIN_ANGLE = 0.0002f;
     
