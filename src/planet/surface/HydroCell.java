@@ -26,8 +26,6 @@ public class HydroCell extends GeoCell {
     public static float oceanSedimentCapacity;
 
     public static float evapScale = 2.5f;
-    
-    public static float erosionMul = 500f;
 
     public static float MIN_ANGLE = 0.0002f;
     

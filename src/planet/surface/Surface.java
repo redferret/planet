@@ -29,7 +29,6 @@ import static planet.surface.Surface.GEOUPDATE;
 import static planet.surface.Surface.planetAge;
 
 import static planet.surface.HydroCell.MIN_ANGLE;
-import static planet.surface.HydroCell.erosionMul;
 import static planet.surface.HydroCell.evapScale;
 import static planet.surface.HydroCell.oceanSedimentCapacity;
 import static planet.surface.HydroCell.rainProb;
@@ -417,13 +416,13 @@ public final class Surface extends SurfaceMap<AtmoCell> {
 
             if (cellToUpdate.getOceanMass() <= oceanSedimentCapacity) {
 
-                float angle, velocity, a;
+                float angle, velocity, slope;
                 SedimentBuffer sedimentBuffer = cellToUpdate.getSedimentBuffer();
                 // Erosion
                 angle = (float) Math.atan(diffGeoHeight / Planet.self().getSqrtBase());
-                a = Math.max((float) Math.sin(angle), MIN_ANGLE);
+                slope = Math.max((float) Math.sin(angle), MIN_ANGLE);
 
-                totalMass = cellToUpdate.getOceanMass() * a * erosionMul;
+                totalMass = cellToUpdate.getOceanMass() * slope;
 
                 if (sedimentBuffer.getSediments() <= 10) {
                     
