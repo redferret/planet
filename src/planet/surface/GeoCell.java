@@ -1,8 +1,6 @@
 
 package planet.surface;
 
-
-import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import planet.Planet;
 import planet.util.TBuffer;
