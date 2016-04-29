@@ -312,6 +312,14 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
 
     @Override
     public Object[] renderLookup() {
+        
+        switch(displaySetting){
+            case HEIGHTMAP:
+                return heightMap;
+            case STRATAMAP:
+                return strataMap;
+        }
+        
         return null;
     }
 
