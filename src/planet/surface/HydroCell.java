@@ -1,5 +1,6 @@
  
 package planet.surface;
+import java.util.List;
 import planet.Planet;
 import planet.util.TBuffer;
 import static planet.surface.Layer.OCEAN;
@@ -164,12 +165,15 @@ public class HydroCell extends GeoCell {
         return getOceanVolume() / Planet.self().getBase();
     }
     
-    public int getRenderIndex(int settings) {
-        
+    public List<Integer> render(List<Integer> settings) {
         
         int index = (int) (getOceanMass() / depthIndexRatio);
-                
-        return index < MAX_WATER_DEPTH_INDEX ? index : MAX_WATER_DEPTH_INDEX - 1;
+       
+        int setting = index < MAX_WATER_DEPTH_INDEX ? index : MAX_WATER_DEPTH_INDEX - 1;
+        
+        settings.add(setting);
+        
+        return super.render(settings);
         
     }
 

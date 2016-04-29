@@ -1,6 +1,7 @@
 
 package planet.surface;
 
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import planet.Planet;
 import planet.util.TBuffer;
@@ -705,12 +706,15 @@ public class GeoCell extends Cell {
         return ((HydroCell) this).getOceanMass() > 0;
     }
     
-    public int getRenderIndex(int settings) {
-        
-        switch(settings){
+    public List<Integer> render(List<Integer> settings) {
+        int setting;
+        switch(Planet.self().getSurface().displaySetting){
             case HEIGHTMAP:
                 float height = Math.abs((getHeightWithoutOceans() + Planet.lowestHeight)) * 10;
-                return (int) (height / heightIndexRatio) % MAX_HEIGHT_INDEX;
+                setting = (int) (height / heightIndexRatio) % MAX_HEIGHT_INDEX;
+                settings.add(setting);
+                
+                return settings;
                 
             case STRATAMAP:
                 if (moltenRockSurfaceMass < 100){
@@ -719,14 +723,16 @@ public class GeoCell extends Cell {
 
                     if (topStratum != null){
                         Layer layerType = topStratum.getLayer();
-                        return layerType.getID();
+                        settings.add(layerType.getID());
+                        return settings;
                     }
                 }else{
-                    return Layer.LAVA.getID();
+                    settings.add(Layer.LAVA.getID());
+                    return settings;
                 }
-                return 0;
+                return settings;
             default: // The display setting is not listed
-                return 0;
+                return settings;
         }
     }
 }

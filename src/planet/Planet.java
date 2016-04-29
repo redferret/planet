@@ -21,7 +21,7 @@ public abstract class Planet extends MThread {
     private Surface planetSurface;
 
     public static float lowestHeight = 0;
-    
+
     public static enum TimeScale {Geological, Evolutionary, Civilization}
     
     /**

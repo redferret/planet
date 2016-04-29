@@ -5,6 +5,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JPanel;
 import planet.Planet;
 import planet.surface.generics.SurfaceMap;
@@ -16,6 +18,7 @@ public class Frame extends JPanel {
 
     private DisplayAdapter<Graphics2D> adapter;
     private SurfaceMap map;
+    private List<BufferedImage> images;
 
     public Frame(int w, int h) {
         super();
@@ -31,6 +34,7 @@ public class Frame extends JPanel {
         setSize(w, h);
         setBackground(Color.WHITE);
         this.adapter = adapter;
+        images = new ArrayList<>();
     }
 
     public void registerMap(SurfaceMap map) {
@@ -44,10 +48,10 @@ public class Frame extends JPanel {
         super.paintComponent(graphics);
 
         Graphics2D g2d = (Graphics2D) graphics;
-
+        
         if (map != null) {
             setRaster(map);
-            g2d.drawImage(map.getImage(), 0, 0, getWidth(), getHeight(), null);
+            
         }
 
         if (adapter != null) {
@@ -65,33 +69,26 @@ public class Frame extends JPanel {
      */
     private void setRaster(SurfaceMap map) {
 
-        Object[] colors = map.renderLookup();
-
-        if (colors == null) {
-            return;
-        }
-
-        BufferedImage image = map.getImage();
-        WritableRaster raster = image.getRaster();
-
-        Color color;
-
-        int dataIndex, bounds = Planet.self().getGridSize();
+        WritableRaster raster = null;
+        List<Integer[]> settings;
+        
+        int bounds = Planet.self().getGridSize();
 
         for (int x = 0; x < bounds; x++) {
             for (int y = 0; y < bounds; y++) {
 
-                dataIndex = map.getCellRenderIndex(x, y);
+                settings = map.getCellSettings(x, y);
 
-                if (dataIndex < 0 || dataIndex > colors.length - 1) {
-                    continue;
+                for (int i = 0; i < settings.size(); i++){
+                    BufferedImage image = images.get(i);
+                    
+                    Integer[] color = settings.get(i);
+                    int rgba[] = {color[0], color[1], color[2], color[3]};
+                    
+                    raster = image.getRaster();
+                    raster.setPixel(x, y, rgba);
                 }
 
-                color = (Color) colors[dataIndex];
-                int rgba[] = {color.getRed(), color.getGreen(),
-                    color.getBlue(), color.getAlpha()};
-
-                raster.setPixel(x, y, rgba);
             }
         }
     }

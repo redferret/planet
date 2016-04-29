@@ -8,7 +8,7 @@ package planet.surface;
  * controlled by this class. 
  * @author Richard DeSilvey
  */
-public class AtmoCell extends BioCell{
+public class AtmoCell extends BioCell {
 
     public AtmoCell(int x, int y) {
         super(x, y);

@@ -1,6 +1,8 @@
 
 package planet.surface.generics;
 
+import java.util.List;
+
 
 /**
  * The interface allows each map to implement these special methods
@@ -22,9 +24,9 @@ public interface RenderInterface {
      * 
      * @param x The x coordinate
      * @param y The y coordinate
-     * @return The index that maps onto the render lookup array
+     * @return The indexes that map onto the render lookup array
      */
-    public int getCellRenderIndex(int x, int y);
+    public List<Integer> getCellSettings(int x, int y);
     
     /**
      * The render look up is an array of Java Objects and can be used to 

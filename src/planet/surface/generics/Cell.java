@@ -1,5 +1,7 @@
 package planet.surface.generics;
 
+import java.util.List;
+
 /**
  * The cell is a base class for each cell contained in a SurfaceMap.
  * For example the Geosphere contains GeoCells which contain geological strata.
@@ -30,7 +32,7 @@ public abstract class Cell {
         return y;
     }
 
-    public abstract int getRenderIndex(int settings);
+    public abstract List<Integer> render(List<Integer> settings);
     
     public String toString() {
         return "[" + x + ", " + y + "]";

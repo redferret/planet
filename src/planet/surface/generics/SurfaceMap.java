@@ -53,7 +53,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
     public final static int LANDOCEAN = 2;
     public final static int MAX_HEIGHT_INDEX = 50;
     
-    private int displaySetting;
+    public int displaySetting;
     
     /**
      * The ratio for indexing onto the height map array,
@@ -74,8 +74,6 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
     protected List<MThread> threads;
 
     private int prevSubThreadAvg;
-
-    private BufferedImage mapImage;
     
     /**
      * Create a new map
@@ -301,13 +299,13 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
         map.put(index, cell);
     }
 
-    public BufferedImage getImage(){
-        return mapImage;
-    }
     
     @Override
-    public int getCellRenderIndex(int x, int y) {
-        return ((Cell) getCellAt(x, y)).getRenderIndex(displaySetting);
+    public List<Integer> getCellSettings(int x, int y) {
+        
+        List<Integer> settings = new ArrayList<>();
+        
+        return ((Cell) getCellAt(x, y)).render(settings);
     }
 
     @Override
@@ -322,9 +320,4 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
         
         return null;
     }
-
-    public void setDisplaySettings(int setting) {
-        displaySetting = setting;
-    }
-    
 }
