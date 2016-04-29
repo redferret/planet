@@ -136,8 +136,6 @@ public class GeoCell extends Cell {
      */
     public static float minSedimentThickness = 32;
     
-    public static float lowestHeight = 0;
-    
     /**
      * The list of strata for this cell
      */
