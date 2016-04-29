@@ -67,10 +67,9 @@ public class Frame extends JPanel {
     /**
      * Sets the raster of the image to the data given by the SurfaceMap.
      *
-     * @param image
-     * @param map
+     * @param map The SurfaceMap being rendered.
      */
-    private void setRasterOfEachImage(SurfaceMap map) {
+    public void setRasterOfEachImage(SurfaceMap map) {
 
         WritableRaster raster = null;
         List<Integer[]> settings;
