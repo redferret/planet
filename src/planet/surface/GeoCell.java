@@ -136,7 +136,7 @@ public class GeoCell extends Cell {
      */
     public static float minSedimentThickness = 32;
     
-    public static float heightScale = 0;
+    public static float lowestHeight = 0;
     
     /**
      * The list of strata for this cell
@@ -711,7 +711,7 @@ public class GeoCell extends Cell {
         
         switch(settings){
             case HEIGHTMAP:
-                float height = Math.abs((getHeightWithoutOceans() + heightScale)) * 10;
+                float height = Math.abs((getHeightWithoutOceans() + lowestHeight)) * 10;
                 return (int) (height / heightIndexRatio) % MAX_HEIGHT_INDEX;
                 
             case STRATAMAP:
