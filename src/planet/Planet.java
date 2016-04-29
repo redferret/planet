@@ -99,6 +99,8 @@ public abstract class Planet extends MThread {
             }
         }
         curFrame++;
+        
+        if (curFrame >= Long.MAX_VALUE) curFrame = 0;
     }
     
     public final int getGridSize(){
