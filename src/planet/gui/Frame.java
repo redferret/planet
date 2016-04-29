@@ -49,10 +49,8 @@ public class Frame extends JPanel {
 
         if (maps != null) {
 
-            maps.stream().map((map) -> {
+            maps.forEach((SurfaceMap map) -> {
                 setRaster(map);
-                return map;
-            }).forEach((SurfaceMap map) -> {
                 g2d.drawImage(map.getImage(), 0, 0, getWidth(), getHeight(), null);
             });
         }
