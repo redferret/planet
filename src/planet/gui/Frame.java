@@ -88,11 +88,11 @@ public class Frame extends JPanel {
                     });
                 }
                 
-                for (int i = 0; i < settings.size(); i++){
+                for (int i = settings.size() - 1; i >= 0; i--){
                     
                     BufferedImage image = images.get(i);
-                    
                     Integer[] color = settings.get(i);
+                    
                     int rgba[] = {color[0], color[1], color[2], color[3]};
                     
                     raster = image.getRaster();
