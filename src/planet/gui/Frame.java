@@ -65,7 +65,8 @@ public class Frame extends JPanel {
     }
 
     /**
-     * Sets the raster of the image to the data given by the SurfaceMap.
+     * Accesses the given surface map for each cell's render data and
+     * sets each individual image's raster to that data.
      *
      * @param map The SurfaceMap being rendered.
      */
