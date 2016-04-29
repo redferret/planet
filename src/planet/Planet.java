@@ -109,7 +109,7 @@ public abstract class Planet extends MThread {
         float cellHeight = planetSurface.getCellAt(x, y).getHeight();
         
         if (cellHeight < lowestHeight){
-            
+            lowestHeight = cellHeight;
         }
     }
     

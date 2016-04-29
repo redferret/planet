@@ -709,7 +709,7 @@ public class GeoCell extends Cell {
         
         switch(settings){
             case HEIGHTMAP:
-                float height = Math.abs((getHeightWithoutOceans() + lowestHeight)) * 10;
+                float height = Math.abs((getHeightWithoutOceans() + Planet.lowestHeight)) * 10;
                 return (int) (height / heightIndexRatio) % MAX_HEIGHT_INDEX;
                 
             case STRATAMAP:
