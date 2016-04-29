@@ -82,11 +82,13 @@ public class Frame extends JPanel {
 
                 settings = map.getCellSettings(x, y);
 
-                for (int i = 0; i < settings.size(); i++){
-                    
-                    if (images.size() < settings.size()){
+                if (images.isEmpty()){
+                    settings.forEach(setting ->{
                         images.add(new BufferedImage(bounds, bounds, BufferedImage.TYPE_INT_ARGB));
-                    }
+                    });
+                }
+                
+                for (int i = 0; i < settings.size(); i++){
                     
                     BufferedImage image = images.get(i);
                     
