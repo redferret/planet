@@ -30,6 +30,8 @@ public abstract class Cell {
         return y;
     }
 
+    public abstract int getRenderIndex(int settings);
+    
     public String toString() {
         return "[" + x + ", " + y + "]";
     }
