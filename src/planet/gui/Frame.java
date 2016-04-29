@@ -16,7 +16,7 @@ import planet.surface.generics.SurfaceMap;
 public class Frame extends JPanel {
 
     private DisplayAdapter<Graphics2D> adapter;
-    private ArrayList<SurfaceMap> maps;
+    private SurfaceMap map;
 
     public Frame(int w, int h) {
         super();
@@ -31,12 +31,11 @@ public class Frame extends JPanel {
     private void setup(int w, int h, DisplayAdapter adapter) {
         setSize(w, h);
         setBackground(Color.WHITE);
-        maps = new ArrayList<>();
         this.adapter = adapter;
     }
 
     public void registerMap(SurfaceMap map) {
-        maps.add(map);
+        this.map = map;
     }
 
     @Override
@@ -47,12 +46,9 @@ public class Frame extends JPanel {
 
         Graphics2D g2d = (Graphics2D) graphics;
 
-        if (maps != null) {
-
-            maps.forEach((SurfaceMap map) -> {
-                setRaster(map);
-                g2d.drawImage(map.getImage(), 0, 0, getWidth(), getHeight(), null);
-            });
+        if (map != null) {
+            setRaster(map);
+            g2d.drawImage(map.getImage(), 0, 0, getWidth(), getHeight(), null);
         }
 
         if (adapter != null) {
