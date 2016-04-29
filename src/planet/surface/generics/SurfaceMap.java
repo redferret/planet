@@ -300,6 +300,6 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
         
         List<Integer[]> settings = new ArrayList<>();
         
-        return ((Cell) getCellAt(x, y)).render(settings);
+        return getCellAt(x, y).render(settings);
     }
 }
