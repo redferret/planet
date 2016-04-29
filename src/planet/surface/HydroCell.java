@@ -128,6 +128,7 @@ public class HydroCell extends GeoCell {
     private WaterBuffer waterBuffer;
     private SuspendedSediments sedimentMap;
     private float mass;
+    private Integer[][] oceanMap;
     
     public HydroCell(int x, int y) {
         super(x, y);
@@ -165,13 +166,13 @@ public class HydroCell extends GeoCell {
         return getOceanVolume() / Planet.self().getBase();
     }
     
-    public List<Integer> render(List<Integer> settings) {
+    public List<Integer[]> render(List<Integer[]> settings) {
         
         int index = (int) (getOceanMass() / depthIndexRatio);
        
         int setting = index < MAX_WATER_DEPTH_INDEX ? index : MAX_WATER_DEPTH_INDEX - 1;
         
-        settings.add(setting);
+        settings.add(oceanMap[setting]);
         
         return super.render(settings);
         

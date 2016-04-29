@@ -32,7 +32,7 @@ public abstract class Cell {
         return y;
     }
 
-    public abstract List<Integer> render(List<Integer> settings);
+    public abstract List<Integer[]> render(List<Integer[]> settings);
     
     public String toString() {
         return "[" + x + ", " + y + "]";

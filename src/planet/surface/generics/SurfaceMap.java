@@ -43,11 +43,6 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
      */
     public static final int[] HDIR_Y_INDEX = {-1, 0, 1, 0};
 
-    /**
-     * The different color maps to represent the surface
-     */
-    private Color[] heightMap, strataMap;
-    
     public final static int HEIGHTMAP = 0;
     public final static int STRATAMAP = 1;
     public final static int LANDOCEAN = 2;
@@ -301,23 +296,10 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
 
     
     @Override
-    public List<Integer> getCellSettings(int x, int y) {
+    public List<Integer[]> getCellSettings(int x, int y) {
         
-        List<Integer> settings = new ArrayList<>();
+        List<Integer[]> settings = new ArrayList<>();
         
         return ((Cell) getCellAt(x, y)).render(settings);
-    }
-
-    @Override
-    public Object[] renderLookup() {
-        
-        switch(displaySetting){
-            case HEIGHTMAP:
-                return heightMap;
-            case STRATAMAP:
-                return strataMap;
-        }
-        
-        return null;
     }
 }

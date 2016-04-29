@@ -26,16 +26,6 @@ public interface RenderInterface {
      * @param y The y coordinate
      * @return The indexes that map onto the render lookup array
      */
-    public List<Integer> getCellSettings(int x, int y);
-    
-    /**
-     * The render look up is an array of Java Objects and can be used to 
-     * pass information about how to render the map's data. The data
-     * look up value is used as a way to determine which object is
-     * used for rendering.
-     * 
-     * @return The render data for this lookup.
-     */
-    public Object[] renderLookup();
+    public List<Integer[]> getCellSettings(int x, int y);
     
 }

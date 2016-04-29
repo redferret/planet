@@ -187,6 +187,8 @@ public class GeoCell extends Cell {
     
     private long depositAgeTimeStamp;
     
+    private Integer[][] heightMap, strataMap, lavaMap;
+    
     /**
      * Constructs a new GeoCell at the location (x, y) with the parent
      * surface map provided.
@@ -706,13 +708,13 @@ public class GeoCell extends Cell {
         return ((HydroCell) this).getOceanMass() > 0;
     }
     
-    public List<Integer> render(List<Integer> settings) {
+    public List<Integer[]> render(List<Integer[]> settings) {
         int setting;
         switch(Planet.self().getSurface().displaySetting){
             case HEIGHTMAP:
                 float height = Math.abs((getHeightWithoutOceans() + Planet.lowestHeight)) * 10;
                 setting = (int) (height / heightIndexRatio) % MAX_HEIGHT_INDEX;
-                settings.add(setting);
+                settings.add(heightMap[setting]);
                 
                 return settings;
                 
@@ -723,11 +725,11 @@ public class GeoCell extends Cell {
 
                     if (topStratum != null){
                         Layer layerType = topStratum.getLayer();
-                        settings.add(layerType.getID());
+                        settings.add(strataMap[layerType.getID()]);
                         return settings;
                     }
                 }else{
-                    settings.add(Layer.LAVA.getID());
+                    settings.add(lavaMap[Layer.LAVA.getID()]);
                     return settings;
                 }
                 return settings;
