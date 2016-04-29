@@ -50,8 +50,11 @@ public class Frame extends JPanel {
         Graphics2D g2d = (Graphics2D) graphics;
         
         if (map != null) {
-            setRaster(map);
+            setRasterOfEachImage(map);
             
+            images.forEach(image -> {
+                g2d.drawImage(image, 0, 0, getWidth(), getHeight(), null);
+            });
         }
 
         if (adapter != null) {
@@ -67,7 +70,7 @@ public class Frame extends JPanel {
      * @param image
      * @param map
      */
-    private void setRaster(SurfaceMap map) {
+    private void setRasterOfEachImage(SurfaceMap map) {
 
         WritableRaster raster = null;
         List<Integer[]> settings;
