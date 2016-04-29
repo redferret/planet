@@ -71,10 +71,8 @@ public class Frame extends JPanel {
             return;
         }
 
-        WritableRaster raster;
-
         BufferedImage image = map.getImage();
-        raster = image.getRaster();
+        WritableRaster raster = image.getRaster();
 
         Color color;
 
