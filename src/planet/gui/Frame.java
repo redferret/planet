@@ -69,7 +69,7 @@ public class Frame extends JPanel {
      *
      * @param map The SurfaceMap being rendered.
      */
-    public void setRasterOfEachImage(SurfaceMap map) {
+    private void setRasterOfEachImage(SurfaceMap map) {
 
         WritableRaster raster = null;
         List<Integer[]> settings;
