@@ -2,6 +2,8 @@
 
 package planet.surface;
 
+import java.util.List;
+
 
 /**
  * The atmosphere is represented by the AtmoCell. Climate and weather are 
@@ -14,5 +16,7 @@ public class AtmoCell extends BioCell {
         super(x, y);
     }
 
-
+    public List<Integer[]> render(List<Integer[]> settings) {
+        return super.render(settings);
+    }
 }
