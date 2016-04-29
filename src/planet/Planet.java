@@ -1,6 +1,7 @@
 
 package planet;
 
+import planet.surface.GeoCell;
 import planet.surface.Surface;
 import planet.util.MThread;
 
@@ -19,6 +20,8 @@ public abstract class Planet extends MThread {
     private static Planet current;
     private Surface planetSurface;
 
+    public static float lowestHeight = 0;
+    
     public static enum TimeScale {Geological, Evolutionary, Civilization}
     
     /**
@@ -95,10 +98,19 @@ public abstract class Planet extends MThread {
                 for (int x = (y % 2) + m; x < gridSize; x += 2){
                     planetSurface.updateGeology(x, y);
                     planetSurface.updateOceans(x, y);
+                    checkForMinimumHeight(x, y);
                 }
             }
         }
         curFrame++;
+    }
+    
+    private void checkForMinimumHeight(int x, int y){
+        float cellHeight = planetSurface.getCellAt(x, y).getHeight();
+        
+        if (cellHeight < lowestHeight){
+            
+        }
     }
     
     public final int getGridSize(){
