@@ -56,7 +56,7 @@ public class Frame extends JPanel {
                 g2d.drawImage(image, 0, 0, getWidth(), getHeight(), null);
             });
         }
-
+ 
         if (adapter != null) {
             adapter.draw(g2d);
         }
@@ -83,6 +83,11 @@ public class Frame extends JPanel {
                 settings = map.getCellSettings(x, y);
 
                 for (int i = 0; i < settings.size(); i++){
+                    
+                    if (images.size() < settings.size()){
+                        images.add(new BufferedImage(bounds, bounds, BufferedImage.TYPE_INT_ARGB));
+                    }
+                    
                     BufferedImage image = images.get(i);
                     
                     Integer[] color = settings.get(i);
