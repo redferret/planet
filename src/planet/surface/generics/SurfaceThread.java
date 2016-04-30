@@ -1,5 +1,7 @@
 package planet.surface.generics;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import planet.surface.Surface;
 import planet.util.Boundaries;
 import planet.util.MThread;
@@ -51,17 +53,22 @@ public class SurfaceThread extends MThread {
         int ystart  = sw ? lowerYBound : (upperYBound - 1);
         int yinc    = sw ? 1 : -1; 
 
-        for (int b = 0; b < 2; b++){
-            for (int y = ystart; (sw ? (y < upperYBound) : (y >= 0)); y += yinc){
-
-                m = ((b > 0) && (y % 2 == 0)) ? 1 :
-                    ((b > 0) && (y % 2 != 0) ? -1 : 0);
-                
-
-                for (int x = ((y % 2) + m) + lowerXBound; x < upperXBound; x += 2){
-                    update(x, y);
+        try {
+            for (int b = 0; b < 2; b++) {
+                for (int y = ystart; (sw ? (y < upperYBound) : (y >= 0)); y += yinc) {
+                    
+                    m = ((b > 0) && (y % 2 == 0)) ? 1
+                            : ((b > 0) && (y % 2 != 0) ? -1 : 0);
+                    
+                    for (int x = ((y % 2) + m) + lowerXBound; x < upperXBound; x += 2) {
+                        update(x, y);
+                    }
                 }
             }
+        } catch (Exception e) {
+            Logger.getLogger(SurfaceThread.class.getName()).log(Level.SEVERE, 
+                    "An exception occured when updating the surface");
+            e.printStackTrace();
         }
         curFrame++;
         
