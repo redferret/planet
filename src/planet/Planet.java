@@ -113,7 +113,7 @@ public abstract class Planet extends MThread {
     private void update(int x, int y) {
         planetSurface.updateGeology(x, y);
         planetSurface.updateOceans(x, y);
-        planetSurface.checkForMinimumHeight(x, y);
+        planetSurface.updateMinimumHeight(x, y);
     }
     
     public final int getGridSize(){

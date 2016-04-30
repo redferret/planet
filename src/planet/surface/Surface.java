@@ -94,7 +94,7 @@ public final class Surface extends SurfaceMap<AtmoCell> {
     
     public static int planetTemp;
     
-    public static AtomicInteger lowestHeight;
+    public static AtomicInteger absLowestHeight;
     private float averageHeight;
     private long strataBuoyancyStamp;
     
@@ -110,7 +110,7 @@ public final class Surface extends SurfaceMap<AtmoCell> {
         ageStep = 100000;
         GEOUPDATE = 100000;
         waterDepthShale = 10;
-        lowestHeight = new AtomicInteger(Integer.MAX_VALUE);
+        absLowestHeight = new AtomicInteger(Integer.MAX_VALUE);
     }
     
     /**
@@ -464,11 +464,11 @@ public final class Surface extends SurfaceMap<AtmoCell> {
         }
     }
 
-    public void checkForMinimumHeight(int x, int y){
+    public void updateMinimumHeight(int x, int y){
         float cellHeight = getCellAt(x, y).getHeight();
         
-        if (cellHeight < lowestHeight.get()){
-            lowestHeight.set((int) cellHeight);
+        if (cellHeight < absLowestHeight.get()){
+            absLowestHeight.set((int) cellHeight);
         }
     }
     

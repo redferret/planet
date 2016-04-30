@@ -719,7 +719,7 @@ public class GeoCell extends Cell {
         int setting;
         switch(Planet.self().getSurface().displaySetting){
             case HEIGHTMAP:
-                float height = Math.abs((getHeightWithoutOceans() - Surface.lowestHeight.get())) * 10;
+                float height = Math.abs((getHeightWithoutOceans() - Surface.absLowestHeight.get())) * 10;
                 setting = (int) (height / heightIndexRatio) % MAX_HEIGHT_INDEX;
                 settings.add(heightMap[setting]);
                 
