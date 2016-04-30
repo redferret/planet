@@ -1,6 +1,7 @@
 package planet.surface.generics;
 
 
+import planet.surface.Surface;
 import planet.util.Boundaries;
 import planet.util.MThread;
 
@@ -17,7 +18,7 @@ public abstract class SurfaceThread<CellType extends Cell> extends MThread {
      */
     protected Boundaries bounds;
     private int curFrame;
-    protected SurfaceMap<CellType> surface;
+    protected Surface surface;
     
     /**
      * Constructs a new SurfaceThread.
@@ -26,7 +27,7 @@ public abstract class SurfaceThread<CellType extends Cell> extends MThread {
      * @param name The name of this thread
      * @param ref The reference to the surface being worked on
      */
-    public SurfaceThread(int delay, Boundaries bounds, String name, SurfaceMap<CellType> ref) {
+    public SurfaceThread(int delay, Boundaries bounds, String name, Surface ref) {
         
         super(delay, name, false);
 
@@ -62,7 +63,8 @@ public abstract class SurfaceThread<CellType extends Cell> extends MThread {
 
                 for (int x = ((y % 2) + m) + lowerXBound; x < upperXBound; x += 2){
 
-                    update(x, y);
+                    surface.updateGeology(x, y);
+                    surface.updateOceans(x, y);
                 }
             }
         }

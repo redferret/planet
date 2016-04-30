@@ -101,14 +101,18 @@ public abstract class Planet extends MThread {
                     ((b > 0) && (y % 2 != 0) ? -1 : 0);
 
                 for (int x = (y % 2) + m; x < gridSize; x += 2){
-                    planetSurface.updateGeology(x, y);
-                    planetSurface.updateOceans(x, y);
-                    checkForMinimumHeight(x, y);
+                    update(x, y);
                 }
             }
         }
         curFrame++;
         display.repaint();
+    }
+    
+    private void update(int x, int y) {
+        planetSurface.updateGeology(x, y);
+        planetSurface.updateOceans(x, y);
+        checkForMinimumHeight(x, y);
     }
     
     private void checkForMinimumHeight(int x, int y){
