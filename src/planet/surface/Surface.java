@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import planet.Planet;
+import planet.gui.DisplayAdapter;
 
 import planet.surface.GeoCell.SedimentBuffer;
 import planet.surface.generics.SurfaceThread;
@@ -94,6 +95,8 @@ public final class Surface extends SurfaceMap<AtmoCell> {
     
     public static int planetTemp;
     
+    private DisplayAdapter display;
+    
     public static AtomicInteger absLowestHeight;
     private float averageHeight;
     private long strataBuoyancyStamp;
@@ -132,6 +135,9 @@ public final class Surface extends SurfaceMap<AtmoCell> {
         strataBuoyancyStamp = 0;
     }
 
+    public void setDisplay(DisplayAdapter display) {
+        this.display = display;
+    }
     
     public long getPlanetAge(){
         return planetAge.get();
@@ -490,6 +496,8 @@ public final class Surface extends SurfaceMap<AtmoCell> {
             
             geologicalTimeStamp = curPlanetAge;
         }
+        
+        display.repaint();
         
         postUpdate();
     }

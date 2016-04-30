@@ -22,7 +22,7 @@ public class BasicJView extends JFrame implements DisplayAdapter {
         super("Test World");
         
         testWorld = new TestWorld();
-        testWorld.setDisplay(this);
+        testWorld.getSurface().setDisplay(this);
         
         renderFrame = new Frame(SIZE, SIZE);
         renderFrame.registerMap(testWorld.getSurface());

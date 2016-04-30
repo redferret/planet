@@ -13,8 +13,6 @@ public abstract class Planet {
     private int gridSize;
     private int sqrtBase;
     private int base;
-    private long curFrame;
-    private DisplayAdapter display;
     protected TimeScale timescale;
     private static Planet current;
     private Surface planetSurface;
@@ -32,16 +30,11 @@ public abstract class Planet {
     public Planet(int gridSize, int sqrtBase, int planetThreadDelay, int threadCount){
         
         current = this;
-        curFrame = 0;
         this.gridSize = gridSize;
         base = sqrtBase * sqrtBase;
         this.sqrtBase = sqrtBase;
         planetSurface = new Surface(gridSize, planetThreadDelay, threadCount);
         
-    }
-    
-    public void setDisplay(DisplayAdapter display) {
-        this.display = display;
     }
     
     protected final void startThreads(){
