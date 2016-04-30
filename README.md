@@ -20,6 +20,7 @@ roperties file)
 Simply add, to the project.properties file:<br/>
 platforms.JDK_1.8.home=C:\\\Program Files\\\Java\\\jdk1.8.0_73\\\
 <br/>
+Or where ever your JDK home is located.<br/>
 Double \\\ is required otherwise it won't parse correctly.
 
 # IDE
