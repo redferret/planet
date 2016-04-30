@@ -28,8 +28,8 @@ public class BasicJView extends JFrame {
         
         addWindowListener(new JAdapter());
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setSize(SIZE, SIZE);
         setLocationRelativeTo(null);
-        pack();
         setVisible(true);
         
         testWorld.start();

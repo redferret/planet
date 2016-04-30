@@ -1,9 +1,11 @@
  
 package planet.surface;
+import java.awt.Color;
 import java.util.List;
 import planet.Planet;
 import planet.util.TBuffer;
 import static planet.surface.Layer.OCEAN;
+import planet.util.Tools;
 
 /**
  * A HydroCell represents the hydrosphere of the planet. The class contains
@@ -132,6 +134,12 @@ public class HydroCell extends GeoCell {
     
     public HydroCell(int x, int y) {
         super(x, y);
+        
+        Color colors[] = {new Color(0, 0, 153, 128), new Color(0, 102, 255, 192),
+                        new Color(153, 204, 255, 255)};
+        
+        oceanMap = Tools.constructSamples(colors, 50);
+        
         mass = 0;
         waterBuffer = new WaterBuffer();
         sedimentMap = new SuspendedSediments();
