@@ -2,8 +2,9 @@
 package planet.surface;
 
 import java.awt.Color;
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.ConcurrentLinkedDeque;
 import planet.Planet;
 import planet.util.TBuffer;
 import planet.util.Tools;
@@ -114,7 +115,7 @@ public class GeoCell extends Cell {
      */
     private class PlateBuffer extends TBuffer {
         
-        private ConcurrentLinkedDeque<Stratum> strata;
+        private Deque<Stratum> strata;
         private float totalMass, totalVolume;
         
         public PlateBuffer(){
@@ -124,7 +125,7 @@ public class GeoCell extends Cell {
         protected final void init(){
             totalMass = totalVolume = 0;
             if (strata == null){
-                strata = new ConcurrentLinkedDeque<>();
+                strata = new LinkedList<>();
             }else{
                 strata.clear();
             }
@@ -141,7 +142,7 @@ public class GeoCell extends Cell {
     /**
      * The list of strata for this cell
      */
-    private ConcurrentLinkedDeque<Stratum> strata;
+    private Deque<Stratum> strata;
     
     /**
      * When the plates move, data needs to be transfered via buffer
@@ -208,7 +209,7 @@ public class GeoCell extends Cell {
         
         heightMap = Tools.constructSamples(colors, 50);
         
-        strata = new ConcurrentLinkedDeque<>();
+        strata = new LinkedList<>();
         crustType = null;
         erosionBuffer = new SedimentBuffer();
         plateBuffer = new PlateBuffer();
@@ -640,7 +641,7 @@ public class GeoCell extends Cell {
      * Get the strata list
      * @return The list of strata for this cell
      */
-    public ConcurrentLinkedDeque<Stratum> getStrata(){
+    public Deque<Stratum> getStrata(){
         return strata;
     }
     
