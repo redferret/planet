@@ -9,12 +9,11 @@ package planet;
  */
 public class TestWorld extends Planet {
 
-    private static final int CELL_SIZE_M, MAIN_DELAY, DEFAULT_SIZE, 
+    private static final int CELL_SIZE_M, DEFAULT_SIZE, 
             PLANET_DELAY, THREAD_COUNT;
     
     static{
         CELL_SIZE_M = 6;
-        MAIN_DELAY = 1;
         THREAD_COUNT = 1;
         PLANET_DELAY = 1000;
         DEFAULT_SIZE = 256;
