@@ -17,7 +17,7 @@ import planet.util.Tools;
 public class HydroCell extends GeoCell {
 
     public final static int MAX_WATER_DEPTH_INDEX       = 50;
-    public static int depthIndexRatio                   = 50 / MAX_WATER_DEPTH_INDEX;
+    public static int depthIndexRatio                   = 2000 / MAX_WATER_DEPTH_INDEX;
     
     public static int rainProb = 1000;
     public static float rainScale = 2.5f;
@@ -140,7 +140,7 @@ public class HydroCell extends GeoCell {
         
         oceanMap = Tools.constructSamples(colors, MAX_WATER_DEPTH_INDEX);
         
-        mass = 10;
+        mass = 0;
         waterBuffer = new WaterBuffer();
         sedimentMap = new SuspendedSediments();
     }
