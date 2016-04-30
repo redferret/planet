@@ -83,34 +83,6 @@ public abstract class Planet {
         return base;
     }
     
-    public void updateSurface(){
-        boolean sw  = (curFrame % 2) == 0;
-        int l       = gridSize, m;
-
-        int ystart  = sw ? 0 : (l - 1);
-        int yinc    = sw ? 1 : -1;
-
-        for (int b = 0; b < 2; b++){
-            for (int y = ystart; (sw ? (y < l) : (y >= 0)); y += yinc){
-
-                m = ((b > 0) && (y % 2 == 0)) ? 1 :
-                    ((b > 0) && (y % 2 != 0) ? -1 : 0);
-
-                for (int x = (y % 2) + m; x < gridSize; x += 2){
-                    update(x, y);
-                }
-            }
-        }
-        curFrame++;
-        display.repaint();
-    }
-    
-    private void update(int x, int y) {
-        planetSurface.updateGeology(x, y);
-        planetSurface.updateOceans(x, y);
-        planetSurface.updateMinimumHeight(x, y);
-    }
-    
     public final int getGridSize(){
         return gridSize;
     }
