@@ -1,6 +1,5 @@
 package planet.surface.generics;
 
-
 import planet.surface.Surface;
 import planet.util.Boundaries;
 import planet.util.MThread;
@@ -9,9 +8,8 @@ import planet.util.MThread;
  * A surface can be broken up into sections where a SurfaceThread can modify
  * and control that section. 
  * @author Richard DeSilvey
- * @param <CellType> The cell being worked on.
  */
-public abstract class SurfaceThread<CellType extends Cell> extends MThread {
+public class SurfaceThread extends MThread {
 
     /**
      * Lower bounds are inclusive, upper bounds are exclusive
@@ -28,7 +26,6 @@ public abstract class SurfaceThread<CellType extends Cell> extends MThread {
      * @param ref The reference to the surface being worked on
      */
     public SurfaceThread(int delay, Boundaries bounds, String name, Surface ref) {
-        
         super(delay, name, false);
 
         this.bounds = bounds;
@@ -64,7 +61,7 @@ public abstract class SurfaceThread<CellType extends Cell> extends MThread {
                 for (int x = ((y % 2) + m) + lowerXBound; x < upperXBound; x += 2){
                     surface.updateGeology(x, y);
                     surface.updateOceans(x, y);
-                    surface.checkForMinimumHeight(x, y);
+                    surface.updateMinimumHeight(x, y);
                 }
             }
         }
@@ -74,23 +71,6 @@ public abstract class SurfaceThread<CellType extends Cell> extends MThread {
             curFrame = 0;
         }
         
-        postUpdate();
-        
     }
-    
-    /**
-     * This method is called after the update(x, y) method is called.
-     * This allows a surface map to apply buffers or do some other
-     * special type of update to the surface.
-     */
-    protected abstract void postUpdate();
-    
-    /**
-     * This method is called with the coordinates for a cell location
-     * that is ready to be updated.
-     * @param x The x coordinate
-     * @param y The y coordinate
-     */
-    protected abstract void update(int x, int y);
     
 }
