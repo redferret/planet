@@ -65,7 +65,7 @@ public class Frame extends JPanel {
         for (int x = 0; x < bounds; x++) {
             for (int y = 0; y < bounds; y++) {
 
-                settings = map.getCellSettings(x, y);
+                settings = map.getCellData(x, y);
 
                 if (images.isEmpty()){
                     settings.forEach(setting ->{

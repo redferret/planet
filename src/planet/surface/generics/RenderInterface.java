@@ -26,6 +26,6 @@ public interface RenderInterface {
      * @param y The y coordinate
      * @return The indexes that map onto the render lookup array
      */
-    public List<Integer[]> getCellSettings(int x, int y);
+    public List<Integer[]> getCellData(int x, int y);
     
 }

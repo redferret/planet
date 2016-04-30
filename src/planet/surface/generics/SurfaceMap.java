@@ -294,7 +294,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
 
     
     @Override
-    public List<Integer[]> getCellSettings(int x, int y) {
+    public List<Integer[]> getCellData(int x, int y) {
         
         List<Integer[]> settings = new ArrayList<>();
         
