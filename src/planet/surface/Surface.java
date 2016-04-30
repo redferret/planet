@@ -122,6 +122,7 @@ public final class Surface extends SurfaceMap<AtmoCell> {
     public Surface(int worldSize, int delay, int threadCount) {
         super(worldSize, delay, "Geosphere", threadCount);
         reset();
+        setupThreads(threadCount, delay);
     }
 
     public void reset(){

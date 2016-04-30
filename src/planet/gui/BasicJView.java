@@ -34,7 +34,7 @@ public class BasicJView extends JFrame implements DisplayAdapter {
         setLocationRelativeTo(null);
         setVisible(true);
         
-        testWorld.start();
+        testWorld.play();
     }
     
     public static void main(String[] args){

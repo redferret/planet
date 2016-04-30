@@ -2,15 +2,13 @@
 package planet;
 
 import planet.gui.DisplayAdapter;
-import planet.surface.GeoCell;
 import planet.surface.Surface;
-import planet.util.MThread;
 
 /**
  * The class that encapsulates a surface and keeps track of the timescale.
  * @author Richard DeSilvey
  */
-public abstract class Planet extends MThread {
+public abstract class Planet {
     
     private int gridSize;
     private int sqrtBase;
@@ -28,15 +26,10 @@ public abstract class Planet extends MThread {
      *
      * @param gridSize The number of cells
      * @param sqrtBase The length of one side of a cell in meters.
-     * @param mainThreadDelay The time to delay between each frame in
-     * milliseconds.
      * @param planetThreadDelay How fast does the planet thread update
      * @param threadCount The number of threads updating the map
      */
-    public Planet(int gridSize, int sqrtBase, int mainThreadDelay, 
-            int planetThreadDelay, int threadCount){
-        
-        super(mainThreadDelay, "Main~", true);
+    public Planet(int gridSize, int sqrtBase, int planetThreadDelay, int threadCount){
         
         current = this;
         curFrame = 0;
@@ -61,10 +54,12 @@ public abstract class Planet extends MThread {
     }
     
     public final void play(){
+        planetSurface.playAll();
         planetSurface.play();
     }
     
     public final void pause(){
+        planetSurface.pauseAll();
         planetSurface.pause();
     }
     
