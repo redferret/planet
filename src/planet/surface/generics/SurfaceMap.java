@@ -71,16 +71,16 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
     /**
      * Create a new map
      *
-     * @param width Width of the map
-     * @param height Height of the map
+     * @param worldSize The size of the map
      * @param delay The number of frames to delay updating
      * @param threadName The name of the thread
+     * @param threadCount The number of threads that will work on the map
      */
-    public SurfaceMap(int width, int height, int delay, String threadName) {
+    public SurfaceMap(int worldSize, int delay, String threadName, int threadCount) {
 
         super(delay, threadName, true);
 
-        map = new ConcurrentHashMap<>();
+        map = new ConcurrentHashMap<>(worldSize, 2, threadCount);
         threads = new ArrayList<>();
         prevSubThreadAvg = 0;
         displaySetting = HEIGHTMAP;

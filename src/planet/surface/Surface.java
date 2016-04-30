@@ -115,12 +115,12 @@ public final class Surface extends SurfaceMap<AtmoCell> {
     
     /**
      * Constructs a new Surface.
-     * @param width The width of the surface
-     * @param height The height of the surface
+     * @param worldSize The size of the surface
      * @param delay The amount of time to delay each frame in milliseconds.
+     * @param threadCount The number of threads that will work on the map
      */
-    public Surface(int width, int height, int delay) {
-        super(width, height, delay, "Geosphere");
+    public Surface(int worldSize, int delay, int threadCount) {
+        super(worldSize, delay, "Geosphere", threadCount);
         reset();
     }
 
