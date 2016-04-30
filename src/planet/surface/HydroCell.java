@@ -16,9 +16,9 @@ import planet.util.Tools;
  */
 public class HydroCell extends GeoCell {
 
-    public final static int MAX_WATER_DEPTH_INDEX       = 50;
-    public static int depthIndexRatio                   = 2000 / MAX_WATER_DEPTH_INDEX;
-    
+    public final static int MAX_WATER_DEPTH_INDEX = 50;
+    public static int depthIndexRatio = 10000 / MAX_WATER_DEPTH_INDEX;
+
     public static int rainProb = 1000;
     public static float rainScale = 2.5f;
     
