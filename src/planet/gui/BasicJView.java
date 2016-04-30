@@ -20,15 +20,15 @@ public class BasicJView extends JFrame {
         super("Test World");
         
         testWorld = new TestWorld();
-        testWorld.start();
-        
         renderFrame = new Frame(SIZE, SIZE);
+        renderFrame.registerMap(testWorld.getSurface());
+        add(renderFrame);
         
         setLocationRelativeTo(null);
-        
-        add(renderFrame);
         pack();
         setVisible(true);
+        
+        testWorld.start();
     }
     
 }
