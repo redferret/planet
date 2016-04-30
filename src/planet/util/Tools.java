@@ -21,7 +21,6 @@ import static planet.surface.generics.SurfaceMap.DIR_Y_INDEX;
  */
 public class Tools {
 
-    
     /**
      * To help create height maps, heat maps, etc, the method
      * takes a list of colors, the colors are then interpolated with
@@ -34,11 +33,10 @@ public class Tools {
      * @param width The number of colors after interpolation
      * @return The samples array
      */
-    public static BufferedImage constructImageLookup(Color[] colors, int width){
+    public static Integer[][] constructSamples(Color[] colors, int width){
         
         if (colors.length > width){
-            throw new IndexOutOfBoundsException("The width of the gradient is invalid: Width is " + width + 
-                    " but expected width to be greater than " + colors.length);
+            throw new IndexOutOfBoundsException("The width of the gradient is invalid");
         }
         
         float[] dist = new float[colors.length];
@@ -52,7 +50,6 @@ public class Tools {
         }
         
         dist[colors.length - 1] = 1.0f;
-        
         
         return constructGradient(colors, dist, width);
         
@@ -69,7 +66,9 @@ public class Tools {
      * @param width The number of colors after interpolation
      * @return The samples array
      */
-    public static BufferedImage constructGradient(Color[] colors, float[] dist, int width){
+    public static Integer[][] constructGradient(Color[] colors, float[] dist, int width){
+        
+        Integer[][] colorArray = new Integer[width][4];
         
         BufferedImage buffer = new BufferedImage(width, 1, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = buffer.createGraphics();
@@ -83,7 +82,15 @@ public class Tools {
         g2d.fillRect(0, 0, width, 1);
         g2d.dispose();
         
-        return buffer;
+        int[][] b = new int[width][4];
+        for (int x = 0, y = 0; x < width; x++){
+            buffer.getRaster().getPixel(x, y, b[x]);
+            for (int a = 0; a < 4; a ++){
+                colorArray[x][a] = b[x][a];
+            }
+        }
+        
+        return colorArray;
         
     }
     

@@ -1,11 +1,12 @@
 
 package planet.surface;
 
+import java.awt.Color;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import planet.Planet;
 import planet.util.TBuffer;
-
+import planet.util.Tools;
 import planet.surface.generics.Cell;
 
 import static planet.surface.Surface.*;
@@ -187,7 +188,7 @@ public class GeoCell extends Cell {
     
     private long depositAgeTimeStamp;
     
-    private Integer[][] heightMap, strataMap, lavaMap;
+    private static Integer[][] heightMap, strataMap, lavaMap;
     
     /**
      * Constructs a new GeoCell at the location (x, y) with the parent
@@ -201,6 +202,11 @@ public class GeoCell extends Cell {
     }
 
     private void setup(){
+        
+        Color[] colors = {new Color(255, 255, 204), new Color(51, 153, 51),
+                        new Color(157, 166, 175)};
+        
+        heightMap = Tools.constructSamples(colors, 50);
         
         strata = new ConcurrentLinkedDeque<>();
         crustType = null;

@@ -4,7 +4,6 @@ package planet;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import planet.Planet;
 import planet.surface.generics.SurfaceMap;
 
 /**
@@ -22,6 +21,9 @@ public class TestWorld extends Planet {
         DEFAULT_SIZE = 256;
     }
     
+    /**
+     * Constructs a default test world with a size of 256
+     */
     public TestWorld(){
         this(DEFAULT_SIZE);
     }
