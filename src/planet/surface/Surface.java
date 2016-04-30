@@ -489,7 +489,7 @@ public final class Surface extends SurfaceMap<AtmoCell> {
     @Override
     public AtmoCell generateCell(int x, int y) {
         AtmoCell gen = new AtmoCell(x, y);
-        gen.add(BASALT, 100000, true);
+        gen.add(BASALT, rand.nextInt(100000), true);
         return gen;
     }
 
