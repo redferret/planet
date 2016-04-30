@@ -67,10 +67,6 @@ public class SurfaceThread extends MThread {
         }
         curFrame++;
         
-        if (curFrame == Integer.MAX_VALUE){
-            curFrame = 0;
-        }
-        
     }
     
 }
