@@ -17,6 +17,7 @@ public abstract class Planet {
     private static Planet current;
     private Surface planetSurface;
 
+    public static final int DEFAULT_PLANET_DELAY = 1000;
     public static enum TimeScale {Geological, Evolutionary, Civilization}
     
     /**
@@ -24,16 +25,16 @@ public abstract class Planet {
      *
      * @param gridSize The number of cells
      * @param sqrtBase The length of one side of a cell in meters.
-     * @param planetThreadDelay How fast does the planet thread update
+     * @param surfaceThreadsDelay How fast does the planet thread update
      * @param threadCount The number of threads updating the map
      */
-    public Planet(int gridSize, int sqrtBase, int planetThreadDelay, int threadCount){
+    public Planet(int gridSize, int sqrtBase, int surfaceThreadsDelay, int threadCount){
         
         current = this;
         this.gridSize = gridSize;
         base = sqrtBase * sqrtBase;
         this.sqrtBase = sqrtBase;
-        planetSurface = new Surface(gridSize, planetThreadDelay, threadCount);
+        planetSurface = new Surface(gridSize, DEFAULT_PLANET_DELAY, surfaceThreadsDelay, threadCount);
         
     }
     
