@@ -11,7 +11,7 @@ import planet.TestWorld;
  *
  * @author Richard DeSilvey
  */
-public class BasicJView extends JFrame {
+public class BasicJView extends JFrame implements DisplayAdapter {
     
     private Frame renderFrame;
     private TestWorld testWorld;
@@ -22,6 +22,8 @@ public class BasicJView extends JFrame {
         super("Test World");
         
         testWorld = new TestWorld();
+        testWorld.setDisplay(this);
+        
         renderFrame = new Frame(SIZE, SIZE);
         renderFrame.registerMap(testWorld.getSurface());
         add(renderFrame);

@@ -1,6 +1,7 @@
 
 package planet;
 
+import planet.gui.DisplayAdapter;
 import planet.surface.GeoCell;
 import planet.surface.Surface;
 import planet.util.MThread;
@@ -15,7 +16,7 @@ public abstract class Planet extends MThread {
     private int sqrtBase;
     private int base;
     private long curFrame;
-    
+    private DisplayAdapter display;
     protected TimeScale timescale;
     private static Planet current;
     private Surface planetSurface;
@@ -43,6 +44,10 @@ public abstract class Planet extends MThread {
         this.sqrtBase = sqrtBase;
         planetSurface = new Surface(gridSize, gridSize, 1000);
         
+    }
+    
+    public void setDisplay(DisplayAdapter display) {
+        this.display = display;
     }
     
     protected final void startThreads(){
@@ -103,6 +108,7 @@ public abstract class Planet extends MThread {
             }
         }
         curFrame++;
+        display.repaint();
     }
     
     private void checkForMinimumHeight(int x, int y){

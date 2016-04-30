@@ -358,8 +358,14 @@ public final class Surface extends SurfaceMap<AtmoCell> {
         WaterBuffer toUpdateWaterBuffer = cellToUpdate.getWaterBuffer();
         WaterBuffer lowestHydroBuffer = lowestCell.getWaterBuffer();
         
+        toUpdateWaterBuffer.applyWaterBuffer();
+        lowestHydroBuffer.applyWaterBuffer();
+        
         SuspendedSediments lowestSSediments = cellToUpdate.getSedimentMap();
         SuspendedSediments toUpdateSSediments = lowestCell.getSedimentMap();
+        
+        lowestSSediments.applyBuffer();
+        toUpdateSSediments.applyBuffer();
         
         if (rand.nextInt(rainProb) == 0) {
             toUpdateWaterBuffer.transferWater(rainScale);

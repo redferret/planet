@@ -10,10 +10,9 @@ package planet.gui;
  * engine.
  * 
  * @author Richard DeSilvey
- * @param <Device> The graphics device being used for this adapter
  */
-public interface DisplayAdapter<Device> {
+public interface DisplayAdapter {
     
-    public void draw(Device device);
+    public void repaint();
     
 }

@@ -16,24 +16,13 @@ import planet.surface.generics.SurfaceMap;
  */
 public class Frame extends JPanel {
 
-    private DisplayAdapter<Graphics2D> adapter;
     private SurfaceMap map;
     private List<BufferedImage> images;
 
     public Frame(int w, int h) {
         super();
-        setup(w, h, null);
-    }
-
-    public Frame(int w, int h, DisplayAdapter adapter) {
-        super();
-        setup(w, h, adapter);
-    }
-
-    private void setup(int w, int h, DisplayAdapter adapter) {
         setSize(w, h);
         setBackground(Color.WHITE);
-        this.adapter = adapter;
         images = new ArrayList<>();
     }
 
@@ -51,14 +40,10 @@ public class Frame extends JPanel {
         
         if (map != null) {
             setRasterOfEachImage(map);
-            
-            images.forEach(image -> {
-                g2d.drawImage(image, 0, 0, getWidth(), getHeight(), null);
-            });
-        }
- 
-        if (adapter != null) {
-            adapter.draw(g2d);
+
+            for (int i = images.size() - 1; i >= 0; i--){
+                g2d.drawImage(images.get(i), 0, 0, getWidth(), getHeight(), null);
+            }
         }
 
         g2d.dispose();
@@ -88,7 +73,7 @@ public class Frame extends JPanel {
                     });
                 }
                 
-                for (int i = settings.size() - 1; i >= 0; i--){
+                for (int i = 0; i < settings.size(); i++){
                     
                     BufferedImage image = images.get(i);
                     Integer[] color = settings.get(i);

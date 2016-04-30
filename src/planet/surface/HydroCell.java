@@ -16,8 +16,8 @@ import planet.util.Tools;
  */
 public class HydroCell extends GeoCell {
 
-    public final static int MAX_WATER_DEPTH_INDEX       = 100;
-    public static int depthIndexRatio                   = 2000 / MAX_WATER_DEPTH_INDEX;
+    public final static int MAX_WATER_DEPTH_INDEX       = 50;
+    public static int depthIndexRatio                   = 50 / MAX_WATER_DEPTH_INDEX;
     
     public static int rainProb = 1000;
     public static float rainScale = 2.5f;
@@ -26,7 +26,7 @@ public class HydroCell extends GeoCell {
      * The amount of water that will continue to hold any sediments. All
      * sediments are dumped if the ocean mass reaches this capacity.
      */
-    public static float oceanSedimentCapacity;
+    public static float oceanSedimentCapacity = 50;
 
     public static float evapScale = 2.5f;
 
@@ -54,23 +54,23 @@ public class HydroCell extends GeoCell {
         
         public void transferWater(float amount) {
 
-            if (!waterBuffer.bufferSet()) {
-                waterBuffer.bufferSet(true);
+            if (!bufferSet()) {
+                bufferSet(true);
             }
 
-            waterBuffer.mass += amount;
+            mass += amount;
 
         }
 
         public void applyWaterBuffer(){
-            if (waterBuffer.bufferSet()) {
-                addOceanMass(waterBuffer.mass);
+            if (bufferSet()) {
+                addOceanMass(mass);
 
                 if (mass < 0) {
                     mass = 0;
                 }
 
-                waterBuffer.resetBuffer();
+                resetBuffer();
             }
         }
         
@@ -135,12 +135,12 @@ public class HydroCell extends GeoCell {
     public HydroCell(int x, int y) {
         super(x, y);
         
-        Color colors[] = {new Color(0, 0, 153, 128), new Color(0, 102, 255, 192),
-                        new Color(153, 204, 255, 255)};
+        Color colors[] = {new Color(0, 0, 0, 0), new Color(153, 204, 255, 128), new Color(0, 102, 255, 192),
+                        new Color(0, 0, 153, 255)};
         
-        oceanMap = Tools.constructSamples(colors, 50);
+        oceanMap = Tools.constructSamples(colors, MAX_WATER_DEPTH_INDEX);
         
-        mass = 0;
+        mass = 10;
         waterBuffer = new WaterBuffer();
         sedimentMap = new SuspendedSediments();
     }
