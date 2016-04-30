@@ -2,9 +2,6 @@
 
 package planet;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import planet.surface.generics.SurfaceMap;
 
 /**
  * This class is used for testing purposes.
