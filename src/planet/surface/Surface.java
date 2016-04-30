@@ -1,10 +1,10 @@
 
 package planet.surface;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import planet.Planet;
@@ -94,8 +94,7 @@ public final class Surface extends SurfaceMap<AtmoCell> {
     
     public static int planetTemp;
     
-    
-    private long threadTime;
+    public static AtomicInteger lowestHeight;
     private float averageHeight;
     private long strataBuoyancyStamp;
     
@@ -111,6 +110,7 @@ public final class Surface extends SurfaceMap<AtmoCell> {
         ageStep = 100000;
         GEOUPDATE = 100000;
         waterDepthShale = 10;
+        lowestHeight = new AtomicInteger(Integer.MAX_VALUE);
     }
     
     /**
@@ -129,7 +129,6 @@ public final class Surface extends SurfaceMap<AtmoCell> {
         geologicalTimeStamp = 0;
         averageHeight = 0;
         strataBuoyancyStamp = 0;
-        threadTime = 0;
     }
 
     
@@ -465,6 +464,14 @@ public final class Surface extends SurfaceMap<AtmoCell> {
         }
     }
 
+    public void checkForMinimumHeight(int x, int y){
+        float cellHeight = getCellAt(x, y).getHeight();
+        
+        if (cellHeight < lowestHeight.get()){
+            lowestHeight.set((int) cellHeight);
+        }
+    }
+    
     public float getAverageHeight(){
         return averageHeight;
     }

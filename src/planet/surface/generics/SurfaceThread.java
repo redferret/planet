@@ -62,9 +62,9 @@ public abstract class SurfaceThread<CellType extends Cell> extends MThread {
                 
 
                 for (int x = ((y % 2) + m) + lowerXBound; x < upperXBound; x += 2){
-
                     surface.updateGeology(x, y);
                     surface.updateOceans(x, y);
+                    surface.checkForMinimumHeight(x, y);
                 }
             }
         }

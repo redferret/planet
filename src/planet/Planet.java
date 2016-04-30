@@ -21,8 +21,6 @@ public abstract class Planet extends MThread {
     private static Planet current;
     private Surface planetSurface;
 
-    public static float lowestHeight = 0;
-
     public static enum TimeScale {Geological, Evolutionary, Civilization}
     
     /**
@@ -112,15 +110,7 @@ public abstract class Planet extends MThread {
     private void update(int x, int y) {
         planetSurface.updateGeology(x, y);
         planetSurface.updateOceans(x, y);
-        checkForMinimumHeight(x, y);
-    }
-    
-    private void checkForMinimumHeight(int x, int y){
-        float cellHeight = planetSurface.getCellAt(x, y).getHeight();
-        
-        if (cellHeight < lowestHeight){
-            lowestHeight = cellHeight;
-        }
+        planetSurface.checkForMinimumHeight(x, y);
     }
     
     public final int getGridSize(){
