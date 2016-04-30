@@ -59,14 +59,18 @@ public class SurfaceThread extends MThread {
                 
 
                 for (int x = ((y % 2) + m) + lowerXBound; x < upperXBound; x += 2){
-                    surface.updateGeology(x, y);
-                    surface.updateOceans(x, y);
-                    surface.updateMinimumHeight(x, y);
+                    update(x, y);
                 }
             }
         }
         curFrame++;
         
     }
-    
+   
+    private void update(int x, int y) {
+        surface.updateGeology(x, y);
+        surface.updateOceans(x, y);
+        surface.updateMinimumHeight(x, y);
+    }
+
 }
