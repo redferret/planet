@@ -35,6 +35,7 @@ public class HydroCell extends GeoCell {
      */
     public static float sedimentCapacity = 0.25f;
     public static float MIN_ANGLE = 0.0002f;
+    private static Integer[][] oceanMap;
     
     /**
      * Buffer when moving water to other cells
@@ -127,18 +128,19 @@ public class HydroCell extends GeoCell {
         }
     }
     
-    private WaterBuffer waterBuffer;
-    private SuspendedSediments sedimentMap;
-    private float mass;
-    private Integer[][] oceanMap;
-    
-    public HydroCell(int x, int y) {
-        super(x, y);
-        
+    static {
         Color colors[] = {new Color(0, 0, 0, 0), new Color(153, 204, 255, 128), new Color(0, 102, 255, 192),
                         new Color(0, 0, 153, 255)};
         
         oceanMap = Tools.constructSamples(colors, MAX_WATER_DEPTH_INDEX);
+    }
+    
+    private WaterBuffer waterBuffer;
+    private SuspendedSediments sedimentMap;
+    private float mass;
+    
+    public HydroCell(int x, int y) {
+        super(x, y);
         
         mass = 0;
         waterBuffer = new WaterBuffer();
