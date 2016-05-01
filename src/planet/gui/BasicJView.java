@@ -4,6 +4,9 @@ package planet.gui;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.function.Consumer;
 import javax.swing.JFrame;
 import planet.TestWorld;
 
@@ -15,11 +18,16 @@ public class BasicJView extends JFrame implements DisplayAdapter {
     
     private Frame renderFrame;
     private TestWorld testWorld;
+    private Deque<Integer> averages;
+    private int totalAvg;
     
     private static final int SIZE = 512;
     
     public BasicJView(){
         super("Test World");
+        
+        averages = new LinkedList<>();
+        totalAvg = 0;
         
         testWorld = new TestWorld();
         testWorld.getSurface().setDisplay(this);
@@ -42,7 +50,18 @@ public class BasicJView extends JFrame implements DisplayAdapter {
     @Override
     public void repaint() {
         super.repaint();
-        setTitle("Age: " + testWorld.getSurface().getPlanetAge());
+        
+        averages.add(testWorld.getSurface().getAverageThreadTime());
+        
+        if (averages.size() == 10){
+            totalAvg = 0;
+            for (;!averages.isEmpty();){
+                totalAvg += averages.poll();
+            }
+            totalAvg /= 25;
+        }
+        
+        setTitle("Age: " + testWorld.getSurface().getPlanetAge() + " F:" + totalAvg);
     }
     
     public static void main(String[] args){
