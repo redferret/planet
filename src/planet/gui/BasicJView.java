@@ -6,7 +6,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Deque;
 import java.util.LinkedList;
-import java.util.function.Consumer;
 import javax.swing.JFrame;
 import planet.TestWorld;
 
