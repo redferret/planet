@@ -61,7 +61,6 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
      */
     private Map<Integer, CellType> map;
 
-    private Cell[] tempMap;
     /**
      * Helper threads that would work on the map.
      */
@@ -83,7 +82,6 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
 
         int capacity = worldSize * worldSize;
         map = new ConcurrentHashMap<>(capacity, 1, threadCount);
-        tempMap = new Cell[capacity];
         threads = new ArrayList<>();
         prevSubThreadAvg = 0;
         displaySetting = HEIGHTMAP;
@@ -302,7 +300,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
         int x = cell.getX(), y = cell.getY();
         int width = Planet.self().getGridSize();
         int index = (width * y) + x;
-        tempMap[index] = cell;
+        map.put(index, cell);
     }
 
     
