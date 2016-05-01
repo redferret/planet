@@ -55,7 +55,7 @@ public class BasicJView extends JFrame implements DisplayAdapter {
         
         if (averages.size() == 10){
             totalAvg = 0;
-            for (;!averages.isEmpty();){
+            while(!averages.isEmpty()){
                 totalAvg += averages.poll();
             }
             totalAvg /= 25;
