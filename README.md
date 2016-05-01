@@ -7,7 +7,7 @@ Simply run Ant on the root directory where the build XML file is located. Newer 
 There is currently a bug in the project's properties file where the JDK home is not set, if you get this error when building:
 <p>
 <code>
-C:\Users\richard.desilvey\git\planet\nbproject\build-impl.xml:86: The J2SE Platform is not correctly set up.
+C:\Users\rich\git\planet\nbproject\build-impl.xml:86: The J2SE Platform is not correctly set up.
  Your active platform is: JDK_1.8, but the corresponding property "platforms.JDK_1.8.home" is not found in the project's
  properties files.
  Either open the project in the IDE and setup the Platform with the same name or add it manually.
