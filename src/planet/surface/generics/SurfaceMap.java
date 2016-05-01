@@ -218,7 +218,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
         int gridSize = Planet.self().getGridSize();
 
         int totalCells = (gridSize * gridSize);
-        int flagUpdate = totalCells / 16;
+        int flagUpdate = totalCells / 4;
         int generated = 0;
         // Initialize the map
         Logger.getLogger(SurfaceMap.class.getName()).log(Level.INFO, "Setting up map");
