@@ -39,6 +39,12 @@ public class BasicJView extends JFrame implements DisplayAdapter {
         testWorld.getSurface().setDelay(250);
     }
     
+    @Override
+    public void repaint() {
+        super.repaint();
+        setTitle("Age: " + testWorld.getSurface().getPlanetAge());
+    }
+    
     public static void main(String[] args){
         new BasicJView();
     }
