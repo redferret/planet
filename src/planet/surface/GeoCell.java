@@ -191,6 +191,13 @@ public class GeoCell extends Cell {
     
     private static Integer[][] heightMap, strataMap, lavaMap;
     
+    static {
+        Color[] colors = {new Color(255, 255, 204), new Color(51, 153, 51),
+                        new Color(157, 166, 175)};
+        
+        heightMap = Tools.constructSamples(colors, 50);
+    }
+    
     /**
      * Constructs a new GeoCell at the location (x, y) with the parent
      * surface map provided.
@@ -203,11 +210,6 @@ public class GeoCell extends Cell {
     }
 
     private void setup(){
-        
-        Color[] colors = {new Color(255, 255, 204), new Color(51, 153, 51),
-                        new Color(157, 166, 175)};
-        
-        heightMap = Tools.constructSamples(colors, 50);
         
         strata = new LinkedList<>();
         crustType = null;

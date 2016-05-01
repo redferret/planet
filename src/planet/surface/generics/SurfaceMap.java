@@ -59,8 +59,9 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
      * The map containing the references to each data point on the surface.
      * Hashtable is used because it's thread safe.
      */
-    private Map<Integer, Cell> map;
+    private Map<Integer, CellType> map;
 
+    private Cell[] tempMap;
     /**
      * Helper threads that would work on the map.
      */
@@ -80,7 +81,9 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
 
         super(delay, threadName, true);
 
-        map = new ConcurrentHashMap<>(worldSize, 2, threadCount);
+        int capacity = worldSize * worldSize;
+        map = new ConcurrentHashMap<>(capacity, 1, threadCount);
+        tempMap = new Cell[capacity];
         threads = new ArrayList<>();
         prevSubThreadAvg = 0;
         displaySetting = HEIGHTMAP;
@@ -216,13 +219,23 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
     public final void setupMap() {
         int gridSize = Planet.self().getGridSize();
 
+        int totalCells = (gridSize * gridSize);
+        int flagUpdate = totalCells / 16;
+        int generated = 0;
         // Initialize the map
         Logger.getLogger(SurfaceMap.class.getName()).log(Level.INFO, "Setting up map");
         for (int x = 0; x < gridSize; x++) {
             for (int y = 0; y < gridSize; y++) {
                 setCellAt(generateCell(x, y));
+                generated++;
+                if (generated % flagUpdate == 0){
+                    double finished = (double)generated / (double)totalCells;
+                    Logger.getLogger(SurfaceMap.class.getName()).log(Level.INFO, 
+                            "Cells created: {0}% finished", finished * 100);
+                }
             }
         }
+        Logger.getLogger(SurfaceMap.class.getName()).log(Level.INFO, "Done");
     }
 
     /**
@@ -289,7 +302,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
         int x = cell.getX(), y = cell.getY();
         int width = Planet.self().getGridSize();
         int index = (width * y) + x;
-        map.put(index, cell);
+        tempMap[index] = cell;
     }
 
     
