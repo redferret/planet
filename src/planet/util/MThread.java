@@ -1,6 +1,8 @@
 
 package planet.util;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 
 /**
  *
@@ -25,18 +27,19 @@ public abstract class MThread extends Thread {
     
     
     private boolean continuous;
-    private int timeLapse;
+    private AtomicInteger timeLapse;
     
     public MThread(int delay, String name, boolean continuous){
         miliSeconds = delay;
         this.continuous = continuous;
         running = false;
         isFinished = false;
+        timeLapse = new AtomicInteger(0);
         setName(name);
     }
     
     public int timeLapse(){
-        return timeLapse;
+        return timeLapse.get();
     }
     
     public void setDelay(int delay){
@@ -71,7 +74,7 @@ public abstract class MThread extends Thread {
                     
                     update();
                     
-                    timeLapse = (int) (System.currentTimeMillis() - start);
+                    timeLapse.getAndSet((int) (System.currentTimeMillis() - start));
                 }
                 
                 sleep(miliSeconds);
