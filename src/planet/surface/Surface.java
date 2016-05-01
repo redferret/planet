@@ -98,7 +98,6 @@ public final class Surface extends SurfaceMap<AtmoCell> {
     private DisplayAdapter display;
     
     public static AtomicInteger absLowestHeight;
-    private float averageHeight;
     private long strataBuoyancyStamp;
     
     /**
@@ -132,7 +131,6 @@ public final class Surface extends SurfaceMap<AtmoCell> {
     public void reset(){
         planetAge = new AtomicLong(0);
         geologicalTimeStamp = 0;
-        averageHeight = 0;
         strataBuoyancyStamp = 0;
     }
 
@@ -446,8 +444,7 @@ public final class Surface extends SurfaceMap<AtmoCell> {
         boolean geoScale = Planet.self().getTimeScale() == Planet.TimeScale.Geological;
 
         GeoCell cell = getCellAt(x, y);
-        averageHeight += cell.getHeightWithoutOceans();
-
+        
         // Update the geosphere
         if (geoScale) {
 
@@ -480,14 +477,6 @@ public final class Surface extends SurfaceMap<AtmoCell> {
         }
     }
     
-    public float getAverageHeight(){
-        return averageHeight;
-    }
-    
-    protected void postUpdate() {
-        averageHeight /= Planet.self().getTotalNumberOfCells();
-    }
-    
     @Override
     public void update() {
         super.update();
@@ -500,7 +489,6 @@ public final class Surface extends SurfaceMap<AtmoCell> {
         
         display.repaint();
         
-        postUpdate();
     }
     
     
