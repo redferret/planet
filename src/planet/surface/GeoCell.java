@@ -417,7 +417,7 @@ public class GeoCell extends Mantel {
         if (amount < 0){ // Removing from the Stratum
             difference = mass + amount;// Take the difference (amount is negative)
             if (difference < 0){
-                if (verifiyStratumNonZeroMass(selectedStratum, workOnTop)){
+                if (verifyStratumMass(selectedStratum, workOnTop)){
                     addToStrata(null, amount - difference, workOnTop);
                     return placeAmount(type, difference, workOnTop);
                 }
@@ -425,7 +425,7 @@ public class GeoCell extends Mantel {
                 /* not adding but subtracting the amounts from the
                    stratum since the amount is less than 0. */
                 addToStrata(null, amount, workOnTop);
-                verifiyStratumNonZeroMass(selectedStratum, workOnTop);
+                verifyStratumMass(selectedStratum, workOnTop);
             }
             
         }else if (amount > 0){ // Adding to the Stratum
@@ -443,7 +443,7 @@ public class GeoCell extends Mantel {
         return 0;
     }
 
-    private boolean verifiyStratumNonZeroMass(Stratum stratum, boolean workOnTop){
+    private boolean verifyStratumMass(Stratum stratum, boolean workOnTop){
         float mass = stratum.getMass();
         if ((mass >= 0.0000001f && mass <= 0.0001f) || mass <= 0){
             if (workOnTop){
