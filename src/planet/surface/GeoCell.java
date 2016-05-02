@@ -197,6 +197,24 @@ public class GeoCell extends Mantel {
                         new Color(157, 166, 175)};
         
         heightMap = Tools.constructSamples(colors, 50);
+        
+        Color[] strataColors = {SEDIMENT.getColor(), SOIL.getColor(),
+                                GRAVEL.getColor(), SANDSTONE.getColor(),
+                                SHALE.getColor(), LIMESTONE.getColor(),
+                                METAMORPHIC.getColor(), BASALT.getColor(),
+                                GRANITE.getColor(), OCEAN.getColor(),
+                                LAVA.getColor(), ICE.getColor()};
+        
+        strataMap = new Integer[strataColors.length][4];
+        
+        for (int i = 0; i < strataColors.length; i++){
+            Color c = strataColors[i];
+            strataMap[i][0] = c.getRed();
+            strataMap[i][1] = c.getGreen();
+            strataMap[i][2] = c.getBlue();
+            strataMap[i][3] = c.getAlpha();
+        }
+        
     }
     
     /**
