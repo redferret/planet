@@ -423,8 +423,9 @@ public class GeoCell extends Mantel {
                 try{
                     return placeAmount(type, difference, workOnTop);
                 }catch (StackOverflowError e){
-                    System.err.println("Caught stack overflow: params = (... ,"
-                            + difference + ", ...)");
+                    System.err.println("Caught stack overflow: params: "
+                            + "difference = " + difference + "\n mass = " 
+                            + mass + "\n" + "amount = " + amount);
                 }
             }else{
                 /* not adding but subtracting the amounts from the
