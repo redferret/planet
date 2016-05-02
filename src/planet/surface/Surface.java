@@ -20,6 +20,7 @@ import planet.util.Boundaries;
 
 import static planet.generics.SurfaceMap.DIR_X_INDEX;
 import static planet.generics.SurfaceMap.DIR_Y_INDEX;
+import planet.mantel.Mantel;
 import static planet.surface.Layer.BASALT;
 import static planet.surface.Layer.LAVA;
 import static planet.surface.Layer.OCEAN;
@@ -429,6 +430,19 @@ public final class Surface extends SurfaceMap<AtmoCell> {
         }
     }
     
+    private void heatMantel(int x, int y){
+        
+        
+        Mantel cell = getCellAt(x, y);
+        GeoCell geo;
+        cell.addHeat(5);
+        
+        if (cell.checkVolcano()){
+            geo = (GeoCell)cell;
+            geo.putMoltenRockToSurface(10000);
+        }
+    }
+    
     /**
      * Updating the surface results in updating lava flows and depositing 
      * sediments.
@@ -440,18 +454,15 @@ public final class Surface extends SurfaceMap<AtmoCell> {
     public void updateGeology(int x, int y) {
 
         long curPlanetAge = planetAge.get();
-        
         boolean geoScale = Planet.self().getTimeScale() == Planet.TimeScale.Geological;
 
         GeoCell cell = getCellAt(x, y);
         
         // Update the geosphere
         if (geoScale) {
-
             spreadToLowest(cell, true);
         } else {
             if ((curPlanetAge - strataBuoyancyStamp) > GEOUPDATE) {
-
                 spreadToLowest(cell, false);
                 cell.updateHeight();
                 strataBuoyancyStamp = curPlanetAge;
@@ -459,8 +470,7 @@ public final class Surface extends SurfaceMap<AtmoCell> {
         }
         depositSediment(x, y);
         updateLavaFlows(x, y);
-
-        
+        heatMantel(x, y);
     }
 
     public void dust(GeoCell cell) {
