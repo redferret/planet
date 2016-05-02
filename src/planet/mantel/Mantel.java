@@ -36,8 +36,8 @@ public class Mantel extends Cell {
         temperature += amount;
     }
     
-    public void cool(){
-        temperature--;
+    public void cool(float amount){
+        temperature -= amount;
     }
     
     public boolean checkVolcano(){
@@ -52,7 +52,10 @@ public class Mantel extends Cell {
     @Override
     public List<Integer[]> render(List<Integer[]> settings) {
         
+        if (temperature > criticalTemperature) temperature = criticalTemperature;
+        
         int index = (int) (temperature / 12);
+        index = index >= heatMap.length? index - 1 : index < 0? 0 : index;
         settings.add(heatMap[index]);
         
         return settings;

@@ -101,6 +101,8 @@ public final class Surface extends SurfaceMap<AtmoCell> {
     public static AtomicInteger absLowestHeight;
     private long strataBuoyancyStamp;
     
+    private int worldSize;
+    
     /**
      * Used primarily for erosion algorithms.
      */
@@ -125,6 +127,7 @@ public final class Surface extends SurfaceMap<AtmoCell> {
      */
     public Surface(int worldSize, int surfaceDelay, int threadsDelay, int threadCount) {
         super(worldSize, surfaceDelay, "Geosphere", threadCount);
+        this.worldSize = worldSize;
         reset();
         setupThreads(threadCount, threadsDelay);
     }
@@ -430,16 +433,20 @@ public final class Surface extends SurfaceMap<AtmoCell> {
         }
     }
     
-    private void heatMantel(int x, int y){
-        
-        
-        Mantel cell = getCellAt(x, y);
-        GeoCell geo;
-        cell.addHeat(5);
-        
-        if (cell.checkVolcano()){
-            geo = (GeoCell)cell;
-            geo.putMoltenRockToSurface(10000);
+    public void heatMantel(){
+        int n = rand.nextInt(1000);
+        for (int i = 0; i < n; i++){
+            int x = rand.nextInt(worldSize);
+            int y = rand.nextInt(worldSize);
+
+            Mantel cell = getCellAt(x, y);
+            GeoCell geo;
+            cell.addHeat(100);
+
+            if (cell.checkVolcano()){
+                geo = (GeoCell)cell;
+                geo.putMoltenRockToSurface(10000);
+            }
         }
     }
     
@@ -470,7 +477,7 @@ public final class Surface extends SurfaceMap<AtmoCell> {
         }
         depositSediment(x, y);
         updateLavaFlows(x, y);
-        heatMantel(x, y);
+        cell.cool(1);
     }
 
     public void dust(GeoCell cell) {

@@ -43,7 +43,7 @@ public class BasicJView extends JFrame implements DisplayAdapter {
         
         testWorld.play();
         // Example of changing the render speed and planet age update
-        testWorld.getSurface().setDelay(250);
+        testWorld.getSurface().setDelay(500);
     }
     
     @Override
