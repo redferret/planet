@@ -145,6 +145,8 @@ public class Stratum {
         bottom = null;
     }
 
-    
+    public void removeTop(){
+        top = null;
+    }
 
 }

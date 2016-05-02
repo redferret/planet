@@ -601,6 +601,7 @@ public class GeoCell extends Mantel {
         
         Stratum removed = strata.removeFirst();
         removed.removeBottom();
+        strata.peek().removeTop();
         
         return updateRemoved(removed);
     }
@@ -615,13 +616,12 @@ public class GeoCell extends Mantel {
     public Stratum removeBottomStratum() {
         
        Stratum removed = strata.removeLast();
-       
        Stratum bottom = peekBottomStratum();
        
        if (bottom == null){
-           throw new RuntimeException("No strata exists!");
+           throw new RuntimeException("No strata!");
        }
-       
+       bottom.removeTop();
        peekBottomStratum().removeBottom();
        
        return updateRemoved(removed);
