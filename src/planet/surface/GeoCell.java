@@ -418,9 +418,13 @@ public class GeoCell extends Mantel {
             difference = mass + amount;// Take the difference (amount is negative)
             if (difference < 0){
                 addToStrata(null, amount - difference, workOnTop);
+                verifiyStratumNonZeroMass(selectedStratum, workOnTop);
                 
-                if (verifiyStratumNonZeroMass(selectedStratum, workOnTop)){
+                try{
                     return placeAmount(type, difference, workOnTop);
+                }catch (StackOverflowError e){
+                    System.err.println("Caught stack overflow: params = (... ,"
+                            + difference + ", ...)");
                 }
             }else{
                 /* not adding but subtracting the amounts from the
@@ -444,16 +448,14 @@ public class GeoCell extends Mantel {
         return 0;
     }
 
-    private boolean verifiyStratumNonZeroMass(Stratum stratum, boolean workOnTop){
+    private void verifiyStratumNonZeroMass(Stratum stratum, boolean workOnTop){
         if (stratum.getMass() <= 0){
             if (workOnTop){
                 removeTopStratum();
             }else{
                 removeBottomStratum();
             }
-            return false;
         }
-        return true;
     }
     
     /**
