@@ -418,9 +418,10 @@ public class GeoCell extends Mantel {
             difference = mass + amount;// Take the difference (amount is negative)
             if (difference < 0){
                 addToStrata(null, amount - difference, workOnTop);
-                verifiyStratumNonZeroMass(selectedStratum, workOnTop);
                 
-                return placeAmount(type, difference, workOnTop);
+                if (verifiyStratumNonZeroMass(selectedStratum, workOnTop)){
+                    return placeAmount(type, difference, workOnTop);
+                }
             }else{
                 /* not adding but subtracting the amounts from the
                    stratum since the amount is less than 0. */
@@ -443,14 +444,16 @@ public class GeoCell extends Mantel {
         return 0;
     }
 
-    private void verifiyStratumNonZeroMass(Stratum stratum, boolean workOnTop){
+    private boolean verifiyStratumNonZeroMass(Stratum stratum, boolean workOnTop){
         if (stratum.getMass() <= 0){
             if (workOnTop){
                 removeTopStratum();
             }else{
                 removeBottomStratum();
             }
+            return false;
         }
+        return true;
     }
     
     /**
@@ -757,7 +760,8 @@ public class GeoCell extends Mantel {
                         return super.render(settings);
                     }
                 }else{
-                    settings.add(lavaMap[Layer.LAVA.getID()]);
+                    Integer[] c = {255, 0, 0, 250};
+                    settings.add(c);
                     return super.render(settings);
                 }
                 return super.render(settings);
