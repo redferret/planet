@@ -84,7 +84,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
         map = new ConcurrentHashMap<>(capacity, 1, threadCount);
         threads = new ArrayList<>();
         prevSubThreadAvg = 0;
-        displaySetting = HEIGHTMAP;
+        displaySetting = STRATAMAP;
     }
 
     /**

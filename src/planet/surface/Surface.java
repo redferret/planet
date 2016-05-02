@@ -436,7 +436,7 @@ public final class Surface extends SurfaceMap<AtmoCell> {
     }
     
     public void heatMantel(){
-        int n = rand.nextInt(2100);
+        int n = rand.nextInt(1000);
         for (int i = 0; i < n; i++){
             int x = rand.nextInt(worldSize);
             int y = rand.nextInt(worldSize);
@@ -520,6 +520,7 @@ public final class Surface extends SurfaceMap<AtmoCell> {
     @Override
     public AtmoCell generateCell(int x, int y) {
         AtmoCell gen = new AtmoCell(x, y);
+        gen.add(BASALT, 10000, true);
         return gen;
     }
 
