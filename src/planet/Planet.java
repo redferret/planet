@@ -35,7 +35,7 @@ public abstract class Planet {
         base = sqrtBase * sqrtBase;
         this.sqrtBase = sqrtBase;
         planetSurface = new Surface(gridSize, DEFAULT_PLANET_DELAY, surfaceThreadsDelay, threadCount);
-        
+        initPlanet();
     }
     
     protected final void startThreads(){

@@ -32,7 +32,6 @@ public class TestWorld extends Planet {
      */
     public TestWorld(int worldSize) {
         super(worldSize, CELL_SIZE_M, PLANET_DELAY, THREAD_COUNT);
-        initPlanet();
         startThreads();
     }
 }
