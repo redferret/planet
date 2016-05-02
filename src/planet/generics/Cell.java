@@ -18,10 +18,12 @@ public abstract class Cell {
     // The y coordinate
     private int y;
 
+    protected boolean renderCell;
 
     public Cell(int x, int y) {
         this.x = x;
         this.y = y;
+        renderCell = true;
     }
 
     public int getX() {
