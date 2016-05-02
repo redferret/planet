@@ -4,6 +4,7 @@ package planet.mantel;
 
 import java.awt.Color;
 import java.util.List;
+import java.util.Random;
 import planet.generics.Cell;
 import planet.util.Tools;
 
@@ -17,11 +18,12 @@ public class Mantel extends Cell {
     public static float criticalTemperature;
     private float temperature;
     private static Integer[][] heatMap;
-    
+    private static Random rand;
     static {
         Color[] colors = {new Color(95, 0, 15), new Color(255, 45, 45), new Color(250, 250, 0)};
         heatMap = Tools.constructSamples(colors, 100);
         criticalTemperature = 1200;
+        rand = new Random();
     }
     
     public Mantel(int x, int y) {
@@ -36,6 +38,11 @@ public class Mantel extends Cell {
     
     public void cool(){
         temperature--;
+    }
+    
+    public boolean checkVolcano(){
+        boolean critical = temperature >= criticalTemperature;
+        return (critical && rand.nextInt(1000) == 0);
     }
     
     public float getMantelTemperature() {
