@@ -34,6 +34,7 @@ public abstract class Planet {
         this.gridSize = gridSize;
         base = sqrtBase * sqrtBase;
         this.sqrtBase = sqrtBase;
+        timescale = TimeScale.Geological;
         planetSurface = new Surface(gridSize, DEFAULT_PLANET_DELAY, surfaceThreadsDelay, threadCount);
         initPlanet();
     }

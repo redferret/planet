@@ -41,8 +41,7 @@ public class Mantel extends Cell {
     }
     
     public boolean checkVolcano(){
-        boolean critical = temperature >= criticalTemperature;
-        return (critical && rand.nextInt(1000) == 0);
+        return temperature >= (criticalTemperature * 7/8);
     }
     
     public float getMantelTemperature() {

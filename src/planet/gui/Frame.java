@@ -41,7 +41,7 @@ public class Frame extends JPanel {
         if (map != null) {
             setRasterOfEachImage(map);
 
-            for (int i = images.size() - 1; i >= images.size() - 1; i--){
+            for (int i = images.size() - 1; i >= 0; i--){
                 g2d.drawImage(images.get(i), 0, 0, getWidth(), getHeight(), null);
             }
         }

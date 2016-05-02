@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import planet.Planet;
 import planet.gui.DisplayAdapter;
@@ -434,7 +436,7 @@ public final class Surface extends SurfaceMap<AtmoCell> {
     }
     
     public void heatMantel(){
-        int n = rand.nextInt(1000);
+        int n = rand.nextInt(2100);
         for (int i = 0; i < n; i++){
             int x = rand.nextInt(worldSize);
             int y = rand.nextInt(worldSize);
@@ -445,7 +447,8 @@ public final class Surface extends SurfaceMap<AtmoCell> {
 
             if (cell.checkVolcano()){
                 geo = (GeoCell)cell;
-                geo.putMoltenRockToSurface(10000);
+                geo.putMoltenRockToSurface(100000);
+                cell.cool(200);
             }
         }
     }
