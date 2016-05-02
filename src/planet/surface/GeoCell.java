@@ -8,7 +8,7 @@ import java.util.List;
 import planet.Planet;
 import planet.util.TBuffer;
 import planet.util.Tools;
-import planet.surface.generics.Cell;
+import planet.generics.Cell;
 
 import static planet.surface.Surface.*;
 import static planet.surface.Layer.*;

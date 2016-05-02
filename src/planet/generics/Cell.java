@@ -1,4 +1,4 @@
-package planet.surface.generics;
+package planet.generics;
 
 import java.util.List;
 

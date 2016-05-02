@@ -11,15 +11,15 @@ import planet.Planet;
 import planet.gui.DisplayAdapter;
 
 import planet.surface.GeoCell.SedimentBuffer;
-import planet.surface.generics.SurfaceThread;
-import planet.surface.generics.SurfaceMap;
+import planet.generics.SurfaceThread;
+import planet.generics.SurfaceMap;
 import planet.surface.HydroCell.SuspendedSediments;
 import planet.surface.HydroCell.WaterBuffer;
 
 import planet.util.Boundaries;
 
-import static planet.surface.generics.SurfaceMap.DIR_X_INDEX;
-import static planet.surface.generics.SurfaceMap.DIR_Y_INDEX;
+import static planet.generics.SurfaceMap.DIR_X_INDEX;
+import static planet.generics.SurfaceMap.DIR_Y_INDEX;
 import static planet.surface.Layer.BASALT;
 import static planet.surface.Layer.LAVA;
 import static planet.surface.Layer.OCEAN;
