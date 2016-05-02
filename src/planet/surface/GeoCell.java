@@ -9,6 +9,7 @@ import planet.Planet;
 import planet.util.TBuffer;
 import planet.util.Tools;
 import planet.generics.Cell;
+import planet.mantel.Mantel;
 
 import static planet.surface.Surface.*;
 import static planet.surface.Layer.*;
@@ -25,7 +26,7 @@ import static planet.util.Tools.*;
  *
  * @author Richard DeSilvey
  */
-public class GeoCell extends Cell {
+public class GeoCell extends Mantel {
 
     /**
      * A single class buffer part of a transfer map
@@ -725,7 +726,7 @@ public class GeoCell extends Cell {
                 setting = (int) (height / heightIndexRatio) % MAX_HEIGHT_INDEX;
                 settings.add(heightMap[setting]);
                 
-                return settings;
+                return super.render(settings);
                 
             case STRATAMAP:
                 if (moltenRockSurfaceMass < 100){
@@ -735,15 +736,15 @@ public class GeoCell extends Cell {
                     if (topStratum != null){
                         Layer layerType = topStratum.getLayer();
                         settings.add(strataMap[layerType.getID()]);
-                        return settings;
+                        return super.render(settings);
                     }
                 }else{
                     settings.add(lavaMap[Layer.LAVA.getID()]);
-                    return settings;
+                    return super.render(settings);
                 }
-                return settings;
+                return super.render(settings);
             default: // The display setting is not listed
-                return settings;
+                return super.render(settings);
         }
     }
 }
