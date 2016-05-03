@@ -467,12 +467,13 @@ public final class Surface extends SurfaceMap<AtmoCell> {
         boolean geoScale = Planet.self().getTimeScale() == Planet.TimeScale.Geological;
 
         GeoCell cell = getCellAt(x, y);
+        long diff = (curPlanetAge - strataBuoyancyStamp);
         
         // Update the geosphere
         if (geoScale) {
             spreadToLowest(cell, true);
         } else {
-            if ((curPlanetAge - strataBuoyancyStamp) > GEOUPDATE) {
+            if (diff > GEOUPDATE) {
                 spreadToLowest(cell, false);
                 cell.updateHeight();
                 strataBuoyancyStamp = curPlanetAge;
