@@ -55,8 +55,8 @@ public class SurfaceThread extends MThread {
             for (int b = 0; b < 2; b++) {
                 for (int y = ystart; (sw ? (y < upperYBound) : (y >= 0)); y += yinc) {
                     
-                    m = ((b > 0) && (y % 2 == 0)) ? 1 
-                            : ((b > 0) && (y % 2 != 0) ? -1 : 0);
+                    m = ((b > 0) && (y % 2 == 0)) ?  1 
+                       :((b > 0) && (y % 2 != 0)  ? -1 : 0);
                     
                     for (int x = ((y % 2) + m) + lowerXBound; x < upperXBound; x += 2) {
                         update(x, y);
