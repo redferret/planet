@@ -1,10 +1,8 @@
-package planet.generics;
+package planet.util;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import planet.surface.Surface;
-import planet.util.Boundaries;
-import planet.util.MThread;
 
 /**
  * A surface can be broken up into sections where a SurfaceThread can modify

@@ -1,5 +1,6 @@
 package planet.generics;
 
+import planet.util.SurfaceThread;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

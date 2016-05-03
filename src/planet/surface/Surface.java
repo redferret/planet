@@ -13,7 +13,7 @@ import planet.Planet;
 import planet.gui.DisplayAdapter;
 
 import planet.surface.GeoCell.SedimentBuffer;
-import planet.generics.SurfaceThread;
+import planet.util.SurfaceThread;
 import planet.generics.SurfaceMap;
 import planet.surface.HydroCell.SuspendedSediments;
 import planet.surface.HydroCell.WaterBuffer;
