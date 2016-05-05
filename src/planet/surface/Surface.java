@@ -469,10 +469,10 @@ public final class Surface extends SurfaceMap<AtmoCell> {
         
         // Update the geosphere
         if (geoScale) {
-            spreadToLowest(cell, true);
+            spreadToLowest(cell, geoScale);
         } else {
             if (diff > GEOUPDATE) {
-                spreadToLowest(cell, false);
+                spreadToLowest(cell, geoScale);
                 cell.updateHeight();
                 strataBuoyancyStamp = curPlanetAge;
             }
