@@ -182,17 +182,16 @@ public class GeoCellTest {
             testCell.add(layer, 1000, true);
         }
         
-        testCell.remove(3100, false, true);
+        testCell.remove(3000, false, true);
         
         Layer expectedLayer = Layer.BASALT;
         Layer actualLayer = testCell.peekTopStratum().getLayer();
         
         assertEquals("Incorrect layer", expectedLayer, actualLayer);
         
-        testCell.removeTopStratum();
         testCell.remove(1500, false, true);
         
-        expectedLayer = Layer.SANDSTONE;
+        expectedLayer = Layer.SHALE;
         actualLayer = testCell.peekTopStratum().getLayer();
         
         assertEquals("Incorrect layer", expectedLayer, actualLayer);
