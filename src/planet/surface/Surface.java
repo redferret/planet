@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import planet.Planet;
 import planet.gui.DisplayAdapter;
@@ -520,9 +518,7 @@ public final class Surface extends SurfaceMap<AtmoCell> {
 
     @Override
     public AtmoCell generateCell(int x, int y) {
-        AtmoCell gen = new AtmoCell(x, y);
-        gen.add(BASALT, 10000, true);
-        return gen;
+        return new AtmoCell(x, y);
     }
 
 }

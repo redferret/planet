@@ -1,7 +1,6 @@
 
 package planet;
 
-import planet.gui.DisplayAdapter;
 import planet.surface.Surface;
 
 /**
@@ -18,7 +17,7 @@ public abstract class Planet {
     private Surface planetSurface;
 
     public static final int DEFAULT_PLANET_DELAY = 1000;
-    public static enum TimeScale {Geological, Evolutionary, Civilization}
+    public static enum TimeScale {Geological, Evolutionary, Civilization, None}
     
     /**
      * Constructs a new Planet.
@@ -34,7 +33,7 @@ public abstract class Planet {
         this.gridSize = gridSize;
         base = sqrtBase * sqrtBase;
         this.sqrtBase = sqrtBase;
-        timescale = TimeScale.Geological;
+        timescale = TimeScale.None;
         planetSurface = new Surface(gridSize, DEFAULT_PLANET_DELAY, surfaceThreadsDelay, threadCount);
         initPlanet();
     }
