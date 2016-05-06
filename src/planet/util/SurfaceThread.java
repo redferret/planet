@@ -2,6 +2,7 @@ package planet.util;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import planet.surface.Hydrosphere;
 import planet.surface.Surface;
 
 /**
@@ -16,7 +17,7 @@ public class SurfaceThread extends MThread {
      */
     protected Boundaries bounds;
     private int curFrame;
-    protected Surface surface;
+    protected Hydrosphere surface;
     
     /**
      * Constructs a new SurfaceThread.
@@ -25,7 +26,7 @@ public class SurfaceThread extends MThread {
      * @param name The name of this thread
      * @param ref The reference to the surface being worked on
      */
-    public SurfaceThread(int delay, Boundaries bounds, String name, Surface ref) {
+    public SurfaceThread(int delay, Boundaries bounds, String name, Hydrosphere ref) {
         super(delay, name, false);
 
         this.bounds = bounds;
