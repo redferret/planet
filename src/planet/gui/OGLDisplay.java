@@ -50,13 +50,16 @@ public class OGLDisplay implements DisplayAdapter {
 
                 if (Keyboard.getEventKey() == Keyboard.KEY_P) {
                     // Switch between normal mode, point mode, and wire-frame mode.
-                    int polygonMode = glGetInteger(GL_POLYGON_MODE);
-                    if (polygonMode == GL_LINE) {
-                        glPolygonMode(GL_FRONT, GL_FILL);
-                    } else if (polygonMode == GL_FILL) {
-                        glPolygonMode(GL_FRONT, GL_POINT);
-                    } else if (polygonMode == GL_POINT) {
-                        glPolygonMode(GL_FRONT, GL_LINE);
+                    switch(glGetInteger(GL_POLYGON_MODE)){
+                        case GL_LINE:
+                            glPolygonMode(GL_FRONT, GL_FILL);
+                            break;
+                        case GL_FILL:
+                            glPolygonMode(GL_FRONT, GL_POINT);
+                            break;
+                        case GL_POINT:
+                            glPolygonMode(GL_FRONT, GL_LINE);
+                            break;
                     }
                 }
             }
