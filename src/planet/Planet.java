@@ -4,6 +4,7 @@ package planet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import planet.generics.SurfaceMap;
+import planet.surface.Hydrosphere;
 import planet.surface.Surface;
 
 /**
@@ -38,7 +39,7 @@ public abstract class Planet {
         base = sqrtBase * sqrtBase;
         this.sqrtBase = sqrtBase;
         timescale = TimeScale.None;
-        planetSurface = new Surface(gridSize, frameDelay, surfaceThreadsDelay, threadCount);
+        planetSurface = new Hydrosphere(gridSize, frameDelay, surfaceThreadsDelay, threadCount);
         initPlanet();
     }
     
