@@ -10,12 +10,13 @@ package planet;
 public class TestWorld extends Planet {
 
     private static final int CELL_SIZE_M, DEFAULT_SIZE, 
-            PLANET_DELAY, THREAD_COUNT;
+            PLANET_DELAY, THREAD_COUNT, AGE_STEP_DELAY;
     
     static{
         CELL_SIZE_M = 6;
         THREAD_COUNT = 1;
         PLANET_DELAY = 10;
+        AGE_STEP_DELAY = 100;
         DEFAULT_SIZE = 256;
     }
     
@@ -31,7 +32,7 @@ public class TestWorld extends Planet {
      * @param worldSize The size of the world squared.
      */
     public TestWorld(int worldSize) {
-        super(worldSize, CELL_SIZE_M, PLANET_DELAY, THREAD_COUNT);
+        super(worldSize, CELL_SIZE_M, AGE_STEP_DELAY, PLANET_DELAY, THREAD_COUNT);
         startThreads();
     }
 }

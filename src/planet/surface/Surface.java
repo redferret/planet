@@ -36,6 +36,7 @@ import static planet.surface.HydroCell.evapScale;
 import static planet.surface.HydroCell.oceanSedimentCapacity;
 import static planet.surface.HydroCell.rainProb;
 import static planet.surface.HydroCell.rainScale;
+import planet.util.Delay;
 
 import static planet.util.Tools.calcDepth;
 import static planet.util.Tools.calcHeight;
@@ -103,6 +104,8 @@ public final class Surface extends SurfaceMap<AtmoCell> {
     
     private int worldSize;
     
+    private Delay delay;
+    
     /**
      * Used primarily for erosion algorithms.
      */
@@ -126,8 +129,9 @@ public final class Surface extends SurfaceMap<AtmoCell> {
      * @param threadCount The number of threads that will work on the map
      */
     public Surface(int worldSize, int surfaceDelay, int threadsDelay, int threadCount) {
-        super(worldSize, surfaceDelay, "Geosphere", threadCount);
+        super(worldSize, 10, "Geosphere", threadCount);
         this.worldSize = worldSize;
+        delay = new Delay(surfaceDelay);
         reset();
         setupThreads(threadCount, threadsDelay);
     }
@@ -517,16 +521,16 @@ public final class Surface extends SurfaceMap<AtmoCell> {
     
     @Override
     public void update() {
-        super.update();
-        long curPlanetAge = planetAge.getAndAdd(ageStep);
-        if (curPlanetAge - geologicalTimeStamp > GEOUPDATE){
-            // < Update to major geological events go here >
-            
-            geologicalTimeStamp = curPlanetAge;
+        
+        if (delay.check()){
+            long curPlanetAge = planetAge.getAndAdd(ageStep);
+            if (curPlanetAge - geologicalTimeStamp > GEOUPDATE){
+                // < Update to major geological events go here >
+
+                geologicalTimeStamp = curPlanetAge;
+            }
         }
-        
         display.repaint();
-        
     }
     
     
