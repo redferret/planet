@@ -244,4 +244,28 @@ public class GeoCellTest {
         assertTrue(testCell.hasOcean());
     }
     
+    /**
+     * Performs a convergence test on the height of a test cell.
+     */
+    @Test
+    public void buyoancyTest(){
+        float heightRangeDiff = 0.05f;
+        GeoCell testCell = testWorld.getSurface().getCellAt(15, 20);
+        
+        testCell.add(Layer.BASALT, 1000000, true);
+        
+        System.out.println("\nPrinting Stats:");
+        
+        for (int i = 0; i < 10; i++){
+            testCell.updateHeight();
+        }
+        
+        float postHeight = testCell.getHeight();
+        testCell.recalculateHeight();
+        float recalculatedHeight = testCell.getHeight();
+        
+        boolean inRange = rangeTest(heightRangeDiff, postHeight, recalculatedHeight);
+        assertTrue("The updated height is not in expected range", inRange);
+    }
+    
 }
