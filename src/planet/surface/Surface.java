@@ -67,6 +67,10 @@ public abstract class Surface extends SurfaceMap<AtmoCell> {
     
     private Delay delay;
     
+    public final static int HEIGHTMAP = 0;
+    public final static int STRATAMAP = 1;
+    public final static int LANDOCEAN = 2;
+    
     /**
      * Used primarily for erosion algorithms.
      */

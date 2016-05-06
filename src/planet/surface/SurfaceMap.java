@@ -44,9 +44,6 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
      */
     public static final int[] HDIR_Y_INDEX = {-1, 0, 1, 0};
 
-    public final static int HEIGHTMAP = 0;
-    public final static int STRATAMAP = 1;
-    public final static int LANDOCEAN = 2;
     public final static int MAX_HEIGHT_INDEX = 50;
     
     public int displaySetting;
@@ -87,7 +84,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
         map = new ConcurrentHashMap<>(capacity, 1, threadCount);
         threads = new ArrayList<>();
         prevSubThreadAvg = 0;
-        displaySetting = STRATAMAP;
+        displaySetting = 0;
     }
 
     /**
