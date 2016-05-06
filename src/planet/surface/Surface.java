@@ -316,6 +316,12 @@ public final class Surface extends SurfaceMap<AtmoCell> {
         }
     }
 
+    /**
+     * Updates surface lava.
+     * @see planet.surface.Surface#updateGeology(int, int) 
+     * @param x Cell's x
+     * @param y Cell's y
+     */
     public void updateLavaFlows(int x, int y) {
 
         GeoCell toUpdate = getCellAt(x, y);
