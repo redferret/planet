@@ -10,6 +10,7 @@ import java.util.Deque;
 import java.util.LinkedList;
 import javax.swing.JFrame;
 import planet.Planet;
+import planet.Planet.TimeScale;
 import planet.TestWorld;
 import planet.surface.Layer;
 
@@ -46,6 +47,7 @@ public class BasicJView extends JFrame implements DisplayAdapter {
         setLocationRelativeTo(null);
         setVisible(true);
         
+        testWorld.setTimescale(TimeScale.Geological);
         testWorld.getSurface().addToSurface(Layer.BASALT, 10000);
         
         testWorld.play();
