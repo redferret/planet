@@ -66,7 +66,7 @@ public class SurfaceThread extends MThread {
             surface.heatMantel();
         } catch (Exception e) {
             Logger.getLogger(SurfaceThread.class.getName()).log(Level.SEVERE, 
-                    "An exception occured when updating the surface");
+              "An exception occured when updating the surface: {0}", getName());
             e.printStackTrace();
         }
         curFrame++;
