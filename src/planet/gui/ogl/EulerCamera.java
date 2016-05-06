@@ -1,4 +1,4 @@
-package planet.gui;
+package planet.gui.ogl;
 
 /*
  * Copyright (c) 2013, Oskar Veerhoek

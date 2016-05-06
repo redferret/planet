@@ -1,6 +1,6 @@
 
 
-package planet.gui;
+package planet.gui.basic;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -13,6 +13,7 @@ import planet.Planet;
 import planet.Planet.TimeScale;
 import planet.TestWorld;
 import planet.enums.Layer;
+import planet.gui.DisplayAdapter;
 
 /**
  *
