@@ -13,8 +13,6 @@ import static planet.cells.HydroCell.rainProb;
 import static planet.cells.HydroCell.rainScale;
 import static planet.enums.Layer.OCEAN;
 import static planet.surface.Surface.rand;
-import planet.util.Boundaries;
-import planet.util.SurfaceThread;
 import static planet.util.Tools.calcMass;
 import static planet.util.Tools.clamp;
 import static planet.util.Tools.getLowestCellFrom;
