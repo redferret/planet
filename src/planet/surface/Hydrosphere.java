@@ -13,6 +13,8 @@ import static planet.cells.HydroCell.rainProb;
 import static planet.cells.HydroCell.rainScale;
 import static planet.defs.Layer.OCEAN;
 import static planet.surface.Surface.rand;
+import planet.util.Boundaries;
+import planet.util.SurfaceThread;
 import static planet.util.Tools.calcMass;
 import static planet.util.Tools.clamp;
 import static planet.util.Tools.getLowestCellFrom;
@@ -109,4 +111,10 @@ public class Hydrosphere extends Geosphere {
             }
         }
     }
+    
+    @Override
+    public SurfaceThread generateSurfaceThread(int delay, Boundaries bounds, String name) {
+        return new SurfaceThread(delay, bounds, name, this);
+    }
+    
 }

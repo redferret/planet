@@ -32,7 +32,7 @@ import static planet.util.Tools.getLowestCellFrom;
  * Contains all logic that works on the geology of the planet.
  * @author Richard DeSilvey
  */
-public class Geosphere extends Surface {
+public abstract class Geosphere extends Surface {
 
     private long strataBuoyancyStamp;
     

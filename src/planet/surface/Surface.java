@@ -9,8 +9,6 @@ import java.util.concurrent.atomic.AtomicLong;
 import planet.gui.DisplayAdapter;
 import planet.generics.SurfaceMap;
 import planet.util.Delay;
-import planet.util.SurfaceThread;
-import planet.util.Boundaries;
 import static planet.surface.Surface.GEOUPDATE;
 import static planet.surface.Surface.planetAge;
 
@@ -23,7 +21,7 @@ import static planet.surface.Surface.planetAge;
  *
  * @author Richard DeSilvey
  */
-public class Surface extends SurfaceMap<AtmoCell> {
+public abstract class Surface extends SurfaceMap<AtmoCell> {
 
     /**
      * The average density of the mantel. The units are in kilograms per cubic
@@ -147,12 +145,6 @@ public class Surface extends SurfaceMap<AtmoCell> {
         display.repaint();
     }
     
-    
-    @Override
-    public SurfaceThread generateSurfaceThread(int delay, Boundaries bounds, String name) {
-        return new SurfaceThread(delay, bounds, name, this);
-    }
-
     @Override
     public AtmoCell generateCell(int x, int y) {
         return new AtmoCell(x, y);
