@@ -727,10 +727,12 @@ public class GeoCell extends Mantel {
         amountSubmerged = cellHeight * (density / mantel_density);
 
         float diff = Math.abs(amountSubmerged - curAmountSubmerged);
+        float change = diff / 2f;
+        change = (change < 0.01f)? 0.01f : change;
         if (amountSubmerged > curAmountSubmerged){
-            curAmountSubmerged += diff / 2f;
+            curAmountSubmerged += change;
         }else if(amountSubmerged < curAmountSubmerged){
-            curAmountSubmerged -= diff / 2f;
+            curAmountSubmerged -= change;
         }
         
     }
