@@ -72,6 +72,10 @@ public abstract class Planet {
         return timescale;
     }
     
+    public void setTimescale(TimeScale timescale) {
+        this.timescale = timescale;
+    }
+    
     public int getSqrtBase() {
         return sqrtBase;
     }
