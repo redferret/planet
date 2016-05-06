@@ -8,6 +8,7 @@ import java.util.Deque;
 import java.util.LinkedList;
 import javax.swing.JFrame;
 import planet.TestWorld;
+import planet.surface.Layer;
 
 /**
  *
@@ -40,6 +41,8 @@ public class BasicJView extends JFrame implements DisplayAdapter {
         setSize(SIZE, SIZE);
         setLocationRelativeTo(null);
         setVisible(true);
+        
+        testWorld.getSurface().addToSurface(Layer.BASALT, 10000);
         
         testWorld.play();
         // Example of changing the render speed and planet age update
