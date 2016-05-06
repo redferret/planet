@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package planet.generics;
+package planet.interfaces;
 
 /**
  *

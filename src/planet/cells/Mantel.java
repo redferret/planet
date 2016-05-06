@@ -5,7 +5,7 @@ package planet.cells;
 import java.awt.Color;
 import java.util.List;
 import java.util.Random;
-import planet.generics.Cell;
+import planet.interfaces.Cell;
 import planet.util.Tools;
 
 /**

@@ -1,4 +1,4 @@
-package planet.defs;
+package planet.enums;
 
 import java.awt.Color;
 

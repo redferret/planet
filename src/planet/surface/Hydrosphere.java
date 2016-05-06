@@ -11,7 +11,7 @@ import static planet.cells.HydroCell.evapScale;
 import static planet.cells.HydroCell.oceanSedimentCapacity;
 import static planet.cells.HydroCell.rainProb;
 import static planet.cells.HydroCell.rainScale;
-import static planet.defs.Layer.OCEAN;
+import static planet.enums.Layer.OCEAN;
 import static planet.surface.Surface.rand;
 import planet.util.Boundaries;
 import planet.util.SurfaceThread;

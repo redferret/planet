@@ -3,7 +3,7 @@ package planet;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import planet.generics.SurfaceMap;
+import planet.interfaces.SurfaceMap;
 import planet.surface.PlanetSurface;
 import planet.surface.Surface;
 

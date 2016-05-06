@@ -1,4 +1,4 @@
-package planet.generics;
+package planet.interfaces;
 
 import planet.util.SurfaceThread;
 import java.util.ArrayList;

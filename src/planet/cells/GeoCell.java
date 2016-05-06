@@ -8,15 +8,15 @@ import java.util.List;
 import planet.Planet;
 import planet.util.TBuffer;
 import planet.util.Tools;
-import planet.generics.Cell;
+import planet.interfaces.Cell;
 import planet.cells.Mantel;
-import planet.defs.CrustType;
-import planet.defs.Layer;
+import planet.enums.CrustType;
+import planet.enums.Layer;
 import planet.surface.Stratum;
 import planet.surface.Surface;
 
 import static planet.surface.Surface.*;
-import static planet.defs.Layer.*;
+import static planet.enums.Layer.*;
 import static planet.util.Tools.*;
 
 /**

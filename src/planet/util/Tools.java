@@ -7,12 +7,12 @@ import java.awt.LinearGradientPaint;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import planet.Planet;
-import planet.defs.Layer;
+import planet.enums.Layer;
 import planet.cells.GeoCell;
 import planet.surface.Surface;
 
-import static planet.generics.SurfaceMap.DIR_X_INDEX;
-import static planet.generics.SurfaceMap.DIR_Y_INDEX;
+import static planet.interfaces.SurfaceMap.DIR_X_INDEX;
+import static planet.interfaces.SurfaceMap.DIR_Y_INDEX;
 
 /**
  * A utility class for the system.

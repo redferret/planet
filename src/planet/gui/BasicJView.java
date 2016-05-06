@@ -12,7 +12,7 @@ import javax.swing.JFrame;
 import planet.Planet;
 import planet.Planet.TimeScale;
 import planet.TestWorld;
-import planet.defs.Layer;
+import planet.enums.Layer;
 
 /**
  *

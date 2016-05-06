@@ -1,5 +1,5 @@
 
-package planet.generics;
+package planet.interfaces;
 
 import java.util.List;
 

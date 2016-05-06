@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
 import planet.Planet;
-import planet.generics.SurfaceMap;
+import planet.interfaces.SurfaceMap;
 
 /**
  * Panel for the JFrame where all rendering takes place for SurfaceMaps

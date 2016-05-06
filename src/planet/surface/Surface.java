@@ -1,13 +1,13 @@
 
 package planet.surface;
 
-import planet.defs.Layer;
+import planet.enums.Layer;
 import planet.cells.AtmoCell;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import planet.gui.DisplayAdapter;
-import planet.generics.SurfaceMap;
+import planet.interfaces.SurfaceMap;
 import planet.util.Delay;
 import static planet.surface.Surface.GEOUPDATE;
 import static planet.surface.Surface.planetAge;

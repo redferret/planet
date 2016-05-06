@@ -1,7 +1,7 @@
 
 import org.junit.Test;
 import planet.cells.GeoCell;
-import planet.defs.Layer;
+import planet.enums.Layer;
 import planet.TestWorld;
 
 import static org.junit.Assert.*;
