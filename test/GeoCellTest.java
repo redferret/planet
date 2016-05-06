@@ -118,8 +118,6 @@ public class GeoCellTest {
         inRange = rangeTest(heightRangeDiff, actualHeight, expectedHeight);
         assertTrue("Height is out of accepted range", inRange);
         
-        System.out.println("Strata Test Results");
-        System.out.println("Height: " + actualHeight);
     }
 
     /**
@@ -253,8 +251,6 @@ public class GeoCellTest {
         GeoCell testCell = testWorld.getSurface().getCellAt(15, 20);
         
         testCell.add(Layer.BASALT, 1000000, true);
-        
-        System.out.println("\nPrinting Stats:");
         
         for (int i = 0; i < 10; i++){
             testCell.updateHeight();
