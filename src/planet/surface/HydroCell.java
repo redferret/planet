@@ -178,12 +178,13 @@ public class HydroCell extends GeoCell {
     
     public List<Integer[]> render(List<Integer[]> settings) {
         
-        int index = (int) (getOceanMass() / depthIndexRatio);
-       
-        int setting = index < MAX_WATER_DEPTH_INDEX ? index : MAX_WATER_DEPTH_INDEX - 1;
-        
-        settings.add(oceanMap[setting]);
-        
+        if (Planet.self().getSurface().displaySetting >= 0){
+            int index = (int) (getOceanMass() / depthIndexRatio);
+
+            int setting = index < MAX_WATER_DEPTH_INDEX ? index : MAX_WATER_DEPTH_INDEX - 1;
+
+            settings.add(oceanMap[setting]);
+        }
         return super.render(settings);
         
     }
