@@ -451,7 +451,7 @@ public final class Surface extends SurfaceMap<AtmoCell> {
 
             if (cell.checkVolcano()){
                 geo = (GeoCell)cell;
-                geo.putMoltenRockToSurface(100000);
+                geo.putMoltenRockToSurface(250000);
                 cell.cool(200);
             }
         }
