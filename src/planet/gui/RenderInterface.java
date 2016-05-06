@@ -1,5 +1,5 @@
 
-package planet.interfaces;
+package planet.gui;
 
 import java.util.List;
 
