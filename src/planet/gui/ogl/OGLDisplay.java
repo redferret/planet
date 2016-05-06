@@ -77,7 +77,7 @@ public class OGLDisplay implements DisplayAdapter {
     }
 
     @Override
-    public void repaint() {
+    public void update() {
         
     }
     

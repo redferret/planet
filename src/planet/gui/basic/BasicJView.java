@@ -55,7 +55,7 @@ public class BasicJView extends JFrame implements DisplayAdapter {
     }
     
     @Override
-    public void repaint() {
+    public void update() {
         renderFrame.repaint();
         
         averages.add(testWorld.getSurface().getAverageThreadTime());

@@ -18,6 +18,6 @@ public interface DisplayAdapter {
      * it is more of a way to flag your display when the data has finished
      * updating on the current frame.
      */
-    public void repaint();
+    public void update();
     
 }
