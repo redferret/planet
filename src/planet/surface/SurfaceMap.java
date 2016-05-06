@@ -1,5 +1,6 @@
-package planet.interfaces;
+package planet.surface;
 
+import planet.cells.Cell;
 import planet.util.SurfaceThread;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import planet.Planet;
+import planet.interfaces.RenderInterface;
 import planet.util.Boundaries;
 import planet.util.MThread;
 

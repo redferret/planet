@@ -1,4 +1,4 @@
-package planet.interfaces;
+package planet.cells;
 
 import java.util.List;
 

@@ -11,8 +11,8 @@ import planet.enums.Layer;
 import planet.cells.GeoCell;
 import planet.surface.Surface;
 
-import static planet.interfaces.SurfaceMap.DIR_X_INDEX;
-import static planet.interfaces.SurfaceMap.DIR_Y_INDEX;
+import static planet.surface.SurfaceMap.DIR_X_INDEX;
+import static planet.surface.SurfaceMap.DIR_Y_INDEX;
 
 /**
  * A utility class for the system.

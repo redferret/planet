@@ -8,7 +8,6 @@ import java.util.List;
 import planet.Planet;
 import planet.util.TBuffer;
 import planet.util.Tools;
-import planet.interfaces.Cell;
 import planet.cells.Mantel;
 import planet.enums.CrustType;
 import planet.enums.Layer;
