@@ -20,10 +20,11 @@ import static planet.util.Tools.clamp;
 import static planet.util.Tools.getLowestCellFrom;
 
 /**
- *
+ * The hydrosphere is everything that deal with water, rivers, lakes, seas,
+ * and oceans.
  * @author Richard DeSilvey
  */
-public class Hydrosphere extends Geosphere {
+public abstract class Hydrosphere extends Geosphere {
 
     public Hydrosphere(int worldSize, int surfaceDelay, int threadsDelay, int threadCount) {
         super(worldSize, surfaceDelay, threadsDelay, threadCount);
@@ -110,11 +111,6 @@ public class Hydrosphere extends Geosphere {
                 toUpdateWaterBuffer.transferWater(-evapScale);
             }
         }
-    }
-    
-    @Override
-    public SurfaceThread generateSurfaceThread(int delay, Boundaries bounds, String name) {
-        return new SurfaceThread(delay, bounds, name, this);
     }
     
 }
