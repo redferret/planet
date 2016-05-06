@@ -3,53 +3,16 @@ package planet.surface;
 
 import planet.defs.Layer;
 import planet.cells.AtmoCell;
-import planet.cells.GeoCell;
-import planet.cells.HydroCell;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
-
-import planet.Planet;
 import planet.gui.DisplayAdapter;
-
-import planet.cells.GeoCell.SedimentBuffer;
-import planet.util.SurfaceThread;
 import planet.generics.SurfaceMap;
-import planet.cells.HydroCell.SuspendedSediments;
-import planet.cells.HydroCell.WaterBuffer;
-
+import planet.util.Delay;
+import planet.util.SurfaceThread;
 import planet.util.Boundaries;
-
-import static planet.generics.SurfaceMap.DIR_X_INDEX;
-import static planet.generics.SurfaceMap.DIR_Y_INDEX;
-import planet.cells.Mantel;
-import static planet.defs.Layer.BASALT;
-import static planet.defs.Layer.LAVA;
-import static planet.defs.Layer.OCEAN;
-import static planet.defs.Layer.SANDSTONE;
-import static planet.defs.Layer.SEDIMENT;
-import static planet.defs.Layer.SHALE;
-
 import static planet.surface.Surface.GEOUPDATE;
 import static planet.surface.Surface.planetAge;
-
-import static planet.cells.HydroCell.MIN_ANGLE;
-import static planet.cells.HydroCell.evapScale;
-import static planet.cells.HydroCell.oceanSedimentCapacity;
-import static planet.cells.HydroCell.rainProb;
-import static planet.cells.HydroCell.rainScale;
-import planet.util.Delay;
-
-import static planet.util.Tools.calcDepth;
-import static planet.util.Tools.calcHeight;
-import static planet.util.Tools.calcMass;
-import static planet.util.Tools.changeMass;
-import static planet.util.Tools.checkXBounds;
-import static planet.util.Tools.checkYBounds;
-import static planet.util.Tools.clamp;
-import static planet.util.Tools.getLowestCellFrom;
 
 /**
  * The Surface is the geology for the planet. It provides a foundation
@@ -60,16 +23,14 @@ import static planet.util.Tools.getLowestCellFrom;
  *
  * @author Richard DeSilvey
  */
-public final class Surface extends SurfaceMap<AtmoCell> {
+public class Surface extends SurfaceMap<AtmoCell> {
 
     /**
      * The average density of the mantel. The units are in kilograms per cubic
      * meter.
      */
     public static float mantel_density = 3700f;
-    
-    public static int waterDepthShale;
-    
+
     /**
      * A mutable erosion quantity (works best around 32 - 128) during
      * geological time scales
@@ -99,21 +60,20 @@ public final class Surface extends SurfaceMap<AtmoCell> {
      */
     public static long ageStep;
     
-    public static int planetTemp;
-    
     private DisplayAdapter display;
     
+    /**
+     * 
+     */
     public static AtomicInteger absLowestHeight;
-    private long strataBuoyancyStamp;
-    
-    private int worldSize;
+    protected int worldSize;
     
     private Delay delay;
     
     /**
      * Used primarily for erosion algorithms.
      */
-    private static final Random rand;
+    protected static final Random rand;
     
     
     static {
@@ -121,7 +81,6 @@ public final class Surface extends SurfaceMap<AtmoCell> {
         erosionAmount = 1;
         ageStep = 100000;
         GEOUPDATE = 100000;
-        waterDepthShale = 10;
         absLowestHeight = new AtomicInteger(Integer.MAX_VALUE);
     }
     
@@ -143,7 +102,6 @@ public final class Surface extends SurfaceMap<AtmoCell> {
     public void reset(){
         planetAge = new AtomicLong(0);
         geologicalTimeStamp = 0;
-        strataBuoyancyStamp = 0;
     }
 
     public void setDisplay(DisplayAdapter display) {
@@ -154,354 +112,6 @@ public final class Surface extends SurfaceMap<AtmoCell> {
         return planetAge.get();
     }
     
-    public void depositSediment(int x, int y) {
-
-        float maxPressure;
-        long age;
-        
-        Stratum stratum;
-        GeoCell cell = getCellAt(x, y);
-        cell.getSedimentBuffer().applySedimentBuffer();
-        stratum = cell.peekTopStratum();
-
-        if (stratum == null) {
-            return;
-        }
-
-        formNewRock(cell, calcDepth(SEDIMENT, 9.8f, 400));
-        age = cell.getAge();
-
-        if (age > 1E8) {
-            maxPressure = 886655;
-        } else {
-            maxPressure = (float) Math.exp((-((age - 717928560.98) / 5E7)) + 25000);
-        }
-        melt(cell, calcDepth(cell.getDensity(), 9.8f, maxPressure));
-
-    }
-
-    public void melt(GeoCell cell, float maxHeight) {
-
-        float height, diff, massToChange;
-        Stratum bottom = cell.peekBottomStratum();
-        if (bottom == null) {
-            return;
-        }
-        Layer bottomType = cell.peekBottomStratum().getLayer();
-
-        height = cell.getHeight();
-
-        if (height > maxHeight) {
-            diff = (height - maxHeight) / 2f;
-            massToChange = calcMass(diff, Planet.self().getBase(), bottomType);
-            cell.remove(massToChange, false, false);
-        }
-
-    }
-
-    public void formNewRock(GeoCell cell, float maxHeight) {
-
-        float height, diff, massBeingDeposited;
-        Layer depositType;
-        SedimentBuffer eb = cell.getSedimentBuffer();
-        
-        height = calcHeight(eb.getSediments(), Planet.self().getBase(), SEDIMENT);
-        if (height > maxHeight) {
-
-            diff = (height - maxHeight);
-
-            massBeingDeposited = calcMass(diff, Planet.self().getBase(), SEDIMENT);
-            depositType = (((HydroCell)cell).getOceanMass() > 900) ? SHALE : SANDSTONE;
-
-            eb.updateSurfaceSedimentMass(-massBeingDeposited);
-
-            massBeingDeposited = changeMass(massBeingDeposited, SEDIMENT, depositType);
-            cell.add(depositType, massBeingDeposited, true);
-
-        }
-    }
-
-    public void spreadToLowest(GeoCell spreadFrom, boolean geoScale) {
-
-        dust(spreadFrom);
-
-        if (geoScale) {
-            convertTopLayer(spreadFrom, calcHeight(100, Planet.self().getBase(), SEDIMENT));
-        }
-
-        if ((((HydroCell)spreadFrom).getOceanMass() > oceanSedimentCapacity) || geoScale) {
-
-            int maxCellCount = 8;
-            ArrayList<GeoCell> lowestList = new ArrayList<>(maxCellCount);
-            getLowestCells(spreadFrom, lowestList, maxCellCount);
-            spread(lowestList, spreadFrom);
-        }
-    }
-
-    public void convertTopLayer(GeoCell spreadFrom, float height) {
-
-        float rockMass, sandMass;
-
-        if (spreadFrom.peekTopStratum() == null) {
-            return;
-        }
-
-        SedimentBuffer eb = spreadFrom.getSedimentBuffer();
-        Layer rockLayer = spreadFrom.peekTopStratum().getLayer();
-        // Wind erosion
-        if (eb.getSediments() < 50 && !spreadFrom.hasOcean()
-                && spreadFrom.getMoltenRockFromSurface() < 300) {
-
-            rockMass = calcMass(height, Planet.self().getBase(), SEDIMENT);
-            rockMass = spreadFrom.erode(rockMass);
-
-            sandMass = changeMass(rockMass, rockLayer, SEDIMENT);
-
-            eb.updateSurfaceSedimentMass(sandMass);
-        }
-    }
-
-    public void getLowestCells(GeoCell spreadFrom, List<GeoCell> lowestList, int max) {
-
-        int tx, ty, mx, my;
-        int x = spreadFrom.getX(), y = spreadFrom.getY();
-        int xl = DIR_X_INDEX.length;
-        GeoCell spreadTo;
-
-        for (int s = 0; s < xl; s++) {
-
-            tx = x + DIR_X_INDEX[s];
-            ty = y + DIR_Y_INDEX[s];
-
-            // Check the boundaries
-            mx = checkXBounds(tx, Planet.self().getGridSize());
-            my = checkYBounds(ty, Planet.self().getGridSize());
-
-            spreadTo = getCellAt(mx, my);
-
-            if (spreadTo.getHeightWithoutOceans() < spreadFrom.getHeightWithoutOceans()) {
-                if (lowestList.size() < max) {
-                    lowestList.add(spreadTo);
-                } else {
-                    break;
-                }
-            }
-        }
-    }
-
-    /**
-     * Selects a random cell from the given list and spreads the sediments to
-     * that cell.
-     *
-     * @param lowestList The list of lowest cells from the central cell
-     * @param spreadFrom The central cell
-     */
-    public void spread(ArrayList<GeoCell> lowestList, GeoCell spreadFrom) {
-
-        GeoCell lowestGeoCell;
-        SedimentBuffer eb = spreadFrom.getSedimentBuffer();
-        SedimentBuffer lowestBuffer;
-        float spreadFromHeight, lowestHeight, diff, mass;
-
-        if (lowestList.size() > 0) {
-
-            lowestGeoCell = lowestList.get(rand.nextInt(lowestList.size()));
-            spreadFromHeight = spreadFrom.getHeightWithoutOceans() / 2.5f;
-            lowestHeight = lowestGeoCell.getHeightWithoutOceans() / 2.5f;
-
-            diff = (spreadFromHeight - lowestHeight) / 2.5f;
-
-            diff = clamp(diff, -lowestHeight, spreadFromHeight);
-
-            if (eb.getSediments() > 0) {
-
-                mass = calcMass(diff, Planet.self().getBase(), SEDIMENT);
-                eb.updateSurfaceSedimentMass(-mass);
-                
-                lowestBuffer = lowestGeoCell.getSedimentBuffer();
-                lowestBuffer.updateSurfaceSedimentMass(mass);
-            }
-        }
-    }
-
-    /**
-     * Updates surface lava.
-     * @see planet.surface.Surface#updateGeology(int, int) 
-     * @param x Cell's x
-     * @param y Cell's y
-     */
-    public void updateLavaFlows(int x, int y) {
-
-        GeoCell toUpdate = getCellAt(x, y);
-        
-        if (toUpdate.getMoltenRockFromSurface() > 300) {
-            GeoCell lowest = getLowestCellFrom(toUpdate);
-
-            if (lowest != null && lowest != toUpdate) {
-                float currentCellHeight = toUpdate.getHeightWithoutOceans() / 2.5f;
-                float lowestHeight = lowest.getHeightWithoutOceans() / 2.5f;
-                float diff = (currentCellHeight - lowestHeight) / 2.5f;
-
-                diff = clamp(diff, -lowestHeight, currentCellHeight);
-
-                float mass = calcMass(diff, Planet.self().getBase(), LAVA);
-
-                toUpdate.putMoltenRockToSurface(-mass);
-                lowest.putMoltenRockToSurface(mass);
-                lowest.getSedimentBuffer().removeAllSediments();
-            }
-
-            float rate = ((HydroCell)toUpdate).getOceanMass() > 300 ? 0.95f : 0.10f;
-
-            //solidify the rock
-            float massToSolidify = toUpdate.getMoltenRockFromSurface() * rate;
-            toUpdate.putMoltenRockToSurface(-massToSolidify);
-            massToSolidify = changeMass(massToSolidify, LAVA, BASALT);
-            toUpdate.add(BASALT, massToSolidify, true);
-            toUpdate.recalculateHeight();
-        } else {
-            toUpdate.removeAllMoltenRock();
-        }
-    }
-
-    public void updateOceans(int x, int y) {
-
-        HydroCell cellToUpdate, lowestCell;
-        
-        float lowestHeight, curCellHeight, displacedMass,
-                diffGeoHeight, differenceHeight, totalMass;
-
-        cellToUpdate = (HydroCell)getCellAt(x, y);
-        lowestCell = (HydroCell)getLowestCellFrom(cellToUpdate);
-
-        if (lowestCell == null || cellToUpdate == null) {
-            return;
-        }
-
-        WaterBuffer toUpdateWaterBuffer = cellToUpdate.getWaterBuffer();
-        WaterBuffer lowestHydroBuffer = lowestCell.getWaterBuffer();
-        
-        toUpdateWaterBuffer.applyWaterBuffer();
-        lowestHydroBuffer.applyWaterBuffer();
-        
-        SuspendedSediments lowestSSediments = cellToUpdate.getSedimentMap();
-        SuspendedSediments toUpdateSSediments = lowestCell.getSedimentMap();
-        
-        lowestSSediments.applyBuffer();
-        toUpdateSSediments.applyBuffer();
-        
-        if (rand.nextInt(rainProb) == 0) {
-            toUpdateWaterBuffer.transferWater(rainScale);
-        }
-
-        if (lowestCell != cellToUpdate && cellToUpdate.hasOcean()) {
-
-            lowestHeight = lowestCell.getHeight();
-            curCellHeight = cellToUpdate.getHeight();
-
-            // Move the water
-            differenceHeight = (curCellHeight - lowestHeight) / 2.5f;
-            curCellHeight = cellToUpdate.getHeight() / 2.5f;
-            lowestHeight = lowestCell.getHeight() / 2.5f;
-
-            differenceHeight = clamp(differenceHeight, -lowestHeight, curCellHeight);
-
-            displacedMass = calcMass(differenceHeight, Planet.self().getBase(), OCEAN);
-
-            toUpdateWaterBuffer.transferWater(-displacedMass);
-            lowestHydroBuffer.transferWater(displacedMass);
-
-            // Erosion/Deposition
-            lowestHeight = lowestCell.getHeightWithoutOceans();
-            curCellHeight = cellToUpdate.getHeightWithoutOceans();
-            diffGeoHeight = curCellHeight - lowestHeight;
-
-            if (cellToUpdate.getOceanMass() <= oceanSedimentCapacity) {
-
-                float angle, velocity, slope;
-                SedimentBuffer sedimentBuffer = cellToUpdate.getSedimentBuffer();
-                // Erosion
-                angle = (float) Math.atan(diffGeoHeight / Planet.self().getSqrtBase());
-                slope = Math.max((float) Math.sin(angle), MIN_ANGLE);
-
-                totalMass = cellToUpdate.getOceanMass() * slope;
-
-                if (sedimentBuffer.getSediments() <= 10) {
-                    
-                    velocity = cellToUpdate.erode(totalMass);
-                    
-                    velocity += sedimentBuffer.getSediments();
-                    sedimentBuffer.removeAllSediments();
-                } else {
-                    velocity = -sedimentBuffer.updateSurfaceSedimentMass(-totalMass);
-                }
-                lowestSSediments.transferSediment(velocity);
-                toUpdateSSediments.transferSediment(-velocity);
-            }
-
-            // Only evaporate if in oceans. Will probably be removed later.
-            else if (cellToUpdate.getOceanMass() > oceanSedimentCapacity) {
-                // Evaporate Water
-                toUpdateWaterBuffer.transferWater(-evapScale);
-            }
-        }
-    }
-    
-    public void heatMantel(){
-        int n = rand.nextInt(1000);
-        for (int i = 0; i < n; i++){
-            int x = rand.nextInt(worldSize);
-            int y = rand.nextInt(worldSize);
-
-            Mantel cell = getCellAt(x, y);
-            GeoCell geo;
-            cell.addHeat(100);
-
-            if (cell.checkVolcano()){
-                geo = (GeoCell)cell;
-                geo.putMoltenRockToSurface(250000);
-                cell.cool(200);
-            }
-        }
-    }
-    
-    /**
-     * Updating the surface results in updating lava flows and depositing 
-     * sediments.
-     * @see planet.surface.Surface#updateLavaFlows(int, int) 
-     * @see planet.surface.Surface#depositSediment(int, int) 
-     * @param x The x coordinate of the cell
-     * @param y The y coordinate of the cell
-     */
-    public void updateGeology(int x, int y) {
-
-        long curPlanetAge = planetAge.get();
-        boolean geoScale = Planet.self().getTimeScale() == Planet.TimeScale.Geological;
-
-        GeoCell cell = getCellAt(x, y);
-        long diff = (curPlanetAge - strataBuoyancyStamp);
-        
-        // Update the geosphere
-        if (geoScale) {
-            spreadToLowest(cell, geoScale);
-        } else {
-            if (diff > GEOUPDATE) {
-                spreadToLowest(cell, geoScale);
-                cell.updateHeight();
-                strataBuoyancyStamp = curPlanetAge;
-            }
-        }
-        depositSediment(x, y);
-        updateLavaFlows(x, y);
-        cell.cool(1);
-    }
-
-    public void dust(GeoCell cell) {
-        if (cell.getMoltenRockFromSurface() < 1) {
-            cell.getSedimentBuffer().updateSurfaceSedimentMass(10);
-        }
-    }
-
     public void updateMinimumHeight(int x, int y){
         float cellHeight = getCellAt(x, y).getHeight();
         
