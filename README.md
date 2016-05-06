@@ -23,6 +23,8 @@ platforms.JDK_1.8.home=C:\\\Program Files\\\Java\\\jdk1.8.0_73\\\
 Or where ever your JDK home is located.<br/>
 Double \\\ is required otherwise it won't parse correctly.
 
+The libs folder at the root directory contains all the libraries the project uses.
+
 # IDE
 The current version is using NetBeans 8.0.2 hence the nbproject directory.
 
