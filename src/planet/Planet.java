@@ -1,6 +1,9 @@
 
 package planet;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import planet.generics.SurfaceMap;
 import planet.surface.Surface;
 
 /**
@@ -28,7 +31,7 @@ public abstract class Planet {
      * @param threadCount The number of threads updating the map
      */
     public Planet(int gridSize, int sqrtBase, int surfaceThreadsDelay, int threadCount){
-        
+        Logger.getLogger(SurfaceMap.class.getName()).log(Level.INFO, "New Planet");
         current = this;
         this.gridSize = gridSize;
         base = sqrtBase * sqrtBase;
