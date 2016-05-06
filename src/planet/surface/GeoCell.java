@@ -726,12 +726,11 @@ public class GeoCell extends Mantel {
         cellHeight = (oceanVolume + totalVolume) / Planet.self().getBase();
         amountSubmerged = cellHeight * (density / mantel_density);
 
-        float force = Surface.mantel_density * 9.8f * amountSubmerged * Planet.self().getBase();
-        float diff = force / (totalMass + ((HydroCell) this).getOceanMass());
+        float diff = Math.abs(amountSubmerged - curAmountSubmerged);
         if (amountSubmerged > curAmountSubmerged){
-            curAmountSubmerged += diff;
+            curAmountSubmerged += diff / 2f;
         }else if(amountSubmerged < curAmountSubmerged){
-            curAmountSubmerged -= diff;
+            curAmountSubmerged -= diff / 2f;
         }
         
     }
