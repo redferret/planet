@@ -1,6 +1,7 @@
 
 package planet.surface;
 
+import planet.defs.Layer;
 import planet.Planet;
 
 

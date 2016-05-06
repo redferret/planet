@@ -1,10 +1,10 @@
  
-package planet.surface;
+package planet.cells;
 import java.awt.Color;
 import java.util.List;
 import planet.Planet;
 import planet.util.TBuffer;
-import static planet.surface.Layer.OCEAN;
+import static planet.defs.Layer.OCEAN;
 import planet.util.Tools;
 
 /**

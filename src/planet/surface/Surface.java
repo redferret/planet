@@ -1,6 +1,10 @@
 
 package planet.surface;
 
+import planet.defs.Layer;
+import planet.cells.AtmoCell;
+import planet.cells.GeoCell;
+import planet.cells.HydroCell;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -10,32 +14,32 @@ import java.util.concurrent.atomic.AtomicLong;
 import planet.Planet;
 import planet.gui.DisplayAdapter;
 
-import planet.surface.GeoCell.SedimentBuffer;
+import planet.cells.GeoCell.SedimentBuffer;
 import planet.util.SurfaceThread;
 import planet.generics.SurfaceMap;
-import planet.surface.HydroCell.SuspendedSediments;
-import planet.surface.HydroCell.WaterBuffer;
+import planet.cells.HydroCell.SuspendedSediments;
+import planet.cells.HydroCell.WaterBuffer;
 
 import planet.util.Boundaries;
 
 import static planet.generics.SurfaceMap.DIR_X_INDEX;
 import static planet.generics.SurfaceMap.DIR_Y_INDEX;
-import planet.mantel.Mantel;
-import static planet.surface.Layer.BASALT;
-import static planet.surface.Layer.LAVA;
-import static planet.surface.Layer.OCEAN;
-import static planet.surface.Layer.SANDSTONE;
-import static planet.surface.Layer.SEDIMENT;
-import static planet.surface.Layer.SHALE;
+import planet.cells.Mantel;
+import static planet.defs.Layer.BASALT;
+import static planet.defs.Layer.LAVA;
+import static planet.defs.Layer.OCEAN;
+import static planet.defs.Layer.SANDSTONE;
+import static planet.defs.Layer.SEDIMENT;
+import static planet.defs.Layer.SHALE;
 
 import static planet.surface.Surface.GEOUPDATE;
 import static planet.surface.Surface.planetAge;
 
-import static planet.surface.HydroCell.MIN_ANGLE;
-import static planet.surface.HydroCell.evapScale;
-import static planet.surface.HydroCell.oceanSedimentCapacity;
-import static planet.surface.HydroCell.rainProb;
-import static planet.surface.HydroCell.rainScale;
+import static planet.cells.HydroCell.MIN_ANGLE;
+import static planet.cells.HydroCell.evapScale;
+import static planet.cells.HydroCell.oceanSedimentCapacity;
+import static planet.cells.HydroCell.rainProb;
+import static planet.cells.HydroCell.rainScale;
 import planet.util.Delay;
 
 import static planet.util.Tools.calcDepth;

@@ -12,7 +12,7 @@ import javax.swing.JFrame;
 import planet.Planet;
 import planet.Planet.TimeScale;
 import planet.TestWorld;
-import planet.surface.Layer;
+import planet.defs.Layer;
 
 /**
  *

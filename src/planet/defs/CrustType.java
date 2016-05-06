@@ -1,5 +1,5 @@
 
-package planet.surface;
+package planet.defs;
 
 /**
  * The crust type is given by determining if the crust will subduct and

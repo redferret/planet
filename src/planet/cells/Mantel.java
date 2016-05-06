@@ -1,6 +1,6 @@
 
 
-package planet.mantel;
+package planet.cells;
 
 import java.awt.Color;
 import java.util.List;

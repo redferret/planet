@@ -1,6 +1,6 @@
 
 
-package planet.surface;
+package planet.cells;
 
 import java.util.List;
 

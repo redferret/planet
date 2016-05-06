@@ -1,5 +1,5 @@
 
-package planet.surface;
+package planet.cells;
 
 import java.awt.Color;
 import java.util.Deque;
@@ -9,10 +9,14 @@ import planet.Planet;
 import planet.util.TBuffer;
 import planet.util.Tools;
 import planet.generics.Cell;
-import planet.mantel.Mantel;
+import planet.cells.Mantel;
+import planet.defs.CrustType;
+import planet.defs.Layer;
+import planet.surface.Stratum;
+import planet.surface.Surface;
 
 import static planet.surface.Surface.*;
-import static planet.surface.Layer.*;
+import static planet.defs.Layer.*;
 import static planet.util.Tools.*;
 
 /**

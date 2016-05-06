@@ -1,4 +1,4 @@
-package planet.surface;
+package planet.defs;
 
 import java.awt.Color;
 

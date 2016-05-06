@@ -1,11 +1,11 @@
 
 import org.junit.Test;
-import planet.surface.GeoCell;
-import planet.surface.Layer;
+import planet.cells.GeoCell;
+import planet.defs.Layer;
 import planet.TestWorld;
 
 import static org.junit.Assert.*;
-import planet.surface.HydroCell;
+import planet.cells.HydroCell;
 import planet.surface.Stratum;
 
 
