@@ -31,16 +31,15 @@ public class Tools {
      * 
      * @param colors The list of colors
      * @param width The number of colors after interpolation
-     * @param additional Additional elements being returned in the array
      * @return The samples array
      */
-    public static Integer[][] constructSamples(Color[] colors, int width, int additional){
+    public static Integer[][] constructSamples(Color[] colors, int width){
         
         if (colors.length > width){
             throw new IndexOutOfBoundsException("The width of the gradient is invalid");
         }
         
-        float[] dist = new float[colors.length + additional];
+        float[] dist = new float[colors.length];
         float distAmount = 1f / colors.length, totalDist = 0;
         
         for (int i = 0; i < colors.length; i++){
@@ -52,7 +51,7 @@ public class Tools {
         
         dist[colors.length - 1] = 1.0f;
         
-        return constructGradient(colors, dist, width, additional);
+        return constructGradient(colors, dist, width);
         
     }
     
@@ -65,11 +64,9 @@ public class Tools {
      * @param colors The list of colors
      * @param dist The list of distributions for each color
      * @param width The number of colors after interpolation
-     * @param additional Additional elements being returned in the array
      * @return The samples array
      */
-    public static Integer[][] constructGradient(Color[] colors, float[] dist, 
-            int width, int additional){
+    public static Integer[][] constructGradient(Color[] colors, float[] dist, int width){
         
         Integer[][] colorArray = new Integer[width][4];
         
