@@ -52,7 +52,7 @@ public class Tools {
         
         dist[colors.length - 1] = 1.0f;
         
-        return constructGradient(colors, dist, width);
+        return constructGradient(colors, dist, width, additional);
         
     }
     
