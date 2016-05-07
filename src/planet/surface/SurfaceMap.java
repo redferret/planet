@@ -276,7 +276,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
         int width = Planet.self().getGridSize();
         int index = (width * y) + x;
 
-        return (CellType) map.get(index);
+        return map.get(index);
     }
 
     /**
