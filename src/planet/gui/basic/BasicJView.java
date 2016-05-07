@@ -34,10 +34,10 @@ public class BasicJView extends JFrame implements DisplayAdapter {
         averages = new LinkedList<>();
         totalAvg = 0;
         
+        renderFrame = new Frame(SIZE, SIZE);
+        
         testWorld = new TestWorld();
         testWorld.getSurface().setDisplay(this);
-        
-        renderFrame = new Frame(SIZE, SIZE);
         renderFrame.registerMap(testWorld.getSurface());
         add(renderFrame);
         
