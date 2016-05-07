@@ -8,7 +8,6 @@ import java.util.List;
 import planet.Planet;
 import planet.util.TBuffer;
 import planet.util.Tools;
-import planet.cells.Mantel;
 import planet.enums.CrustType;
 import planet.enums.Layer;
 import planet.surface.Stratum;
@@ -23,9 +22,7 @@ import static planet.util.Tools.*;
  * strata and specialized methods for adding and/or removing from the strata.
  * The GeoCell doesn't contain information about oceans but accesses the
  * Hydrosphere to obtain the quantity of sea water at this cell location to
- * calculate the average density of this cell. Measurements are as follows, Mass
- * is in kilograms, Volume is in cubic meters, Density is in grams per liter =
- * kilograms per cubic meter, and Height is in meters.
+ * calculate the average density of this cell.
  *
  * @author Richard DeSilvey
  */
