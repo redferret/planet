@@ -56,7 +56,7 @@ public final class EulerCamera implements Camera {
     private final float zNear;
     private final float zFar;
 
-    private EulerCamera(Builder builder) {
+    private EulerCamera(EulerFactory builder) {
         this.x = builder.x;
         this.y = builder.y;
         this.z = builder.z;
@@ -616,17 +616,13 @@ public final class EulerCamera implements Camera {
     /**
      * A builder helper class for the EulerCamera class.
      */
-    public static class Builder {
+    public static class EulerFactory {
 
         private float aspectRatio = 1;
         private float x = 0, y = 0, z = 0, pitch = 0, yaw = 0, roll = 0;
         private float zNear = 0.3f;
         private float zFar = 100;
         private float fov = 90;
-
-        public Builder() {
-
-        }
 
         /**
          * Sets the aspect ratio of the camera.
@@ -636,7 +632,7 @@ public final class EulerCamera implements Camera {
          *
          * @return this
          */
-        public Builder setAspectRatio(float aspectRatio) {
+        public EulerFactory setAspectRatio(float aspectRatio) {
             if (aspectRatio <= 0) {
                 throw new IllegalArgumentException("aspectRatio " + aspectRatio + " was 0 or was smaller than 0");
             }
@@ -654,7 +650,7 @@ public final class EulerCamera implements Camera {
          *
          * @throws IllegalArgumentException if nearClippingPane is 0 or less
          */
-        public Builder setNearClippingPane(float nearClippingPane) {
+        public EulerFactory setNearClippingPane(float nearClippingPane) {
             if (nearClippingPane <= 0) {
                 throw new IllegalArgumentException("nearClippingPane " + nearClippingPane + " is 0 or less");
             }
@@ -672,7 +668,7 @@ public final class EulerCamera implements Camera {
          *
          * @throws IllegalArgumentException if farClippingPane is 0 or less
          */
-        public Builder setFarClippingPane(float farClippingPane) {
+        public EulerFactory setFarClippingPane(float farClippingPane) {
             if (farClippingPane <= 0) {
                 throw new IllegalArgumentException("farClippingPane " + farClippingPane + " is 0 or less");
             }
@@ -687,7 +683,7 @@ public final class EulerCamera implements Camera {
          *
          * @return this
          */
-        public Builder setFieldOfView(float fov) {
+        public EulerFactory setFieldOfView(float fov) {
             this.fov = fov;
             return this;
         }
@@ -701,7 +697,7 @@ public final class EulerCamera implements Camera {
          *
          * @return this
          */
-        public Builder setPosition(float x, float y, float z) {
+        public EulerFactory setPosition(float x, float y, float z) {
             this.x = x;
             this.y = y;
             this.z = z;
@@ -716,7 +712,7 @@ public final class EulerCamera implements Camera {
          * @param roll the rotation around the z-axis in degrees
          * @return
          */
-        public Builder setRotation(float pitch, float yaw, float roll) {
+        public EulerFactory setRotation(float pitch, float yaw, float roll) {
             this.pitch = pitch;
             this.yaw = yaw;
             this.roll = roll;
