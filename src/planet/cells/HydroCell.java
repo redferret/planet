@@ -131,7 +131,7 @@ public class HydroCell extends GeoCell {
     static {
         Color colors[] = {new Color(0, 0, 0, 0), new Color(153, 204, 255, 128), new Color(0, 102, 255, 192),
                         new Color(0, 0, 153, 255)};
-        float[] dist = {0.04f, 0.32f, 0.32f, 0.32f};
+        float[] dist = {0.04f, 0.36f, 0.68f, 1f};
         oceanMap = Tools.constructGradient(colors, dist, MAX_WATER_DEPTH_INDEX);      
     }
     
