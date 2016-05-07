@@ -28,8 +28,10 @@ public class OGLDisplay implements DisplayAdapter {
     public OGLDisplay(int width, int height){
         
         float aspectRatio = width*1f / height*1f;
-        camera = new EulerCamera.Builder().setPosition(-5.4f, 19.2f,
-            33.2f).setRotation(30, 61, 0).setAspectRatio(aspectRatio).setFieldOfView(60).build();
+        camera = new EulerCamera.Builder().setPosition(-5.4f, 19.2f, 33.2f)
+                .setRotation(30, 61, 0)
+                .setAspectRatio(aspectRatio)
+                .setFieldOfView(60).build();
         
         try {
             // Sets the width of the display to 640 and the height to 480
