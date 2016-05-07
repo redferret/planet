@@ -35,11 +35,8 @@ public class OGLDisplay implements DisplayAdapter {
                 .setFieldOfView(60).build();
         
         try {
-            // Sets the width of the display to 640 and the height to 480
             Display.setDisplayMode(new DisplayMode(640, 480));
-            // Sets the title of the display to "Episode 2 - Display"
             Display.setTitle("Episode 2 - Display");
-            // Creates and shows the display
             Display.create();
             
         } catch (LWJGLException e) {
