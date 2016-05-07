@@ -36,7 +36,7 @@ public class OGLDisplay implements DisplayAdapter {
         
         try {
             Display.setDisplayMode(new DisplayMode(640, 480));
-            Display.setTitle("Episode 2 - Display");
+            Display.setTitle("Planet");
             Display.create();
             
         } catch (LWJGLException e) {
