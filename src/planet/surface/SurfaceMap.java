@@ -233,7 +233,6 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
                 }
             }
         }
-        Logger.getLogger(SurfaceMap.class.getName()).log(Level.INFO, "Done");
     }
 
     /**
