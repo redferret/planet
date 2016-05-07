@@ -112,7 +112,8 @@ public abstract class Geosphere extends Surface {
         dust(spreadFrom);
 
         if (geoScale) {
-            convertTopLayer(spreadFrom, calcHeight(100, Planet.self().getBase(), SEDIMENT));
+            float height = calcHeight(1, Planet.self().getBase(), SEDIMENT);
+            convertTopLayer(spreadFrom, height);
         }
 
         if ((((HydroCell)spreadFrom).getOceanMass() > oceanSedimentCapacity) || geoScale) {
