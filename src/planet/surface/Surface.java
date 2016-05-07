@@ -146,8 +146,10 @@ public abstract class Surface extends SurfaceMap<AtmoCell> {
                 geologicalTimeStamp = curPlanetAge;
             }
         }
+        display.update();
+        
         if (threadAverageDelay.check()){
-            display.update();
+            super.update();
         }
     }
     
