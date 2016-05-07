@@ -307,7 +307,8 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
     public List<Integer[]> getCellData(int x, int y) {
         
         List<Integer[]> settings = new ArrayList<>();
+        CellType cell = getCellAt(x, y);
         
-        return getCellAt(x, y).render(settings);
+        return cell.render(settings);
     }
 }
