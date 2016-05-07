@@ -65,7 +65,7 @@ public abstract class Surface extends SurfaceMap<AtmoCell> {
     public static AtomicInteger absLowestHeight;
     protected int worldSize;
     
-    private Delay delay;
+    private Delay ageUpdateDelay, threadAverageDelay;
     
     public final static int HEIGHTMAP = 0;
     public final static int STRATAMAP = 1;
@@ -95,7 +95,8 @@ public abstract class Surface extends SurfaceMap<AtmoCell> {
     public Surface(int worldSize, int surfaceDelay, int threadsDelay, int threadCount) {
         super(worldSize, 10, "Geosphere", threadCount);
         this.worldSize = worldSize;
-        delay = new Delay(surfaceDelay);
+        ageUpdateDelay = new Delay(surfaceDelay);
+        threadAverageDelay = new Delay(250);
         reset();
         setupThreads(threadCount, threadsDelay);
     }
@@ -137,7 +138,7 @@ public abstract class Surface extends SurfaceMap<AtmoCell> {
     @Override
     public void update() {
         
-        if (delay.check()){
+        if (ageUpdateDelay.check()){
             long curPlanetAge = planetAge.getAndAdd(ageStep);
             if (curPlanetAge - geologicalTimeStamp > GEOUPDATE){
                 // < Update to major geological events go here >
@@ -145,7 +146,9 @@ public abstract class Surface extends SurfaceMap<AtmoCell> {
                 geologicalTimeStamp = curPlanetAge;
             }
         }
-        display.update();
+        if (threadAverageDelay.check()){
+            display.update();
+        }
     }
     
     @Override

@@ -78,7 +78,7 @@ public class OGLDisplay implements DisplayAdapter {
 
     @Override
     public void update() {
-        
+        checkInput();
     }
     
     
