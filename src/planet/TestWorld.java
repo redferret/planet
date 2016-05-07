@@ -16,7 +16,7 @@ public class TestWorld extends Planet {
         CELL_SIZE_M = 6;
         THREAD_COUNT = 1;
         PLANET_DELAY = 10;
-        AGE_STEP_DELAY = 100;
+        AGE_STEP_DELAY = 250;
         DEFAULT_SIZE = 256;
     }
     
