@@ -1,7 +1,7 @@
 ## Planet
 A simulation that simulates geological processes as well as hydrological, biological, and other complex systems that can exist on a planet.
 
-## Please Read the Wiki
+### Please Read the Wiki
 
 ## Building
 Simply run Ant on the root directory where the build XML file is located. Newer versions of the project will eventually move to Maven
