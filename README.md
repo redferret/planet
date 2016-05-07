@@ -31,7 +31,7 @@ The libs folder at the root directory contains all the libraries the project use
 The current version is using NetBeans 8.0.2 hence the nbproject directory.
 
 ## Project Status
-Right now the project is in clean and maintance mode with some minor additions and changes to the code. More unit tests must be written before newer code is added to the code base. There is no GUI at the moment and when code revisions are finished a basic GUI will be built.
+The project needs LWJGL programmers to give a good UI to the simulation.
 
 ## Contributors
 If you wish to contribute to the project, I'm looking for those skilled in 3D graphics. The simulation will be using LWJGL.
