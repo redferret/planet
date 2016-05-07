@@ -65,11 +65,8 @@ public class OGLDisplay implements DisplayAdapter {
                 }
             }
         }
-        if (Mouse.isButtonDown(0)) {
-            Mouse.setGrabbed(true);
-        } else if (Mouse.isButtonDown(1)) {
-            Mouse.setGrabbed(false);
-        }
+        Mouse.setGrabbed(Mouse.isButtonDown(0));
+
         if (Mouse.isGrabbed()) {
             camera.processMouse(1, 80, -80);
         }
