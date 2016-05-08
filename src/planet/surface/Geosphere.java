@@ -38,6 +38,7 @@ public abstract class Geosphere extends Surface {
     
     public Geosphere(int worldSize, int surfaceDelay, int threadsDelay, int threadCount) {
         super(worldSize, surfaceDelay, threadsDelay, threadCount);
+        strataBuoyancyStamp = 0;
     }
 
     public void depositSediment(int x, int y) {
@@ -45,14 +46,8 @@ public abstract class Geosphere extends Surface {
         float maxPressure;
         long age;
         
-        Stratum stratum;
         GeoCell cell = getCellAt(x, y);
         cell.getSedimentBuffer().applySedimentBuffer();
-        stratum = cell.peekTopStratum();
-
-        if (stratum == null) {
-            return;
-        }
 
         formNewRock(cell, calcDepth(SEDIMENT, 9.8f, 400));
         age = cell.getAge();
@@ -69,10 +64,6 @@ public abstract class Geosphere extends Surface {
     public void melt(GeoCell cell, float maxHeight) {
 
         float height, diff, massToChange;
-        Stratum bottom = cell.peekBottomStratum();
-        if (bottom == null) {
-            return;
-        }
         Layer bottomType = cell.peekBottomStratum().getLayer();
 
         height = cell.getHeight();
