@@ -5,7 +5,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 
 /**
- *
+ * Modified thread that can be continuous or be signaled to run. Each
+ * thread has a delay time on each update.
  * @author Richard DeSilvey
  */
 public abstract class MThread extends Thread {
@@ -69,22 +70,16 @@ public abstract class MThread extends Thread {
         while(!isFinished){
             try {
                 if (running) {
-                    
                     long start = System.currentTimeMillis();
-                    
                     update();
-                    
                     timeLapse.getAndSet((int) (System.currentTimeMillis() - start));
                 }
                 
                 sleep(miliSeconds);
-                
                 running = continuous;
-                
                 if (!running){
                     sleep(60000);
                 }
-                
             } catch (InterruptedException interruptedException) {
             }
         }
