@@ -245,10 +245,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
                 name = "SubThread: " + c;
                 bounds = new Boundaries(w * x, w * (x + 1), h * y, h * (y + 1));
                 SurfaceThread thread = new SurfaceThread(delay, bounds, name);
-
-                if (thread != null) {
-                    threads.add(thread);
-                }
+                threads.add(thread);
             }
         }
     }
