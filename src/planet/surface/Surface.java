@@ -10,6 +10,8 @@ import planet.gui.DisplayAdapter;
 import planet.util.Delay;
 import static planet.surface.Surface.GEOUPDATE;
 import static planet.surface.Surface.planetAge;
+import planet.util.Boundaries;
+import planet.util.SurfaceThread;
 
 /**
  * The Surface is the geology for the planet. It provides a foundation
@@ -151,6 +153,11 @@ public abstract class Surface extends SurfaceMap<AtmoCell> {
         if (threadAverageDelay.check()){
             super.update();
         }
+    }
+    
+    @Override
+    public SurfaceThread generateSurfaceThread(int delay, Boundaries bounds, String name) {
+        return new SurfaceThread(delay, bounds, name);
     }
     
     @Override
