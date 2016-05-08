@@ -156,11 +156,6 @@ public abstract class Surface extends SurfaceMap<AtmoCell> {
     }
     
     @Override
-    public SurfaceThread generateSurfaceThread(int delay, Boundaries bounds, String name) {
-        return new SurfaceThread(delay, bounds, name);
-    }
-    
-    @Override
     public AtmoCell generateCell(int x, int y) {
         return new AtmoCell(x, y);
     }

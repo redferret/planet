@@ -160,17 +160,6 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
     public abstract CellType generateCell(int x, int y);
 
     /**
-     * Should return a new instance of a SurfaceThread. This method is called by
-     * the super class when threads are being constructed.
-     *
-     * @param delay The delay the new thread should have
-     * @param bounds The boundaries the thread should have
-     * @param name The name of the thread
-     * @return The newly constructed thread
-     */
-    public abstract SurfaceThread generateSurfaceThread(int delay, Boundaries bounds, String name);
-
-    /**
      * Override this method and call the <code>super.update()</code> to make
      * additional updates. The <code>super.update()</code> must be called for
      * the map to function properly.
@@ -255,7 +244,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
             for (int x = 0; x < threadDivision; x++, c++) {
                 name = "SubThread: " + c;
                 bounds = new Boundaries(w * x, w * (x + 1), h * y, h * (y + 1));
-                SurfaceThread thread = generateSurfaceThread(delay, bounds, name);
+                SurfaceThread thread = new SurfaceThread(delay, bounds, name);
 
                 if (thread != null) {
                     threads.add(thread);
