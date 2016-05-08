@@ -2,8 +2,8 @@ package planet.util;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import planet.surface.Hydrosphere;
-import planet.surface.Surface;
+import planet.Planet;
+import planet.surface.PlanetSurface;
 
 /**
  * A surface can be broken up into sections where a SurfaceThread can modify
@@ -17,21 +17,18 @@ public class SurfaceThread extends MThread {
      */
     protected Boundaries bounds;
     private int curFrame;
-    protected Hydrosphere surface;
     
     /**
      * Constructs a new SurfaceThread.
      * @param delay The amount of time to delay each frame in milliseconds
      * @param bounds The surface boundaries
      * @param name The name of this thread
-     * @param ref The reference to the surface being worked on
      */
-    public SurfaceThread(int delay, Boundaries bounds, String name, Hydrosphere ref) {
+    public SurfaceThread(int delay, Boundaries bounds, String name) {
         super(delay, name, false);
 
         this.bounds = bounds;
         curFrame = 0;
-        this.surface =  ref;
     }
 
     
@@ -41,6 +38,8 @@ public class SurfaceThread extends MThread {
      */
     public final void update(){
 
+        PlanetSurface surface = (PlanetSurface)Planet.self().getSurface();
+        
         boolean sw  = (curFrame % 2) == 0;
         int m;
         int lowerYBound = bounds.getLowerYBound();
@@ -60,7 +59,9 @@ public class SurfaceThread extends MThread {
                        :((b > 0) && (y % 2 != 0)  ? -1 : 0);
                     
                     for (int x = ((y % 2) + m) + lowerXBound; x < upperXBound; x += 2) {
-                        update(x, y);
+                        surface.updateGeology(x, y);
+                        surface.updateOceans(x, y);
+                        surface.updateMinimumHeight(x, y);
                     }
                 }
             }
@@ -74,10 +75,4 @@ public class SurfaceThread extends MThread {
         
     }
    
-    private void update(int x, int y) {
-        surface.updateGeology(x, y);
-        surface.updateOceans(x, y);
-        surface.updateMinimumHeight(x, y);
-    }
-
 }
