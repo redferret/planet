@@ -110,13 +110,16 @@ public abstract class Surface extends SurfaceMap<AtmoCell> {
     }
     
     public float getLowestHeight() {
-        float avgHeight = 0;
-        
+        float lowest = Integer.MAX_VALUE;
+        float h;
         for (SurfaceThread thread : threads){
-            avgHeight += thread.getPreviousLowestHeight();
+            h = thread.getPreviousLowestHeight();
+            if (h < lowest){
+                lowest = h;
+            }
         }
         
-        return avgHeight / threads.size();
+        return lowest;
     }
     
     
