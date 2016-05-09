@@ -40,8 +40,6 @@ public final class Delay implements Serializable {
      * @param frames
      */
     public Delay(int frames) {
-        assert frames <= 0 : "Invalid Delay Time";
-
         delayTime = 0;
         this.maxDelay = frames;
         reset = true;
@@ -54,9 +52,6 @@ public final class Delay implements Serializable {
      * @param reset
      */
     public Delay(int frames, boolean reset) {
-
-        assert frames <= 0 : "Invalid Delay Time";
-
         delayTime = 0;
         this.maxDelay = frames;
         this.reset = reset;
@@ -80,9 +75,6 @@ public final class Delay implements Serializable {
      * @return
      */
     public boolean check(int frames) {
-
-        assert frames < 0 : "Invalid Delay Time";
-
         if (++delayTime >= frames) {
 
             if (!reset) {

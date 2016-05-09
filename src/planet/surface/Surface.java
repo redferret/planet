@@ -97,6 +97,7 @@ public abstract class Surface extends SurfaceMap<AtmoCell> {
         this.worldSize = worldSize;
         ageUpdateDelay = new Delay(ageStepDelay);
         threadAverageDelay = new Delay(250);
+        display = null;
         reset();
         setupThreads(threadCount, threadsDelay);
     }
@@ -146,8 +147,10 @@ public abstract class Surface extends SurfaceMap<AtmoCell> {
                 geologicalTimeStamp = curPlanetAge;
             }
         }
-        display.update();
         
+        if (display != null){
+            display.update();
+        }
         if (threadAverageDelay.check()){
             super.update();
         }
