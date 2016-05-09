@@ -15,6 +15,7 @@ public class SurfaceThread extends MThread {
 
     private float absLowestHeight;
     private AtomicInteger previousLowestHeight;
+    private AtomicInteger decPartLowestHeight;
     
     /**
      * Lower bounds are inclusive, upper bounds are exclusive
@@ -34,6 +35,7 @@ public class SurfaceThread extends MThread {
         this.bounds = bounds;
         curFrame = 0;
         previousLowestHeight = new AtomicInteger(Integer.MAX_VALUE);
+        decPartLowestHeight = new AtomicInteger(Integer.MAX_VALUE);
         absLowestHeight = Integer.MAX_VALUE;
     }
 
@@ -79,12 +81,21 @@ public class SurfaceThread extends MThread {
         }
         curFrame++;
         
-        previousLowestHeight.set((int)absLowestHeight);
+        int intPart = (int)absLowestHeight;
+        int decPart = (int)((absLowestHeight - intPart) * 10);
+        
+        previousLowestHeight.set(intPart);
+        decPartLowestHeight.set(decPart);
+        
         absLowestHeight = Integer.MAX_VALUE;
     }
     
-    public int getPreviousLowestHeight() {
-        return previousLowestHeight.get();
+    public float getPreviousLowestHeight() {
+        
+        float decPart = decPartLowestHeight.get() / 10f;
+        decPart = previousLowestHeight.get() + decPart;
+        
+        return decPart;
     }
     
     private void updateMinimumHeight(int x, int y, PlanetSurface surface){
