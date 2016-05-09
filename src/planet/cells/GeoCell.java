@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import planet.Planet;
 import planet.util.TBuffer;
 import planet.util.Tools;
@@ -421,7 +423,13 @@ public class GeoCell extends Mantel {
                 if (verifyStratumMass(selectedStratum, workOnTop)){
                     addToStrata(null, amount - difference, workOnTop);
                 }
-                return placeAmount(type, difference, workOnTop);
+                try {
+                    return placeAmount(type, difference, workOnTop);
+                } catch (Exception e) {
+                    Logger.getLogger(GeoCell.class.getName())
+                            .log(Level.SEVERE, "Stackoverflow\nmass: {0}\n"
+                                + "amount: {1}\n", new Object[]{mass, amount});
+                }
             }else{
                 /* not adding but subtracting the amounts from the
                    stratum since the amount is less than 0. */
