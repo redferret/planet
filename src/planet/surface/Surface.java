@@ -98,10 +98,14 @@ public abstract class Surface extends SurfaceMap<AtmoCell> {
         ageUpdateDelay = new Delay(ageStepDelay);
         threadAverageDelay = new Delay(250);
         display = null;
-        reset();
+        set();
         setupThreads(threadCount, threadsDelay);
     }
 
+    private void set(){
+        reset();
+    }
+    
     public void reset(){
         planetAge = new AtomicLong(0);
         geologicalTimeStamp = 0;
@@ -116,7 +120,7 @@ public abstract class Surface extends SurfaceMap<AtmoCell> {
     }
     
     public void updateMinimumHeight(int x, int y){
-        float cellHeight = getCellAt(x, y).getHeight();
+        float cellHeight = getCellAt(x, y).getHeightWithoutOceans();
         
         if (cellHeight < absLowestHeight.get()){
             absLowestHeight.set((int) cellHeight);
