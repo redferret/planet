@@ -118,7 +118,7 @@ public abstract class Hydrosphere extends Geosphere {
             // Only evaporate if in oceans. Will probably be removed later.
             else if (cellToUpdate.getOceanMass() > oceanSedimentCapacity) {
                 // Evaporate Water
-                toUpdateWaterBuffer.transferWater(-evapScale);
+//                toUpdateWaterBuffer.transferWater(-evapScale);
             }
         }
     }

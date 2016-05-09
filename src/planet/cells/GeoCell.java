@@ -754,7 +754,7 @@ public class GeoCell extends Mantel {
         int setting;
         switch(Planet.self().getSurface().displaySetting){
             case HEIGHTMAP:
-                float height = Math.abs((getHeightWithoutOceans() - Surface.absLowestHeight.get())) * 10;
+                float height = Math.max(0, getHeightWithoutOceans() - Surface.absLowestHeight.get()) * 10;
                 setting = (int) (height / heightIndexRatio) % MAX_HEIGHT_INDEX;
                 settings.add(heightMap[setting]);
                 
