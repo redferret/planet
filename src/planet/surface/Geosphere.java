@@ -41,6 +41,19 @@ public abstract class Geosphere extends Surface {
         strataBuoyancyStamp = 0;
     }
 
+    /**
+     * Add a uniformed layer on the whole surface.
+     * @param type The layer being added
+     * @param amount The amount being added
+     */
+    public void addToSurface(Layer type, float amount){
+        for (int x = 0; x < worldSize; x++){
+            for (int y = 0; y < worldSize; y++){
+                getCellAt(x, y).add(type, amount, true);
+            }
+        }
+    }
+    
     public void depositSediment(int x, int y) {
 
         float maxPressure;
