@@ -138,11 +138,6 @@ public class GeoCell extends Mantel {
     }
     
     /**
-     * The thickness of sediment layers to become visible on screen.
-     */
-    public static float minSedimentThickness = 32;
-    
-    /**
      * The list of strata for this cell
      */
     private Deque<Stratum> strata;
