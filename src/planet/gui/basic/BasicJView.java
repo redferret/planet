@@ -14,6 +14,7 @@ import planet.Planet.TimeScale;
 import planet.TestWorld;
 import planet.enums.Layer;
 import planet.gui.DisplayAdapter;
+import planet.surface.PlanetSurface;
 
 /**
  *
@@ -49,7 +50,9 @@ public class BasicJView extends JFrame implements DisplayAdapter {
         setVisible(true);
         
         testWorld.setTimescale(TimeScale.Geological);
-        testWorld.getSurface().addToSurface(Layer.BASALT, 10000);
+        PlanetSurface surface = (PlanetSurface) testWorld.getSurface();
+        surface.addToSurface(Layer.BASALT, 10000);
+        surface.addWaterToAllCells(10000);
         
         testWorld.play();
     }
