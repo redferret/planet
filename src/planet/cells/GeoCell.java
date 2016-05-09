@@ -425,7 +425,7 @@ public class GeoCell extends Mantel {
                 }
                 try {
                     return placeAmount(type, difference, workOnTop);
-                } catch (Exception e) {
+                } catch (StackOverflowError e) {
                     Logger.getLogger(GeoCell.class.getName())
                             .log(Level.SEVERE, "Stackoverflow\nmass: {0}\n"
                                 + "amount: {1}\n", new Object[]{mass, amount});
