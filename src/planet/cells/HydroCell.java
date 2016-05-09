@@ -5,6 +5,7 @@ import java.util.List;
 import planet.Planet;
 import planet.util.TBuffer;
 import static planet.enums.Layer.OCEAN;
+import planet.surface.Hydrosphere;
 import planet.util.Tools;
 
 /**
@@ -178,7 +179,7 @@ public class HydroCell extends GeoCell {
     
     public List<Integer[]> render(List<Integer[]> settings) {
         
-        if (Planet.self().getSurface().displaySetting >= 0){
+        if (Hydrosphere.drawOcean){
             int index = (int) (getOceanMass() / depthIndexRatio);
 
             int setting = index < MAX_WATER_DEPTH_INDEX ? index : MAX_WATER_DEPTH_INDEX - 1;

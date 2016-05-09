@@ -14,6 +14,7 @@ import planet.Planet.TimeScale;
 import planet.TestWorld;
 import planet.enums.Layer;
 import planet.gui.DisplayAdapter;
+import planet.surface.Hydrosphere;
 import planet.surface.PlanetSurface;
 
 /**
@@ -86,6 +87,10 @@ class KeyController extends KeyAdapter {
     public void keyReleased(KeyEvent e) {
         
         switch(e.getKeyCode()){
+            
+            case KeyEvent.VK_INSERT:
+                Hydrosphere.drawOcean = !Hydrosphere.drawOcean;
+                break;
             
             case KeyEvent.VK_PAGE_UP:
                 Planet.self().getSurface().displaySetting++;

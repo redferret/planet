@@ -24,6 +24,12 @@ import static planet.util.Tools.getLowestCellFrom;
  */
 public abstract class Hydrosphere extends Geosphere {
 
+    public static boolean drawOcean;
+
+    static {
+        drawOcean = true;
+    }
+    
     public Hydrosphere(int worldSize, int surfaceDelay, int threadsDelay, int threadCount) {
         super(worldSize, surfaceDelay, threadsDelay, threadCount);
     }
