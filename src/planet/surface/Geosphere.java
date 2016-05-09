@@ -287,7 +287,7 @@ public abstract class Geosphere extends Surface {
     }
     
     public void heatMantel(){
-        int n = rand.nextInt(1000);
+        int n = rand.nextInt(1100);
         for (int i = 0; i < n; i++){
             int x = rand.nextInt(worldSize);
             int y = rand.nextInt(worldSize);
