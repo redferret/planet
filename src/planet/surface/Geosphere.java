@@ -101,7 +101,7 @@ public abstract class Geosphere extends Surface {
             diff = (height - maxHeight);
 
             massBeingDeposited = calcMass(diff, Planet.self().getBase(), SEDIMENT);
-            depositType = (((HydroCell)cell).getOceanMass() > 15000) ? SHALE : SANDSTONE;
+            depositType = (((HydroCell)cell).getOceanMass() > 9000) ? SHALE : SANDSTONE;
 
             eb.updateSurfaceSedimentMass(-massBeingDeposited);
 
