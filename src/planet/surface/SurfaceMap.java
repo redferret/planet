@@ -64,7 +64,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
     /**
      * Helper threads that would work on the map.
      */
-    protected List<MThread> threads;
+    protected List<SurfaceThread> threads;
 
     private int prevSubThreadAvg;
     

@@ -16,6 +16,7 @@ import planet.enums.Layer;
 import planet.gui.DisplayAdapter;
 import planet.surface.Hydrosphere;
 import planet.surface.PlanetSurface;
+import planet.surface.Surface;
 
 /**
  *
@@ -72,7 +73,8 @@ public class BasicJView extends JFrame implements DisplayAdapter {
             totalAvg /= 25;
         }
         
-        setTitle("Age: " + testWorld.getSurface().getPlanetAge() + " F:" + totalAvg);
+        setTitle("Age: " + testWorld.getSurface().getPlanetAge() 
+                + " F:" + totalAvg + " L:" + testWorld.getSurface().getLowestHeight());
     }
     
     public static void main(String[] args){

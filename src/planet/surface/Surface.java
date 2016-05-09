@@ -1,15 +1,14 @@
 
 package planet.surface;
 
-import planet.enums.Layer;
 import planet.cells.AtmoCell;
 import java.util.Random;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import planet.gui.DisplayAdapter;
 import planet.util.Delay;
 import static planet.surface.Surface.GEOUPDATE;
 import static planet.surface.Surface.planetAge;
+import planet.util.SurfaceThread;
 
 /**
  * The Surface is the geology for the planet. It provides a foundation
@@ -44,7 +43,7 @@ public abstract class Surface extends SurfaceMap<AtmoCell> {
      * The number of years that pass for each step of erosion
      */
     public static long GEOUPDATE;
-    
+
     private long geologicalTimeStamp;
     
     /**
@@ -59,10 +58,6 @@ public abstract class Surface extends SurfaceMap<AtmoCell> {
     
     private DisplayAdapter display;
     
-    /**
-     * 
-     */
-    public static AtomicInteger absLowestHeight;
     protected int worldSize;
     
     private Delay ageUpdateDelay, threadAverageDelay;
@@ -82,7 +77,6 @@ public abstract class Surface extends SurfaceMap<AtmoCell> {
         erosionAmount = 1;
         ageStep = 100000;
         GEOUPDATE = 100000;
-        absLowestHeight = new AtomicInteger(Integer.MAX_VALUE);
     }
     
     /**
@@ -115,16 +109,19 @@ public abstract class Surface extends SurfaceMap<AtmoCell> {
         this.display = display;
     }
     
-    public long getPlanetAge(){
-        return planetAge.get();
+    public float getLowestHeight() {
+        float avgHeight = 0;
+        
+        for (SurfaceThread thread : threads){
+            avgHeight += thread.getPreviousLowestHeight();
+        }
+        
+        return avgHeight / threads.size();
     }
     
-    public void updateMinimumHeight(int x, int y){
-        float cellHeight = getCellAt(x, y).getHeightWithoutOceans();
-        
-        if (cellHeight < absLowestHeight.get()){
-            absLowestHeight.set((int) cellHeight);
-        }
+    
+    public long getPlanetAge(){
+        return planetAge.get();
     }
     
     @Override

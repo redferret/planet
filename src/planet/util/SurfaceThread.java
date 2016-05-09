@@ -1,5 +1,6 @@
 package planet.util;
 
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import planet.Planet;
@@ -12,6 +13,9 @@ import planet.surface.PlanetSurface;
  */
 public class SurfaceThread extends MThread {
 
+    private float absLowestHeight;
+    private AtomicInteger previousLowestHeight;
+    
     /**
      * Lower bounds are inclusive, upper bounds are exclusive
      */
@@ -29,6 +33,8 @@ public class SurfaceThread extends MThread {
 
         this.bounds = bounds;
         curFrame = 0;
+        previousLowestHeight = new AtomicInteger(Integer.MAX_VALUE);
+        absLowestHeight = Integer.MAX_VALUE;
     }
 
     
@@ -61,7 +67,7 @@ public class SurfaceThread extends MThread {
                     for (int x = ((y % 2) + m) + lowerXBound; x < upperXBound; x += 2) {
                         surface.updateGeology(x, y);
                         surface.updateOceans(x, y);
-                        surface.updateMinimumHeight(x, y);
+                        updateMinimumHeight(x, y, surface);
                     }
                 }
             }
@@ -73,6 +79,20 @@ public class SurfaceThread extends MThread {
         }
         curFrame++;
         
+        previousLowestHeight.set((int)absLowestHeight);
+        absLowestHeight = Integer.MAX_VALUE;
+    }
+    
+    public int getPreviousLowestHeight() {
+        return previousLowestHeight.get();
+    }
+    
+    private void updateMinimumHeight(int x, int y, PlanetSurface surface){
+        float cellHeight = surface.getCellAt(x, y).getHeightWithoutOceans();
+        
+        if (cellHeight < absLowestHeight){
+            absLowestHeight = cellHeight;
+        }
     }
    
 }

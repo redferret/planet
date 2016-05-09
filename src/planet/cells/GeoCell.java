@@ -17,6 +17,7 @@ import planet.surface.Surface;
 
 import static planet.surface.Surface.*;
 import static planet.enums.Layer.*;
+import planet.surface.PlanetSurface;
 import static planet.util.Tools.*;
 
 /**
@@ -747,9 +748,10 @@ public class GeoCell extends Mantel {
     
     public List<Integer[]> render(List<Integer[]> settings) {
         int setting;
-        switch(Planet.self().getSurface().displaySetting){
+        PlanetSurface surface = (PlanetSurface) Planet.self().getSurface();
+        switch(surface.displaySetting){
             case HEIGHTMAP:
-                float height = Math.max(0, getHeightWithoutOceans() - Surface.absLowestHeight.get()) * 10;
+                float height = Math.max(0, getHeightWithoutOceans() - surface.getLowestHeight()) * 10;
                 setting = (int) (height / heightIndexRatio) % MAX_HEIGHT_INDEX;
                 settings.add(heightMap[setting]);
                 
