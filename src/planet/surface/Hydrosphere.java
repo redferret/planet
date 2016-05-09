@@ -28,6 +28,18 @@ public abstract class Hydrosphere extends Geosphere {
         super(worldSize, surfaceDelay, threadsDelay, threadCount);
     }
 
+    /**
+     * Add a uniformed layer on the whole surface.
+     * @param amount The amount being added
+     */
+    public void addUniformly(float amount){
+        for (int x = 0; x < worldSize; x++){
+            for (int y = 0; y < worldSize; y++){
+                getCellAt(x, y).addOceanMass(amount);
+            }
+        }
+    }
+    
     public void updateOceans(int x, int y) {
 
         HydroCell cellToUpdate, lowestCell;
