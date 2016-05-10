@@ -109,6 +109,7 @@ public abstract class Hydrosphere extends Geosphere {
                 
                 // Move suspended sediments based on the angle
                 movedSSediments = slope * toUpdateSSediments.getSediments();
+                toUpdateSSediments.transferSediment(-movedSSediments);
                 lowestSSediments.transferSediment(movedSSediments);
             }
 
