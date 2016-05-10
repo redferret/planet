@@ -116,7 +116,7 @@ public abstract class Geosphere extends Surface {
         dust(spreadFrom);
 
         if (geoScale) {
-            float height = calcHeight(1, Planet.self().getBase(), SEDIMENT);
+            float height = calcHeight(0.01f, Planet.self().getBase(), SEDIMENT);
             convertTopLayer(spreadFrom, height);
         }
 
@@ -306,7 +306,7 @@ public abstract class Geosphere extends Surface {
     
     public void dust(GeoCell cell) {
         if (cell.getMoltenRockFromSurface() < 1) {
-            cell.getSedimentBuffer().updateSurfaceSedimentMass(10);
+            cell.getSedimentBuffer().updateSurfaceSedimentMass(0.001f);
         }
     }
     
