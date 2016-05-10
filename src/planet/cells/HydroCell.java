@@ -142,7 +142,7 @@ public class HydroCell extends GeoCell {
         float[] dist = {0.04f, 0.36f, 0.68f, 1f};
         oceanMap = Tools.constructGradient(colors, dist, MAX_WATER_DEPTH_INDEX);
         
-        oceanSedimentCapacity = 50;
+        oceanSedimentCapacity = 20000;
         evapScale = 2.5f;
         sedimentCapacity = 0.25f;
         minAngle = 0.0002f;

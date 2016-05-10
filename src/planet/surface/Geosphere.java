@@ -5,6 +5,7 @@ package planet.surface;
 import java.util.ArrayList;
 import java.util.List;
 import planet.Planet;
+import planet.Planet.TimeScale;
 import planet.cells.GeoCell;
 import planet.cells.HydroCell;
 import planet.cells.Mantel;
@@ -266,17 +267,17 @@ public abstract class Geosphere extends Surface {
     public void updateGeology(int x, int y) {
 
         long curPlanetAge = planetAge.get();
-        boolean geoScale = Planet.self().getTimeScale() == Planet.TimeScale.Geological;
+        TimeScale scale = Planet.self().getTimeScale();
 
         GeoCell cell = getCellAt(x, y);
         long diff = (curPlanetAge - strataBuoyancyStamp);
         
         // Update the geosphere
-        if (geoScale) {
-            spreadToLowest(cell, geoScale);
-        } else {
+        if (scale == TimeScale.Geological) {
+            spreadToLowest(cell, true);
+        } else if (scale != TimeScale.None) {
             if (diff > GEOUPDATE) {
-                spreadToLowest(cell, geoScale);
+                spreadToLowest(cell, false);
                 cell.updateHeight();
                 strataBuoyancyStamp = curPlanetAge;
             }
