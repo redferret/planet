@@ -20,22 +20,19 @@ public class HydroCell extends GeoCell {
     public final static int MAX_WATER_DEPTH_INDEX = 50;
     public static int depthIndexRatio = 21000 / MAX_WATER_DEPTH_INDEX;
 
-    public static int rainProb = 1000;
-    public static float rainScale = 2.5f;
-    
     /**
      * The amount of water that will continue to hold any sediments. All
      * sediments are dumped if the ocean mass reaches this capacity.
      */
-    public static float oceanSedimentCapacity = 50;
+    public static float oceanSedimentCapacity;
 
-    public static float evapScale = 2.5f;
+    public static float evapScale;
 
     /**
      * The percentage of water that can dissolve sediments.
      */
-    public static float sedimentCapacity = 0.25f;
-    public static float MIN_ANGLE = 0.0002f;
+    public static float sedimentCapacity;
+    public static float minAngle;
     private static Integer[][] oceanMap;
     
     /**
@@ -132,8 +129,14 @@ public class HydroCell extends GeoCell {
     static {
         Color colors[] = {new Color(0, 0, 0, 0), new Color(153, 204, 255, 128), new Color(0, 102, 255, 192),
                         new Color(0, 0, 153, 255)};
+        
         float[] dist = {0.04f, 0.36f, 0.68f, 1f};
-        oceanMap = Tools.constructGradient(colors, dist, MAX_WATER_DEPTH_INDEX);      
+        oceanMap = Tools.constructGradient(colors, dist, MAX_WATER_DEPTH_INDEX);
+        
+        oceanSedimentCapacity = 50;
+        evapScale = 2.5f;
+        sedimentCapacity = 0.25f;
+        minAngle = 0.0002f;
     }
     
     private WaterBuffer waterBuffer;

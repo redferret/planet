@@ -6,13 +6,10 @@ import planet.Planet;
 import planet.cells.GeoCell;
 import planet.cells.HydroCell;
 
-import static planet.cells.HydroCell.MIN_ANGLE;
+import static planet.cells.HydroCell.minAngle;
 import static planet.cells.HydroCell.evapScale;
 import static planet.cells.HydroCell.oceanSedimentCapacity;
-import static planet.cells.HydroCell.rainProb;
-import static planet.cells.HydroCell.rainScale;
 import static planet.enums.Layer.OCEAN;
-import static planet.surface.Surface.rand;
 import static planet.util.Tools.calcMass;
 import static planet.util.Tools.clamp;
 import static planet.util.Tools.getLowestCellFrom;
@@ -72,10 +69,8 @@ public abstract class Hydrosphere extends Geosphere {
         lowestSSediments.applyBuffer();
         toUpdateSSediments.applyBuffer();
         
-        if (rand.nextInt(rainProb) == 0) {
-            toUpdateWaterBuffer.transferWater(rainScale);
-        }
-
+        // ADD WATER AT THIS STEP... maybe
+        
         if (lowestCell != cellToUpdate && cellToUpdate.hasOcean()) {
 
             lowestHeight = lowestCell.getHeight();
@@ -104,7 +99,7 @@ public abstract class Hydrosphere extends Geosphere {
                 GeoCell.SedimentBuffer sedimentBuffer = cellToUpdate.getSedimentBuffer();
                 // Erosion
                 angle = (float) Math.atan(diffGeoHeight / Planet.self().getSqrtBase());
-                slope = Math.max((float) Math.sin(angle), MIN_ANGLE);
+                slope = Math.max((float) Math.sin(angle), minAngle);
 
                 totalMass = cellToUpdate.getOceanMass() * slope;
 
