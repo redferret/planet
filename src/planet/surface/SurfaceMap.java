@@ -57,7 +57,6 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
     
     /**
      * The map containing the references to each data point on the surface.
-     * Hashtable is used because it's thread safe.
      */
     private Map<Integer, CellType> map;
 
