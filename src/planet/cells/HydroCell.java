@@ -64,11 +64,6 @@ public class HydroCell extends GeoCell {
         public void applyWaterBuffer(){
             if (bufferSet()) {
                 addOceanMass(mass);
-
-                if (mass < 0) {
-                    mass = 0;
-                }
-
                 resetBuffer();
             }
         }
@@ -79,7 +74,9 @@ public class HydroCell extends GeoCell {
      * Buffer when moving sediments to other cells
      */
     public final class SuspendedSediments extends TBuffer {
+        
         private float sediments;
+        
         public SuspendedSediments(){
             super();
         }
@@ -141,12 +138,12 @@ public class HydroCell extends GeoCell {
     
     private WaterBuffer waterBuffer;
     private SuspendedSediments sedimentMap;
-    private float mass;
+    private float oceanMass;
     
     public HydroCell(int x, int y) {
         super(x, y);
         
-        mass = 0;
+        oceanMass = 0;
         waterBuffer = new WaterBuffer();
         sedimentMap = new SuspendedSediments();
     }
@@ -160,20 +157,20 @@ public class HydroCell extends GeoCell {
     }
     
     public void addOceanMass(float m){
-        mass += m;
-        if (mass < 0) mass = 0;
+        oceanMass += m;
+        if (oceanMass < 0) oceanMass = 0;
     }
     
     public void setOceanMass(float m){
-        mass = m;
+        oceanMass = m;
     }
     
     public float getOceanMass() {
-        return mass;
+        return oceanMass;
     }
     
     public float getOceanVolume(){
-        return mass / OCEAN.getDensity();
+        return oceanMass / OCEAN.getDensity();
     }
     
     public float getOceanHeight() {
