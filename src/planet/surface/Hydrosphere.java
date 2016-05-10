@@ -95,25 +95,21 @@ public abstract class Hydrosphere extends Geosphere {
 
             if (cellToUpdate.getOceanMass() <= oceanSedimentCapacity) {
 
-                float angle, velocity, slope;
-                GeoCell.SedimentBuffer sedimentBuffer = cellToUpdate.getSedimentBuffer();
+                float angle, removedSediments, slope, movedSSediments;
                 // Erosion
                 angle = (float) Math.atan(diffGeoHeight / Planet.self().getSqrtBase());
                 slope = Math.max((float) Math.sin(angle), minAngle);
 
                 totalMass = cellToUpdate.getOceanMass() * slope;
 
-                if (sedimentBuffer.getSediments() <= 10) {
-                    
-                    velocity = cellToUpdate.erode(totalMass);
-                    
-                    velocity += sedimentBuffer.getSediments();
-                    sedimentBuffer.removeAllSediments();
-                } else {
-                    velocity = -sedimentBuffer.updateSurfaceSedimentMass(-totalMass);
-                }
-                lowestSSediments.transferSediment(velocity);
-                toUpdateSSediments.transferSediment(-velocity);
+                removedSediments = cellToUpdate.erode(totalMass);
+                
+                lowestSSediments.transferSediment(removedSediments);
+                toUpdateSSediments.transferSediment(-removedSediments);
+                
+                // Move suspended sediments based on the angle
+                movedSSediments = slope * toUpdateSSediments.getSediments();
+                lowestSSediments.transferSediment(movedSSediments);
             }
 
             // Only evaporate if in oceans. Will probably be removed later.

@@ -100,17 +100,29 @@ public class HydroCell extends GeoCell {
             return sediments;
         }
 
+        private float getCap(){
+            return (getOceanMass() * sedimentCapacity);
+        }
+        
+        public boolean atCapacity(){
+            float cap = getCap();
+            return sediments >= cap;
+        }
+        
+        private boolean oceanIsDeep(){
+            return getOceanMass() >= oceanSedimentCapacity;
+        }
+        
         public void applyBuffer() {
 
             if (bufferSet()) {
 
-                float cap = (getOceanMass() * sedimentCapacity);
+                float cap = getCap();
                 SedimentBuffer eb = getSedimentBuffer();
-                if (getOceanMass() < oceanSedimentCapacity) {
-
-                    if (sediments > cap) {
-                        float diff = sediments - cap;
-                        eb.updateSurfaceSedimentMass(diff);
+                if (!oceanIsDeep()) {
+                    if (atCapacity()){
+                        float overflow = sediments - cap;
+                        eb.updateSurfaceSedimentMass(overflow);
                         sediments = cap;
                     }
                 } else {
