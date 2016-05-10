@@ -96,6 +96,10 @@ class KeyController extends KeyAdapter {
             
             case KeyEvent.VK_PAGE_UP:
                 Planet.self().getSurface().displaySetting++;
+                
+                if (Planet.self().getSurface().displaySetting > 2){
+                    Planet.self().getSurface().displaySetting = 2;
+                }
                 break;
                 
             case KeyEvent.VK_PAGE_DOWN:
