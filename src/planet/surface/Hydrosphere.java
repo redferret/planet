@@ -2,17 +2,6 @@
 
 package planet.surface;
 
-import planet.Planet;
-import planet.cells.GeoCell;
-import planet.cells.HydroCell;
-
-import static planet.cells.HydroCell.minAngle;
-import static planet.cells.HydroCell.evapScale;
-import static planet.cells.HydroCell.oceanSedimentCapacity;
-import static planet.enums.Layer.OCEAN;
-import static planet.util.Tools.calcMass;
-import static planet.util.Tools.clamp;
-import static planet.util.Tools.getLowestCellFrom;
 
 /**
  * The hydrosphere is everything that deal with water, rivers, lakes, seas,
