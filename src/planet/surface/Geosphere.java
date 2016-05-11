@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import planet.Planet;
 import planet.Planet.TimeScale;
+import static planet.Planet.TimeScale.Geological;
+import static planet.Planet.TimeScale.None;
 import planet.cells.GeoCell;
 import planet.cells.HydroCell;
 import planet.cells.Mantel;
@@ -252,6 +254,17 @@ public abstract class Geosphere extends Surface {
         }
     }
     
+    public boolean checkForGeologicalUpdate(){
+        long curPlanetAge = planetAge.get();
+        long diff = (curPlanetAge - strataBuoyancyStamp);
+        return diff > GEOUPDATE;
+    }
+    
+    private void stampBuoyancyTimeStamp(){
+        long curPlanetAge = planetAge.get();
+        strataBuoyancyStamp = curPlanetAge;
+    }
+    
     /**
      * Updating the surface results in updating lava flows and depositing 
      * sediments.
@@ -262,20 +275,16 @@ public abstract class Geosphere extends Surface {
      */
     public void updateGeology(int x, int y) {
 
-        long curPlanetAge = planetAge.get();
-        TimeScale scale = Planet.self().getTimeScale();
-
         GeoCell cell = getCellAt(x, y);
-        long diff = (curPlanetAge - strataBuoyancyStamp);
         
         // Update the geosphere
-        if (scale == TimeScale.Geological) {
+        if (Planet.self().isTimeScale(Geological)) {
             geologicalUpdate(cell);
-        } else if (scale != TimeScale.None) {
-            if (diff > GEOUPDATE) {
+        } else if (!Planet.self().isTimeScale(None)) {
+            if (checkForGeologicalUpdate()) {
                 geologicalUpdate(cell);
                 cell.updateHeight();
-                strataBuoyancyStamp = curPlanetAge;
+                stampBuoyancyTimeStamp();
             }
         }
         depositSediment(x, y);
