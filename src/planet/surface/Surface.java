@@ -90,13 +90,13 @@ public abstract class Surface extends SurfaceMap<AtmoCell> {
         super(worldSize, 1, "Geosphere", threadCount);
         this.worldSize = worldSize;
         ageUpdateDelay = new Delay(ageStepDelay);
-        threadAverageDelay = new Delay(250);
-        display = null;
         set();
         setupThreads(threadCount, threadsDelay);
     }
 
     private void set(){
+        threadAverageDelay = new Delay(250);
+        display = null;
         reset();
     }
     
