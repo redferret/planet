@@ -11,7 +11,6 @@ import planet.cells.HydroCell;
 import planet.cells.Mantel;
 import planet.enums.Layer;
 
-import static planet.cells.HydroCell.oceanSedimentCapacity;
 import static planet.enums.Layer.BASALT;
 import static planet.enums.Layer.LAVA;
 import static planet.enums.Layer.SANDSTONE;
@@ -117,7 +116,7 @@ public abstract class Geosphere extends Surface {
 
         dust(spreadFrom);
 
-        float height = calcHeight(0.01f, Planet.self().getBase(), SEDIMENT);
+        float height = calcHeight(0.001f, Planet.self().getBase(), SEDIMENT);
         convertTopLayer(spreadFrom, height);
 
         int maxCellCount = 8;
@@ -271,16 +270,20 @@ public abstract class Geosphere extends Surface {
         
         // Update the geosphere
         if (scale == TimeScale.Geological) {
-            spreadToLowest(cell);
+            geologicalUpdate(cell);
         } else if (scale != TimeScale.None) {
             if (diff > GEOUPDATE) {
-                spreadToLowest(cell);
+                geologicalUpdate(cell);
                 cell.updateHeight();
                 strataBuoyancyStamp = curPlanetAge;
             }
         }
         depositSediment(x, y);
         updateLavaFlows(x, y);
+    }
+
+    private void geologicalUpdate(GeoCell cell) {
+        spreadToLowest(cell);
         cell.cool(1);
     }
     
