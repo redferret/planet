@@ -78,6 +78,7 @@ public abstract class Geosphere extends Surface {
     public void melt(GeoCell cell, float maxHeight) {
 
         float height, diff, massToChange;
+        if (cell.peekBottomStratum() == null) return;
         Layer bottomType = cell.peekBottomStratum().getLayer();
 
         height = cell.getHeight();
@@ -112,22 +113,18 @@ public abstract class Geosphere extends Surface {
         }
     }
 
-    public void spreadToLowest(GeoCell spreadFrom, boolean geoScale) {
+    public void spreadToLowest(GeoCell spreadFrom) {
 
         dust(spreadFrom);
 
-        if (geoScale) {
-            float height = calcHeight(0.01f, Planet.self().getBase(), SEDIMENT);
-            convertTopLayer(spreadFrom, height);
-        }
+        float height = calcHeight(0.01f, Planet.self().getBase(), SEDIMENT);
+        convertTopLayer(spreadFrom, height);
 
-        if ((((HydroCell)spreadFrom).getOceanMass() > oceanSedimentCapacity) || geoScale) {
-
-            int maxCellCount = 8;
-            ArrayList<GeoCell> lowestList = new ArrayList<>(maxCellCount);
-            getLowestCells(spreadFrom, lowestList, maxCellCount);
-            spread(lowestList, spreadFrom);
-        }
+        int maxCellCount = 8;
+        ArrayList<GeoCell> lowestList = new ArrayList<>(maxCellCount);
+        getLowestCells(spreadFrom, lowestList, maxCellCount);
+        spread(lowestList, spreadFrom);
+        
     }
 
     public void convertTopLayer(GeoCell spreadFrom, float height) {
@@ -274,10 +271,10 @@ public abstract class Geosphere extends Surface {
         
         // Update the geosphere
         if (scale == TimeScale.Geological) {
-            spreadToLowest(cell, true);
+            spreadToLowest(cell);
         } else if (scale != TimeScale.None) {
             if (diff > GEOUPDATE) {
-                spreadToLowest(cell, false);
+                spreadToLowest(cell);
                 cell.updateHeight();
                 strataBuoyancyStamp = curPlanetAge;
             }

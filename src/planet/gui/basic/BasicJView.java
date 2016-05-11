@@ -39,7 +39,7 @@ public class BasicJView extends JFrame implements DisplayAdapter {
         
         renderFrame = new Frame(SIZE, SIZE);
         
-        testWorld = new TestWorld();
+        testWorld = new TestWorld(50);
         testWorld.getSurface().setDisplay(this);
         renderFrame.registerMap(testWorld.getSurface());
         add(renderFrame);
@@ -51,10 +51,29 @@ public class BasicJView extends JFrame implements DisplayAdapter {
         setLocationRelativeTo(null);
         setVisible(true);
         
-        testWorld.setTimescale(TimeScale.Geological);
+        testWorld.setTimescale(TimeScale.None);
         PlanetSurface surface = (PlanetSurface) testWorld.getSurface();
-        surface.addToSurface(Layer.BASALT, 10000);
-        surface.addWaterToAllCells(10000);
+        surface.addToSurface(Layer.BASALT, 100000);
+        surface.addToSurface(Layer.SANDSTONE, 50000);
+        for (int x = 0; x < 30; x++) {
+            for (int y = 0; y < 50; y++){
+                surface.getCellAt(x, y).add(Layer.SHALE, 1000000, true);
+            }
+        }
+        
+        for (int x = 0; x < 30; x++){
+            surface.getCellAt(x, 10).add(Layer.SHALE, 100000, true);
+        }
+        
+        for (int y = 0; y < 50; y++){
+            surface.getCellAt(0, y).add(Layer.SHALE, 100000, true);
+        }
+        
+        for (int x = 0; x < 30; x++){
+            surface.getCellAt(x, 29).add(Layer.SHALE, 100000, true);
+        }
+        surface.getCellAt(11, 11).addOceanMass(1000);
+
         
         testWorld.play();
     }

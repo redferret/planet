@@ -87,7 +87,7 @@ public abstract class Surface extends SurfaceMap<AtmoCell> {
      * @param threadCount The number of threads that will work on the map
      */
     public Surface(int worldSize, int ageStepDelay, int threadsDelay, int threadCount) {
-        super(worldSize, 1, "Geosphere", threadCount);
+        super(worldSize, 0, "Geosphere", threadCount);
         this.worldSize = worldSize;
         ageUpdateDelay = new Delay(ageStepDelay);
         threadAverageDelay = new Delay(250);

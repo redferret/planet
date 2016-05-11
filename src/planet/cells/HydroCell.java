@@ -20,12 +20,6 @@ public class HydroCell extends GeoCell {
     public final static int MAX_WATER_DEPTH_INDEX = 50;
     public static int depthIndexRatio = 21000 / MAX_WATER_DEPTH_INDEX;
 
-    /**
-     * The amount of water that will continue to hold any sediments. All
-     * sediments are dumped if the ocean mass reaches this capacity.
-     */
-    public static float oceanSedimentCapacity;
-
     public static float evapScale;
 
     /**
@@ -38,35 +32,15 @@ public class HydroCell extends GeoCell {
     /**
      * Buffer when moving water to other cells
      */
-    public final class WaterBuffer extends TBuffer {
+    public final class WaterPipeline {
 
-        private float mass;
+        private float mLeft, mRight, mTop, mBottom;
         
-        public WaterBuffer(){
-            super();
-        }
-        
-        @Override
-        protected final void init() {
-            mass = 0;
+        public WaterPipeline(){
+            mLeft = mRight = mTop = mBottom = 0;
         }
         
-        public void transferWater(float amount) {
-
-            if (!bufferSet()) {
-                bufferSet(true);
-            }
-
-            mass += amount;
-
-        }
-
-        public void applyWaterBuffer(){
-            if (bufferSet()) {
-                addOceanMass(mass);
-                resetBuffer();
-            }
-        }
+        
         
     }
     
@@ -109,29 +83,12 @@ public class HydroCell extends GeoCell {
             return sediments >= cap;
         }
         
-        private boolean oceanIsDeep(){
-            return getOceanMass() >= oceanSedimentCapacity;
-        }
-        
         public void applyBuffer() {
-
             if (bufferSet()) {
-
-                float cap = getCap();
                 SedimentBuffer eb = getSedimentBuffer();
-                if (!oceanIsDeep()) {
-                    if (atCapacity()){
-                        float overflow = sediments - cap;
-                        eb.updateSurfaceSedimentMass(overflow);
-                        sediments = cap;
-                    }
-                } else {
-                    eb.updateSurfaceSedimentMass(sediments);
-                    sediments = 0;
-                }
-
+                eb.updateSurfaceSedimentMass(sediments);
+                sediments = 0;
             }
-
         }
     }
     
@@ -142,13 +99,12 @@ public class HydroCell extends GeoCell {
         float[] dist = {0.04f, 0.36f, 0.68f, 1f};
         oceanMap = Tools.constructGradient(colors, dist, MAX_WATER_DEPTH_INDEX);
         
-        oceanSedimentCapacity = 20000;
         evapScale = 2.5f;
         sedimentCapacity = 0.25f;
         minAngle = 0.0002f;
     }
     
-    private WaterBuffer waterBuffer;
+    private WaterPipeline waterPipeline;
     private SuspendedSediments sedimentMap;
     private float oceanMass;
     
@@ -156,12 +112,12 @@ public class HydroCell extends GeoCell {
         super(x, y);
         
         oceanMass = 0;
-        waterBuffer = new WaterBuffer();
+        waterPipeline = new WaterPipeline();
         sedimentMap = new SuspendedSediments();
     }
     
-    public WaterBuffer getWaterBuffer() {
-        return waterBuffer;
+    public WaterPipeline getWaterPipeline() {
+        return waterPipeline;
     }
 
     public SuspendedSediments getSedimentMap() {
