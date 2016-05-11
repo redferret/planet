@@ -121,8 +121,7 @@ public abstract class Surface extends SurfaceMap<AtmoCell> {
         
         return lowest;
     }
-    
-    
+
     public long getPlanetAge(){
         return planetAge.get();
     }
