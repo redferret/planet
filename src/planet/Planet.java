@@ -74,6 +74,10 @@ public abstract class Planet {
         return current;
     }
     
+    public boolean isTimeScale(TimeScale scale) {
+        return scale == timescale;
+    }
+
     public final TimeScale getTimeScale(){
         return timescale;
     }
