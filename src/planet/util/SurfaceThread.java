@@ -4,6 +4,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import planet.Planet;
+import planet.Planet.TimeScale;
 import planet.surface.PlanetSurface;
 
 /**
@@ -78,7 +79,8 @@ public class SurfaceThread extends MThread {
                     }
                 }
             }
-            if (!suppressMantelHeating) {
+            if (!suppressMantelHeating && 
+                    Planet.self().getTimeScale() == TimeScale.Geological) {
                 surface.heatMantel();
             }
         } catch (Exception e) {
