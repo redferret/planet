@@ -34,14 +34,24 @@ public abstract class Hydrosphere extends Geosphere {
     
     public void updateOceans(int x, int y) {
         moveWater(x, y);
-        updateVelocityField(x, y);
+        erode(x, y);
     }
     
-    public void moveWater(int x, int y){
+    /**
+     * Updates the water surface and velocity field.
+     * @param x The x coordinate
+     * @param y The y coordinate
+     */
+    private void moveWater(int x, int y){
         
     }
     
-    public void updateVelocityField(int x, int y){
+    /**
+     * Erodes sediments and rock and transfers it.
+     * @param x The x coordinate
+     * @param y The y coordinate
+     */
+    private void erode(int x, int y){
         
     }
     
