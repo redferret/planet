@@ -4,7 +4,7 @@ package planet.surface;
 
 
 /**
- * The hydrosphere is everything that deal with water, rivers, lakes, seas,
+ * The hydrosphere is everything that deals with rivers, lakes, seas,
  * and oceans.
  * @author Richard DeSilvey
  */
