@@ -2,6 +2,8 @@
 
 package planet.gui.ogl;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -40,7 +42,8 @@ public class OGLDisplay implements DisplayAdapter {
             Display.create();
             
         } catch (LWJGLException e) {
-            e.printStackTrace();
+            Logger.getLogger(OGLDisplay.class.getName()).log(Level.SEVERE, 
+                    "LWJGLException caught: {0}", e.getMessage());
             Display.destroy();
         }
     }
