@@ -103,6 +103,7 @@ public abstract class Surface extends SurfaceMap<AtmoCell> {
     public void reset(){
         planetAge = new AtomicLong(0);
         geologicalTimeStamp = 0;
+        setupMap();
     }
 
     public void setDisplay(DisplayAdapter display) {
