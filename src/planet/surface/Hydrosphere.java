@@ -33,7 +33,16 @@ public abstract class Hydrosphere extends Geosphere {
     }
     
     public void updateOceans(int x, int y) {
-
+        moveWater(x, y);
+        updateVelocityField(x, y);
+    }
+    
+    public void moveWater(int x, int y){
+        
+    }
+    
+    public void updateVelocityField(int x, int y){
+        
     }
     
 }
