@@ -23,10 +23,10 @@ public class SurfaceThread extends MThread {
      */
     protected Boundaries bounds;
     private int curFrame;
-    public static boolean supressMantelHeating;
+    public static boolean suppressMantelHeating;
     
     static {
-        supressMantelHeating = false;
+        suppressMantelHeating = false;
     }
     
     /**
@@ -78,7 +78,7 @@ public class SurfaceThread extends MThread {
                     }
                 }
             }
-            if (!supressMantelHeating) {
+            if (!suppressMantelHeating) {
                 surface.heatMantel();
             }
         } catch (Exception e) {
