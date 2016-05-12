@@ -216,7 +216,7 @@ public abstract class Geosphere extends Surface {
 
     /**
      * Updates surface lava.
-     * @see planet.surface.Surface#updateGeology(int, int) 
+     * @see planet.surface.Geosphere#updateGeology(int, int) 
      * @param x Cell's x
      * @param y Cell's y
      */
@@ -268,8 +268,8 @@ public abstract class Geosphere extends Surface {
     /**
      * Updating the surface results in updating lava flows and depositing 
      * sediments.
-     * @see planet.surface.Surface#updateLavaFlows(int, int) 
-     * @see planet.surface.Surface#depositSediment(int, int) 
+     * @see planet.surface.Geosphere#updateLavaFlows(int, int) 
+     * @see planet.surface.Geosphere#depositSediment(int, int) 
      * @param x The x coordinate of the cell
      * @param y The y coordinate of the cell
      */
