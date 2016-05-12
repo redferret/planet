@@ -1,5 +1,3 @@
-
-
 package planet.surface;
 
 import java.util.ArrayList;
@@ -31,6 +29,7 @@ import static planet.Planet.TimeScale.None;
 
 /**
  * Contains all logic that works on the geology of the planet.
+ *
  * @author Richard DeSilvey
  */
 public abstract class Geosphere extends Surface {
@@ -39,26 +38,25 @@ public abstract class Geosphere extends Surface {
      * The maximum number of cells that receive heating.
      */
     public static int heatDistributionCount;
-    
+
     /**
      * The amount of heat added to a cell.
      */
     public static int thermalInc;
-    
+
     /**
-     * The amount of volcanic rock added to the surface when a volcano
-     * erupts.
+     * The amount of volcanic rock added to the surface when a volcano erupts.
      */
     public static float averageVolcanicMass;
-    
+
     private long strataBuoyancyStamp;
-    
+
     static {
         heatDistributionCount = 1100;
         thermalInc = 100;
         averageVolcanicMass = 250000;
     }
-    
+
     public Geosphere(int worldSize, int surfaceDelay, int threadsDelay, int threadCount) {
         super(worldSize, surfaceDelay, threadsDelay, threadCount);
         strataBuoyancyStamp = 0;
@@ -66,22 +64,23 @@ public abstract class Geosphere extends Surface {
 
     /**
      * Add a uniformed layer on the whole surface.
+     *
      * @param type The layer being added
      * @param amount The amount being added
      */
-    public void addToSurface(Layer type, float amount){
-        for (int x = 0; x < worldSize; x++){
-            for (int y = 0; y < worldSize; y++){
+    public void addToSurface(Layer type, float amount) {
+        for (int x = 0; x < worldSize; x++) {
+            for (int y = 0; y < worldSize; y++) {
                 getCellAt(x, y).add(type, amount, true);
             }
         }
     }
-    
+
     public void depositSediment(int x, int y) {
 
         float maxPressure;
         long age;
-        
+
         GeoCell cell = getCellAt(x, y);
         cell.getSedimentBuffer().applySedimentBuffer();
 
@@ -100,7 +99,9 @@ public abstract class Geosphere extends Surface {
     public void melt(GeoCell cell, float maxHeight) {
 
         float height, diff, massToChange;
-        if (cell.peekBottomStratum() == null) return;
+        if (cell.peekBottomStratum() == null) {
+            return;
+        }
         Layer bottomType = cell.peekBottomStratum().getLayer();
 
         height = cell.getHeight();
@@ -118,14 +119,14 @@ public abstract class Geosphere extends Surface {
         float height, diff, massBeingDeposited;
         Layer depositType;
         GeoCell.SedimentBuffer eb = cell.getSedimentBuffer();
-        
+
         height = calcHeight(eb.getSediments(), Planet.self().getCellArea(), SEDIMENT);
         if (height > maxHeight) {
 
             diff = (height - maxHeight);
 
             massBeingDeposited = calcMass(diff, Planet.self().getCellArea(), SEDIMENT);
-            depositType = (((HydroCell)cell).getOceanMass() > 9000) ? SHALE : SANDSTONE;
+            depositType = (((HydroCell) cell).getOceanMass() > 9000) ? SHALE : SANDSTONE;
 
             eb.updateSurfaceSedimentMass(-massBeingDeposited);
 
@@ -146,7 +147,7 @@ public abstract class Geosphere extends Surface {
         ArrayList<GeoCell> lowestList = new ArrayList<>(maxCellCount);
         getLowestCells(spreadFrom, lowestList, maxCellCount);
         spread(lowestList, spreadFrom);
-        
+
     }
 
     public void convertTopLayer(GeoCell spreadFrom, float height) {
@@ -228,7 +229,7 @@ public abstract class Geosphere extends Surface {
 
                 mass = calcMass(diff, Planet.self().getCellArea(), SEDIMENT);
                 eb.updateSurfaceSedimentMass(-mass);
-                
+
                 lowestBuffer = lowestGeoCell.getSedimentBuffer();
                 lowestBuffer.updateSurfaceSedimentMass(mass);
             }
@@ -237,14 +238,15 @@ public abstract class Geosphere extends Surface {
 
     /**
      * Updates surface lava.
-     * @see planet.surface.Geosphere#updateGeology(int, int) 
+     *
+     * @see planet.surface.Geosphere#updateGeology(int, int)
      * @param x Cell's x
      * @param y Cell's y
      */
     public void updateLavaFlows(int x, int y) {
 
         GeoCell toUpdate = getCellAt(x, y);
-        
+
         if (toUpdate.getMoltenRockFromSurface() > 300) {
             GeoCell lowest = getLowestCellFrom(toUpdate);
 
@@ -262,7 +264,7 @@ public abstract class Geosphere extends Surface {
                 lowest.getSedimentBuffer().removeAllSediments();
             }
 
-            float rate = ((HydroCell)toUpdate).getOceanMass() > 300 ? 0.95f : 0.10f;
+            float rate = ((HydroCell) toUpdate).getOceanMass() > 300 ? 0.95f : 0.10f;
 
             //solidify the rock
             float massToSolidify = toUpdate.getMoltenRockFromSurface() * rate;
@@ -274,30 +276,31 @@ public abstract class Geosphere extends Surface {
             toUpdate.removeAllMoltenRock();
         }
     }
-    
-    public boolean checkForGeologicalUpdate(){
+
+    public boolean checkForGeologicalUpdate() {
         long curPlanetAge = planetAge.get();
         long diff = (curPlanetAge - strataBuoyancyStamp);
         return diff > GEOUPDATE;
     }
-    
-    private void stampBuoyancyTimeStamp(){
+
+    private void stampBuoyancyTimeStamp() {
         long curPlanetAge = planetAge.get();
         strataBuoyancyStamp = curPlanetAge;
     }
-    
+
     /**
-     * Updating the surface results in updating lava flows and depositing 
+     * Updating the surface results in updating lava flows and depositing
      * sediments.
-     * @see planet.surface.Geosphere#updateLavaFlows(int, int) 
-     * @see planet.surface.Geosphere#depositSediment(int, int) 
+     *
+     * @see planet.surface.Geosphere#updateLavaFlows(int, int)
+     * @see planet.surface.Geosphere#depositSediment(int, int)
      * @param x The x coordinate of the cell
      * @param y The y coordinate of the cell
      */
     public void updateGeology(int x, int y) {
 
         GeoCell cell = getCellAt(x, y);
-        
+
         // Update the geosphere
         if (Planet.self().isTimeScale(Geological)) {
             geologicalUpdate(cell);
@@ -316,10 +319,10 @@ public abstract class Geosphere extends Surface {
         spreadToLowest(cell);
         cell.cool(1);
     }
-    
-    public void heatMantel(){
+
+    public void heatMantel() {
         int n = rand.nextInt(heatDistributionCount);
-        for (int i = 0; i < n; i++){
+        for (int i = 0; i < n; i++) {
             int x = rand.nextInt(worldSize);
             int y = rand.nextInt(worldSize);
 
@@ -327,18 +330,18 @@ public abstract class Geosphere extends Surface {
             GeoCell geo;
             cell.addHeat(thermalInc);
 
-            if (cell.checkVolcano()){
-                geo = (GeoCell)cell;
+            if (cell.checkVolcano()) {
+                geo = (GeoCell) cell;
                 geo.putMoltenRockToSurface(averageVolcanicMass);
                 cell.cool(200);
             }
         }
     }
-    
+
     public void dust(GeoCell cell) {
         if (cell.getMoltenRockFromSurface() < 1) {
             cell.getSedimentBuffer().updateSurfaceSedimentMass(0.001f);
         }
     }
-    
+
 }
