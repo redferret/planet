@@ -1,5 +1,7 @@
 package planet.surface;
 
+import planet.Planet;
+
 /**
  * The hydrosphere is everything that deals with rivers, lakes, seas, and
  * oceans.
@@ -24,10 +26,9 @@ public abstract class Hydrosphere extends Geosphere {
      * @param amount The amount being added
      */
     public void addWaterToAllCells(float amount) {
-        for (int x = 0; x < worldSize; x++) {
-            for (int y = 0; y < worldSize; y++) {
-                getCellAt(x, y).addOceanMass(amount);
-            }
+        int count = Planet.self().getTotalNumberOfCells();
+        for (int i = 0; i < count; i++) {
+            getCellAt(i).addOceanMass(amount);
         }
     }
 
