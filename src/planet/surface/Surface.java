@@ -149,8 +149,8 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
     }
     
     @Override
-    public AtmoCell generateCell(int x, int y) {
-        return new AtmoCell(x, y);
+    public PlanetCell generateCell(int x, int y) {
+        return new PlanetCell(x, y);
     }
 
 }
