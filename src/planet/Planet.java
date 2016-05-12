@@ -13,9 +13,9 @@ import planet.surface.Surface;
  */
 public abstract class Planet {
     
-    private int gridSize;
-    private int sqrtBase;
-    private int base;
+    private int gridWidth;
+    private int cellLength;
+    private int area;
     protected TimeScale timescale;
     private static Planet current;
     private Surface planetSurface;
@@ -25,21 +25,22 @@ public abstract class Planet {
     /**
      * Constructs a new Planet.
      *
-     * @param gridSize The number of cells
+     * @param gridWidth The number of cells in the X and Y axis.
+     * That is gridWidth * gridWidth = total number of cells.
      * @param sqrtBase The length of one side of a cell in meters.
      * @param ageStepDelay The amount of time to delay between each update to the
      * planet's age.
-     * @param surfaceThreadsDelay How fast does the planet thread update
-     * @param threadCount The number of threads updating the map
+     * @param surfaceThreadsDelay How fast does the planet thread(s) update
+     * @param threadCount The number of threads that work on the map
      */
-    public Planet(int gridSize, int sqrtBase, int ageStepDelay, int surfaceThreadsDelay, int threadCount){
+    public Planet(int gridWidth, int sqrtBase, int ageStepDelay, int surfaceThreadsDelay, int threadCount){
         Logger.getLogger(SurfaceMap.class.getName()).log(Level.INFO, "New Planet");
         current = this;
-        this.gridSize = gridSize;
-        base = sqrtBase * sqrtBase;
-        this.sqrtBase = sqrtBase;
+        this.gridWidth = gridWidth;
+        area = cellLength * cellLength;
+        this.cellLength = cellLength;
         timescale = TimeScale.None;
-        planetSurface = new PlanetSurface(gridSize, ageStepDelay, surfaceThreadsDelay, threadCount);
+        planetSurface = new PlanetSurface(gridWidth, ageStepDelay, surfaceThreadsDelay, threadCount);
         initPlanet();
     }
     
@@ -86,20 +87,32 @@ public abstract class Planet {
         this.timescale = timescale;
     }
     
-    public int getSqrtBase() {
-        return sqrtBase;
+    /**
+     * The length of a cell in meters.
+     * @return length of a cell in meters.
+     */
+    public int getLength() {
+        return cellLength;
     }
 
-    public int getBase() {
-        return base;
+    /**
+     * The area of the cell is the cell length^2
+     * @return The area of a cell in square meters.
+     */
+    public int getCellArea() {
+        return area;
     }
     
+    /**
+     * The number of cells in the X direction.
+     * @return 
+     */
     public final int getGridWidth(){
-        return gridSize;
+        return gridWidth;
     }
     
     public final int getTotalNumberOfCells(){
-        return gridSize * gridSize;
+        return gridWidth * gridWidth;
     }
     
 }
