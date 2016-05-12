@@ -4,11 +4,12 @@ package planet.surface;
 import planet.cells.AtmoCell;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
+import planet.cells.PlanetCell;
 import planet.gui.DisplayAdapter;
 import planet.util.Delay;
+import planet.util.SurfaceThread;
 import static planet.surface.Surface.GEOUPDATE;
 import static planet.surface.Surface.planetAge;
-import planet.util.SurfaceThread;
 
 /**
  * The Surface is the geology for the planet. It provides a foundation
@@ -19,7 +20,7 @@ import planet.util.SurfaceThread;
  *
  * @author Richard DeSilvey
  */
-public abstract class Surface extends SurfaceMap<AtmoCell> {
+public abstract class Surface extends SurfaceMap<PlanetCell> {
 
     /**
      * The average density of the mantel. The units are in kilograms per cubic
