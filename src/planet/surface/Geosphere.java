@@ -5,9 +5,6 @@ package planet.surface;
 import java.util.ArrayList;
 import java.util.List;
 import planet.Planet;
-import planet.Planet.TimeScale;
-import static planet.Planet.TimeScale.Geological;
-import static planet.Planet.TimeScale.None;
 import planet.cells.GeoCell;
 import planet.cells.HydroCell;
 import planet.cells.Mantel;
@@ -29,6 +26,8 @@ import static planet.util.Tools.checkXBounds;
 import static planet.util.Tools.checkYBounds;
 import static planet.util.Tools.clamp;
 import static planet.util.Tools.getLowestCellFrom;
+import static planet.Planet.TimeScale.Geological;
+import static planet.Planet.TimeScale.None;
 
 /**
  * Contains all logic that works on the geology of the planet.
@@ -36,7 +35,17 @@ import static planet.util.Tools.getLowestCellFrom;
  */
 public abstract class Geosphere extends Surface {
 
+    public static int heatDistributionCount;
+    public static int thermalInc;
+    public static float averageVolcanicMass;
+    
     private long strataBuoyancyStamp;
+    
+    static {
+        heatDistributionCount = 1100;
+        thermalInc = 100;
+        averageVolcanicMass = 250000;
+    }
     
     public Geosphere(int worldSize, int surfaceDelay, int threadsDelay, int threadCount) {
         super(worldSize, surfaceDelay, threadsDelay, threadCount);
@@ -297,18 +306,18 @@ public abstract class Geosphere extends Surface {
     }
     
     public void heatMantel(){
-        int n = rand.nextInt(1100);
+        int n = rand.nextInt(heatDistributionCount);
         for (int i = 0; i < n; i++){
             int x = rand.nextInt(worldSize);
             int y = rand.nextInt(worldSize);
 
             Mantel cell = getCellAt(x, y);
             GeoCell geo;
-            cell.addHeat(100);
+            cell.addHeat(thermalInc);
 
             if (cell.checkVolcano()){
                 geo = (GeoCell)cell;
-                geo.putMoltenRockToSurface(250000);
+                geo.putMoltenRockToSurface(averageVolcanicMass);
                 cell.cool(200);
             }
         }
