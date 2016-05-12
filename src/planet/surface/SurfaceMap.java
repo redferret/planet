@@ -234,7 +234,6 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
     public final void setupThreads(int threadDivision, int delay) {
 
         int w = Planet.self().getGridWidth() / threadDivision;
-        int h = Planet.self().getGridWidth() / threadDivision;
         int c = 0;
         Boundaries bounds;
         String name;
@@ -242,7 +241,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
         for (int y = 0; y < threadDivision; y++) {
             for (int x = 0; x < threadDivision; x++, c++) {
                 name = "SubThread: " + c;
-                bounds = new Boundaries(w * x, w * (x + 1), h * y, h * (y + 1));
+                bounds = new Boundaries(w * x, w * (x + 1), w * y, w * (y + 1));
                 SurfaceThread thread = new SurfaceThread(delay, bounds, name);
                 threads.add(thread);
             }
