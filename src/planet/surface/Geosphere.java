@@ -164,8 +164,8 @@ public abstract class Geosphere extends Surface {
             ty = y + DIR_Y_INDEX[s];
 
             // Check the boundaries
-            mx = checkXBounds(tx, Planet.self().getGridSize());
-            my = checkYBounds(ty, Planet.self().getGridSize());
+            mx = checkXBounds(tx, Planet.self().getGridWidth());
+            my = checkYBounds(ty, Planet.self().getGridWidth());
 
             spreadTo = getCellAt(mx, my);
 

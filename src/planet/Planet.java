@@ -94,7 +94,7 @@ public abstract class Planet {
         return base;
     }
     
-    public final int getGridSize(){
+    public final int getGridWidth(){
         return gridSize;
     }
     

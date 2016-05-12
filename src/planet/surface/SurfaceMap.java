@@ -203,7 +203,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
      * individually. This is due to the global reference to the engine.
      */
     public final void setupMap() {
-        int gridSize = Planet.self().getGridSize();
+        int gridSize = Planet.self().getGridWidth();
 
         int totalCells = (gridSize * gridSize);
         int flagUpdate = totalCells / 2;
@@ -233,8 +233,8 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
      */
     public final void setupThreads(int threadDivision, int delay) {
 
-        int w = Planet.self().getGridSize() / threadDivision;
-        int h = Planet.self().getGridSize() / threadDivision;
+        int w = Planet.self().getGridWidth() / threadDivision;
+        int h = Planet.self().getGridWidth() / threadDivision;
         int c = 0;
         Boundaries bounds;
         String name;
@@ -258,7 +258,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
      */
     public final CellType getCellAt(int x, int y) {
 
-        int width = Planet.self().getGridSize();
+        int width = Planet.self().getGridWidth();
         int index = (width * y) + x;
 
         return map.get(index);
@@ -282,7 +282,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
      */
     private void setCellAt(CellType cell) {
         int x = cell.getX(), y = cell.getY();
-        int width = Planet.self().getGridSize();
+        int width = Planet.self().getGridWidth();
         int index = (width * y) + x;
         map.put(index, cell);
     }

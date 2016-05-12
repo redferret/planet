@@ -60,7 +60,7 @@ public class Frame extends JPanel {
         WritableRaster raster = null;
         List<Integer[]> settings;
         
-        int bounds = Planet.self().getGridSize();
+        int bounds = Planet.self().getGridWidth();
 
         for (int x = 0; x < bounds; x++) {
             for (int y = 0; y < bounds; y++) {
