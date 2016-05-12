@@ -35,8 +35,20 @@ import static planet.Planet.TimeScale.None;
  */
 public abstract class Geosphere extends Surface {
 
+    /**
+     * The maximum number of cells that receive heating.
+     */
     public static int heatDistributionCount;
+    
+    /**
+     * The amount of heat added to a cell.
+     */
     public static int thermalInc;
+    
+    /**
+     * The amount of volcanic rock added to the surface when a volcano
+     * erupts.
+     */
     public static float averageVolcanicMass;
     
     private long strataBuoyancyStamp;
