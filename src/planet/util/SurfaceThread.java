@@ -25,11 +25,11 @@ public class SurfaceThread extends MThread {
     protected Boundaries bounds;
     private int curFrame;
     public static boolean suppressMantelHeating;
-    
+
     static {
         suppressMantelHeating = false;
     }
-    
+
     /**
      * Constructs a new SurfaceThread.
      *
@@ -55,9 +55,9 @@ public class SurfaceThread extends MThread {
 
         PlanetSurface surface = (PlanetSurface) Planet.self().getSurface();
 
-        boolean geologicalUpdate = Planet.self().isTimeScale(Geological) || 
-                    surface.checkForGeologicalUpdate();
-        
+        boolean geologicalUpdate = Planet.self().isTimeScale(Geological)
+                || surface.checkForGeologicalUpdate();
+
         boolean sw = (curFrame % 2) == 0;
         int m;
         int lowerYBound = bounds.getLowerYBound();
@@ -82,7 +82,7 @@ public class SurfaceThread extends MThread {
                     }
                 }
             }
-            
+
             if (!suppressMantelHeating && geologicalUpdate) {
                 surface.heatMantel();
             }

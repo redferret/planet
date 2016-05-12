@@ -37,11 +37,11 @@ public class Frame extends JPanel {
         super.paintComponent(graphics);
 
         Graphics2D g2d = (Graphics2D) graphics;
-        
+
         if (map != null) {
             setRasterOfEachImage(map);
 
-            for (int i = images.size() - 1; i >= 0; i--){
+            for (int i = images.size() - 1; i >= 0; i--) {
                 g2d.drawImage(images.get(i), 0, 0, getWidth(), getHeight(), null);
             }
         }
@@ -50,8 +50,8 @@ public class Frame extends JPanel {
     }
 
     /**
-     * Accesses the given surface map for each cell's render data and
-     * sets each individual image's raster to that data.
+     * Accesses the given surface map for each cell's render data and sets each
+     * individual image's raster to that data.
      *
      * @param map The SurfaceMap being rendered.
      */
@@ -59,7 +59,7 @@ public class Frame extends JPanel {
 
         WritableRaster raster = null;
         List<Integer[]> settings;
-        
+
         int bounds = Planet.self().getGridWidth();
 
         for (int x = 0; x < bounds; x++) {
@@ -67,19 +67,19 @@ public class Frame extends JPanel {
 
                 settings = map.getCellData(x, y);
 
-                if (images.isEmpty()){
-                    settings.forEach(setting ->{
+                if (images.isEmpty()) {
+                    settings.forEach(setting -> {
                         images.add(new BufferedImage(bounds, bounds, BufferedImage.TYPE_INT_ARGB));
                     });
                 }
-                
-                for (int i = 0; i < Math.min(settings.size(), images.size()); i++){
-                    
+
+                for (int i = 0; i < Math.min(settings.size(), images.size()); i++) {
+
                     BufferedImage image = images.get(i);
                     Integer[] color = settings.get(i);
-                    
+
                     int rgba[] = {color[0], color[1], color[2], color[3]};
-                    
+
                     raster = image.getRaster();
                     raster.setPixel(x, y, rgba);
                 }

@@ -1,4 +1,3 @@
-
 package planet;
 
 import java.util.logging.Level;
@@ -9,10 +8,11 @@ import planet.surface.Surface;
 
 /**
  * The class that encapsulates a surface and keeps track of the timescale.
+ *
  * @author Richard DeSilvey
  */
 public abstract class Planet {
-    
+
     private int gridWidth;
     private int cellLength;
     private int area;
@@ -20,20 +20,23 @@ public abstract class Planet {
     private static Planet current;
     private Surface planetSurface;
 
-    public static enum TimeScale {Geological, Evolutionary, Civilization, None}
-    
+    public static enum TimeScale {
+
+        Geological, Evolutionary, Civilization, None
+    }
+
     /**
      * Constructs a new Planet.
      *
-     * @param gridWidth The number of cells in the X and Y axis.
-     * That is gridWidth * gridWidth = total number of cells.
+     * @param gridWidth The number of cells in the X and Y axis. That is
+     * gridWidth * gridWidth = total number of cells.
      * @param cellLength The length of one side of a cell in meters.
-     * @param ageStepDelay The amount of time to delay between each update to the
-     * planet's age.
+     * @param ageStepDelay The amount of time to delay between each update to
+     * the planet's age.
      * @param surfaceThreadsDelay How fast does the planet thread(s) update
      * @param threadCount The number of threads that work on the map
      */
-    public Planet(int gridWidth, int cellLength, int ageStepDelay, int surfaceThreadsDelay, int threadCount){
+    public Planet(int gridWidth, int cellLength, int ageStepDelay, int surfaceThreadsDelay, int threadCount) {
         Logger.getLogger(SurfaceMap.class.getName()).log(Level.INFO, "New Planet");
         current = this;
         this.gridWidth = gridWidth;
@@ -42,48 +45,50 @@ public abstract class Planet {
         timescale = TimeScale.None;
         planetSurface = new PlanetSurface(gridWidth, ageStepDelay, surfaceThreadsDelay, threadCount);
     }
-    
-    protected final void startThreads(){
+
+    protected final void startThreads() {
         planetSurface.startAll();
         planetSurface.start();
     }
-    
-    public final void play(){
+
+    public final void play() {
         planetSurface.playAll();
         planetSurface.play();
     }
-    
-    public final void pause(){
+
+    public final void pause() {
         planetSurface.pauseAll();
         planetSurface.pause();
     }
-    
+
     public Surface getSurface() {
         return planetSurface;
     }
-    
+
     /**
      * A static reference to the most recent instantiated Planet.
-     * @return A reference to the Planet 
+     *
+     * @return A reference to the Planet
      */
-    public final static Planet self(){
+    public final static Planet self() {
         return current;
     }
-    
+
     public boolean isTimeScale(TimeScale scale) {
         return scale == timescale;
     }
 
-    public final TimeScale getTimeScale(){
+    public final TimeScale getTimeScale() {
         return timescale;
     }
-    
+
     public void setTimescale(TimeScale timescale) {
         this.timescale = timescale;
     }
-    
+
     /**
      * The length of a cell in meters.
+     *
      * @return length of a cell in meters.
      */
     public int getLength() {
@@ -92,22 +97,24 @@ public abstract class Planet {
 
     /**
      * The area of the cell is the cell length^2
+     *
      * @return The area of a cell in square meters.
      */
     public int getCellArea() {
         return area;
     }
-    
+
     /**
      * The number of cells in the X direction.
-     * @return 
+     *
+     * @return
      */
-    public final int getGridWidth(){
+    public final int getGridWidth() {
         return gridWidth;
     }
-    
-    public final int getTotalNumberOfCells(){
+
+    public final int getTotalNumberOfCells() {
         return gridWidth * gridWidth;
     }
-    
+
 }

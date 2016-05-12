@@ -15,14 +15,14 @@ import planet.util.MThread;
 
 /**
  * The SurfaceMap is a generic map for all the systems on the planet. The map
- * contains generic cells. The RenderInterface is not required for this
- * class but it gives two methods for rendering each map. This implementation
- * may change in the future when new graphic rendering capabilities change.
+ * contains generic cells. The RenderInterface is not required for this class
+ * but it gives two methods for rendering each map. This implementation may
+ * change in the future when new graphic rendering capabilities change.
  *
  * @author Richard DeSilvey
  * @param <CellType> The high-level cell living in this map.
  */
-public abstract class SurfaceMap<CellType extends Cell> extends MThread implements RenderInterface{
+public abstract class SurfaceMap<CellType extends Cell> extends MThread implements RenderInterface {
 
     /**
      * The direction look up list for X values
@@ -45,16 +45,16 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
     public static final int[] HDIR_Y_INDEX = {-1, 0, 1, 0};
 
     public final static int MAX_HEIGHT_INDEX = 50;
-    
+
     public int displaySetting;
-    
+
     /**
-     * The ratio for indexing onto the height map array,
-     * by taking a cell height and dividing it by this value will
-     * give the proper index to the height map.
+     * The ratio for indexing onto the height map array, by taking a cell height
+     * and dividing it by this value will give the proper index to the height
+     * map.
      */
-    public static int heightIndexRatio  = 50 / MAX_HEIGHT_INDEX;
-    
+    public static int heightIndexRatio = 50 / MAX_HEIGHT_INDEX;
+
     /**
      * The map containing the references to each data point on the surface.
      */
@@ -66,7 +66,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
     protected List<SurfaceThread> threads;
 
     private int prevSubThreadAvg;
-    
+
     /**
      * Create a new map
      *
@@ -129,8 +129,8 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
     /**
      * Sets all the threads to this delay.
      *
-     * @param delay The amount of time to set all threads to delay each frame
-     * in milliseconds.
+     * @param delay The amount of time to set all threads to delay each frame in
+     * milliseconds.
      */
     public final void setThreadsDelay(int delay) {
         for (int i = 0; i < threads.size(); i++) {
@@ -214,9 +214,9 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
             for (int y = 0; y < gridSize; y++) {
                 setCellAt(generateCell(x, y));
                 generated++;
-                if (generated % flagUpdate == 0){
-                    double finished = (double)generated / (double)totalCells;
-                    Logger.getLogger(SurfaceMap.class.getName()).log(Level.INFO, 
+                if (generated % flagUpdate == 0) {
+                    double finished = (double) generated / (double) totalCells;
+                    Logger.getLogger(SurfaceMap.class.getName()).log(Level.INFO,
                             "Cells created: {0}% finished", finished * 100);
                 }
             }
@@ -286,13 +286,12 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
         map.put(index, cell);
     }
 
-    
     @Override
     public List<Integer[]> getCellData(int x, int y) {
-        
+
         List<Integer[]> settings = new ArrayList<>();
         CellType cell = getCellAt(x, y);
-        
+
         return cell.render(settings);
     }
 }
