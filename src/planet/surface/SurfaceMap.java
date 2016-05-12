@@ -280,7 +280,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
      *
      * @param cell The cell that is being added to the map
      */
-    protected final void setCellAt(CellType cell) {
+    private final void setCellAt(CellType cell) {
         int x = cell.getX(), y = cell.getY();
         int width = Planet.self().getGridSize();
         int index = (width * y) + x;
