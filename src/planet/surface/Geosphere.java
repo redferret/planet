@@ -69,10 +69,9 @@ public abstract class Geosphere extends Surface {
      * @param amount The amount being added
      */
     public void addToSurface(Layer type, float amount) {
-        for (int x = 0; x < worldSize; x++) {
-            for (int y = 0; y < worldSize; y++) {
-                getCellAt(x, y).add(type, amount, true);
-            }
+        int cellCount = Planet.self().getTotalNumberOfCells();
+        for (int i = 0; i < cellCount; i++){
+            getCellAt(i).add(type, amount, true);
         }
     }
 
