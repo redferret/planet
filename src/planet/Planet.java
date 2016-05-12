@@ -27,13 +27,13 @@ public abstract class Planet {
      *
      * @param gridWidth The number of cells in the X and Y axis.
      * That is gridWidth * gridWidth = total number of cells.
-     * @param sqrtBase The length of one side of a cell in meters.
+     * @param cellLength The length of one side of a cell in meters.
      * @param ageStepDelay The amount of time to delay between each update to the
      * planet's age.
      * @param surfaceThreadsDelay How fast does the planet thread(s) update
      * @param threadCount The number of threads that work on the map
      */
-    public Planet(int gridWidth, int sqrtBase, int ageStepDelay, int surfaceThreadsDelay, int threadCount){
+    public Planet(int gridWidth, int cellLength, int ageStepDelay, int surfaceThreadsDelay, int threadCount){
         Logger.getLogger(SurfaceMap.class.getName()).log(Level.INFO, "New Planet");
         current = this;
         this.gridWidth = gridWidth;
