@@ -41,16 +41,11 @@ public abstract class Planet {
         this.cellLength = cellLength;
         timescale = TimeScale.None;
         planetSurface = new PlanetSurface(gridWidth, ageStepDelay, surfaceThreadsDelay, threadCount);
-        initPlanet();
     }
     
     protected final void startThreads(){
         planetSurface.startAll();
         planetSurface.start();
-    }
-    
-    protected final void initPlanet(){
-        planetSurface.setupMap();
     }
     
     public final void play(){

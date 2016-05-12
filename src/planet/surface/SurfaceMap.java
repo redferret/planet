@@ -202,7 +202,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
      * called after the engine is created where each surface map is setup
      * individually. This is due to the global reference to the engine.
      */
-    public final void setupMap() {
+    protected void setupMap() {
         int gridSize = Planet.self().getGridWidth();
 
         int totalCells = (gridSize * gridSize);

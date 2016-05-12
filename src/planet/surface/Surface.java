@@ -1,7 +1,6 @@
 
 package planet.surface;
 
-import planet.cells.AtmoCell;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import planet.cells.PlanetCell;
