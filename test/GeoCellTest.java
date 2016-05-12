@@ -87,7 +87,7 @@ public class GeoCellTest {
         float volumeRangeDiff = 0.0000005f;
         float densityRangeDiff = 0.0005f;
         float heightRangeDiff = 0.000005f;
-        long cellBase = testWorld.getBase();
+        long cellBase = testWorld.getCellArea();
 
         GeoCell testCell = testWorld.getSurface().getCellAt(50, 50);
 

@@ -86,7 +86,7 @@ public abstract class Geosphere extends Surface {
 
         if (height > maxHeight) {
             diff = (height - maxHeight) / 2f;
-            massToChange = calcMass(diff, Planet.self().getBase(), bottomType);
+            massToChange = calcMass(diff, Planet.self().getCellArea(), bottomType);
             cell.remove(massToChange, false, false);
         }
 
@@ -98,12 +98,12 @@ public abstract class Geosphere extends Surface {
         Layer depositType;
         GeoCell.SedimentBuffer eb = cell.getSedimentBuffer();
         
-        height = calcHeight(eb.getSediments(), Planet.self().getBase(), SEDIMENT);
+        height = calcHeight(eb.getSediments(), Planet.self().getCellArea(), SEDIMENT);
         if (height > maxHeight) {
 
             diff = (height - maxHeight);
 
-            massBeingDeposited = calcMass(diff, Planet.self().getBase(), SEDIMENT);
+            massBeingDeposited = calcMass(diff, Planet.self().getCellArea(), SEDIMENT);
             depositType = (((HydroCell)cell).getOceanMass() > 9000) ? SHALE : SANDSTONE;
 
             eb.updateSurfaceSedimentMass(-massBeingDeposited);
@@ -118,7 +118,7 @@ public abstract class Geosphere extends Surface {
 
         dust(spreadFrom);
 
-        float height = calcHeight(0.001f, Planet.self().getBase(), SEDIMENT);
+        float height = calcHeight(0.001f, Planet.self().getCellArea(), SEDIMENT);
         convertTopLayer(spreadFrom, height);
 
         int maxCellCount = 8;
@@ -142,7 +142,7 @@ public abstract class Geosphere extends Surface {
         if (eb.getSediments() < 50 && !spreadFrom.hasOcean()
                 && spreadFrom.getMoltenRockFromSurface() < 300) {
 
-            rockMass = calcMass(height, Planet.self().getBase(), SEDIMENT);
+            rockMass = calcMass(height, Planet.self().getCellArea(), SEDIMENT);
             rockMass = spreadFrom.erode(rockMass);
 
             sandMass = changeMass(rockMass, rockLayer, SEDIMENT);
@@ -205,7 +205,7 @@ public abstract class Geosphere extends Surface {
 
             if (eb.getSediments() > 0) {
 
-                mass = calcMass(diff, Planet.self().getBase(), SEDIMENT);
+                mass = calcMass(diff, Planet.self().getCellArea(), SEDIMENT);
                 eb.updateSurfaceSedimentMass(-mass);
                 
                 lowestBuffer = lowestGeoCell.getSedimentBuffer();
@@ -234,7 +234,7 @@ public abstract class Geosphere extends Surface {
 
                 diff = clamp(diff, -lowestHeight, currentCellHeight);
 
-                float mass = calcMass(diff, Planet.self().getBase(), LAVA);
+                float mass = calcMass(diff, Planet.self().getCellArea(), LAVA);
 
                 toUpdate.putMoltenRockToSurface(-mass);
                 lowest.putMoltenRockToSurface(mass);

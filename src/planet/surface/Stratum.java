@@ -80,12 +80,12 @@ public class Stratum {
     
     /**
      * The height is calculated based on the volume of the stratum and the
-     * Planet.self().getBase()_SQRD.
+ Planet.self().getCellArea()_SQRD.
      *
      * @return The height of this stratum.
      */
     public float getHeight() {
-        return getVolume() / Planet.self().getBase();
+        return getVolume() / Planet.self().getCellArea();
     }
     
     public void setMass(float m){
