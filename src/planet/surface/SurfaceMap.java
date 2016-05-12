@@ -260,9 +260,18 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
         int width = Planet.self().getGridWidth();
         int index = (width * y) + x;
 
-        return map.get(index);
+        return getCellAt(index);
     }
 
+    /**
+     * Fetches a cell at the given index from the map.
+     * @param index The index
+     * @return The cell that maps to the given index.
+     */
+    public final CellType getCellAt(int index){
+        return map.get(index);
+    }
+    
     /**
      * Returns the cell of this map using the position of the given cell.
      *
