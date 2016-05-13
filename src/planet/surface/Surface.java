@@ -52,7 +52,7 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
     /**
      * The number of years that pass for each update to the geosphere
      */
-    public static long ageStep;
+    public static long timeStep;
 
     private DisplayAdapter display;
 
@@ -72,7 +72,7 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
     static {
         rand = new Random();
         erosionAmount = 1;
-        ageStep = 100000;
+        timeStep = 100000;
         GEOUPDATE = 100000;
     }
 
@@ -130,7 +130,7 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
     public void update() {
 
         if (ageUpdateDelay.check()) {
-            long curPlanetAge = planetAge.getAndAdd(ageStep);
+            long curPlanetAge = planetAge.getAndAdd(timeStep);
             if (curPlanetAge - geologicalTimeStamp > GEOUPDATE) {
                 // < Update to major geological events go here >
 
