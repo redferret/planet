@@ -72,7 +72,7 @@ public class GeoCell extends Mantel {
          * Apply the changes that need to be made to this cell, if the buffer is
          * not set nothing will happen.
          */
-        public void applySedimentBuffer() {
+        public void applyBuffer() {
             if (bufferSet()) {
                 updateSurfaceSedimentMass(pendingSediments);
                 resetBuffer();
@@ -134,6 +134,9 @@ public class GeoCell extends Mantel {
             }
 
         }
+
+        @Override
+        public void applyBuffer() {}
 
     }
 
