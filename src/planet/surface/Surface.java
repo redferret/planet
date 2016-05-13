@@ -77,7 +77,7 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
     }
 
     /**
-     * Constructs a new Surface.
+     * Constructs a new Surface with an empty map.
      *
      * @param planetWidth The size of the surface
      * @param ageStepDelay The amount of time to delay updating planet age
@@ -99,6 +99,9 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
         reset();
     }
 
+    /**
+     * Resets the surface to an empty map and resets the planet's age.
+     */
     public void reset() {
         planetAge = new AtomicLong(0);
         geologicalTimeStamp = 0;
