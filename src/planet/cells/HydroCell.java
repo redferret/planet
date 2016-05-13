@@ -23,6 +23,11 @@ public class HydroCell extends GeoCell {
     public static float evapScale;
 
     /**
+     * The cross-sectional area of each virtual pipe in the water pipeline
+     * model.
+     */
+    public static float crossSectionalArea;
+    /**
      * The percentage of water that can dissolve sediments.
      */
     public static float sedimentCapacity;
@@ -30,18 +35,22 @@ public class HydroCell extends GeoCell {
     private static Integer[][] oceanMap;
     
     /**
-     * Buffer when moving water to other cells
+     * The water pipeline model for the movement of water.
      */
     public final class WaterPipeline {
 
-        private float mLeft, mRight, mTop, mBottom;
+        private float inLeft, inRight, inTop, inBottom;
+        private float outLeft, outRight, outTop, outBottom;
         
         public WaterPipeline(){
-            mLeft = mRight = mTop = mBottom = 0;
+            inLeft = inRight = inTop = inBottom = 0;
+            outLeft = outRight = outTop = outBottom = 0;
         }
         
         
-        
+        public float sum(){
+            return 0;
+        }
     }
     
     /**
@@ -102,6 +111,7 @@ public class HydroCell extends GeoCell {
         evapScale = 2.5f;
         sedimentCapacity = 0.25f;
         minAngle = 0.0002f;
+        crossSectionalArea = Planet.self().getCellArea();
     }
     
     private WaterPipeline waterPipeline;
