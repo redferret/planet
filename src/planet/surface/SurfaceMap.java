@@ -193,6 +193,10 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
         }
     }
 
+    /**
+     * Gets the average runtime between all threads loaded in the simulation.
+     * @return The average runtime between all threads.
+     */
     public int getAverageThreadTime() {
         return prevSubThreadAvg;
     }
