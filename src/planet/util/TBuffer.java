@@ -43,6 +43,11 @@ public abstract class TBuffer {
     protected abstract void init();
     
     /**
+     * Applies changes.
+     */
+    public abstract void applyBuffer();
+    
+    /**
      * Changes the bufferSet flag.
      * @param b Whether this buffer is set or not
      */
