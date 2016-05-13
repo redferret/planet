@@ -81,7 +81,7 @@ public abstract class Geosphere extends Surface {
         long age;
 
         GeoCell cell = getCellAt(x, y);
-        cell.getSedimentBuffer().applySedimentBuffer();
+        cell.getSedimentBuffer().applyBuffer();
 
         formNewRock(cell, calcDepth(SEDIMENT, 9.8f, 400));
         age = cell.getAge();
