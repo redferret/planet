@@ -189,6 +189,14 @@ public class GeoCell extends Mantel {
 
     private static Integer[][] heightMap, strataMap, lavaMap;
 
+    public final static int MAX_HEIGHT_INDEX = 50;
+    /**
+     * The ratio for indexing onto the height map array, by taking a cell height
+     * and dividing it by this value will give the proper index to the height
+     * map.
+     */
+    public static int heightIndexRatio = 50 / MAX_HEIGHT_INDEX;
+    
     static {
         Color[] colors = {new Color(255, 255, 204), new Color(51, 153, 51),
             new Color(157, 166, 175)};

@@ -44,17 +44,8 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
      */
     public static final int[] HDIR_Y_INDEX = {-1, 0, 1, 0};
 
-    public final static int MAX_HEIGHT_INDEX = 50;
-
     public int displaySetting;
-
-    /**
-     * The ratio for indexing onto the height map array, by taking a cell height
-     * and dividing it by this value will give the proper index to the height
-     * map.
-     */
-    public static int heightIndexRatio = 50 / MAX_HEIGHT_INDEX;
-
+    
     /**
      * The map containing the references to each data point on the surface.
      */
