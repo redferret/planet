@@ -20,8 +20,7 @@ import static planet.util.Tools.calcDepth;
 import static planet.util.Tools.calcHeight;
 import static planet.util.Tools.calcMass;
 import static planet.util.Tools.changeMass;
-import static planet.util.Tools.checkXBounds;
-import static planet.util.Tools.checkYBounds;
+import static planet.util.Tools.checkBounds;
 import static planet.util.Tools.clamp;
 import static planet.util.Tools.getLowestCellFrom;
 import static planet.Planet.TimeScale.Geological;
@@ -185,8 +184,8 @@ public abstract class Geosphere extends Surface {
             ty = y + DIR_Y_INDEX[s];
 
             // Check the boundaries
-            mx = checkXBounds(tx, Planet.self().getGridWidth());
-            my = checkYBounds(ty, Planet.self().getGridWidth());
+            mx = checkBounds(tx, Planet.self().getGridWidth());
+            my = checkBounds(ty, Planet.self().getGridWidth());
 
             spreadTo = getCellAt(mx, my);
 

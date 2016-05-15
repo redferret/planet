@@ -119,13 +119,8 @@ public class Tools {
     }
 
     
-    public static int checkXBounds(int tx, int b){
+    public static int checkBounds(int tx, int b){
         return (tx >= b) ? tx - b :(tx < 0)? b + tx : tx;
-    }
-
-    public static int checkYBounds(int ty, int length){
-        
-        return (ty >= length) ? ty - length : (ty < 0) ? length + ty : ty;
     }
     
     /**
@@ -209,8 +204,8 @@ public class Tools {
             ty = y + DIR_Y_INDEX[s];
 
             // Check the boundaries
-            mx = checkXBounds(tx, Planet.self().getGridWidth());
-            my = checkYBounds(ty, Planet.self().getGridWidth());
+            mx = checkBounds(tx, Planet.self().getGridWidth());
+            my = checkBounds(ty, Planet.self().getGridWidth());
 
             cell = geo.getCellAt(mx, my);
 
