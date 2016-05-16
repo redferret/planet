@@ -67,6 +67,10 @@ public class HydroCell extends GeoCell {
             
             float thisHeight = getHeight();
             
+            if (top == null){
+                setCells();
+            }
+            
             update(thisHeight, left);
             update(thisHeight, right);
             update(thisHeight, top);
