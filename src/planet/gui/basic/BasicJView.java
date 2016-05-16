@@ -16,7 +16,7 @@ import planet.enums.Layer;
 import planet.gui.DisplayAdapter;
 import planet.surface.Hydrosphere;
 import planet.surface.PlanetSurface;
-import planet.surface.Surface;
+import planet.util.SurfaceThread;
 
 /**
  *
@@ -39,7 +39,7 @@ public class BasicJView extends JFrame implements DisplayAdapter {
         
         renderFrame = new Frame(SIZE, SIZE);
         
-        testWorld = new TestWorld(50);
+        testWorld = new TestWorld();
         testWorld.getSurface().setDisplay(this);
         renderFrame.registerMap(testWorld.getSurface());
         add(renderFrame);
@@ -51,29 +51,8 @@ public class BasicJView extends JFrame implements DisplayAdapter {
         setLocationRelativeTo(null);
         setVisible(true);
         
-        testWorld.setTimescale(TimeScale.None);
         PlanetSurface surface = (PlanetSurface) testWorld.getSurface();
-        surface.addToSurface(Layer.BASALT, 100000);
-        surface.addToSurface(Layer.SANDSTONE, 50000);
-        for (int x = 0; x < 30; x++) {
-            for (int y = 0; y < 50; y++){
-                surface.getCellAt(x, y).add(Layer.SHALE, 1000000, true);
-            }
-        }
-        
-        for (int x = 0; x < 30; x++){
-            surface.getCellAt(x, 10).add(Layer.SHALE, 100000, true);
-        }
-        
-        for (int y = 0; y < 50; y++){
-            surface.getCellAt(0, y).add(Layer.SHALE, 100000, true);
-        }
-        
-        for (int x = 0; x < 30; x++){
-            surface.getCellAt(x, 29).add(Layer.SHALE, 100000, true);
-        }
-        surface.getCellAt(11, 11).addOceanMass(1000);
-
+        surface.addToSurface(Layer.LAVA, 10000);
         
         testWorld.play();
     }
@@ -83,17 +62,19 @@ public class BasicJView extends JFrame implements DisplayAdapter {
         renderFrame.repaint();
         
         averages.add(testWorld.getSurface().getAverageThreadTime());
+        final int SAMPLES = 10;
         
-        if (averages.size() == 10){
+        if (averages.size() == SAMPLES){
             totalAvg = 0;
             while(!averages.isEmpty()){
                 totalAvg += averages.poll();
             }
-            totalAvg /= 25;
+            totalAvg /= SAMPLES;
         }
         
-        setTitle("Age: " + testWorld.getSurface().getPlanetAge() 
-                + " F:" + totalAvg + " L:" + testWorld.getSurface().getLowestHeight());
+        long age = testWorld.getSurface().getPlanetAge();
+        float lowestHeight = testWorld.getSurface().getLowestHeight();
+        setTitle("Age: " + age + " F:" + totalAvg + " L:" + lowestHeight);
     }
     
     public static void main(String[] args){
