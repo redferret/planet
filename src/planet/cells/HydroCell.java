@@ -3,10 +3,17 @@ package planet.cells;
 import java.awt.Color;
 import java.util.List;
 import planet.Planet;
-import planet.util.TBuffer;
+import planet.enums.Layer;
 import static planet.enums.Layer.OCEAN;
+import planet.util.TBuffer;
 import planet.surface.Hydrosphere;
+import planet.surface.Surface;
 import planet.util.Tools;
+import static planet.util.Tools.calcMass;
+import static planet.util.Tools.checkBounds;
+import static planet.util.Tools.clamp;
+import static planet.util.Tools.constructGradient;
+import static planet.util.Tools.maxOf;
 
 /**
  * A HydroCell represents the hydrosphere of the planet. The class contains
@@ -37,20 +44,73 @@ public class HydroCell extends GeoCell {
     /**
      * The water pipeline model for the movement of water.
      */
-    public final class WaterPipeline {
+    public final class WaterPipeline extends TBuffer {
 
-        private float inLeft, inRight, inTop, inBottom;
-        private float outLeft, outRight, outTop, outBottom;
+        private float bufferedMass;
+        private HydroCell top, bottom, left, right;
         
         public WaterPipeline(){
-            inLeft = inRight = inTop = inBottom = 0;
-            outLeft = outRight = outTop = outBottom = 0;
+            super();
         }
         
-        
-        public float sum(){
-            return 0;
+        public void setCells(){
+            Surface surface = Planet.self().getSurface();
+            int size = Planet.self().getGridWidth();
+            
+            top = surface.getCellAt(getX(), checkBounds(getY() - 1, size));
+            bottom = surface.getCellAt(getX(), checkBounds(getY() + 1, size));
+            left = surface.getCellAt(checkBounds(getX() - 1, size), getY());
+            right = surface.getCellAt(checkBounds(getX() + 1, size), getY());
         }
+        
+        public void update(){
+            
+            float thisHeight = getHeight();
+            
+            update(thisHeight, left);
+            update(thisHeight, right);
+            update(thisHeight, top);
+            update(thisHeight, bottom);
+            
+        }
+
+        private void update(float thisHeight, HydroCell cell) {
+            long area = Planet.self().getCellArea();
+            float l = Planet.self().getLength();
+            
+            float leftHeight = cell.getHeight();
+            float heightDiff = Math.max(0, thisHeight - leftHeight);
+            
+            double angle = Math.atan(thisHeight / l);
+            float mass = getOceanMass(), displacedMass;
+            float pressure = (maxOf(0, (float) Math.sin(angle), 0.0001f) * mass) / area;
+            
+            if (heightDiff != 0){
+                heightDiff = clamp(heightDiff, -leftHeight, thisHeight)/4f;
+
+                displacedMass = calcMass(heightDiff, area, OCEAN);
+
+                transferWater(-displacedMass);
+                cell.getWaterPipeline().transferWater(displacedMass);
+            }
+            
+        }
+
+        public void transferWater(float amount){
+            bufferedMass += amount;
+        }
+        
+        @Override
+        protected void init() {
+            bufferedMass = 0;
+        }
+
+        @Override
+        public void applyBuffer() {
+            addOceanMass(bufferedMass);
+            resetBuffer();
+        }
+        
     }
     
     /**
@@ -96,7 +156,7 @@ public class HydroCell extends GeoCell {
             if (bufferSet()) {
                 SedimentBuffer eb = getSedimentBuffer();
                 eb.updateSurfaceSedimentMass(sediments);
-                sediments = 0;
+                resetBuffer();
             }
         }
     }
@@ -106,7 +166,7 @@ public class HydroCell extends GeoCell {
                         new Color(0, 0, 153, 255)};
         
         float[] dist = {0.04f, 0.36f, 0.68f, 1f};
-        oceanMap = Tools.constructGradient(colors, dist, MAX_WATER_DEPTH_INDEX);
+        oceanMap = constructGradient(colors, dist, MAX_WATER_DEPTH_INDEX);
         
         evapScale = 2.5f;
         sedimentCapacity = 0.25f;

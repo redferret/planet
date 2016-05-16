@@ -26,6 +26,8 @@ public class SurfaceThread extends MThread {
     private int curFrame;
     public static boolean suppressMantelHeating;
 
+    private static final boolean CONTINUOUS = true;
+    
     static {
         suppressMantelHeating = false;
     }
@@ -38,7 +40,7 @@ public class SurfaceThread extends MThread {
      * @param name The name of this thread
      */
     public SurfaceThread(int delay, Boundaries bounds, String name) {
-        super(delay, name, false);
+        super(delay, name, CONTINUOUS);
 
         this.bounds = bounds;
         curFrame = 0;
@@ -77,7 +79,7 @@ public class SurfaceThread extends MThread {
 
                     for (int x = ((y % 2) + m) + lowerXBound; x < upperXBound; x += 2) {
                         surface.updateGeology(x, y);
-                        surface.updateOceans(x, y);
+                        surface.updateOceans(x, y, curFrame);
                         updateMinimumHeight(x, y, surface);
                     }
                 }

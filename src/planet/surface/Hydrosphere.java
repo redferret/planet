@@ -1,6 +1,8 @@
 package planet.surface;
 
 import planet.Planet;
+import planet.cells.HydroCell;
+import planet.cells.HydroCell.WaterPipeline;
 
 /**
  * The hydrosphere is everything that deals with rivers, lakes, seas, and
@@ -32,8 +34,8 @@ public abstract class Hydrosphere extends Geosphere {
         }
     }
 
-    public void updateOceans(int x, int y) {
-        moveWater(x, y);
+    public void updateOceans(int x, int y, int frame) {
+        moveWater(x, y, frame);
         erode(x, y);
     }
 
@@ -43,8 +45,12 @@ public abstract class Hydrosphere extends Geosphere {
      * @param x The x coordinate
      * @param y The y coordinate
      */
-    private void moveWater(int x, int y) {
+    private void moveWater(int x, int y, int frame) {
+        HydroCell toUpdate = getCellAt(x, y);
+        WaterPipeline wp = toUpdate.getWaterPipeline();
 
+        wp.applyBuffer();
+        wp.update();
     }
 
     /**

@@ -184,6 +184,10 @@ public class Tools {
     public static float clamp(float heightDiff, float min, float max){
         return (heightDiff < min) ? min : (heightDiff > max ? max : heightDiff);
     }
+    
+    public static float maxOf(float lessThan, float of, float then){
+        return of > lessThan ? of : then;
+    }
 
     public static GeoCell getLowestCellFrom(GeoCell central) {
 
