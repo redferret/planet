@@ -65,6 +65,10 @@ public abstract class MThread extends Thread {
     
     public abstract void update();
     
+    public void setContinuous(boolean continuous) {
+        this.continuous = continuous;
+    }
+    
     @Override
     public void run() {
         while(!isFinished){
