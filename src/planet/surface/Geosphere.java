@@ -314,7 +314,7 @@ public abstract class Geosphere extends Surface {
     }
 
     private void geologicalUpdate(GeoCell cell) {
-//        spreadToLowest(cell);
+        spreadToLowest(cell);
         cell.cool(1);
     }
 
