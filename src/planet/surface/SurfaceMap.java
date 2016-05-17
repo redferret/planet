@@ -196,6 +196,12 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
         return false;
     }
     
+    public void setThreadsAsContinuous(boolean c){
+        for (SurfaceThread thread : threads){
+            thread.setContinuous(c);
+        }
+    }
+    
     /**
      * Gets the average runtime between all threads loaded in the simulation.
      * @return The average runtime between all threads.
