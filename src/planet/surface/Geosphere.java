@@ -48,7 +48,7 @@ public abstract class Geosphere extends Surface {
      */
     public static float averageVolcanicMass;
 
-    private long strataBuoyancyStamp;
+    private long ageStamp;
 
     static {
         heatDistributionCount = 5;
@@ -58,7 +58,7 @@ public abstract class Geosphere extends Surface {
 
     public Geosphere(int worldSize, int surfaceDelay, int threadsDelay, int threadCount) {
         super(worldSize, surfaceDelay, threadsDelay, threadCount);
-        strataBuoyancyStamp = 0;
+        ageStamp = 0;
     }
 
     /**
@@ -277,13 +277,13 @@ public abstract class Geosphere extends Surface {
 
     public boolean checkForGeologicalUpdate() {
         long curPlanetAge = planetAge.get();
-        long diff = (curPlanetAge - strataBuoyancyStamp);
+        long diff = (curPlanetAge - ageStamp);
         return diff > GEOUPDATE;
     }
 
     private void stampBuoyancyTimeStamp() {
         long curPlanetAge = planetAge.get();
-        strataBuoyancyStamp = curPlanetAge;
+        ageStamp = curPlanetAge;
     }
 
     /**
