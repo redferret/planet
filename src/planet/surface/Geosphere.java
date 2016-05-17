@@ -281,7 +281,7 @@ public abstract class Geosphere extends Surface {
         return diff > GEOUPDATE;
     }
 
-    private void stampBuoyancyTimeStamp() {
+    private void timeStamp() {
         long curPlanetAge = planetAge.get();
         ageStamp = curPlanetAge;
     }
@@ -306,7 +306,7 @@ public abstract class Geosphere extends Surface {
             if (checkForGeologicalUpdate()) {
                 geologicalUpdate(cell);
                 cell.updateHeight();
-                stampBuoyancyTimeStamp();
+                timeStamp();
             }
         }
         depositSediment(x, y);
