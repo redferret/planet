@@ -14,7 +14,7 @@ public class TestWorld extends Planet {
         CELL_SIZE_M = 6;
         DEFAULT_THREAD_COUNT = 1;
         PLANET_DELAY = 1;
-        AGE_STEP_DELAY = 500;
+        AGE_STEP_DELAY = 250;
         DEFAULT_SIZE = 256;
     }
 
@@ -44,6 +44,7 @@ public class TestWorld extends Planet {
      */
     public TestWorld(int worldSize, int threadCount) {
         super(worldSize * threadCount, CELL_SIZE_M, AGE_STEP_DELAY, PLANET_DELAY, threadCount);
+        timescale = TimeScale.Geological;
         startThreads();
     }
 }
