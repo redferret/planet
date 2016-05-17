@@ -51,7 +51,7 @@ public abstract class Geosphere extends Surface {
     private long strataBuoyancyStamp;
 
     static {
-        heatDistributionCount = 100;
+        heatDistributionCount = 5;
         thermalInc = 100;
         averageVolcanicMass = 2500000;
     }
