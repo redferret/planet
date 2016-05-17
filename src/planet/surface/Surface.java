@@ -129,6 +129,10 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
         return planetAge.get();
     }
 
+    public abstract void partialUpdate(int x, int y);
+    
+    public abstract void fullUpdate();
+    
     @Override
     public void update() {
 

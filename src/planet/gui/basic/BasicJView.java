@@ -38,7 +38,7 @@ public class BasicJView extends JFrame implements DisplayAdapter {
         
         renderFrame = new Frame(SIZE, SIZE);
         
-        testWorld = new TestWorld(85, 3);
+        testWorld = new TestWorld();
         testWorld.getSurface().setDisplay(this);
         renderFrame.registerMap(testWorld.getSurface());
         add(renderFrame);
@@ -53,7 +53,7 @@ public class BasicJView extends JFrame implements DisplayAdapter {
         PlanetSurface surface = (PlanetSurface) testWorld.getSurface();
         surface.addToSurface(Layer.BASALT, 10000);
         surface.addWaterToAllCells(10000);
-        Geosphere.heatDistributionCount = 50;
+        Geosphere.heatDistributionCount = 500;
         Geosphere.thermalInc = 100;
         
         testWorld.play();

@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import planet.Planet;
 import static planet.Planet.TimeScale.Geological;
 import planet.surface.PlanetSurface;
+import planet.surface.Surface;
 
 /**
  * A surface can be broken up into sections where a SurfaceThread can modify and
@@ -48,17 +49,14 @@ public class SurfaceThread extends MThread {
         lowestHeightDecPart = new AtomicInteger(Integer.MAX_VALUE);
         absLowestHeight = Integer.MAX_VALUE;
     }
-
+    
     /**
      * Each time the thread posts an update this method is called following a
      * post-update call to postUpdate()
      */
     public final void update() {
 
-        PlanetSurface surface = (PlanetSurface) Planet.self().getSurface();
-
-        boolean geologicalUpdate = Planet.self().isTimeScale(Geological)
-                || surface.checkForGeologicalUpdate();
+        Surface surface = Planet.self().getSurface();
 
         boolean sw = (curFrame % 2) == 0;
         int m;
@@ -78,16 +76,14 @@ public class SurfaceThread extends MThread {
                             : ((b > 0) && (y % 2 != 0) ? -1 : 0);
 
                     for (int x = ((y % 2) + m) + lowerXBound; x < upperXBound; x += 2) {
-                        surface.updateGeology(x, y);
-                        surface.updateOceans(x, y);
-                        updateMinimumHeight(x, y, surface);
+                        surface.partialUpdate(x, y);
+                        updateMinimumHeight(x, y, (PlanetSurface) surface);
                     }
                 }
             }
 
-            if (!suppressMantelHeating && geologicalUpdate) {
-                surface.heatMantel();
-            }
+            surface.fullUpdate();
+            
         } catch (Exception e) {
             Logger.getLogger(SurfaceThread.class.getName()).log(Level.SEVERE,
                     "An exception occured when updating the surface: {0}", getName());
