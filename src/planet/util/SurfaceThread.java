@@ -25,14 +25,9 @@ public class SurfaceThread extends MThread {
      */
     protected Boundaries bounds;
     private int curFrame;
-    public static boolean suppressMantelHeating;
-
+    
     private static final boolean CONTINUOUS = true;
     
-    static {
-        suppressMantelHeating = false;
-    }
-
     /**
      * Constructs a new SurfaceThread.
      *

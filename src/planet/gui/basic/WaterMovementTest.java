@@ -44,7 +44,7 @@ public class WaterMovementTest extends JFrame implements DisplayAdapter {
         setLocationRelativeTo(null);
         setVisible(true);
         
-        SurfaceThread.suppressMantelHeating = true;
+        PlanetSurface.suppressMantelHeating = true;
         PlanetSurface surface = (PlanetSurface) testWorld.getSurface();
         surface.addToSurface(Layer.SHALE, 100000);
         surface.getCellAt(49, 45).addOceanMass(1000000);
