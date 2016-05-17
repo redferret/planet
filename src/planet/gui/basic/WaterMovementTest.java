@@ -2,19 +2,12 @@
 
 package planet.gui.basic;
 
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.Deque;
 import java.util.LinkedList;
 import javax.swing.JFrame;
-import planet.Planet;
-import planet.Planet.TimeScale;
 import planet.TestWorld;
 import planet.enums.Layer;
 import planet.gui.DisplayAdapter;
-import planet.surface.Hydrosphere;
 import planet.surface.PlanetSurface;
 import planet.util.SurfaceThread;
 
@@ -51,14 +44,10 @@ public class WaterMovementTest extends JFrame implements DisplayAdapter {
         setLocationRelativeTo(null);
         setVisible(true);
         
-        testWorld.setTimescale(TimeScale.None);
         SurfaceThread.suppressMantelHeating = true;
         PlanetSurface surface = (PlanetSurface) testWorld.getSurface();
-        surface.addToSurface(Layer.BASALT, 100000);
-        
-        surface.getCellAt(20, 10).addOceanMass(10000000);
-        surface.getCellAt(60, 50).addOceanMass(10000000);
-        surface.getCellAt(80, 70).addOceanMass(10000000);
+        surface.addToSurface(Layer.SHALE, 100000);
+        surface.getCellAt(49, 45).addOceanMass(1000000);
         
         testWorld.play();
     }

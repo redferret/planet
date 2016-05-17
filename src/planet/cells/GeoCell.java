@@ -425,7 +425,7 @@ public class GeoCell extends Mantel {
         if (amount < 0) { // Removing from the Stratum
             difference = mass + amount;// Take the difference (amount is negative)
             if (difference < 0) {
-                difference = Math.min(-0.001f, difference);
+                difference = Math.min(-0.00001f, difference);
                 if (verifyStratumMass(selectedStratum, workOnTop)) {
                     addToStrata(null, amount - difference, workOnTop);
                 }

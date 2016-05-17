@@ -13,6 +13,7 @@ import static planet.util.Tools.calcMass;
 import static planet.util.Tools.checkBounds;
 import static planet.util.Tools.clamp;
 import static planet.util.Tools.constructGradient;
+import static planet.util.Tools.getLowestCellFrom;
 import static planet.util.Tools.maxOf;
 
 /**
@@ -53,45 +54,49 @@ public class HydroCell extends GeoCell {
         }
         
         public void update(){
-            
-            float thisHeight = getHeight();
-            
-            Surface surface = Planet.self().getSurface();
-            int size = Planet.self().getGridWidth();
-            HydroCell top, bottom, left, right;
-            
-            top = surface.getCellAt(getX(), checkBounds(getY() - 1, size));
-            bottom = surface.getCellAt(getX(), checkBounds(getY() + 1, size));
-            left = surface.getCellAt(checkBounds(getX() - 1, size), getY());
-            right = surface.getCellAt(checkBounds(getX() + 1, size), getY());
-            
-            update(thisHeight, left);
-            update(thisHeight, right);
-            update(thisHeight, top);
-            update(thisHeight, bottom);
-            
-        }
 
-        private void update(float thisHeight, HydroCell cell) {
-            long area = Planet.self().getCellArea();
-            float l = Planet.self().getLength();
-            
-            float leftHeight = cell.getHeight();
-            float heightDiff = Math.max(0, thisHeight - leftHeight);
-            
-            double angle = Math.atan(thisHeight / l);
-            float mass = getOceanMass(), displacedMass;
-            float pressure = (maxOf(0, (float) Math.sin(angle), 0.0001f) * mass) / area;
-            
-            if (heightDiff > 0){
-                heightDiff = clamp(heightDiff, -leftHeight, thisHeight)/4f;
+            HydroCell cellToUpdate, lowestCell;
 
-                displacedMass = calcMass(heightDiff, area, OCEAN);
+            float lowestHeight, curCellHeight, displacedMass,
+                    diffGeoHeight, differenceHeight, totalMass;
 
-                transferWater(-displacedMass);
-                cell.getWaterPipeline().transferWater(displacedMass);
+            cellToUpdate = (HydroCell) thisCell();
+            lowestCell = (HydroCell) getLowestCellFrom(cellToUpdate);
+
+            if (lowestCell == null || cellToUpdate == null) {
+                return;
             }
-            
+
+            WaterPipeline toUpdateWaterBuffer = cellToUpdate.getWaterPipeline();
+            WaterPipeline lowestHydroBuffer = lowestCell.getWaterPipeline();
+
+            toUpdateWaterBuffer.applyBuffer();
+            lowestHydroBuffer.applyBuffer();
+
+            HydroCell.SuspendedSediments lowestSSediments = cellToUpdate.getSedimentMap();
+            HydroCell.SuspendedSediments toUpdateSSediments = lowestCell.getSedimentMap();
+
+            lowestSSediments.applyBuffer();
+            toUpdateSSediments.applyBuffer();
+
+            if (lowestCell != cellToUpdate && cellToUpdate.hasOcean()) {
+
+                lowestHeight = lowestCell.getHeight();
+                curCellHeight = cellToUpdate.getHeight();
+
+                // Move the water
+                differenceHeight = (curCellHeight - lowestHeight) / 2.5f;
+                curCellHeight = cellToUpdate.getHeight() / 2.5f;
+                lowestHeight = lowestCell.getHeight() / 2.5f;
+
+                differenceHeight = clamp(differenceHeight, -lowestHeight, curCellHeight);
+
+                displacedMass = calcMass(differenceHeight, Planet.self().getCellArea(), OCEAN);
+
+                toUpdateWaterBuffer.transferWater(-displacedMass);
+                lowestHydroBuffer.transferWater(displacedMass);
+            }
+
         }
 
         public void transferWater(float amount){
@@ -109,6 +114,10 @@ public class HydroCell extends GeoCell {
             resetBuffer();
         }
         
+    }
+    
+    private Cell thisCell(){
+        return this;
     }
     
     /**

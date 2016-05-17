@@ -138,7 +138,7 @@ public abstract class Geosphere extends Surface {
 
         dust(spreadFrom);
 
-        float height = calcHeight(0.1f, Planet.self().getCellArea(), SEDIMENT);
+        float height = calcHeight(0.00001f, Planet.self().getCellArea(), SEDIMENT);
         convertTopLayer(spreadFrom, height);
 
         int maxCellCount = 8;
@@ -314,7 +314,7 @@ public abstract class Geosphere extends Surface {
     }
 
     private void geologicalUpdate(GeoCell cell) {
-        spreadToLowest(cell);
+//        spreadToLowest(cell);
         cell.cool(1);
     }
 

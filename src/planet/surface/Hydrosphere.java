@@ -3,6 +3,10 @@ package planet.surface;
 import planet.Planet;
 import planet.cells.HydroCell;
 import planet.cells.HydroCell.WaterPipeline;
+import static planet.enums.Layer.OCEAN;
+import static planet.util.Tools.calcMass;
+import static planet.util.Tools.clamp;
+import static planet.util.Tools.getLowestCellFrom;
 
 /**
  * The hydrosphere is everything that deals with rivers, lakes, seas, and
@@ -36,7 +40,6 @@ public abstract class Hydrosphere extends Geosphere {
 
     public void updateOceans(int x, int y) {
         moveWater(x, y);
-        erode(x, y);
     }
 
     /**
