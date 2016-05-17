@@ -170,6 +170,33 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
     }
 
     /**
+     * If all the threads are not continuous then this method will check if
+     * all threads have finished their iteration. If all threads have finished
+     * their iteration then this method will signal all threads to run and
+     * return true, otherwise this method will return false.
+     * @return True if all the threads were signaled to run.
+     */
+    public boolean synchronizeThreads(){
+        int sleeping = 0;
+        int expected = threads.size();
+        
+        if (expected > 0) {
+            boolean paused;
+            for (int i = 0; i < expected; i++) {
+                paused = threads.get(i).paused();
+                if (paused) {
+                    sleeping++;
+                }
+            }
+            if (sleeping == expected) {
+                playAll();
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
      * Gets the average runtime between all threads loaded in the simulation.
      * @return The average runtime between all threads.
      */
