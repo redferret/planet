@@ -144,6 +144,8 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
      */
     public abstract void fullUpdate();
     
+    public native void surfaceThreadPostUpdate();
+    
     @Override
     public void update() {
 
@@ -162,6 +164,10 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
         if (threadAverageDelay.check()) {
             super.update();
         }
+        
+        try{
+            surfaceThreadPostUpdate();
+        }finally{}
     }
 
     @Override
