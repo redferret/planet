@@ -89,7 +89,7 @@ public class HydroCell extends GeoCell {
             float mass = getOceanMass(), displacedMass;
             float pressure = (maxOf(0, (float) Math.sin(angle), 0.0001f) * mass) / area;
             
-            if (heightDiff != 0){
+            if (heightDiff > 0){
                 heightDiff = clamp(heightDiff, -leftHeight, thisHeight)/4f;
 
                 displacedMass = calcMass(heightDiff, area, OCEAN);

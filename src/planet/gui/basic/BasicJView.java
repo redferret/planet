@@ -52,7 +52,7 @@ public class BasicJView extends JFrame implements DisplayAdapter {
         setVisible(true);
         
         PlanetSurface surface = (PlanetSurface) testWorld.getSurface();
-        surface.addToSurface(Layer.LAVA, 10000);
+        surface.addToSurface(Layer.BASALT, 10000);
         
         testWorld.play();
     }

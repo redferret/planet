@@ -14,24 +14,36 @@ public class TestWorld extends Planet {
         CELL_SIZE_M = 6;
         THREAD_COUNT = 1;
         PLANET_DELAY = 1;
-        AGE_STEP_DELAY = 250;
+        AGE_STEP_DELAY = 500;
         DEFAULT_SIZE = 256;
     }
 
     /**
-     * Constructs a default test world with a size of 256
+     * Constructs a default test world with a size of 256 with one thread.
      */
     public TestWorld() {
         this(DEFAULT_SIZE);
     }
 
     /**
-     * Constructs a new test world for the simulation.
+     * Constructs a new test world for the simulation with a given thread 
+     * divisor on a default sized world.
      *
-     * @param worldSize The size of the world squared.
+     * @param threadCount The size of the world squared.
      */
-    public TestWorld(int worldSize) {
-        super(worldSize, CELL_SIZE_M, AGE_STEP_DELAY, PLANET_DELAY, THREAD_COUNT);
+    public TestWorld(int threadCount) {
+        this(DEFAULT_SIZE * threadCount, threadCount);
+    }
+    
+    /**
+     * Constructs a new test world for the simulation with a specified number
+     * of threads. Each thread will get a chunk size.
+     *
+     * @param worldSize The size chunk for each thread
+     * @param threadCount The number of thread divisions
+     */
+    public TestWorld(int worldSize, int threadCount) {
+        super(worldSize * threadCount, CELL_SIZE_M, AGE_STEP_DELAY, PLANET_DELAY, threadCount);
         startThreads();
     }
 }

@@ -144,6 +144,9 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
         if (display != null) {
             display.update();
         }
+        if (threadAverageDelay.check()) {
+            super.update();
+        }
     }
 
     @Override

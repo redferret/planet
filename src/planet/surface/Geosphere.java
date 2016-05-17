@@ -51,9 +51,9 @@ public abstract class Geosphere extends Surface {
     private long strataBuoyancyStamp;
 
     static {
-        heatDistributionCount = 1100;
+        heatDistributionCount = 100;
         thermalInc = 100;
-        averageVolcanicMass = 250000;
+        averageVolcanicMass = 2500000;
     }
 
     public Geosphere(int worldSize, int surfaceDelay, int threadsDelay, int threadCount) {
@@ -138,7 +138,7 @@ public abstract class Geosphere extends Surface {
 
         dust(spreadFrom);
 
-        float height = calcHeight(0.001f, Planet.self().getCellArea(), SEDIMENT);
+        float height = calcHeight(0.1f, Planet.self().getCellArea(), SEDIMENT);
         convertTopLayer(spreadFrom, height);
 
         int maxCellCount = 8;

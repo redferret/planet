@@ -153,6 +153,23 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
     public abstract CellType generateCell(int x, int y);
 
     /**
+     * Override this method and call the <code>super.update()</code> to make
+     * additional updates. The <code>super.update()</code> must be called for
+     * the map to function properly.
+     */
+    public void update() {
+        checkSubThreads();
+    }
+
+    private void checkSubThreads() {
+        int avg = 0;
+        for (SurfaceThread thread : threads){
+            avg = thread.timeLapse();
+        }
+        prevSubThreadAvg = avg / threads.size();
+    }
+
+    /**
      * Gets the average runtime between all threads loaded in the simulation.
      * @return The average runtime between all threads.
      */
