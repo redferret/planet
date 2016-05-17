@@ -64,6 +64,8 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
     public final static int STRATAMAP = 1;
     public final static int LANDOCEAN = 2;
 
+    private static final int DEFAULT_THREAD_DELAY = 1;
+    
     /**
      * Used primarily for erosion algorithms.
      */
@@ -86,7 +88,7 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
      * @param threadCount The number of threads that will work on the map
      */
     public Surface(int planetWidth, int ageStepDelay, int threadsDelay, int threadCount) {
-        super(planetWidth, 1, "Geosphere", threadCount);
+        super(planetWidth, DEFAULT_THREAD_DELAY, "Geosphere", threadCount);
         this.worldSize = planetWidth;
         ageUpdateDelay = new Delay(ageStepDelay);
         set();
