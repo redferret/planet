@@ -197,7 +197,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
                 if (generated % flagUpdate == 0) {
                     double finished = (double) generated / (double) totalCells;
                     Logger.getLogger(SurfaceMap.class.getName()).log(Level.INFO,
-                            "Cells created: {0}% finished", finished * 100);
+                            "Cells created: {0}% finished", Math.round(finished * 100));
                 }
             }
         }
