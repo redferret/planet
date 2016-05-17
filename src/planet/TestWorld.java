@@ -32,7 +32,7 @@ public class TestWorld extends Planet {
      * @param threadCount The size of the world squared.
      */
     public TestWorld(int threadCount) {
-        this(DEFAULT_SIZE * threadCount, threadCount);
+        this(DEFAULT_SIZE, threadCount);
     }
     
     /**
