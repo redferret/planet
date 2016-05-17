@@ -95,6 +95,7 @@ public class SurfaceThread extends MThread {
         }
         curFrame++;
 
+        absLowestHeight = absLowestHeight < 0 ? 0 : absLowestHeight;
         int intPart = (int) absLowestHeight;
         int decPart = (int) ((absLowestHeight - intPart) * 10);
 
