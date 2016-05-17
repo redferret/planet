@@ -39,7 +39,7 @@ public class WaterMovementTest extends JFrame implements DisplayAdapter {
         
         renderFrame = new Frame(SIZE, SIZE);
         
-        testWorld = new TestWorld(512, 2);
+        testWorld = new TestWorld(33, 3);
         testWorld.getSurface().setDisplay(this);
         renderFrame.registerMap(testWorld.getSurface());
         add(renderFrame);

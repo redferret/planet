@@ -10,13 +10,11 @@ import java.util.Deque;
 import java.util.LinkedList;
 import javax.swing.JFrame;
 import planet.Planet;
-import planet.Planet.TimeScale;
 import planet.TestWorld;
 import planet.enums.Layer;
 import planet.gui.DisplayAdapter;
 import planet.surface.Hydrosphere;
 import planet.surface.PlanetSurface;
-import planet.util.SurfaceThread;
 
 /**
  *
@@ -39,7 +37,7 @@ public class BasicJView extends JFrame implements DisplayAdapter {
         
         renderFrame = new Frame(SIZE, SIZE);
         
-        testWorld = new TestWorld();
+        testWorld = new TestWorld(33, 3);
         testWorld.getSurface().setDisplay(this);
         renderFrame.registerMap(testWorld.getSurface());
         add(renderFrame);
