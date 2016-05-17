@@ -47,29 +47,23 @@ public class HydroCell extends GeoCell {
     public final class WaterPipeline extends TBuffer {
 
         private float bufferedMass;
-        private HydroCell top, bottom, left, right;
         
         public WaterPipeline(){
             super();
-        }
-        
-        public void setCells(){
-            Surface surface = Planet.self().getSurface();
-            int size = Planet.self().getGridWidth();
-            
-            top = surface.getCellAt(getX(), checkBounds(getY() - 1, size));
-            bottom = surface.getCellAt(getX(), checkBounds(getY() + 1, size));
-            left = surface.getCellAt(checkBounds(getX() - 1, size), getY());
-            right = surface.getCellAt(checkBounds(getX() + 1, size), getY());
         }
         
         public void update(){
             
             float thisHeight = getHeight();
             
-            if (top == null){
-                setCells();
-            }
+            Surface surface = Planet.self().getSurface();
+            int size = Planet.self().getGridWidth();
+            HydroCell top, bottom, left, right;
+            
+            top = surface.getCellAt(getX(), checkBounds(getY() - 1, size));
+            bottom = surface.getCellAt(getX(), checkBounds(getY() + 1, size));
+            left = surface.getCellAt(checkBounds(getX() - 1, size), getY());
+            right = surface.getCellAt(checkBounds(getX() + 1, size), getY());
             
             update(thisHeight, left);
             update(thisHeight, right);
