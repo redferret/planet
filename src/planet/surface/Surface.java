@@ -165,9 +165,9 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
             super.update();
         }
         
-        try{
+        try {
             surfaceThreadPostUpdate();
-        }finally{}
+        } catch (UnsatisfiedLinkError e) {}
     }
 
     @Override
