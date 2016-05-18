@@ -139,9 +139,6 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
      */
     public abstract void partialUpdate(int x, int y);
     
-    /**
-     * This method is called after each individual cell is updated.
-     */
     public abstract void fullUpdate();
     
     @Override
