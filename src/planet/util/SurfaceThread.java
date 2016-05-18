@@ -4,7 +4,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import planet.Planet;
-import static planet.Planet.TimeScale.Geological;
 import planet.surface.PlanetSurface;
 import planet.surface.Surface;
 
@@ -77,8 +76,6 @@ public class SurfaceThread extends MThread {
                 }
             }
 
-            surface.fullUpdate();
-            
         } catch (Exception e) {
             Logger.getLogger(SurfaceThread.class.getName()).log(Level.SEVERE,
                     "An exception occured when updating the surface: {0}", getName());
