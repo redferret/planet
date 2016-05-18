@@ -58,6 +58,7 @@ public abstract class Geosphere extends Surface {
     static {
         heatDistributionCount = 5;
         thermalInc = 100;
+        volcanicHeatLoss = 100;
         averageVolcanicMass = 2500000;
     }
 
