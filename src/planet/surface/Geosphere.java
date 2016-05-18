@@ -48,6 +48,11 @@ public abstract class Geosphere extends Surface {
      */
     public static float averageVolcanicMass;
 
+    /**
+     * The amount of heat lost after a volcanic eruption.
+     */
+    public static float volcanicHeatLoss;
+    
     private long ageStamp;
 
     static {
@@ -309,10 +314,13 @@ public abstract class Geosphere extends Surface {
                 timeStamp();
             }
         }
+    }
+
+    public void updateRockFormation(int x, int y){
         depositSediment(x, y);
         updateLavaFlows(x, y);
     }
-
+    
     private void geologicalUpdate(GeoCell cell) {
         spreadToLowest(cell);
         cell.cool(1);
@@ -331,7 +339,7 @@ public abstract class Geosphere extends Surface {
             if (cell.checkVolcano()) {
                 geo = (GeoCell) cell;
                 geo.putMoltenRockToSurface(averageVolcanicMass);
-                cell.cool(200);
+                cell.cool(volcanicHeatLoss);
             }
         }
     }
