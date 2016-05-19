@@ -1,20 +1,16 @@
  
 package planet.cells;
+
 import java.awt.Color;
 import java.util.List;
 import planet.Planet;
-import planet.enums.Layer;
-import static planet.enums.Layer.OCEAN;
 import planet.util.TBuffer;
 import planet.surface.Hydrosphere;
-import planet.surface.Surface;
-import planet.util.Tools;
 import static planet.util.Tools.calcMass;
-import static planet.util.Tools.checkBounds;
 import static planet.util.Tools.clamp;
 import static planet.util.Tools.constructGradient;
 import static planet.util.Tools.getLowestCellFrom;
-import static planet.util.Tools.maxOf;
+import static planet.enums.Layer.OCEAN;
 
 /**
  * A HydroCell represents the hydrosphere of the planet. The class contains
