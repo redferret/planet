@@ -73,7 +73,7 @@ public class Frame extends JPanel {
 
                 firstTimeInit(settings, bounds);
 
-                for (int i = 0; i < Math.min(settings.size(), images.size()); i++) {
+                for (int i = 0; i < settings.size(); i++) {
 
                     BufferedImage image = images.get(i);
                     Integer[] color = settings.get(i);
