@@ -89,7 +89,8 @@ public class Frame extends JPanel {
     }
 
     private void firstTimeInit(List<Integer[]> settings, int bounds) {
-        if (images.isEmpty()) {
+        if (images.size() < settings.size()) {
+            images.clear();
             GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
             GraphicsDevice device = env.getDefaultScreenDevice();
             GraphicsConfiguration config = device.getDefaultConfiguration();
