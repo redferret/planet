@@ -3,10 +3,6 @@ package planet.gui.basic;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import java.util.ArrayList;
@@ -91,11 +87,8 @@ public class Frame extends JPanel {
     private void firstTimeInit(List<Integer[]> settings, int bounds) {
         if (images.size() < settings.size()) {
             images.clear();
-            GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            GraphicsDevice device = env.getDefaultScreenDevice();
-            GraphicsConfiguration config = device.getDefaultConfiguration();
             settings.forEach(setting -> {
-                BufferedImage image = config.createCompatibleImage(bounds, bounds, Transparency.TRANSLUCENT);
+                BufferedImage image = new BufferedImage(bounds, bounds, BufferedImage.TYPE_INT_ARGB);
                 images.add(image);
             });
         }
