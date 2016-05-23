@@ -324,7 +324,6 @@ public abstract class Geosphere extends Surface {
     
     private void geologicalUpdate(GeoCell cell) {
         spreadToLowest(cell);
-        cell.cool(1);
     }
 
     public void heatMantel() {
@@ -347,7 +346,7 @@ public abstract class Geosphere extends Surface {
 
     public void dust(GeoCell cell) {
         if (cell.getMoltenRockFromSurface() < 1) {
-            cell.getSedimentBuffer().updateSurfaceSedimentMass(0.001f);
+            cell.getSedimentBuffer().updateSurfaceSedimentMass(0.00001f);
         }
     }
 

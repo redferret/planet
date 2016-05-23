@@ -2,6 +2,7 @@
 
 package planet.surface;
 
+import planet.Planet;
 import planet.util.Delay;
 
 /**
@@ -25,11 +26,14 @@ public class PlanetSurface extends Hydrosphere {
 
     @Override
     public void partialUpdate(int x, int y) {
-        if (geologicDelay.check()){
-            updateGeology(x, y);
-        }
+        updateGeology(x, y);
+        coolLava(x, y);
         updateRockFormation(x, y);
         updateOceans(x, y);
+    }
+    
+    private void coolLava(int x, int y){
+        Planet.self().getSurface().getCellAt(x, y).cool(1);
     }
 
     @Override

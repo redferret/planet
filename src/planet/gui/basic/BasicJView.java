@@ -54,7 +54,7 @@ public class BasicJView extends JFrame implements DisplayAdapter {
         surface.addToSurface(Layer.BASALT, 10000);
         surface.addWaterToAllCells(1000);
         Geosphere.heatDistributionCount = 500;
-        Geosphere.thermalInc = 100;
+        Geosphere.thermalInc = 75;
 
         testWorld.play();
     }
