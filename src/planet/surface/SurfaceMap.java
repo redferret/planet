@@ -12,6 +12,7 @@ import planet.Planet;
 import planet.gui.RenderInterface;
 import planet.util.Boundaries;
 import planet.util.MThread;
+import planet.util.Task;
 
 /**
  * The SurfaceMap is a generic map for all the systems on the planet. The map
@@ -161,6 +162,12 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
         checkSubThreads();
     }
 
+    public void addTask(Task task){
+        threads.forEach(thread -> {
+            thread.addTask(task);
+        });
+    }
+    
     private void checkSubThreads() {
         int avg = 0;
         for (SurfaceThread thread : threads){

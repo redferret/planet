@@ -1,11 +1,12 @@
 package planet.util;
 
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import planet.Planet;
 import planet.surface.PlanetSurface;
-import planet.surface.Surface;
 
 /**
  * A surface can be broken up into sections where a SurfaceThread can modify and
@@ -18,7 +19,7 @@ public class SurfaceThread extends MThread {
     private float absLowestHeight;
     private AtomicInteger lowestHeightIntPart;
     private AtomicInteger lowestHeightDecPart;
-
+    private Deque<Task> tasks;
     /**
      * Lower bounds are inclusive, upper bounds are exclusive
      */
@@ -42,40 +43,37 @@ public class SurfaceThread extends MThread {
         lowestHeightIntPart = new AtomicInteger(Integer.MAX_VALUE);
         lowestHeightDecPart = new AtomicInteger(Integer.MAX_VALUE);
         absLowestHeight = Integer.MAX_VALUE;
+        tasks = new LinkedList<>();
     }
     
     /**
-     * Each time the thread posts an update this method is called following a
-     * post-update call to postUpdate()
+     * Each time the thread posts an perform this method is called following a
+     * post-perform call to postUpdate()
      */
     public final void update() {
 
-        Surface surface = Planet.self().getSurface();
-
-        boolean sw = (curFrame % 2) == 0;
-        int m;
         int lowerYBound = bounds.getLowerYBound();
         int upperYBound = bounds.getUpperYBound();
         int lowerXBound = bounds.getLowerXBound();
         int upperXBound = bounds.getUpperXBound();
-
-        int ystart = sw ? lowerYBound : (upperYBound - 1);
-        int yinc = sw ? 1 : -1;
-
+        
         try {
-            for (int b = 0; b < 2; b++) {
-                for (int y = ystart; (sw ? (y < upperYBound) : (y >= 0)); y += yinc) {
-
-                    m = ((b > 0) && (y % 2 == 0)) ? 1
-                            : ((b > 0) && (y % 2 != 0) ? -1 : 0);
-
-                    for (int x = ((y % 2) + m) + lowerXBound; x < upperXBound; x += 2) {
-                        surface.partialUpdate(x, y);
-                        updateMinimumHeight(x, y, (PlanetSurface) surface);
+            tasks.forEach(task -> {
+                if (task.check()) {
+                    for (int y = lowerYBound; y < upperYBound; y++) {
+                        for (int x = lowerXBound; x < upperXBound; x++) {
+                            task.perform(x, y);
+                        }
                     }
                 }
+            });
+            
+            for (int y = lowerYBound; y < upperYBound; y++) {
+                for (int x = lowerXBound; x < upperXBound; x++) {
+                    updateMinimumHeight(x, y);
+                }
             }
-
+            
         } catch (Exception e) {
             Logger.getLogger(SurfaceThread.class.getName()).log(Level.SEVERE,
                     "An exception occured when updating the surface: {0}", getName());
@@ -101,7 +99,12 @@ public class SurfaceThread extends MThread {
         return decPart;
     }
 
-    private void updateMinimumHeight(int x, int y, PlanetSurface surface) {
+    public void addTask(Task task){
+        tasks.add(task);
+    }
+    
+    private void updateMinimumHeight(int x, int y) {
+        PlanetSurface surface = (PlanetSurface) Planet.self().getSurface();
         float cellHeight = surface.getCellAt(x, y).getHeightWithoutOceans();
 
         if (cellHeight < absLowestHeight) {

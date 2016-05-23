@@ -130,16 +130,6 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
     public long getPlanetAge() {
         return planetAge.get();
     }
-
-    /**
-     * A partial update is an update performed on a piece of the surface.
-     * In this case the update happens on one cell.
-     * @param x The x coordinate
-     * @param y The y coordinate
-     */
-    public abstract void partialUpdate(int x, int y);
-    
-    public abstract void fullUpdate();
     
     @Override
     public void update() {
@@ -160,7 +150,6 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
             super.update();
         }
         
-        fullUpdate();
     }
 
     @Override

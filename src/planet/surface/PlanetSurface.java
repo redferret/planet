@@ -2,8 +2,8 @@
 
 package planet.surface;
 
-import planet.Planet;
 import planet.util.Delay;
+import planet.util.Task;
 
 /**
  * The highest level of abstraction for the surface of a planet.
@@ -12,7 +12,6 @@ import planet.util.Delay;
 public class PlanetSurface extends Hydrosphere {
 
     public static boolean suppressMantelHeating;
-    private Delay mantelHeatingDelay, geologicDelay;
     
     static {
         suppressMantelHeating = false;
@@ -20,30 +19,53 @@ public class PlanetSurface extends Hydrosphere {
     
     public PlanetSurface(int worldSize, int surfaceDelay, int threadsDelay, int threadCount) {
         super(worldSize, surfaceDelay, threadsDelay, threadCount);
-        mantelHeatingDelay = new Delay(100);
-        geologicDelay = new Delay(2);
+        
+        addTask(new GeologicalUpdate());
+        addTask(new HeatMantel());
+        addTask(new RockFormation());
     }
 
-    @Override
-    public void partialUpdate(int x, int y) {
-        updateGeology(x, y);
-        coolLava(x, y);
-        updateRockFormation(x, y);
-        updateOceans(x, y);
-    }
-    
-    private void coolLava(int x, int y){
-        Planet.self().getSurface().getCellAt(x, y).cool(1);
-    }
-
-    @Override
-    public void fullUpdate() {
-        if (mantelHeatingDelay.check()){
-            if (!suppressMantelHeating || checkForGeologicalUpdate()){
-                heatMantel();
-            }
+    class GeologicalUpdate implements Task {
+        private Delay geologicDelay;
+        
+        public GeologicalUpdate() {
+            geologicDelay = new Delay(5);
+        }
+        @Override
+        public void perform(int x, int y){
+            updateGeology(x, y);
+        }
+        @Override
+        public boolean check(){
+            return geologicDelay.check();
         }
     }
-
     
+    class HeatMantel implements Task {
+        
+        @Override
+        public void perform(int x, int y) {}
+
+        @Override
+        public boolean check() {
+            if (!suppressMantelHeating || checkForGeologicalUpdate()) {
+                heatMantel();
+            }
+            return false;
+        }
+        
+    }
+    
+    class RockFormation implements Task {
+        @Override
+        public void perform(int x, int y) {
+            updateRockFormation(x, y);
+            updateOceans(x, y);
+        }
+
+        @Override
+        public boolean check() {
+            return true;
+        }
+    }
 }
