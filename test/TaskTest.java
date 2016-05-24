@@ -39,14 +39,14 @@ public class TaskTest {
      * Tests a single iteration on the test SurfaceThread to run added Tasks.
      */
     @Test(expected = RuntimeException.class)
-    public void CallingPerformMethodTest(){
+    public void callingPerformMethodTest(){
         TestTask task = new TestTask(true);
         testThread.addTask(task);
         testThread.update();
     }
     
     @Test
-    public void CallingCheckMethodTest(){
+    public void callingCheckMethodTest(){
         TestTask task = new TestTask(false);
         testThread.addTask(task);
         try {
