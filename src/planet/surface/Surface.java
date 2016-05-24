@@ -103,13 +103,13 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
         ageUpdateDelay = new Delay(ageStepDelay);
         set();
         setupThreads(threadCount, threadsDelay);
+        addTaskToThreads(new UpdateMinimumHeightTask());
     }
 
     private void set() {
         threadAverageDelay = new Delay(500);
         display = null;
         generalTasks = new LinkedList<>();
-        addTaskToThreads(new UpdateMinimumHeightTask());
         reset();
     }
 
