@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import planet.Planet;
 import planet.gui.RenderInterface;
 import planet.util.Boundaries;
 import planet.util.MThread;
@@ -59,7 +58,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
 
     private List<Integer[]> settings;
     
-    private int prevSubThreadAvg;
+    private int prevSubThreadAvg, gridWidth;
 
     /**
      * Create a new map
@@ -72,7 +71,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
     public SurfaceMap(int planetWidth, int delay, String threadName, int threadCount) {
 
         super(delay, threadName, true);
-
+        gridWidth = planetWidth;
         int capacity = planetWidth * planetWidth;
         map = new ConcurrentHashMap<>(capacity, 1, threadCount);
         threads = new ArrayList<>();
@@ -223,15 +222,13 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
      * individually. This is due to the global reference to the engine.
      */
     protected void setupMap() {
-        int gridSize = Planet.self().getGridWidth();
-
-        int totalCells = (gridSize * gridSize);
+        int totalCells = (gridWidth * gridWidth);
         int flagUpdate = totalCells / 2;
         int generated = 0;
         // Initialize the map
         Logger.getLogger(SurfaceMap.class.getName()).log(Level.INFO, "Setting up map");
-        for (int x = 0; x < gridSize; x++) {
-            for (int y = 0; y < gridSize; y++) {
+        for (int x = 0; x < gridWidth; x++) {
+            for (int y = 0; y < gridWidth; y++) {
                 setCellAt(generateCell(x, y));
                 generated++;
                 if (generated % flagUpdate == 0) {
@@ -253,7 +250,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
      */
     public final void setupThreads(int threadDivision, int delay) {
 
-        int w = Planet.self().getGridWidth() / threadDivision;
+        int w = gridWidth / threadDivision;
         int c = 0;
         Boundaries bounds;
         String name;
@@ -276,10 +273,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
      * @return Returns the cell at the specified X and Y location.
      */
     public final CellType getCellAt(int x, int y) {
-
-        int width = Planet.self().getGridWidth();
-        int index = (width * y) + x;
-
+        int index = (gridWidth * y) + x;
         return getCellAt(index);
     }
 
@@ -310,8 +304,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
      */
     private void setCellAt(CellType cell) {
         int x = cell.getX(), y = cell.getY();
-        int width = Planet.self().getGridWidth();
-        int index = (width * y) + x;
+        int index = (gridWidth * y) + x;
         map.put(index, cell);
     }
 
