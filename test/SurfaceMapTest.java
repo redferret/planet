@@ -1,6 +1,7 @@
 
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,7 +38,8 @@ public class SurfaceMapTest {
         testSurface.startAll();
         testSurface.playAll();
         
-        latch.await();
+        boolean signaled = latch.await(5, TimeUnit.SECONDS);
+        assertTrue("Latch was never signaled", signaled);
         
         String failedMsg = "A cell was never updated";
         int cellCount = MAP_SIZE * MAP_SIZE;
