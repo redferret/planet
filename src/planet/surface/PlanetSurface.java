@@ -4,6 +4,7 @@ package planet.surface;
 
 import planet.util.Delay;
 import planet.util.Task;
+import planet.util.TaskAdapter;
 
 /**
  * The highest level of abstraction for the surface of a planet.
@@ -64,16 +65,11 @@ public class PlanetSurface extends Hydrosphere {
         
     }
     
-    class RockFormation implements Task {
+    class RockFormation extends TaskAdapter {
         @Override
         public void perform(int x, int y) {
             updateRockFormation(x, y);
             updateOceans(x, y);
-        }
-
-        @Override
-        public boolean check() {
-            return true;
         }
     }
 }
