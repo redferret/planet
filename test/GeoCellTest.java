@@ -19,7 +19,7 @@ public class GeoCellTest {
     private static TestWorld testWorld;
     
     static {
-        testWorld = new TestWorld(WORLD_SIZE);
+        testWorld = new TestWorld(1, WORLD_SIZE);
     }
     
     /**
