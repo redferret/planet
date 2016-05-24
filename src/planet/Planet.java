@@ -66,9 +66,9 @@ public abstract class Planet {
     }
 
     /**
-     * A static reference to the most recent instantiated Planet.
+     * References the most recent instantiated object of this class.
      *
-     * @return A reference to the Planet
+     * @return A reference to the current Planet
      */
     public final static Planet self() {
         return current;
