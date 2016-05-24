@@ -5,16 +5,13 @@ import java.util.LinkedList;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
-import planet.Planet;
 import planet.cells.PlanetCell;
 import planet.gui.DisplayAdapter;
 import planet.util.Delay;
-import planet.util.SurfaceThread;
+import planet.util.Task;
+
 import static planet.surface.Surface.GEOUPDATE;
 import static planet.surface.Surface.planetAge;
-import planet.util.Task;
-import planet.util.TaskAdapter;
-
 /**
  * The Surface is the geology for the planet. It provides a foundation for life
  * to grow on and to influence climate in many ways. Through the placement of
