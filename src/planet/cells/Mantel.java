@@ -30,7 +30,7 @@ public class Mantel extends Cell {
     public Mantel(int x, int y) {
         super(x, y);
         
-        temperature = rand.nextInt(800);
+        temperature = rand.nextInt(1200);
     }
 
     public void addHeat(float amount){

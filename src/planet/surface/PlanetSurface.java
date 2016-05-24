@@ -20,9 +20,9 @@ public class PlanetSurface extends Hydrosphere {
     public PlanetSurface(int worldSize, int surfaceDelay, int threadsDelay, int threadCount) {
         super(worldSize, surfaceDelay, threadsDelay, threadCount);
         
-        addTask(new GeologicalUpdate());
+        addTaskToThreads(new GeologicalUpdate());
         addTask(new HeatMantel());
-        addTask(new RockFormation());
+        addTaskToThreads(new RockFormation());
     }
 
     class GeologicalUpdate implements Task {
@@ -43,13 +43,21 @@ public class PlanetSurface extends Hydrosphere {
     
     class HeatMantel implements Task {
         
+        private Delay mantelHeatingDelay;
+        
+        public HeatMantel() {
+            mantelHeatingDelay = new Delay(125);
+        }
+        
         @Override
         public void perform(int x, int y) {}
 
         @Override
         public boolean check() {
-            if (!suppressMantelHeating || checkForGeologicalUpdate()) {
-                heatMantel();
+            if (mantelHeatingDelay.check()){
+                if (!suppressMantelHeating) {
+                    heatMantel();
+                }
             }
             return false;
         }

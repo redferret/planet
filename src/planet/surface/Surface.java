@@ -1,5 +1,7 @@
 package planet.surface;
 
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import planet.cells.PlanetCell;
@@ -8,6 +10,7 @@ import planet.util.Delay;
 import planet.util.SurfaceThread;
 import static planet.surface.Surface.GEOUPDATE;
 import static planet.surface.Surface.planetAge;
+import planet.util.Task;
 
 /**
  * The Surface is the geology for the planet. It provides a foundation for life
@@ -55,7 +58,7 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
     public static long timeStep;
 
     private DisplayAdapter display;
-
+    private Deque<Task> generalTasks;
     protected int worldSize;
 
     private Delay ageUpdateDelay, threadAverageDelay;
@@ -98,6 +101,7 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
     private void set() {
         threadAverageDelay = new Delay(500);
         display = null;
+        generalTasks = new LinkedList<>();
         reset();
     }
 
@@ -131,6 +135,10 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
         return planetAge.get();
     }
     
+    public void addTask(Task task){
+        generalTasks.add(task);
+    }
+    
     @Override
     public void update() {
 
@@ -149,6 +157,16 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
         if (threadAverageDelay.check()) {
             super.update();
         }
+        
+        generalTasks.forEach(task -> {
+            if (task.check()) {
+                for (int y = 0; y < worldSize; y++) {
+                    for (int x = 0; x < worldSize; x++) {
+                        task.perform(x, y);
+                    }
+                }
+            }
+        });
         
     }
 
