@@ -49,6 +49,15 @@ public class SurfaceMapTest {
         }
     }
     
+    @Test
+    public void getCellMethodTest(){
+        TestCell cell = testSurface.getCellAt(3);
+        int expectedX = 3, expectedY = 0;
+        
+        assertTrue(expectedX == cell.getX());
+        assertTrue(expectedY == cell.getY());
+    }
+    
     @After
     public void tearDown() {
         testSurface.killAllThreads();
