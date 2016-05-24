@@ -79,7 +79,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
         prevSubThreadAvg = 0;
         displaySetting = 0;
     }
-
+    
     /**
      * Starts all the threads
      */
@@ -263,6 +263,12 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
                 threads.add(thread);
             }
         }
+    }
+    
+    public void killAllThreads(){
+        threads.forEach(thread -> {
+            thread.kill();
+        });
     }
 
     /**
