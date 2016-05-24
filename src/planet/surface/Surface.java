@@ -179,12 +179,11 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
         return decPart;
     }
     
-    class UpdateMinimumHeightTask implements Task {
+    private class UpdateMinimumHeightTask implements Task {
 
         public UpdateMinimumHeightTask() {
             lowestHeightIntPart = new AtomicInteger(Integer.MAX_VALUE);
             lowestHeightDecPart = new AtomicInteger(Integer.MAX_VALUE);
-            absLowestHeight = Integer.MAX_VALUE;
         }
         
         @Override
@@ -193,8 +192,7 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
         }
         
         private void updateMinimumHeight(int x, int y) {
-            PlanetSurface surface = (PlanetSurface) Planet.self().getSurface();
-            float cellHeight = surface.getCellAt(x, y).getHeightWithoutOceans();
+            float cellHeight = getCellAt(x, y).getHeightWithoutOceans();
 
             if (cellHeight < absLowestHeight) {
                 absLowestHeight = cellHeight;
