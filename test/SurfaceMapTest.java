@@ -16,14 +16,14 @@ import planet.util.Task;
 public class SurfaceMapTest {
     
     private TestSurface testSurface;
-    private static final int MAP_SIZE = 10;
+    private static final int MAP_SIZE = 5;
     private static final int DELAY = 1;
     private static final int THREAD_COUNT = 1;
     public static CountDownLatch latch;
     
     @Before
     public void setUp() {
-        latch = new CountDownLatch(MAP_SIZE);
+        latch = new CountDownLatch(MAP_SIZE * MAP_SIZE);
         testSurface = new TestSurface(MAP_SIZE, DELAY, THREAD_COUNT);
         testSurface.reset();
     }
@@ -41,8 +41,8 @@ public class SurfaceMapTest {
         latch.await();
         
         String failedMsg = "A cell was never updated";
-        
-        for (int i = 0; i < MAP_SIZE; i++){
+        int cellCount = MAP_SIZE * MAP_SIZE;
+        for (int i = 0; i < cellCount; i++){
             boolean cellUpdated = testSurface.getCellAt(i).isUpdated();
             assertTrue(failedMsg, cellUpdated);
         }
