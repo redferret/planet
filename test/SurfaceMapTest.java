@@ -4,12 +4,10 @@ import java.util.concurrent.CountDownLatch;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import planet.cells.Cell;
 import planet.surface.SurfaceMap;
-import planet.util.Task;
 import planet.util.TaskAdapter;
-
+import static org.junit.Assert.*;
 /**
  * Performs tests on the SurfaceMap class.
  * @author Richard
