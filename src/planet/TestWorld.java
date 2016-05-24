@@ -44,7 +44,6 @@ public class TestWorld extends Planet {
      */
     public TestWorld(int worldSize, int threadCount) {
         super(worldSize * threadCount, CELL_SIZE_M, AGE_STEP_DELAY, PLANET_DELAY, threadCount);
-        timescale = TimeScale.Geological;
         startThreads();
     }
 }
