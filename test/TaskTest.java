@@ -68,6 +68,7 @@ class TestTask implements Task {
     
     @Override
     public void perform(int x, int y) {
+        System.out.println("Test Task Running");
         throw new RuntimeException();
     }
 
