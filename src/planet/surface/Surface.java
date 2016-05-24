@@ -3,7 +3,9 @@ package planet.surface;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import planet.Planet;
 import planet.cells.PlanetCell;
 import planet.gui.DisplayAdapter;
 import planet.util.Delay;
@@ -11,6 +13,7 @@ import planet.util.SurfaceThread;
 import static planet.surface.Surface.GEOUPDATE;
 import static planet.surface.Surface.planetAge;
 import planet.util.Task;
+import planet.util.TaskAdapter;
 
 /**
  * The Surface is the geology for the planet. It provides a foundation for life
@@ -63,6 +66,10 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
 
     private Delay ageUpdateDelay, threadAverageDelay;
 
+    private float absLowestHeight;
+    private AtomicInteger lowestHeightIntPart;
+    private AtomicInteger lowestHeightDecPart;
+
     public final static int HEIGHTMAP = 0;
     public final static int STRATAMAP = 1;
     public final static int LANDOCEAN = 2;
@@ -102,6 +109,7 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
         threadAverageDelay = new Delay(500);
         display = null;
         generalTasks = new LinkedList<>();
+        addTaskToThreads(new UpdateMinimumHeightTask());
         reset();
     }
 
@@ -117,19 +125,6 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
 
     public void setDisplay(DisplayAdapter display) {
         this.display = display;
-    }
-
-    public float getLowestHeight() {
-        float lowest = Integer.MAX_VALUE;
-        float h;
-        for (SurfaceThread thread : threads) {
-            h = thread.getPreviousLowestHeight();
-            if (h < lowest) {
-                lowest = h;
-            }
-        }
-
-        return lowest;
     }
 
     public long getPlanetAge() {
@@ -176,4 +171,50 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
         return new PlanetCell(x, y);
     }
 
+    public float getLowestHeight() {
+
+        float decPart = lowestHeightDecPart.get() / 10f;
+        decPart = lowestHeightIntPart.get() + decPart;
+
+        return decPart;
+    }
+    
+    class UpdateMinimumHeightTask implements Task {
+
+        public UpdateMinimumHeightTask() {
+            lowestHeightIntPart = new AtomicInteger(Integer.MAX_VALUE);
+            lowestHeightDecPart = new AtomicInteger(Integer.MAX_VALUE);
+            absLowestHeight = Integer.MAX_VALUE;
+        }
+        
+        @Override
+        public void perform(int x, int y) {
+            updateMinimumHeight(x, y);
+        }
+        
+        private void updateMinimumHeight(int x, int y) {
+            PlanetSurface surface = (PlanetSurface) Planet.self().getSurface();
+            float cellHeight = surface.getCellAt(x, y).getHeightWithoutOceans();
+
+            if (cellHeight < absLowestHeight) {
+                absLowestHeight = cellHeight;
+            }
+        }
+
+        @Override
+        public boolean check() {
+            absLowestHeight = absLowestHeight < 0 ? 0 : absLowestHeight;
+            int intPart = (int) absLowestHeight;
+            int decPart = (int) ((absLowestHeight - intPart) * 10);
+
+            lowestHeightIntPart.set(intPart);
+            lowestHeightDecPart.set(decPart);
+
+            absLowestHeight = Integer.MAX_VALUE;
+            
+            return true;
+        }
+        
+    }
+    
 }

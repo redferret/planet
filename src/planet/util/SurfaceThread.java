@@ -16,9 +16,6 @@ import planet.surface.PlanetSurface;
  */
 public class SurfaceThread extends MThread {
 
-    private float absLowestHeight;
-    private AtomicInteger lowestHeightIntPart;
-    private AtomicInteger lowestHeightDecPart;
     private Deque<Task> tasks;
     /**
      * Lower bounds are inclusive, upper bounds are exclusive
@@ -40,9 +37,6 @@ public class SurfaceThread extends MThread {
 
         this.bounds = bounds;
         curFrame = 0;
-        lowestHeightIntPart = new AtomicInteger(Integer.MAX_VALUE);
-        lowestHeightDecPart = new AtomicInteger(Integer.MAX_VALUE);
-        absLowestHeight = Integer.MAX_VALUE;
         tasks = new LinkedList<>();
         forceExecption = false;
     }
@@ -73,12 +67,6 @@ public class SurfaceThread extends MThread {
                 }
             });
             
-            for (int y = lowerYBound; y < upperYBound; y++) {
-                for (int x = lowerXBound; x < upperXBound; x++) {
-                    updateMinimumHeight(x, y);
-                }
-            }
-            
         } catch (Exception e) {
             String msg = "An exception occured when updating the surface:" + getName();
             if (forceExecption){
@@ -89,36 +77,10 @@ public class SurfaceThread extends MThread {
             }
         }
         curFrame++;
-
-        absLowestHeight = absLowestHeight < 0 ? 0 : absLowestHeight;
-        int intPart = (int) absLowestHeight;
-        int decPart = (int) ((absLowestHeight - intPart) * 10);
-
-        lowestHeightIntPart.set(intPart);
-        lowestHeightDecPart.set(decPart);
-
-        absLowestHeight = Integer.MAX_VALUE;
-    }
-
-    public float getPreviousLowestHeight() {
-
-        float decPart = lowestHeightDecPart.get() / 10f;
-        decPart = lowestHeightIntPart.get() + decPart;
-
-        return decPart;
     }
 
     public void addTask(Task task){
         tasks.add(task);
     }
     
-    private void updateMinimumHeight(int x, int y) {
-        PlanetSurface surface = (PlanetSurface) Planet.self().getSurface();
-        float cellHeight = surface.getCellAt(x, y).getHeightWithoutOceans();
-
-        if (cellHeight < absLowestHeight) {
-            absLowestHeight = cellHeight;
-        }
-    }
-
 }
