@@ -27,7 +27,7 @@ public class SurfaceThread extends MThread {
     private int curFrame;
     
     private static final boolean CONTINUOUS = true;
-    
+    private boolean forceExecption;
     /**
      * Constructs a new SurfaceThread.
      *
@@ -44,6 +44,11 @@ public class SurfaceThread extends MThread {
         lowestHeightDecPart = new AtomicInteger(Integer.MAX_VALUE);
         absLowestHeight = Integer.MAX_VALUE;
         tasks = new LinkedList<>();
+        forceExecption = false;
+    }
+    
+    public void forceExecption(boolean b){
+        forceExecption = b;
     }
     
     /**
@@ -75,9 +80,13 @@ public class SurfaceThread extends MThread {
             }
             
         } catch (Exception e) {
-            Logger.getLogger(SurfaceThread.class.getName()).log(Level.SEVERE,
-                    "An exception occured when updating the surface: {0}", getName());
-            e.printStackTrace();
+            String msg = "An exception occured when updating the surface:" + getName();
+            if (forceExecption){
+                throw new RuntimeException(e);
+            }else{
+                Logger.getLogger(SurfaceThread.class.getName()).log(Level.SEVERE, msg);
+                e.printStackTrace();
+            }
         }
         curFrame++;
 
