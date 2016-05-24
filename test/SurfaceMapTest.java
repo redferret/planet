@@ -8,6 +8,7 @@ import static org.junit.Assert.*;
 import planet.cells.Cell;
 import planet.surface.SurfaceMap;
 import planet.util.Task;
+import planet.util.TaskAdapter;
 
 /**
  * Performs tests on the SurfaceMap class.
@@ -74,19 +75,12 @@ class TestSurface extends SurfaceMap<TestCell> {
         return new TestCell(x, y);
     }
     
-    class SurfaceTask implements Task {
-
+    class SurfaceTask extends TaskAdapter {
         @Override
         public void perform(int x, int y) {
             SurfaceMapTest.latch.countDown();
             getCellAt(x, y).update();
         }
-
-        @Override
-        public boolean check() {
-            return true;
-        }
-
     }
     
 }
