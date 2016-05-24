@@ -3,8 +3,6 @@ package planet.surface;
 import planet.cells.Cell;
 import planet.util.SurfaceThread;
 import java.util.ArrayList;
-import java.util.Deque;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
