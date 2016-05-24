@@ -16,9 +16,9 @@ import static org.junit.Assert.*;
 public class SurfaceMapTest {
     
     private TestSurface testSurface;
-    private static final int MAP_SIZE = 5;
+    private static final int MAP_SIZE = 10;
     private static final int DELAY = 1;
-    private static final int THREAD_COUNT = 1;
+    private static final int THREAD_COUNT = 2;
     public static CountDownLatch latch;
     
     @Before
@@ -41,11 +41,12 @@ public class SurfaceMapTest {
         boolean signaled = latch.await(5, TimeUnit.SECONDS);
         assertTrue("Latch was never signaled", signaled);
         
-        String failedMsg = "A cell was never updated";
+        String failedMsg = "A cell was never updated: ";
         int cellCount = MAP_SIZE * MAP_SIZE;
         for (int i = 0; i < cellCount; i++){
-            boolean cellUpdated = testSurface.getCellAt(i).isUpdated();
-            assertTrue(failedMsg, cellUpdated);
+            TestCell cell = testSurface.getCellAt(i);
+            boolean cellUpdated = cell.isUpdated();
+            assertTrue(failedMsg + cell, cellUpdated);
         }
     }
     
