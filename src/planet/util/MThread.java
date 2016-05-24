@@ -80,8 +80,7 @@ public abstract class MThread extends Thread {
                 }
                 
                 sleep(miliSeconds);
-                running = continuous;
-                if (!running){
+                if (!running || !continuous){
                     sleep(60000);
                 }
             } catch (InterruptedException interruptedException) {
