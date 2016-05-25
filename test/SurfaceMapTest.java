@@ -16,9 +16,7 @@ import static org.junit.Assert.*;
 public class SurfaceMapTest {
     
     private TestSurface testSurface;
-    private static final int MAP_SIZE = 5;
-    private static final int DELAY = 1;
-    private static final int THREAD_COUNT = 1;
+    private static final int MAP_SIZE = 5, DELAY = 1, THREAD_COUNT = 1;
     public static CountDownLatch latch;
     
     @Before
