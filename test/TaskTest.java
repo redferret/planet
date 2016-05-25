@@ -8,6 +8,7 @@ import static org.junit.Assert.*;
 import planet.TestWorld;
 import planet.util.Boundaries;
 import planet.util.SurfaceThread;
+import planet.util.SurfaceThreadException;
 import planet.util.Task;
 
 /**
@@ -40,7 +41,7 @@ public class TaskTest {
     /**
      * Tests a single iteration on the test SurfaceThread to run added Tasks.
      */
-    @Test(expected = RuntimeException.class)
+    @Test(expected = SurfaceThreadException.class)
     public void callingPerformMethodTest(){
         TestTask task = new TestTask(true);
         testThread.addTask(task);
@@ -71,7 +72,7 @@ class TestTask implements Task {
     @Override
     public void perform(int x, int y) {
         System.out.println("Test Task Running");
-        throw new RuntimeException();
+        throw new SurfaceThreadException();
     }
 
     @Override

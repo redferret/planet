@@ -71,7 +71,7 @@ public class SurfaceThread extends MThread {
                 }
             });
             
-        } catch (RuntimeException | InterruptedException | BrokenBarrierException e) {
+        } catch (SurfaceThreadException | InterruptedException | BrokenBarrierException e) {
             String msg = "An exception occured when updating the surface:" + getName();
             if (forceExecption){
                 throw new SurfaceThreadException(e);
