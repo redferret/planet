@@ -70,7 +70,7 @@ public class SurfaceThread extends MThread {
         } catch (Exception e) {
             String msg = "An exception occured when updating the surface:" + getName();
             if (forceExecption){
-                throw new RuntimeException(e);
+                throw new SurfaceThreadException(e);
             }else{
                 Logger.getLogger(SurfaceThread.class.getName()).log(Level.SEVERE, msg);
                 e.printStackTrace();

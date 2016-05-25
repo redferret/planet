@@ -6,6 +6,7 @@ import static org.junit.Assert.*;
 import planet.TestWorld;
 import planet.util.Boundaries;
 import planet.util.SurfaceThread;
+import planet.util.SurfaceThreadException;
 import planet.util.Task;
 import planet.util.TaskAdapter;
 
@@ -27,7 +28,7 @@ public class SurfaceThreadTest {
     /**
      * Tests the functionality of the SurfaceThread exception handling.
      */
-    @Test(expected = RuntimeException.class)
+    @Test(expected = SurfaceThreadException.class)
     public void ForceExceptionTest(){
         testThread.throwExecption(true);
         testThread.update();
@@ -40,7 +41,7 @@ public class SurfaceThreadTest {
     public void NoForcedExceptionTest(){
         try {
             testThread.update();
-        } catch (Exception e) {
+        } catch (SurfaceThreadException e) {
             fail("No Exception should have been thrown");
         }
     }
@@ -55,6 +56,6 @@ public class SurfaceThreadTest {
 class ExecptionTask extends TaskAdapter {
     @Override
     public void perform(int x, int y) {
-        throw new RuntimeException();
+        throw new RuntimeException("The task threw an error");
     }
 }
