@@ -18,6 +18,7 @@ public class SurfaceMapTest {
     private TestSurface testSurface;
     private static final int MAP_SIZE = 5, DELAY = 1, THREAD_COUNT = 1;
     public static CountDownLatch latch;
+    private CountDownLatch waitingLatch;
     
     @Before
     public void setUp() {
@@ -33,7 +34,12 @@ public class SurfaceMapTest {
      */
     @Test
     public void surfaceMapRunningTest() throws InterruptedException{
+        waitingLatch = new CountDownLatch(1);
+        
         testSurface.startAll();
+        
+        // Wait for the threads to start up
+        waitingLatch.await(1, TimeUnit.SECONDS);
         testSurface.playAll();
         
         boolean signaled = latch.await(5, TimeUnit.SECONDS);

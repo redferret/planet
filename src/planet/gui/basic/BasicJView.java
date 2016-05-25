@@ -38,7 +38,7 @@ public class BasicJView extends JFrame implements DisplayAdapter {
         
         renderFrame = new Frame(SIZE, SIZE);
         
-        testWorld = new TestWorld();
+        testWorld = new TestWorld(2);
         testWorld.getSurface().setDisplay(this);
         renderFrame.registerMap(testWorld.getSurface());
         add(renderFrame);

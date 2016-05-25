@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CyclicBarrier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import planet.gui.RenderInterface;
@@ -60,6 +61,8 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
     
     private int prevSubThreadAvg, gridWidth;
 
+    private final CyclicBarrier waitingGate;
+    
     /**
      * Create a new map
      *
@@ -80,6 +83,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
         settings = new ArrayList<>();
         prevSubThreadAvg = 0;
         displaySetting = 0;
+        waitingGate = new CyclicBarrier(threadCount);
     }
     
     /**
@@ -261,7 +265,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
             for (int x = 0; x < threadDivision; x++, c++) {
                 name = "SubThread: " + c;
                 bounds = new Boundaries(w * x, w * (x + 1), w * y, w * (y + 1));
-                SurfaceThread thread = new SurfaceThread(delay, bounds, name);
+                SurfaceThread thread = new SurfaceThread(delay, bounds, name, waitingGate);
                 threads.add(thread);
             }
         }

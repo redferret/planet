@@ -1,4 +1,5 @@
 
+import java.util.concurrent.CyclicBarrier;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,12 +14,14 @@ import static org.junit.Assert.*;
  */
 public class SurfaceThreadTest {
     
+    private CyclicBarrier waitingGate;
     private SurfaceThread testThread;
     private static final Boundaries BOUNDS = new Boundaries(0, 1, 0, 1);
     
     @Before
     public void setUp() {
-        testThread = new SurfaceThread(1, BOUNDS, "Test Thread");
+        waitingGate = new CyclicBarrier(1);
+        testThread = new SurfaceThread(1, BOUNDS, "Test Thread", waitingGate);
         testThread.addTask(new ExecptionTask());
     }
     
@@ -53,6 +56,6 @@ public class SurfaceThreadTest {
 class ExecptionTask extends TaskAdapter {
     @Override
     public void perform(int x, int y) {
-        throw new RuntimeException("The task threw an error");
+        throw new SurfaceThreadException("The task threw an error");
     }
 }

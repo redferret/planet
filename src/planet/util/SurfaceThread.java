@@ -2,11 +2,10 @@ package planet.util;
 
 import java.util.Deque;
 import java.util.LinkedList;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CyclicBarrier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import planet.Planet;
-import planet.surface.PlanetSurface;
 
 /**
  * A surface can be broken up into sections where a SurfaceThread can modify and
@@ -25,16 +24,19 @@ public class SurfaceThread extends MThread {
     
     private static final boolean CONTINUOUS = true;
     private boolean forceExecption;
+    
+    private CyclicBarrier waitingGate;
     /**
      * Constructs a new SurfaceThread.
      *
      * @param delay The amount of time to delay each frame in milliseconds
      * @param bounds The surface boundaries
      * @param name The name of this thread
+     * @param waitingGate The gate for this thread to wait at before running
      */
-    public SurfaceThread(int delay, Boundaries bounds, String name) {
+    public SurfaceThread(int delay, Boundaries bounds, String name, CyclicBarrier waitingGate) {
         super(delay, name, CONTINUOUS);
-
+        this.waitingGate = waitingGate;
         this.bounds = bounds;
         curFrame = 0;
         tasks = new LinkedList<>();
@@ -57,6 +59,8 @@ public class SurfaceThread extends MThread {
         int upperXBound = bounds.getUpperXBound();
         
         try {
+            waitingGate.await();
+            
             tasks.forEach(task -> {
                 if (task.check()) {
                     for (int y = lowerYBound; y < upperYBound; y++) {
@@ -67,7 +71,7 @@ public class SurfaceThread extends MThread {
                 }
             });
             
-        } catch (Exception e) {
+        } catch (RuntimeException | InterruptedException | BrokenBarrierException e) {
             String msg = "An exception occured when updating the surface:" + getName();
             if (forceExecption){
                 throw new SurfaceThreadException(e);

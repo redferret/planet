@@ -1,5 +1,6 @@
 
 
+import java.util.concurrent.CyclicBarrier;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,13 +21,14 @@ public class TaskTest {
      * to a null reference to a Surface object.
      */
     private static TestWorld testWorld = new TestWorld();
-    
+    private CyclicBarrier waitingGate;
     private SurfaceThread testThread;
     private static final Boundaries BOUNDS = new Boundaries(0, 100, 0, 100);
 
     @Before
     public void setUp() {
-        testThread = new SurfaceThread(1, BOUNDS, "Test Thread");
+        waitingGate = new CyclicBarrier(1);
+        testThread = new SurfaceThread(1, BOUNDS, "Test Thread", waitingGate);
         testThread.throwExecption(true);
     }
     
