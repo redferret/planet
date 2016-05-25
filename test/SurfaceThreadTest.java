@@ -2,14 +2,11 @@
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
-import planet.TestWorld;
 import planet.util.Boundaries;
 import planet.util.SurfaceThread;
 import planet.util.SurfaceThreadException;
-import planet.util.Task;
 import planet.util.TaskAdapter;
-
+import static org.junit.Assert.*;
 /**
  *
  * @author Richard
