@@ -28,7 +28,7 @@ public class SurfaceThreadTest {
      */
     @Test(expected = RuntimeException.class)
     public void ForceExceptionTest(){
-        testThread.forceExecption(true);
+        testThread.catchExecption(true);
         testThread.update();
     }
     
