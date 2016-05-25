@@ -6,6 +6,8 @@ import static org.junit.Assert.*;
 import planet.TestWorld;
 import planet.util.Boundaries;
 import planet.util.SurfaceThread;
+import planet.util.Task;
+import planet.util.TaskAdapter;
 
 /**
  *
@@ -19,12 +21,11 @@ public class SurfaceThreadTest {
     @Before
     public void setUp() {
         testThread = new SurfaceThread(1, BOUNDS, "Test Thread");
+        testThread.addTask(new ExecptionTask());
     }
     
     /**
-     * Since there is no Planet object being created, there should be
-     * a RuntimeException thrown by the SurfaceThread during it's update
-     * iteration.
+     * Tests the functionality of the SurfaceThread exception handling.
      */
     @Test(expected = RuntimeException.class)
     public void ForceExceptionTest(){
@@ -49,4 +50,11 @@ public class SurfaceThreadTest {
         testThread.kill();
     }
     
+}
+
+class ExecptionTask extends TaskAdapter {
+    @Override
+    public void perform(int x, int y) {
+        throw new RuntimeException();
+    }
 }
