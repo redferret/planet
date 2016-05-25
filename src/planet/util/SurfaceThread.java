@@ -61,15 +61,15 @@ public class SurfaceThread extends MThread {
         try {
             waitingGate.await();
             
-            tasks.forEach(task -> {
-                if (task.check()) {
-                    for (int y = lowerYBound; y < upperYBound; y++) {
-                        for (int x = lowerXBound; x < upperXBound; x++) {
+            for (int y = lowerYBound; y < upperYBound; y++) {
+                for (int x = lowerXBound; x < upperXBound; x++) {
+                    for(Task task : tasks){
+                        if (task.check()) {
                             task.perform(x, y);
                         }
                     }
                 }
-            });
+            }
             
         } catch (SurfaceThreadException | InterruptedException | BrokenBarrierException e) {
             String msg = "An exception occured when updating the surface:" + getName();
