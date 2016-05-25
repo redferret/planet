@@ -53,6 +53,7 @@ public class BasicJView extends JFrame implements DisplayAdapter {
         PlanetSurface surface = (PlanetSurface) testWorld.getSurface();
         surface.addToSurface(Layer.BASALT, 10000);
         surface.addWaterToAllCells(1000);
+        Planet.self().setTimescale(Planet.TimeScale.Geological);
         Geosphere.heatDistributionCount = 100;
         Geosphere.thermalInc = 75;
 

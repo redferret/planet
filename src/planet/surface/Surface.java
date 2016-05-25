@@ -1,7 +1,9 @@
 package planet.surface;
 
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -12,6 +14,7 @@ import planet.util.Task;
 
 import static planet.surface.Surface.GEOUPDATE;
 import static planet.surface.Surface.planetAge;
+import planet.util.TaskFactory;
 /**
  * The Surface is the geology for the planet. It provides a foundation for life
  * to grow on and to influence climate in many ways. Through the placement of
@@ -63,16 +66,13 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
 
     private Delay ageUpdateDelay, threadAverageDelay;
 
-    private float absLowestHeight;
-    private AtomicInteger lowestHeightIntPart;
-    private AtomicInteger lowestHeightDecPart;
-
     public final static int HEIGHTMAP = 0;
     public final static int STRATAMAP = 1;
     public final static int LANDOCEAN = 2;
 
     private static final int DEFAULT_THREAD_DELAY = 1;
     
+    private UpdateMinimumHeightFactory mhFactory;
     /**
      * Used primarily for erosion algorithms.
      */
@@ -100,7 +100,8 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
         ageUpdateDelay = new Delay(ageStepDelay);
         set();
         setupThreads(threadCount, threadsDelay);
-        addTaskToThreads(new UpdateMinimumHeightTask());
+        mhFactory = new UpdateMinimumHeightFactory();
+        produceTasks(mhFactory);
     }
 
     private void set() {
@@ -169,18 +170,48 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
     }
 
     public float getLowestHeight() {
-
-        float decPart = lowestHeightDecPart.get() / 10f;
-        decPart = lowestHeightIntPart.get() + decPart;
-
-        return decPart;
+        return mhFactory.getLowestHeight();
+    }
+    
+    private class UpdateMinimumHeightFactory implements TaskFactory {
+        
+        private List<UpdateMinimumHeightTask> tasks;
+        
+        public UpdateMinimumHeightFactory(){
+            tasks = new ArrayList<>();
+        }
+        
+        public float getLowestHeight(){
+            
+            float lowestHeight = Float.MAX_VALUE;
+            
+            for (UpdateMinimumHeightTask task : tasks){
+                float testHeight = task.getLowestHeight();
+                if (testHeight < lowestHeight){
+                    lowestHeight = testHeight;
+                }
+            }
+            
+            return lowestHeight;
+        }
+        
+        @Override
+        public Task buildTask() {
+            UpdateMinimumHeightTask task = new UpdateMinimumHeightTask();
+            tasks.add(task);
+            return task;
+        }
     }
     
     private class UpdateMinimumHeightTask implements Task {
 
-        public UpdateMinimumHeightTask() {
-            lowestHeightIntPart = new AtomicInteger(Integer.MAX_VALUE);
-            lowestHeightDecPart = new AtomicInteger(Integer.MAX_VALUE);
+        private float absLowestHeight;
+        private AtomicInteger lowestHeightIntPart;
+        private AtomicInteger lowestHeightDecPart;
+        
+        public UpdateMinimumHeightTask(){
+            lowestHeightIntPart = new AtomicInteger(0);
+            lowestHeightDecPart = new AtomicInteger(0);
         }
         
         @Override
@@ -196,6 +227,13 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
             }
         }
 
+        public float getLowestHeight(){
+            float decPart = lowestHeightDecPart.get() / 10f;
+            decPart = lowestHeightIntPart.get() + decPart;
+
+            return decPart;
+        }
+        
         @Override
         public boolean check() {
             absLowestHeight = absLowestHeight < 0 ? 0 : absLowestHeight;
@@ -204,9 +242,8 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
 
             lowestHeightIntPart.set(intPart);
             lowestHeightDecPart.set(decPart);
-
-            absLowestHeight = Integer.MAX_VALUE;
             
+            absLowestHeight = Integer.MAX_VALUE;
             return true;
         }
         
