@@ -41,7 +41,7 @@ public class SurfaceThread extends MThread {
         forceExecption = false;
     }
     
-    public void catchExecption(boolean b){
+    public void throwExecption(boolean b){
         forceExecption = b;
     }
     

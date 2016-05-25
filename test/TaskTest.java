@@ -27,7 +27,7 @@ public class TaskTest {
     @Before
     public void setUp() {
         testThread = new SurfaceThread(1, BOUNDS, "Test Thread");
-        testThread.catchExecption(true);
+        testThread.throwExecption(true);
     }
     
     @After
