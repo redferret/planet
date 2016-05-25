@@ -174,79 +174,77 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
     }
     
     private class UpdateMinimumHeightFactory implements TaskFactory {
-        
+
         private List<UpdateMinimumHeightTask> tasks;
-        
-        public UpdateMinimumHeightFactory(){
+
+        public UpdateMinimumHeightFactory() {
             tasks = new ArrayList<>();
         }
-        
-        public float getLowestHeight(){
-            
+
+        public float getLowestHeight() {
+
             float lowestHeight = Float.MAX_VALUE;
-            
-            for (UpdateMinimumHeightTask task : tasks){
+
+            for (UpdateMinimumHeightTask task : tasks) {
                 float testHeight = task.getLowestHeight();
-                if (testHeight < lowestHeight){
+                if (testHeight < lowestHeight) {
                     lowestHeight = testHeight;
                 }
             }
-            
+
             return lowestHeight;
         }
-        
+
         @Override
         public Task buildTask() {
             UpdateMinimumHeightTask task = new UpdateMinimumHeightTask();
             tasks.add(task);
             return task;
         }
-    }
-    
-    private class UpdateMinimumHeightTask implements Task {
 
-        private float absLowestHeight;
-        private AtomicInteger lowestHeightIntPart;
-        private AtomicInteger lowestHeightDecPart;
-        
-        public UpdateMinimumHeightTask(){
-            lowestHeightIntPart = new AtomicInteger(0);
-            lowestHeightDecPart = new AtomicInteger(0);
-        }
-        
-        @Override
-        public void perform(int x, int y) {
-            updateMinimumHeight(x, y);
-        }
-        
-        private void updateMinimumHeight(int x, int y) {
-            float cellHeight = getCellAt(x, y).getHeightWithoutOceans();
+        private class UpdateMinimumHeightTask implements Task {
 
-            if (cellHeight < absLowestHeight) {
-                absLowestHeight = cellHeight;
+            private float absLowestHeight;
+            private AtomicInteger lowestHeightIntPart;
+            private AtomicInteger lowestHeightDecPart;
+
+            public UpdateMinimumHeightTask() {
+                lowestHeightIntPart = new AtomicInteger(0);
+                lowestHeightDecPart = new AtomicInteger(0);
+            }
+
+            @Override
+            public void perform(int x, int y) {
+                updateMinimumHeight(x, y);
+            }
+
+            private void updateMinimumHeight(int x, int y) {
+                float cellHeight = getCellAt(x, y).getHeightWithoutOceans();
+
+                if (cellHeight < absLowestHeight) {
+                    absLowestHeight = cellHeight;
+                }
+            }
+
+            public float getLowestHeight() {
+                float decPart = lowestHeightDecPart.get() / 10f;
+                decPart = lowestHeightIntPart.get() + decPart;
+
+                return decPart;
+            }
+
+            @Override
+            public boolean check() {
+                absLowestHeight = absLowestHeight < 0 ? 0 : absLowestHeight;
+                int intPart = (int) absLowestHeight;
+                int decPart = (int) ((absLowestHeight - intPart) * 10);
+
+                lowestHeightIntPart.set(intPart);
+                lowestHeightDecPart.set(decPart);
+
+                absLowestHeight = Integer.MAX_VALUE;
+                return true;
             }
         }
-
-        public float getLowestHeight(){
-            float decPart = lowestHeightDecPart.get() / 10f;
-            decPart = lowestHeightIntPart.get() + decPart;
-
-            return decPart;
-        }
-        
-        @Override
-        public boolean check() {
-            absLowestHeight = absLowestHeight < 0 ? 0 : absLowestHeight;
-            int intPart = (int) absLowestHeight;
-            int decPart = (int) ((absLowestHeight - intPart) * 10);
-
-            lowestHeightIntPart.set(intPart);
-            lowestHeightDecPart.set(decPart);
-            
-            absLowestHeight = Integer.MAX_VALUE;
-            return true;
-        }
-        
     }
-    
 }

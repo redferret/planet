@@ -28,25 +28,29 @@ public class PlanetSurface extends Hydrosphere {
     }
 
     private class GeologicalUpdateFactory implements TaskFactory {
+
         @Override
         public Task buildTask() {
             return new GeologicalUpdate();
         }
-    }
-    
-    private class GeologicalUpdate implements Task {
-        private Delay geologicDelay;
-        
-        public GeologicalUpdate() {
-            geologicDelay = new Delay(5);
-        }
-        @Override
-        public void perform(int x, int y){
-            updateGeology(x, y);
-        }
-        @Override
-        public boolean check(){
-            return geologicDelay.check();
+
+        private class GeologicalUpdate implements Task {
+
+            private Delay geologicDelay;
+
+            public GeologicalUpdate() {
+                geologicDelay = new Delay(5);
+            }
+
+            @Override
+            public void perform(int x, int y) {
+                updateGeology(x, y);
+            }
+
+            @Override
+            public boolean check() {
+                return geologicDelay.check();
+            }
         }
     }
     
