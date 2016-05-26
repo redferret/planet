@@ -169,6 +169,9 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
         return new PlanetCell(x, y);
     }
 
+    public float getHighestHeight(){
+        return mhFactory.getHighestHeight();
+    }
     public float getLowestHeight() {
         return mhFactory.getLowestHeight();
     }
@@ -182,10 +185,10 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
         }
 
         public float getHighestHeight(){
-            float highest = 0;
+            float highest = Integer.MIN_VALUE;
             
             for (MinMaxHeightTask task : tasks) {
-                float testHeight = task.getLowestHeight();
+                float testHeight = task.getHighestHeight();
                 if (testHeight > highest) {
                     highest = testHeight;
                 }
@@ -195,7 +198,7 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
         
         public float getLowestHeight() {
 
-            float lowestHeight = Float.MAX_VALUE;
+            float lowestHeight = Integer.MAX_VALUE;
 
             for (MinMaxHeightTask task : tasks) {
                 float testHeight = task.getLowestHeight();
@@ -219,10 +222,16 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
             private float absLowestHeight, absHighestHeight;
             private AtomicInteger lowestHeightIntPart;
             private AtomicInteger lowestHeightDecPart;
+            
+            private AtomicInteger highestHeightIntPart;
+            private AtomicInteger highestHeightDecPart;
 
             public MinMaxHeightTask() {
                 lowestHeightIntPart = new AtomicInteger(0);
                 lowestHeightDecPart = new AtomicInteger(0);
+                
+                highestHeightIntPart = new AtomicInteger(0);
+                highestHeightDecPart = new AtomicInteger(0);
             }
 
             @Override
@@ -243,7 +252,10 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
             }
 
             public float getHighestHeight(){
-                return absHighestHeight;
+                float decPart = highestHeightDecPart.get() / 10f;
+                decPart = highestHeightIntPart.get() + decPart;
+
+                return decPart;
             }
             
             public float getLowestHeight() {
@@ -261,9 +273,15 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
 
                 lowestHeightIntPart.set(intPart);
                 lowestHeightDecPart.set(decPart);
+                
+                intPart = (int) absHighestHeight;
+                decPart = (int) ((absHighestHeight - intPart) * 10);
+
+                highestHeightIntPart.set(intPart);
+                highestHeightDecPart.set(decPart);
 
                 absLowestHeight = Integer.MAX_VALUE;
-                absHighestHeight = 0;
+                absHighestHeight = Integer.MIN_VALUE;
                 return true;
             }
         }

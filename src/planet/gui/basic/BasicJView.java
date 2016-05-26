@@ -76,7 +76,7 @@ public class BasicJView extends JFrame implements DisplayAdapter {
         }
         
         long age = testWorld.getSurface().getPlanetAge();
-        float lowestHeight = testWorld.getSurface().getLowestHeight();
+        float lowestHeight = testWorld.getSurface().getHighestHeight();
         setTitle("Age: " + age + " F:" + totalAvg + " L:" + lowestHeight);
     }
     
