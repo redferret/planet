@@ -55,45 +55,60 @@ public class HydroCell extends GeoCell {
 
             float lowestHeight, curCellHeight, displacedMass,
                     diffGeoHeight, differenceHeight, totalMass;
+            int area;
 
-            cellToUpdate = (HydroCell) thisCell();
-            lowestCell = (HydroCell) getLowestCellFrom(cellToUpdate);
+            lowestCell = (HydroCell) getLowestCellFrom(HydroCell.this);
 
-            if (lowestCell == null || cellToUpdate == null) {
+            if (lowestCell == null) {
                 return;
             }
-
-            WaterPipeline toUpdateWaterBuffer = cellToUpdate.getWaterPipeline();
+            SedimentBuffer eb = getSedimentBuffer();
+            
+            WaterPipeline toUpdateWaterBuffer = getWaterPipeline();
             WaterPipeline lowestHydroBuffer = lowestCell.getWaterPipeline();
 
             toUpdateWaterBuffer.applyBuffer();
             lowestHydroBuffer.applyBuffer();
 
-            HydroCell.SuspendedSediments lowestSSediments = cellToUpdate.getSedimentMap();
+            HydroCell.SuspendedSediments lowestSSediments = getSedimentMap();
             HydroCell.SuspendedSediments toUpdateSSediments = lowestCell.getSedimentMap();
 
             lowestSSediments.applyBuffer();
             toUpdateSSediments.applyBuffer();
 
-            if (lowestCell != cellToUpdate && cellToUpdate.hasOcean()) {
+            if (lowestCell != HydroCell.this && hasOcean()) {
 
                 lowestHeight = lowestCell.getHeight();
-                curCellHeight = cellToUpdate.getHeight();
+                curCellHeight = getHeight();
 
                 // Move the water
                 differenceHeight = (curCellHeight - lowestHeight) / 2.5f;
-                curCellHeight = cellToUpdate.getHeight() / 2.5f;
+                curCellHeight = getHeight() / 2.5f;
                 lowestHeight = lowestCell.getHeight() / 2.5f;
 
                 differenceHeight = clamp(differenceHeight, -lowestHeight, curCellHeight);
-
-                displacedMass = calcMass(differenceHeight, Planet.self().getCellArea(), OCEAN);
+                area = Planet.self().getCellArea();
+                displacedMass = calcMass(differenceHeight, area, OCEAN);
 
                 toUpdateWaterBuffer.transferWater(-displacedMass);
                 lowestHydroBuffer.transferWater(displacedMass);
                 
                 double theta = Math.atan(differenceHeight / Planet.self().getCellLength());
-                float pressure = (float) Math.sin(theta);
+                final float MIN_ANGLE = 0.0002f;
+                float calcVal = (float) Math.sin(theta);
+                float pressure = (float) Math.min(MIN_ANGLE, calcVal);
+                float erosion = (pressure * displacedMass) / area;
+                
+                float erodedSeds = erode(erosion);
+                float transferSeds = erodedSeds + toUpdateSSediments.getSediments();
+                
+                toUpdateSSediments.transferSediment(-transferSeds);
+                lowestSSediments.transferSediment(transferSeds);
+                
+                if (calcVal < MIN_ANGLE){
+                    eb.updateSurfaceSedimentMass(toUpdateSSediments.getSediments());
+                    toUpdateSSediments.resetBuffer();
+                }
                 
             }
 
@@ -162,8 +177,12 @@ public class HydroCell extends GeoCell {
         public void applyBuffer() {
             if (bufferSet()) {
                 SedimentBuffer eb = getSedimentBuffer();
-                eb.updateSurfaceSedimentMass(sediments);
-                resetBuffer();
+                if (atCapacity()){
+                    float diff = sediments - getCap();
+                    eb.updateSurfaceSedimentMass(diff);
+                    sediments = getCap();
+                }
+                
             }
         }
     }

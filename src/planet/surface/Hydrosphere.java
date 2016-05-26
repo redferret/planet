@@ -3,6 +3,7 @@ package planet.surface;
 import planet.Planet;
 import planet.cells.HydroCell;
 import planet.cells.HydroCell.WaterPipeline;
+import planet.util.TaskAdapter;
 
 /**
  * The hydrosphere is everything that deals with rivers, lakes, seas, and
@@ -20,6 +21,7 @@ public abstract class Hydrosphere extends Geosphere {
 
     public Hydrosphere(int worldSize, int surfaceDelay, int threadsDelay, int threadCount) {
         super(worldSize, surfaceDelay, threadsDelay, threadCount);
+        addTaskToThreads(new UpdateOceansTask());
     }
 
     /**
@@ -52,14 +54,11 @@ public abstract class Hydrosphere extends Geosphere {
         wp.update();
     }
 
-    /**
-     * Erodes sediments and rock and transfers it.
-     *
-     * @param x The x coordinate
-     * @param y The y coordinate
-     */
-    private void erode(int x, int y) {
-
+    private class UpdateOceansTask extends TaskAdapter {
+        @Override
+        public void perform(int x, int y) {
+            updateOceans(x, y);
+        }
     }
 
 }

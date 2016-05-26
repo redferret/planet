@@ -25,6 +25,11 @@ import static planet.util.Tools.clamp;
 import static planet.util.Tools.getLowestCellFrom;
 import static planet.Planet.TimeScale.Geological;
 import static planet.Planet.TimeScale.None;
+import static planet.surface.PlanetSurface.suppressMantelHeating;
+import planet.util.Delay;
+import planet.util.Task;
+import planet.util.TaskAdapter;
+import planet.util.TaskFactory;
 
 /**
  * Contains all logic that works on the geology of the planet.
@@ -65,6 +70,9 @@ public abstract class Geosphere extends Surface {
     public Geosphere(int worldSize, int surfaceDelay, int threadsDelay, int threadCount) {
         super(worldSize, surfaceDelay, threadsDelay, threadCount);
         ageStamp = 0;
+        produceTasks(new GeologicalUpdateFactory());
+        addTask(new HeatMantel());
+        addTaskToThreads(new RockFormation());
     }
 
     /**
@@ -141,8 +149,6 @@ public abstract class Geosphere extends Surface {
     }
 
     public void spreadToLowest(GeoCell spreadFrom) {
-
-        dust(spreadFrom);
 
         float height = calcHeight(0.00001f, Planet.self().getCellArea(), SEDIMENT);
         convertTopLayer(spreadFrom, height);
@@ -307,10 +313,10 @@ public abstract class Geosphere extends Surface {
 
         // Update the geosphere
         if (Planet.self().isTimeScale(Geological)) {
-            geologicalUpdate(cell);
+            cell.cool(1);
         } else if (!Planet.self().isTimeScale(None)) {
             if (checkForGeologicalUpdate()) {
-                geologicalUpdate(cell);
+                cell.cool(1);
                 cell.updateHeight();
                 timeStamp();
             }
@@ -320,11 +326,6 @@ public abstract class Geosphere extends Surface {
     public void updateRockFormation(int x, int y){
         depositSediment(x, y);
         updateLavaFlows(x, y);
-    }
-    
-    private void geologicalUpdate(GeoCell cell) {
-        spreadToLowest(cell);
-        cell.cool(1);
     }
 
     public void heatMantel() {
@@ -351,4 +352,60 @@ public abstract class Geosphere extends Surface {
         }
     }
 
+    private class GeologicalUpdateFactory implements TaskFactory {
+
+        @Override
+        public Task buildTask() {
+            return new GeologicalUpdate();
+        }
+
+        private class GeologicalUpdate implements Task {
+
+            private Delay geologicDelay;
+
+            public GeologicalUpdate() {
+                geologicDelay = new Delay(5);
+            }
+
+            @Override
+            public void perform(int x, int y) {
+                updateGeology(x, y);
+            }
+
+            @Override
+            public boolean check() {
+                return geologicDelay.check();
+            }
+        }
+    }
+    
+    private class HeatMantel implements Task {
+        
+        private Delay mantelHeatingDelay;
+        
+        public HeatMantel() {
+            mantelHeatingDelay = new Delay(125);
+        }
+        
+        @Override
+        public void perform(int x, int y) {}
+
+        @Override
+        public boolean check() {
+            if (mantelHeatingDelay.check()){
+                if (!suppressMantelHeating) {
+                    heatMantel();
+                }
+            }
+            return false;
+        }
+        
+    }
+    
+    private class RockFormation extends TaskAdapter {
+        @Override
+        public void perform(int x, int y) {
+            updateRockFormation(x, y);
+        }
+    }
 }
