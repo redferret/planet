@@ -72,7 +72,7 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
 
     private static final int DEFAULT_THREAD_DELAY = 1;
     
-    private UpdateMinimumHeightFactory mhFactory;
+    private MinMaxHeightFactory mhFactory;
     /**
      * Used primarily for erosion algorithms.
      */
@@ -100,7 +100,7 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
         ageUpdateDelay = new Delay(ageStepDelay);
         set();
         setupThreads(threadCount, threadsDelay);
-        mhFactory = new UpdateMinimumHeightFactory();
+        mhFactory = new MinMaxHeightFactory();
         produceTasks(mhFactory);
     }
 
@@ -173,19 +173,31 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
         return mhFactory.getLowestHeight();
     }
     
-    private class UpdateMinimumHeightFactory implements TaskFactory {
+    private class MinMaxHeightFactory implements TaskFactory {
 
-        private List<UpdateMinimumHeightTask> tasks;
+        private List<MinMaxHeightTask> tasks;
 
-        public UpdateMinimumHeightFactory() {
+        public MinMaxHeightFactory() {
             tasks = new ArrayList<>();
         }
 
+        public float getHighestHeight(){
+            float highest = 0;
+            
+            for (MinMaxHeightTask task : tasks) {
+                float testHeight = task.getLowestHeight();
+                if (testHeight > highest) {
+                    highest = testHeight;
+                }
+            }
+            return highest;
+        }
+        
         public float getLowestHeight() {
 
             float lowestHeight = Float.MAX_VALUE;
 
-            for (UpdateMinimumHeightTask task : tasks) {
+            for (MinMaxHeightTask task : tasks) {
                 float testHeight = task.getLowestHeight();
                 if (testHeight < lowestHeight) {
                     lowestHeight = testHeight;
@@ -197,35 +209,43 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
 
         @Override
         public Task buildTask() {
-            UpdateMinimumHeightTask task = new UpdateMinimumHeightTask();
+            MinMaxHeightTask task = new MinMaxHeightTask();
             tasks.add(task);
             return task;
         }
 
-        private class UpdateMinimumHeightTask implements Task {
+        private class MinMaxHeightTask implements Task {
 
-            private float absLowestHeight;
+            private float absLowestHeight, absHighestHeight;
             private AtomicInteger lowestHeightIntPart;
             private AtomicInteger lowestHeightDecPart;
 
-            public UpdateMinimumHeightTask() {
+            public MinMaxHeightTask() {
                 lowestHeightIntPart = new AtomicInteger(0);
                 lowestHeightDecPart = new AtomicInteger(0);
             }
 
             @Override
             public void perform(int x, int y) {
-                updateMinimumHeight(x, y);
+                updateMinMaxHeight(x, y);
             }
 
-            private void updateMinimumHeight(int x, int y) {
+            private void updateMinMaxHeight(int x, int y) {
                 float cellHeight = getCellAt(x, y).getHeightWithoutOceans();
 
                 if (cellHeight < absLowestHeight) {
                     absLowestHeight = cellHeight;
                 }
+                
+                if (cellHeight > absHighestHeight){
+                    absHighestHeight = cellHeight;
+                }
             }
 
+            public float getHighestHeight(){
+                return absHighestHeight;
+            }
+            
             public float getLowestHeight() {
                 float decPart = lowestHeightDecPart.get() / 10f;
                 decPart = lowestHeightIntPart.get() + decPart;
@@ -243,6 +263,7 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
                 lowestHeightDecPart.set(decPart);
 
                 absLowestHeight = Integer.MAX_VALUE;
+                absHighestHeight = 0;
                 return true;
             }
         }
