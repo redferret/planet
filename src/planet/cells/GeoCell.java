@@ -625,7 +625,9 @@ public class GeoCell extends Mantel {
 
         Stratum removed = strata.removeFirst();
         removed.removeBottom();
-        strata.peek().removeTop();
+        if (strata.peek() != null){
+            strata.peek().removeTop();
+        }
 
         return updateRemoved(removed);
     }
