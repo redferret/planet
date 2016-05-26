@@ -199,7 +199,7 @@ public class GeoCell extends Mantel {
     
     static {
         Color[] colors = {new Color(255, 255, 204), new Color(51, 153, 51),
-            new Color(157, 166, 175)};
+            new Color(157, 166, 175), new Color(255, 255, 255)};
 
         heightMap = Tools.constructSamples(colors, 50);
 
@@ -766,14 +766,15 @@ public class GeoCell extends Mantel {
     public boolean hasOcean() {
         return ((HydroCell) this).getOceanMass() > 0;
     }
-
+    
     public List<Integer[]> render(List<Integer[]> settings) {
         int setting;
         PlanetSurface surface = (PlanetSurface) Planet.self().getSurface();
         switch (surface.displaySetting) {
             case HEIGHTMAP:
-                float height = Math.max(0, getHeightWithoutOceans() - surface.getLowestHeight()) * 10;
-                setting = (int) (height / heightIndexRatio) % MAX_HEIGHT_INDEX;
+                float thisHeight = getHeightWithoutOceans();
+                float height = Math.max(0, thisHeight - surface.getLowestHeight()) * 5;
+                setting = (int) Math.min((height / heightIndexRatio), MAX_HEIGHT_INDEX - 1);
                 settings.add(heightMap[setting]);
 
                 return super.render(settings);

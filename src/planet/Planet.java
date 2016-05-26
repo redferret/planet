@@ -91,7 +91,7 @@ public abstract class Planet {
      *
      * @return length of a cell in meters.
      */
-    public int getLength() {
+    public int getCellLength() {
         return cellLength;
     }
 

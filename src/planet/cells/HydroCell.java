@@ -91,6 +91,10 @@ public class HydroCell extends GeoCell {
 
                 toUpdateWaterBuffer.transferWater(-displacedMass);
                 lowestHydroBuffer.transferWater(displacedMass);
+                
+                double theta = Math.atan(differenceHeight / Planet.self().getCellLength());
+                float pressure = (float) Math.sin(theta);
+                
             }
 
         }
