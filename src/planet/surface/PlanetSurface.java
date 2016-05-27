@@ -7,7 +7,7 @@ package planet.surface;
  * The highest level of abstraction for the surface of a planet.
  * @author Richard DeSilvey
  */
-public class PlanetSurface extends Hydrosphere {
+public class PlanetSurface extends Atmosphere {
 
     public static boolean suppressMantelHeating;
     
