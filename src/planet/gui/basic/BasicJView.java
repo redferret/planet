@@ -54,8 +54,8 @@ public class BasicJView extends JFrame implements DisplayAdapter {
         surface.addToSurface(Layer.BASALT, 10000);
         surface.addWaterToAllCells(1000);
         Planet.self().setTimescale(Planet.TimeScale.Geological);
-        Geosphere.heatDistributionCount = 100;
-        Geosphere.thermalInc = 75;
+        Geosphere.heatDistributionCount = 300;
+        Geosphere.thermalInc = 150;
 
         testWorld.play();
     }
@@ -111,6 +111,10 @@ class KeyController extends KeyAdapter {
                 if (Planet.self().getSurface().displaySetting < 0){
                     Planet.self().getSurface().displaySetting = 0;
                 }
+                break;
+                
+            case KeyEvent.VK_ENTER:
+                
                 break;
         }
     }

@@ -9,7 +9,10 @@ import planet.TestWorld;
 import planet.enums.Layer;
 import planet.gui.DisplayAdapter;
 import planet.surface.PlanetSurface;
+import planet.util.Delay;
 import planet.util.SurfaceThread;
+import planet.util.Task;
+import planet.util.TaskAdapter;
 
 /**
  *
@@ -32,7 +35,7 @@ public class WaterMovementTest extends JFrame implements DisplayAdapter {
         
         renderFrame = new Frame(SIZE, SIZE);
         
-        testWorld = new TestWorld(33, 3);
+        testWorld = new TestWorld(30, 1);
         testWorld.getSurface().setDisplay(this);
         renderFrame.registerMap(testWorld.getSurface());
         add(renderFrame);
@@ -46,10 +49,60 @@ public class WaterMovementTest extends JFrame implements DisplayAdapter {
         
         PlanetSurface.suppressMantelHeating = true;
         PlanetSurface surface = (PlanetSurface) testWorld.getSurface();
-        surface.addToSurface(Layer.SHALE, 100000);
-        surface.getCellAt(49, 45).addOceanMass(1000000);
+        surface.addToSurface(Layer.SHALE, 10000000);
+        
+        flatErosionTest();
         
         testWorld.play();
+    }
+    
+    private void flatErosionTest(){
+        PlanetSurface surface = (PlanetSurface) testWorld.getSurface();
+        
+        for (int y = 4; y < 20; y++)
+            surface.getCellAt(0, y).addToStrata(Layer.BASALT, 10000000, true);
+        
+        for (int y = 4; y < 20; y++){
+            for (int x = 0; x < 10; x++){
+                surface.getCellAt(x, y).addToStrata(Layer.SANDSTONE, 100000, true);
+                surface.getCellAt(x, y).addToStrata(Layer.SEDIMENT, 10000, true);
+            }
+        }
+        for (int x = 0; x < 10; x++){
+            surface.getCellAt(x, 3).addToStrata(Layer.BASALT, 10000000, true);
+        }
+        for (int x = 0; x < 10; x++){
+            surface.getCellAt(x, 20).addToStrata(Layer.BASALT, 10000000, true);
+        }
+        testWorld.getSurface().addTask(new AddWaterTask());
+        testWorld.getSurface().addTask(new EmptyWaterTask());
+    }
+    
+    private class EmptyWaterTask extends TaskAdapter {
+        @Override
+        public void perform(int x, int y) {
+            if (x == 0 && y == 6){
+                testWorld.getSurface().getCellAt(25, 6).addOceanMass(-100000);
+            }
+        }
+    }
+    
+    private class AddWaterTask implements Task {
+        private Delay timer;
+        public AddWaterTask(){
+            timer = new Delay(40000, false);
+        }
+        @Override
+        public void perform(int x, int y) {
+            if (x == 1 && y == 4){
+                testWorld.getSurface().getCellAt(1, 11).addOceanMass(1000);
+            }
+        }
+
+        @Override
+        public boolean check() {
+            return !timer.check();
+        }
     }
     
     @Override
