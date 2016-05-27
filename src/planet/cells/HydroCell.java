@@ -4,6 +4,7 @@ package planet.cells;
 import java.awt.Color;
 import java.util.List;
 import planet.Planet;
+import planet.enums.Layer;
 import planet.util.TBuffer;
 import planet.surface.Hydrosphere;
 import static planet.util.Tools.calcMass;
@@ -11,6 +12,7 @@ import static planet.util.Tools.clamp;
 import static planet.util.Tools.constructGradient;
 import static planet.util.Tools.getLowestCellFrom;
 import static planet.enums.Layer.OCEAN;
+import planet.util.Tools;
 
 /**
  * A HydroCell represents the hydrosphere of the planet. The class contains
@@ -51,10 +53,9 @@ public class HydroCell extends GeoCell {
         
         public void update(){
 
-            HydroCell cellToUpdate, lowestCell;
+            HydroCell lowestCell;
 
-            float lowestHeight, curCellHeight, displacedMass,
-                    diffGeoHeight, differenceHeight, totalMass;
+            float lowestHeight, curCellHeight, displacedMass, differenceHeight;
             int area;
 
             lowestCell = (HydroCell) getLowestCellFrom(HydroCell.this);
@@ -62,7 +63,7 @@ public class HydroCell extends GeoCell {
             if (lowestCell == null) {
                 return;
             }
-            SedimentBuffer eb = getSedimentBuffer();
+            SedimentBuffer eb = lowestCell.getSedimentBuffer();
             
             WaterPipeline toUpdateWaterBuffer = getWaterPipeline();
             WaterPipeline lowestHydroBuffer = lowestCell.getWaterPipeline();
@@ -94,21 +95,26 @@ public class HydroCell extends GeoCell {
                 lowestHydroBuffer.transferWater(displacedMass);
                 
                 double theta = Math.atan(differenceHeight / Planet.self().getCellLength());
-                final float MIN_ANGLE = 0.0002f;
                 float calcVal = (float) Math.sin(theta);
-                float pressure = (float) Math.min(MIN_ANGLE, calcVal);
-                float erosion = (pressure * displacedMass) / area;
+                float pressure = (float) Math.min(minAngle, calcVal);
+                float erosion = (displacedMass * pressure);
                 
-                float erodedSeds = erode(erosion);
-                float transferSeds = erodedSeds + toUpdateSSediments.getSediments();
-                
-                toUpdateSSediments.transferSediment(-transferSeds);
-                lowestSSediments.transferSediment(transferSeds);
-                
-                if (calcVal < MIN_ANGLE){
-                    eb.updateSurfaceSedimentMass(toUpdateSSediments.getSediments());
-                    toUpdateSSediments.resetBuffer();
+                if (eb.getSediments() < Tools.calcMass(1f, area, Layer.SEDIMENT)) {
+                    float erodedSeds = erode(erosion);
+                    lowestSSediments.transferSediment(erodedSeds);
                 }
+//                float transferSeds = erodedSeds;
+//                float movedSeds = (pressure * displacedMass);
+//                
+//                toUpdateSSediments.transferSediment(-movedSeds);
+                
+//                
+//                eb.updateSurfaceSedimentMass(toUpdateSSediments.getSediments() * pressure);
+//                
+//                if (calcVal < minAngle){
+//                    eb.updateSurfaceSedimentMass(toUpdateSSediments.getSediments());
+//                    toUpdateSSediments.resetBuffer();
+//                }
                 
             }
 
@@ -131,9 +137,6 @@ public class HydroCell extends GeoCell {
         
     }
     
-    private Cell thisCell(){
-        return this;
-    }
     
     /**
      * Buffer when moving sediments to other cells
@@ -171,18 +174,15 @@ public class HydroCell extends GeoCell {
         
         public boolean atCapacity(){
             float cap = getCap();
-            return sediments >= cap;
+            return sediments > cap;
         }
         
         public void applyBuffer() {
-            if (bufferSet()) {
-                SedimentBuffer eb = getSedimentBuffer();
-                if (atCapacity()){
-                    float diff = sediments - getCap();
-                    eb.updateSurfaceSedimentMass(diff);
-                    sediments = getCap();
-                }
-                
+            SedimentBuffer eb = getSedimentBuffer();
+            if (atCapacity()){
+                float diff = sediments - getCap();
+                eb.updateSurfaceSedimentMass(diff);
+                sediments = getCap();
             }
         }
     }
@@ -195,7 +195,7 @@ public class HydroCell extends GeoCell {
         oceanMap = constructGradient(colors, dist, MAX_WATER_DEPTH_INDEX);
         
         evapScale = 2.5f;
-        sedimentCapacity = 0.25f;
+        sedimentCapacity = 0.50f;
         minAngle = 0.0002f;
         crossSectionalArea = Planet.self().getCellArea();
     }
