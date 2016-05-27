@@ -220,9 +220,15 @@ public class HydroCell extends GeoCell {
         return sedimentMap;
     }
     
-    public void addOceanMass(float m){
-        oceanMass += m;
-        if (oceanMass < 0) oceanMass = 0;
+    public float addOceanMass(float amount){
+        if (oceanMass + amount < 0) {
+            float temp = oceanMass;
+            oceanMass = 0;
+            return temp;
+        }else {
+            oceanMass += amount;
+            return amount;
+        }
     }
     
     public void setOceanMass(float m){

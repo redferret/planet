@@ -71,7 +71,7 @@ public abstract class Geosphere extends Surface {
         super(worldSize, surfaceDelay, threadsDelay, threadCount);
         ageStamp = 0;
         produceTasks(new GeologicalUpdateFactory());
-        produceTasks(new WindErosionFactory());
+//        produceTasks(new WindErosionFactory());
         addTaskToThreads(new SpreadSedimentTask());
         addTaskToThreads(new RockFormation());
         addTask(new HeatMantel());
@@ -362,7 +362,7 @@ public abstract class Geosphere extends Surface {
             private Delay delay;
 
             public WindErosionTask() {
-                delay = new Delay(80);
+                delay = new Delay(160);
             }
             
             @Override
@@ -398,7 +398,7 @@ public abstract class Geosphere extends Surface {
             private Delay geologicDelay;
 
             public GeologicalUpdate() {
-                geologicDelay = new Delay(5);
+                geologicDelay = new Delay(15);
             }
 
             @Override

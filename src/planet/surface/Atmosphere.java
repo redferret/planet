@@ -7,7 +7,7 @@ import planet.cells.PlanetCell;
 import planet.util.Delay;
 import planet.util.Task;
 import planet.util.TaskFactory;
-
+import static planet.surface.Surface.rand;
 /**
  *
  * @author Richard DeSilvey
@@ -18,7 +18,7 @@ public class Atmosphere extends Hydrosphere {
         super(worldSize, surfaceDelay, threadsDelay, threadCount);
         produceTasks(new EvaporateFactory());
     }
-
+    
     private class EvaporateFactory implements TaskFactory {
 
         @Override
@@ -31,7 +31,7 @@ public class Atmosphere extends Hydrosphere {
             private Delay delay;
 
             public EvaporateTask() {
-                delay = new Delay(20);
+                delay = new Delay(40);
             }
             
             @Override
@@ -47,8 +47,12 @@ public class Atmosphere extends Hydrosphere {
                     }else if (h <= y && y < w){
                         rate = (w - y) / h;
                     }
-                    final int a = 50;
-                    cell.addOceanMass(- (rate * a));
+                    float amount = 10 * rate;
+                    amount = cell.addOceanMass(-amount);
+                    
+                    int xx = rand.nextInt(worldSize);
+                    int yy = rand.nextInt(worldSize);
+                    getCellAt(xx, yy).addOceanMass(amount);
                 }
             }
 
