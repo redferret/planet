@@ -13,10 +13,10 @@ import java.util.List;
 public abstract class Cell {
 
     // The x coordinate
-    private int x;
+    private final int x;
     
     // The y coordinate
-    private int y;
+    private final int y;
 
     public Cell(int x, int y) {
         this.x = x;
