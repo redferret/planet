@@ -71,8 +71,10 @@ public abstract class Geosphere extends Surface {
         super(worldSize, surfaceDelay, threadsDelay, threadCount);
         ageStamp = 0;
         produceTasks(new GeologicalUpdateFactory());
-        addTask(new HeatMantel());
+        produceTasks(new WindErosionFactory());
+        addTaskToThreads(new SpreadSedimentTask());
         addTaskToThreads(new RockFormation());
+        addTask(new HeatMantel());
     }
 
     /**
@@ -150,14 +152,16 @@ public abstract class Geosphere extends Surface {
 
     public void spreadToLowest(GeoCell spreadFrom) {
 
-        float height = calcHeight(0.00001f, Planet.self().getCellArea(), SEDIMENT);
-        convertTopLayer(spreadFrom, height);
-
         int maxCellCount = 8;
         ArrayList<GeoCell> lowestList = new ArrayList<>(maxCellCount);
         getLowestCells(spreadFrom, lowestList, maxCellCount);
         spread(lowestList, spreadFrom);
 
+    }
+    
+    public void windErosion(GeoCell spreadFrom){
+        float height = calcHeight(0.00001f, Planet.self().getCellArea(), SEDIMENT);
+        convertTopLayer(spreadFrom, height);
     }
 
     public void convertTopLayer(GeoCell spreadFrom, float height) {
@@ -346,12 +350,42 @@ public abstract class Geosphere extends Surface {
         }
     }
 
-    public void dust(GeoCell cell) {
-        if (cell.getMoltenRockFromSurface() < 1) {
-            cell.getSedimentBuffer().updateSurfaceSedimentMass(0.00001f);
+    private class WindErosionFactory implements TaskFactory {
+
+        @Override
+        public Task buildTask() {
+            return new WindErosionTask();
+        }
+        
+        private class WindErosionTask implements Task {
+
+            private Delay delay;
+
+            public WindErosionTask() {
+                delay = new Delay(80);
+            }
+            
+            @Override
+            public void perform(int x, int y) {
+                windErosion(getCellAt(x, y));
+            }
+
+            @Override
+            public boolean check() {
+                return delay.check();
+            }
+            
+        }
+        
+    }
+    
+    private class SpreadSedimentTask extends TaskAdapter {
+        @Override
+        public void perform(int x, int y) {
+            spreadToLowest(getCellAt(x, y));
         }
     }
-
+    
     private class GeologicalUpdateFactory implements TaskFactory {
 
         @Override
