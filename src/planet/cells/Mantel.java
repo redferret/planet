@@ -39,6 +39,7 @@ public class Mantel extends Cell {
     
     public void cool(float amount){
         temperature -= amount;
+        if (temperature < 0) temperature = 0;
     }
     
     public boolean checkVolcano(){
