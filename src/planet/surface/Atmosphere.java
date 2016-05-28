@@ -47,7 +47,7 @@ public class Atmosphere extends Hydrosphere {
                     }else if (h <= y && y < w){
                         rate = (w - y) / h;
                     }
-                    float amount = 10 * rate;
+                    float amount = 15 * rate;
                     amount = cell.addOceanMass(-amount);
                     
                     int xx = rand.nextInt(worldSize);
