@@ -37,16 +37,6 @@ public abstract class Hydrosphere extends Geosphere {
     }
 
     public void updateOceans(int x, int y) {
-        moveWater(x, y);
-    }
-
-    /**
-     * Updates the water surface and velocity field.
-     *
-     * @param x The x coordinate
-     * @param y The y coordinate
-     */
-    private void moveWater(int x, int y) {
         HydroCell toUpdate = getCellAt(x, y);
         WaterPipeline wp = toUpdate.getWaterPipeline();
 
