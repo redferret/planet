@@ -766,7 +766,7 @@ public class GeoCell extends Mantel {
     }
 
     public boolean hasOcean() {
-        return ((HydroCell) this).getOceanMass() > 0;
+        return ((HydroCell) this).getOceanMass() > 0.001f;
     }
     
     public List<Integer[]> render(List<Integer[]> settings) {
