@@ -249,7 +249,7 @@ public class HydroCell extends GeoCell {
     
     public List<Integer[]> render(List<Integer[]> settings) {
         
-        if (Hydrosphere.drawOcean){
+        if (Hydrosphere.drawOcean && hasOcean()){
             int index = (int) (getOceanMass() / depthIndexRatio);
 
             int setting = index < MAX_WATER_DEPTH_INDEX ? index : MAX_WATER_DEPTH_INDEX - 1;
