@@ -25,6 +25,7 @@ import static planet.util.Tools.clamp;
 import static planet.util.Tools.getLowestCellFrom;
 import static planet.Planet.TimeScale.Geological;
 import static planet.Planet.TimeScale.None;
+import planet.cells.PlanetCell;
 import static planet.surface.PlanetSurface.suppressMantelHeating;
 import planet.util.Delay;
 import planet.util.Task;
@@ -338,14 +339,13 @@ public abstract class Geosphere extends Surface {
             int x = rand.nextInt(worldSize);
             int y = rand.nextInt(worldSize);
 
-            Mantel cell = getCellAt(x, y);
-            GeoCell geo;
+            PlanetCell cell = getCellAt(x, y);
             cell.addHeat(thermalInc);
 
             if (cell.checkVolcano()) {
-                geo = (GeoCell) cell;
-                geo.putMoltenRockToSurface(averageVolcanicMass);
+                cell.putMoltenRockToSurface(averageVolcanicMass);
                 cell.cool(volcanicHeatLoss);
+                cell.addOceanMass(0.0001f);
             }
         }
     }
