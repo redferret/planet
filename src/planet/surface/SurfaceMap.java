@@ -168,12 +168,21 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
         checkSubThreads();
     }
 
+    /**
+     * Adds the Task instance to each thread.
+     * @param task The task being added to each thread.
+     */
     public void addTaskToThreads(Task task){
         threads.forEach(thread -> {
             thread.addTask(task);
         });
     }
     
+    /**
+     * Produces individual instances of a Task for each thread.
+     * @param factory The object factory that will produce a Task for
+     * each thread.
+     */
     public void produceTasks(TaskFactory factory){
         threads.forEach(thread -> {
             thread.addTask(factory.buildTask());
