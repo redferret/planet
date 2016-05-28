@@ -220,6 +220,12 @@ public class HydroCell extends GeoCell {
         return sedimentMap;
     }
     
+    /**
+     * Adds or subtracts water from this cell. The returned value is the 
+     * actual amount removed or added.
+     * @param amount Positive amounts add, negative amounts subtract.
+     * @return The amount that was removed or added.
+     */
     public float addOceanMass(float amount){
         if (oceanMass + amount < 0) {
             float temp = oceanMass;
