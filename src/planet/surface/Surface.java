@@ -32,18 +32,6 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
     public static float mantel_density = 3700f;
 
     /**
-     * A mutable erosion quantity (works best around 32 - 128) during geological
-     * time scales
-     */
-    public static float erosionAmount;
-
-    /**
-     * A variable that controls how thick sediment layers need to be before
-     * converting them to sedimentary rock.
-     */
-    public static float ssMul = 1.0f;
-
-    /**
      * The number of years that pass for each step of erosion
      */
     public static long GEOUPDATE;
@@ -80,7 +68,6 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
 
     static {
         rand = new Random();
-        erosionAmount = 1;
         timeStep = 100000;
         GEOUPDATE = 100000;
     }
