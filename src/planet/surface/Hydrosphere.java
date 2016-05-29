@@ -44,7 +44,6 @@ public abstract class Hydrosphere extends Geosphere {
             HydroCell toUpdate = getCellAt(x, y);
             WaterPipeline wp = toUpdate.getWaterPipeline();
 
-            wp.applyBuffer();
             wp.update();
         }
     }
