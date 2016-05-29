@@ -300,7 +300,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
      * @param y The y coordinate of the cell
      * @return Returns the cell at the specified X and Y location.
      */
-    public final CellType getCellAt(int x, int y) {
+    public final synchronized CellType getCellAt(int x, int y) {
         int index = (gridWidth * y) + x;
         return getCellAt(index);
     }
@@ -310,7 +310,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
      * @param index The index
      * @return The cell that maps to the given index.
      */
-    public final CellType getCellAt(int index){
+    public final synchronized CellType getCellAt(int index){
         return map.get(index);
     }
     
@@ -320,7 +320,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
      * @param cell The cell to use a look up of it's coordinates?
      * @return The cell at the location of the cell given at the parameter.
      */
-    public final CellType getCellAt(Cell cell) {
+    public final synchronized CellType getCellAt(Cell cell) {
         return getCellAt(cell.getX(), cell.getY());
     }
 
