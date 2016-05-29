@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import planet.gui.RenderInterface;
@@ -60,8 +61,10 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
 
     private List<Integer[]> settings;
     
-    private int prevSubThreadAvg, gridWidth;
+    private int prevSubThreadAvg;
 
+    private AtomicInteger gridWidth;
+    
     private final CyclicBarrier waitingGate;
     
     /**
@@ -77,7 +80,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
     public SurfaceMap(int planetWidth, int delay, String threadName, int threadCount) {
 
         super(delay, threadName, true);
-        gridWidth = planetWidth;
+        gridWidth = new AtomicInteger(planetWidth);
         int capacity = planetWidth * planetWidth;
         map = new ConcurrentHashMap<>(capacity, 1, threadCount);
         threads = new ArrayList<>();
@@ -244,13 +247,14 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
      * individually. This is due to the global reference to the engine.
      */
     protected void setupMap() {
-        int totalCells = (gridWidth * gridWidth);
+        int cellCountWidth = gridWidth.get();
+        int totalCells = (cellCountWidth * cellCountWidth);
         int flagUpdate = totalCells / 2;
         int generated = 0;
         // Initialize the map
         Logger.getLogger(SurfaceMap.class.getName()).log(Level.INFO, "Setting up map");
-        for (int x = 0; x < gridWidth; x++) {
-            for (int y = 0; y < gridWidth; y++) {
+        for (int x = 0; x < cellCountWidth; x++) {
+            for (int y = 0; y < cellCountWidth; y++) {
                 setCellAt(generateCell(x, y));
                 generated++;
                 if (generated % flagUpdate == 0) {
@@ -272,7 +276,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
      */
     public final void setupThreads(int threadDivision, int delay) {
 
-        int w = gridWidth / threadDivision;
+        int w = gridWidth.get() / threadDivision;
         int c = 0;
         Boundaries bounds;
         String name;
@@ -300,8 +304,8 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
      * @param y The y coordinate of the cell
      * @return Returns the cell at the specified X and Y location.
      */
-    public final synchronized CellType getCellAt(int x, int y) {
-        int index = (gridWidth * y) + x;
+    public CellType getCellAt(int x, int y) {
+        int index = (gridWidth.get() * y) + x;
         return getCellAt(index);
     }
 
@@ -310,20 +314,20 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
      * @param index The index
      * @return The cell that maps to the given index.
      */
-    public final synchronized CellType getCellAt(int index){
+    public CellType getCellAt(int index){
         return map.get(index);
     }
-    
+
     /**
      * Returns the cell of this map using the position of the given cell.
      *
      * @param cell The cell to use a look up of it's coordinates?
      * @return The cell at the location of the cell given at the parameter.
      */
-    public final synchronized CellType getCellAt(Cell cell) {
+    public CellType getCellAt(Cell cell) {
         return getCellAt(cell.getX(), cell.getY());
     }
-
+    
     /**
      * This method is reserved for internal use only by the SurfaceMap during
      * initialization.
@@ -332,7 +336,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
      */
     private void setCellAt(CellType cell) {
         int x = cell.getX(), y = cell.getY();
-        int index = (gridWidth * y) + x;
+        int index = (gridWidth.get() * y) + x;
         map.put(index, cell);
     }
 

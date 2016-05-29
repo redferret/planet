@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage;
 import planet.Planet;
 import planet.enums.Layer;
 import planet.cells.GeoCell;
-import planet.surface.Surface;
+import planet.surface.PlanetSurface;
 
 import static planet.surface.SurfaceMap.DIR_X_INDEX;
 import static planet.surface.SurfaceMap.DIR_Y_INDEX;
@@ -196,7 +196,7 @@ public class Tools {
         }
 
         int tx, ty, mx, my;
-        Surface geo = Planet.self().getSurface();
+        PlanetSurface surface = (PlanetSurface) Planet.self().getSurface();
 
         int x = central.getX(), y = central.getY();
         int xl = DIR_X_INDEX.length;
@@ -211,7 +211,7 @@ public class Tools {
             mx = checkBounds(tx, Planet.self().getGridWidth());
             my = checkBounds(ty, Planet.self().getGridWidth());
 
-            cell = geo.getCellAt(mx, my);
+            cell = surface.getCellAt(mx, my);
 
             if (cell.getHeight() < lowest.getHeight()) {
                 lowest = cell;
@@ -220,8 +220,7 @@ public class Tools {
 
         return lowest;
     }
-    
+
     private Tools() {
     }
-    
 }

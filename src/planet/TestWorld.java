@@ -1,5 +1,7 @@
 package planet;
 
+import planet.util.Tools;
+
 /**
  * This class is used for testing purposes.
  *

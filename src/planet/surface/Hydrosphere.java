@@ -3,6 +3,7 @@ package planet.surface;
 import planet.Planet;
 import planet.cells.HydroCell;
 import planet.cells.HydroCell.WaterPipeline;
+import planet.cells.PlanetCell;
 import planet.util.Task;
 import planet.util.TaskAdapter;
 import planet.util.TaskFactory;

@@ -9,16 +9,18 @@ import planet.cells.Cell;
 import planet.surface.SurfaceMap;
 import planet.util.TaskAdapter;
 import static org.junit.Assert.*;
+
 /**
  * Performs tests on the SurfaceMap class.
  * @author Richard
  */
 public class SurfaceMapTest {
     
-    private TestSurface testSurface;
     private static final int MAP_SIZE = 5, DELAY = 1, THREAD_COUNT = 1;
     public static CountDownLatch latch;
+    
     private CountDownLatch waitingLatch;
+    private TestSurface testSurface;
     
     @Before
     public void setUp() {
@@ -48,7 +50,8 @@ public class SurfaceMapTest {
         String failedMsg = "A cell was never updated";
         int cellCount = MAP_SIZE * MAP_SIZE;
         for (int i = 0; i < cellCount; i++){
-            boolean cellUpdated = testSurface.getCellAt(i).isUpdated();
+            TestCell cell = testSurface.getCellAt(i);
+            boolean cellUpdated = cell.isUpdated();
             assertTrue(failedMsg, cellUpdated);
         }
     }

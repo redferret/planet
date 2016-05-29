@@ -5,7 +5,6 @@ import java.util.List;
 import planet.Planet;
 import planet.cells.GeoCell;
 import planet.cells.HydroCell;
-import planet.cells.Mantel;
 import planet.enums.Layer;
 
 import static planet.enums.Layer.BASALT;
@@ -93,8 +92,6 @@ public abstract class Geosphere extends Surface {
     
     public class GeosphereWorker {
         
-        
-
         public void depositSediment(int x, int y) {
 
             float maxPressure;
