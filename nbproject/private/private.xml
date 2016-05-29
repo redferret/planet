@@ -4,19 +4,17 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/src/planet/surface/Geosphere.java</file>
-            <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/src/planet/cells/HydroCell.java</file>
-            <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/test/SurfaceMapTest.java</file>
-            <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/src/planet/util/SurfaceThread.java</file>
-            <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/src/planet/gui/basic/BasicJView.java</file>
-            <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/src/planet/surface/Atmosphere.java</file>
             <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/src/planet/Planet.java</file>
-            <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/src/planet/gui/basic/WaterMovementTest.java</file>
-            <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/src/planet/TestWorld.java</file>
+            <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/src/planet/cells/HydroCell.java</file>
             <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/src/planet/surface/Hydrosphere.java</file>
-            <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/src/planet/cells/Mantel.java</file>
-            <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/src/planet/surface/SurfaceMap.java</file>
+            <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/src/planet/TestWorld.java</file>
             <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/src/planet/cells/GeoCell.java</file>
+            <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/src/planet/surface/SurfaceMap.java</file>
+            <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/test/GeoCellTest.java</file>
+            <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/src/planet/gui/basic/BasicJView.java</file>
             <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/src/planet/surface/Surface.java</file>
+            <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/test/HydroCellTest.java</file>
+            <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/src/planet/surface/Atmosphere.java</file>
         </group>
     </open-files>
 </project-private>

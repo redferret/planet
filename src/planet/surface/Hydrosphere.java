@@ -3,7 +3,9 @@ package planet.surface;
 import planet.Planet;
 import planet.cells.HydroCell;
 import planet.cells.HydroCell.WaterPipeline;
+import planet.util.Task;
 import planet.util.TaskAdapter;
+import planet.util.TaskFactory;
 
 /**
  * The hydrosphere is everything that deals with rivers, lakes, seas, and
@@ -21,7 +23,7 @@ public abstract class Hydrosphere extends Geosphere {
 
     public Hydrosphere(int worldSize, int surfaceDelay, int threadsDelay, int threadCount) {
         super(worldSize, surfaceDelay, threadsDelay, threadCount);
-        addTaskToThreads(new UpdateOceansTask());
+        produceTasks(new UpdateOceansFactory());
     }
 
     /**
@@ -36,18 +38,35 @@ public abstract class Hydrosphere extends Geosphere {
         }
     }
 
-    public void updateOceans(int x, int y) {
-        HydroCell toUpdate = getCellAt(x, y);
-        WaterPipeline wp = toUpdate.getWaterPipeline();
+    public class OceanWorker {
+        public void updateOceans(int x, int y) {
+            HydroCell toUpdate = getCellAt(x, y);
+            WaterPipeline wp = toUpdate.getWaterPipeline();
 
-        wp.applyBuffer();
-        wp.update();
+            wp.applyBuffer();
+            wp.update();
+        }
     }
 
-    private class UpdateOceansTask extends TaskAdapter {
+    private class UpdateOceansFactory implements TaskFactory {
+
         @Override
-        public void perform(int x, int y) {
-            updateOceans(x, y);
+        public Task buildTask() {
+            return new UpdateOceansTask();
+        }
+        
+        private class UpdateOceansTask extends TaskAdapter {
+
+            private OceanWorker worker;
+
+            public UpdateOceansTask() {
+                worker = new OceanWorker();
+            }
+
+            @Override
+            public void perform(int x, int y) {
+                worker.updateOceans(x, y);
+            }
         }
     }
 
