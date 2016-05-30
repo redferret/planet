@@ -23,7 +23,7 @@ public class SurfaceThread extends MThread {
     private int curFrame;
     
     private static final boolean CONTINUOUS = true;
-    private boolean forceExecption;
+    private boolean throwExecption;
     
     private CyclicBarrier waitingGate;
     /**
@@ -40,11 +40,11 @@ public class SurfaceThread extends MThread {
         this.bounds = bounds;
         curFrame = 0;
         tasks = new LinkedList<>();
-        forceExecption = false;
+        throwExecption = false;
     }
     
     public void throwExecption(boolean b){
-        forceExecption = b;
+        throwExecption = b;
     }
     
     /**
@@ -73,7 +73,7 @@ public class SurfaceThread extends MThread {
             
         } catch (SurfaceThreadException | InterruptedException | BrokenBarrierException e) {
             String msg = "An exception occured when updating the surface:" + getName();
-            if (forceExecption){
+            if (throwExecption){
                 throw new SurfaceThreadException(e);
             }else{
                 Logger.getLogger(SurfaceThread.class.getName()).log(Level.SEVERE, msg);
