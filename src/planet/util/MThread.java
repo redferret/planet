@@ -1,6 +1,8 @@
 
 package planet.util;
 
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
@@ -29,6 +31,7 @@ public abstract class MThread extends Thread {
     
     private boolean continuous;
     private AtomicInteger timeLapse;
+    private CyclicBarrier waiter;
     
     public MThread(int delay, String name, boolean continuous){
         miliSeconds = delay;
@@ -36,6 +39,7 @@ public abstract class MThread extends Thread {
         running = false;
         isFinished = false;
         timeLapse = new AtomicInteger(0);
+        waiter = new CyclicBarrier(2);
         setName(name);
     }
     
@@ -52,7 +56,7 @@ public abstract class MThread extends Thread {
     }
     public void play(){
         running = true;
-        interrupt();
+        waiter.reset();
     }
     
     public void kill(){
@@ -80,13 +84,11 @@ public abstract class MThread extends Thread {
                 }
                 
                 sleep(miliSeconds);
-                if (!continuous) {
-                    running = false;
+                
+                if (!running || !continuous){
+                    waiter.await();
                 }
-                if (!running){
-                    sleep(60000);
-                }
-            } catch (InterruptedException interruptedException) {
+            } catch (InterruptedException | BrokenBarrierException e) {
             }
         }
     }
