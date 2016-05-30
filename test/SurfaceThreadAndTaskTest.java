@@ -4,18 +4,17 @@ import java.util.concurrent.CyclicBarrier;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
-import planet.TestWorld;
 import planet.util.Boundaries;
 import planet.util.SurfaceThread;
 import planet.util.SurfaceThreadException;
 import planet.util.Task;
+import static org.junit.Assert.*;
 
 /**
  * Runs tests on using Tasks in a SurfaceThread.
  * @author Richard DeSilvey
  */
-public class TaskTest {
+public class SurfaceThreadAndTaskTest {
     
     private CyclicBarrier waitingGate;
     private SurfaceThread testThread;
