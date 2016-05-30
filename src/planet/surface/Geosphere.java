@@ -57,7 +57,7 @@ public abstract class Geosphere extends Surface {
      * The amount of heat lost after a volcanic eruption.
      */
     public static float volcanicHeatLoss;
-    
+
     private long ageStamp;
 
     static {
@@ -76,7 +76,7 @@ public abstract class Geosphere extends Surface {
         addTaskToThreads(new RockFormation());
         addTask(new HeatMantel());
     }
-    
+
     /**
      * Add a uniformed layer on the whole surface.
      *
@@ -89,7 +89,7 @@ public abstract class Geosphere extends Surface {
             getCellAt(i).add(type, amount, true);
         }
     }
-    
+
     public void depositSediment(int x, int y) {
 
         float maxPressure;
@@ -159,7 +159,7 @@ public abstract class Geosphere extends Surface {
 
     }
 
-    public void windErosion(GeoCell spreadFrom){
+    public void windErosion(GeoCell spreadFrom) {
         float height = calcHeight(0.00001f, Planet.self().getCellArea(), SEDIMENT);
         convertTopLayer(spreadFrom, height);
     }
@@ -290,6 +290,7 @@ public abstract class Geosphere extends Surface {
             toUpdate.removeAllMoltenRock();
         }
     }
+
     /**
      * Updating the surface results in updating lava flows and depositing
      * sediments.
@@ -336,8 +337,7 @@ public abstract class Geosphere extends Surface {
             }
         }
     }
-        
-        
+
     public boolean checkForGeologicalUpdate() {
         long curPlanetAge = planetAge.get();
         long diff = (curPlanetAge - ageStamp);
@@ -355,7 +355,7 @@ public abstract class Geosphere extends Surface {
         public Task buildTask() {
             return new WindErosionTask();
         }
-        
+
         private class WindErosionTask implements Task {
 
             private Delay delay;
@@ -363,7 +363,7 @@ public abstract class Geosphere extends Surface {
             public WindErosionTask() {
                 delay = new Delay(300);
             }
-            
+
             @Override
             public void perform(int x, int y) {
                 windErosion(getCellAt(x, y));
@@ -373,18 +373,19 @@ public abstract class Geosphere extends Surface {
             public boolean check() {
                 return false;// 'plug back in later' delay.check();
             }
-            
+
         }
-        
+
     }
-    
+
     private class SpreadSedimentTask extends TaskAdapter {
+
         @Override
         public void perform(int x, int y) {
             spreadToLowest(getCellAt(x, y));
         }
     }
-    
+
     private class GeologicalUpdateFactory implements TaskFactory {
 
         @Override
@@ -411,31 +412,33 @@ public abstract class Geosphere extends Surface {
             }
         }
     }
-    
+
     private class HeatMantel implements Task {
-        
+
         private Delay mantelHeatingDelay;
-        
+
         public HeatMantel() {
             mantelHeatingDelay = new Delay(125);
         }
-        
+
         @Override
-        public void perform(int x, int y) {}
+        public void perform(int x, int y) {
+        }
 
         @Override
         public boolean check() {
-            if (mantelHeatingDelay.check()){
+            if (mantelHeatingDelay.check()) {
                 if (!suppressMantelHeating) {
                     heatMantel();
                 }
             }
             return false;
         }
-        
+
     }
-    
+
     private class RockFormation extends TaskAdapter {
+
         @Override
         public void perform(int x, int y) {
             updateRockFormation(x, y);
