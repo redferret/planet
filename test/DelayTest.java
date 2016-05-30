@@ -24,6 +24,11 @@ public class DelayTest {
         for (boolean b : expectedReturns){
             assertTrue(b == testDelay.check());
         }
+        
+        testDelay.reset();
+        
+        assertTrue(testDelay.check() == false);
+        
     }
     
     /**
