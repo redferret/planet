@@ -17,11 +17,6 @@ import planet.util.Task;
  */
 public class TaskTest {
     
-    /**
-     * Used to keep the SurfaceThread from throwing an internal exception due
-     * to a null reference to a Surface object.
-     */
-    private static TestWorld testWorld = new TestWorld();
     private CyclicBarrier waitingGate;
     private SurfaceThread testThread;
     private static final Boundaries BOUNDS = new Boundaries(0, 100, 0, 100);
