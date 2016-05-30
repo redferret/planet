@@ -99,7 +99,7 @@ public class HydroCell extends GeoCell {
                 float pressure = (float) Math.min(minAngle, calcVal);
                 float erosion = (displacedMass * pressure);
                 
-                if (eb.getSediments() < Tools.calcMass(1f, area, Layer.SEDIMENT)) {
+                if (eb.getSediments() < Tools.calcMass(0.1f, area, Layer.SEDIMENT)) {
                     float erodedSeds = erode(erosion);
                     lowestSSediments.transferSediment(erodedSeds);
                 }

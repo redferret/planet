@@ -3,7 +3,6 @@ package planet.surface;
 import planet.Planet;
 import planet.cells.HydroCell;
 import planet.cells.HydroCell.WaterPipeline;
-import planet.cells.PlanetCell;
 import planet.util.Task;
 import planet.util.TaskAdapter;
 import planet.util.TaskFactory;
@@ -39,13 +38,11 @@ public abstract class Hydrosphere extends Geosphere {
         }
     }
 
-    public class OceanWorker {
-        public void updateOceans(int x, int y) {
-            HydroCell toUpdate = getCellAt(x, y);
-            WaterPipeline wp = toUpdate.getWaterPipeline();
+    public void updateOceans(int x, int y) {
+        HydroCell toUpdate = getCellAt(x, y);
+        WaterPipeline wp = toUpdate.getWaterPipeline();
 
-            wp.update();
-        }
+        wp.update();
     }
 
     private class UpdateOceansFactory implements TaskFactory {
@@ -56,16 +53,9 @@ public abstract class Hydrosphere extends Geosphere {
         }
         
         private class UpdateOceansTask extends TaskAdapter {
-
-            private OceanWorker worker;
-
-            public UpdateOceansTask() {
-                worker = new OceanWorker();
-            }
-
             @Override
             public void perform(int x, int y) {
-                worker.updateOceans(x, y);
+                updateOceans(x, y);
             }
         }
     }

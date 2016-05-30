@@ -90,256 +90,253 @@ public abstract class Geosphere extends Surface {
         }
     }
     
-    public class GeosphereWorker {
-        
-        public void depositSediment(int x, int y) {
+    public void depositSediment(int x, int y) {
 
-            float maxPressure;
-            long age;
+        float maxPressure;
+        long age;
 
-            GeoCell cell = getCellAt(x, y);
-            cell.getSedimentBuffer().applyBuffer();
+        GeoCell cell = getCellAt(x, y);
+        cell.getSedimentBuffer().applyBuffer();
 
-            formNewRock(cell, calcDepth(SEDIMENT, 9.8f, 400));
-            age = cell.getAge();
+        formNewRock(cell, calcDepth(SEDIMENT, 9.8f, 400));
+        age = cell.getAge();
 
-            if (age > 1E8) {
-                maxPressure = 886655;
-            } else {
-                maxPressure = (float) Math.exp((-((age - 717928560.98) / 5E7)) + 25000);
-            }
-            melt(cell, calcDepth(cell.getDensity(), 9.8f, maxPressure));
-
+        if (age > 1E8) {
+            maxPressure = 886655;
+        } else {
+            maxPressure = (float) Math.exp((-((age - 717928560.98) / 5E7)) + 25000);
         }
+        melt(cell, calcDepth(cell.getDensity(), 9.8f, maxPressure));
 
-        public void melt(GeoCell cell, float maxHeight) {
-
-            float height, diff, massToChange;
-            if (cell.peekBottomStratum() == null) {
-                return;
-            }
-            Layer bottomType = cell.peekBottomStratum().getLayer();
-
-            height = cell.getHeight();
-
-            if (height > maxHeight) {
-                diff = (height - maxHeight) / 2f;
-                massToChange = calcMass(diff, Planet.self().getCellArea(), bottomType);
-                cell.remove(massToChange, false, false);
-            }
-
-        }
-
-        public void formNewRock(GeoCell cell, float maxHeight) {
-
-            float height, diff, massBeingDeposited;
-            Layer depositType;
-            GeoCell.SedimentBuffer eb = cell.getSedimentBuffer();
-
-            height = calcHeight(eb.getSediments(), Planet.self().getCellArea(), SEDIMENT);
-            if (height > maxHeight) {
-
-                diff = (height - maxHeight);
-
-                massBeingDeposited = calcMass(diff, Planet.self().getCellArea(), SEDIMENT);
-                depositType = (((HydroCell) cell).getOceanMass() > 9000) ? SHALE : SANDSTONE;
-
-                eb.updateSurfaceSedimentMass(-massBeingDeposited);
-
-                massBeingDeposited = changeMass(massBeingDeposited, SEDIMENT, depositType);
-                cell.add(depositType, massBeingDeposited, true);
-
-            }
-        }
-
-        public void spreadToLowest(GeoCell spreadFrom) {
-
-            int maxCellCount = 8;
-            ArrayList<GeoCell> lowestList = new ArrayList<>(maxCellCount);
-            getLowestCells(spreadFrom, lowestList, maxCellCount);
-            spread(lowestList, spreadFrom);
-
-        }
-
-        public void windErosion(GeoCell spreadFrom){
-            float height = calcHeight(0.00001f, Planet.self().getCellArea(), SEDIMENT);
-            convertTopLayer(spreadFrom, height);
-        }
-
-        public void convertTopLayer(GeoCell spreadFrom, float height) {
-
-            float rockMass, sandMass;
-
-            if (spreadFrom.peekTopStratum() == null) {
-                return;
-            }
-
-            GeoCell.SedimentBuffer eb = spreadFrom.getSedimentBuffer();
-            Layer rockLayer = spreadFrom.peekTopStratum().getLayer();
-            // Wind erosion
-            if (eb.getSediments() < 50 && !spreadFrom.hasOcean()
-                    && spreadFrom.getMoltenRockFromSurface() < 300) {
-
-                rockMass = calcMass(height, Planet.self().getCellArea(), SEDIMENT);
-                rockMass = spreadFrom.erode(rockMass);
-
-                sandMass = changeMass(rockMass, rockLayer, SEDIMENT);
-
-                eb.updateSurfaceSedimentMass(sandMass);
-            }
-        }
-
-        public void getLowestCells(GeoCell spreadFrom, List<GeoCell> lowestList, int max) {
-
-            int tx, ty, mx, my;
-            int x = spreadFrom.getX(), y = spreadFrom.getY();
-            int xl = DIR_X_INDEX.length;
-            GeoCell spreadTo;
-
-            for (int s = 0; s < xl; s++) {
-
-                tx = x + DIR_X_INDEX[s];
-                ty = y + DIR_Y_INDEX[s];
-
-                // Check the boundaries
-                mx = checkBounds(tx, Planet.self().getGridWidth());
-                my = checkBounds(ty, Planet.self().getGridWidth());
-
-                spreadTo = getCellAt(mx, my);
-
-                if (spreadTo.getHeightWithoutOceans() < spreadFrom.getHeightWithoutOceans()) {
-                    if (lowestList.size() < max) {
-                        lowestList.add(spreadTo);
-                    } else {
-                        break;
-                    }
-                }
-            }
-        }
-
-        /**
-         * Selects a random cell from the given list and spreads the sediments to
-         * that cell.
-         *
-         * @param lowestList The list of lowest cells from the central cell
-         * @param spreadFrom The central cell
-         */
-        public void spread(ArrayList<GeoCell> lowestList, GeoCell spreadFrom) {
-
-            GeoCell lowestGeoCell;
-            GeoCell.SedimentBuffer eb = spreadFrom.getSedimentBuffer();
-            GeoCell.SedimentBuffer lowestBuffer;
-            float spreadFromHeight, lowestHeight, diff, mass;
-
-            if (lowestList.size() > 0) {
-
-                lowestGeoCell = lowestList.get(rand.nextInt(lowestList.size()));
-                spreadFromHeight = spreadFrom.getHeightWithoutOceans() / 2.5f;
-                lowestHeight = lowestGeoCell.getHeightWithoutOceans() / 2.5f;
-
-                diff = (spreadFromHeight - lowestHeight) / 2.5f;
-
-                diff = clamp(diff, -lowestHeight, spreadFromHeight);
-
-                if (eb.getSediments() > 0) {
-
-                    mass = calcMass(diff, Planet.self().getCellArea(), SEDIMENT);
-                    eb.updateSurfaceSedimentMass(-mass);
-
-                    lowestBuffer = lowestGeoCell.getSedimentBuffer();
-                    lowestBuffer.updateSurfaceSedimentMass(mass);
-                }
-            }
-        }
-
-        /**
-         * Updates surface lava.
-         *
-         * @see planet.surface.Geosphere#updateGeology(int, int)
-         * @param x Cell's x
-         * @param y Cell's y
-         */
-        public void updateLavaFlows(int x, int y) {
-
-            GeoCell toUpdate = getCellAt(x, y);
-
-            if (toUpdate.getMoltenRockFromSurface() > 300) {
-                GeoCell lowest = getLowestCellFrom(toUpdate);
-
-                if (lowest != null && lowest != toUpdate) {
-                    float currentCellHeight = toUpdate.getHeightWithoutOceans() / 2.5f;
-                    float lowestHeight = lowest.getHeightWithoutOceans() / 2.5f;
-                    float diff = (currentCellHeight - lowestHeight) / 2.5f;
-
-                    diff = clamp(diff, -lowestHeight, currentCellHeight);
-
-                    float mass = calcMass(diff, Planet.self().getCellArea(), LAVA);
-
-                    toUpdate.putMoltenRockToSurface(-mass);
-                    lowest.putMoltenRockToSurface(mass);
-                    lowest.getSedimentBuffer().removeAllSediments();
-                }
-
-                float rate = ((HydroCell) toUpdate).getOceanMass() > 300 ? 0.95f : 0.10f;
-
-                //solidify the rock
-                float massToSolidify = toUpdate.getMoltenRockFromSurface() * rate;
-                toUpdate.putMoltenRockToSurface(-massToSolidify);
-                massToSolidify = changeMass(massToSolidify, LAVA, BASALT);
-                toUpdate.add(BASALT, massToSolidify, true);
-                toUpdate.recalculateHeight();
-            } else {
-                toUpdate.removeAllMoltenRock();
-            }
-        }
-        /**
-         * Updating the surface results in updating lava flows and depositing
-         * sediments.
-         *
-         * @see planet.surface.Geosphere#updateLavaFlows(int, int)
-         * @see planet.surface.Geosphere#depositSediment(int, int)
-         * @param x The x coordinate of the cell
-         * @param y The y coordinate of the cell
-         */
-        public void updateGeology(int x, int y) {
-
-            GeoCell cell = getCellAt(x, y);
-
-            // Update the geosphere
-            if (Planet.self().isTimeScale(Geological)) {
-                cell.cool(1);
-            } else if (!Planet.self().isTimeScale(None)) {
-                if (checkForGeologicalUpdate()) {
-                    cell.cool(1);
-                    cell.updateHeight();
-                    timeStamp();
-                }
-            }
-        }
-
-        public void updateRockFormation(int x, int y) {
-            depositSediment(x, y);
-            updateLavaFlows(x, y);
-        }
-
-        public void heatMantel() {
-            int n = rand.nextInt(heatDistributionCount);
-            for (int i = 0; i < n; i++) {
-                int x = rand.nextInt(worldSize);
-                int y = rand.nextInt(worldSize);
-
-                PlanetCell cell = getCellAt(x, y);
-                cell.addHeat(thermalInc);
-
-                if (cell.checkVolcano()) {
-                    cell.putMoltenRockToSurface(averageVolcanicMass);
-                    cell.cool(volcanicHeatLoss);
-                    cell.addOceanMass(0.0001f);
-                }
-            }
-        }
-        
     }
+
+    public void melt(GeoCell cell, float maxHeight) {
+
+        float height, diff, massToChange;
+        if (cell.peekBottomStratum() == null) {
+            return;
+        }
+        Layer bottomType = cell.peekBottomStratum().getLayer();
+
+        height = cell.getHeight();
+
+        if (height > maxHeight) {
+            diff = (height - maxHeight) / 2f;
+            massToChange = calcMass(diff, Planet.self().getCellArea(), bottomType);
+            cell.remove(massToChange, false, false);
+        }
+
+    }
+
+    public void formNewRock(GeoCell cell, float maxHeight) {
+
+        float height, diff, massBeingDeposited;
+        Layer depositType;
+        GeoCell.SedimentBuffer eb = cell.getSedimentBuffer();
+
+        height = calcHeight(eb.getSediments(), Planet.self().getCellArea(), SEDIMENT);
+        if (height > maxHeight) {
+
+            diff = (height - maxHeight);
+
+            massBeingDeposited = calcMass(diff, Planet.self().getCellArea(), SEDIMENT);
+            depositType = (((HydroCell) cell).getOceanMass() > 9000) ? SHALE : SANDSTONE;
+
+            eb.updateSurfaceSedimentMass(-massBeingDeposited);
+
+            massBeingDeposited = changeMass(massBeingDeposited, SEDIMENT, depositType);
+            cell.add(depositType, massBeingDeposited, true);
+
+        }
+    }
+
+    public void spreadToLowest(GeoCell spreadFrom) {
+
+        int maxCellCount = 8;
+        ArrayList<GeoCell> lowestList = new ArrayList<>(maxCellCount);
+        getLowestCells(spreadFrom, lowestList, maxCellCount);
+        spread(lowestList, spreadFrom);
+
+    }
+
+    public void windErosion(GeoCell spreadFrom){
+        float height = calcHeight(0.00001f, Planet.self().getCellArea(), SEDIMENT);
+        convertTopLayer(spreadFrom, height);
+    }
+
+    public void convertTopLayer(GeoCell spreadFrom, float height) {
+
+        float rockMass, sandMass;
+
+        if (spreadFrom.peekTopStratum() == null) {
+            return;
+        }
+
+        GeoCell.SedimentBuffer eb = spreadFrom.getSedimentBuffer();
+        Layer rockLayer = spreadFrom.peekTopStratum().getLayer();
+        // Wind erosion
+        if (eb.getSediments() < 50 && !spreadFrom.hasOcean()
+                && spreadFrom.getMoltenRockFromSurface() < 300) {
+
+            rockMass = calcMass(height, Planet.self().getCellArea(), SEDIMENT);
+            rockMass = spreadFrom.erode(rockMass);
+
+            sandMass = changeMass(rockMass, rockLayer, SEDIMENT);
+
+            eb.updateSurfaceSedimentMass(sandMass);
+        }
+    }
+
+    public void getLowestCells(GeoCell spreadFrom, List<GeoCell> lowestList, int max) {
+
+        int tx, ty, mx, my;
+        int x = spreadFrom.getX(), y = spreadFrom.getY();
+        int xl = DIR_X_INDEX.length;
+        GeoCell spreadTo;
+
+        for (int s = 0; s < xl; s++) {
+
+            tx = x + DIR_X_INDEX[s];
+            ty = y + DIR_Y_INDEX[s];
+
+            // Check the boundaries
+            mx = checkBounds(tx, Planet.self().getGridWidth());
+            my = checkBounds(ty, Planet.self().getGridWidth());
+
+            spreadTo = getCellAt(mx, my);
+
+            if (spreadTo.getHeightWithoutOceans() < spreadFrom.getHeightWithoutOceans()) {
+                if (lowestList.size() < max) {
+                    lowestList.add(spreadTo);
+                } else {
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
+     * Selects a random cell from the given list and spreads the sediments to
+     * that cell.
+     *
+     * @param lowestList The list of lowest cells from the central cell
+     * @param spreadFrom The central cell
+     */
+    public void spread(ArrayList<GeoCell> lowestList, GeoCell spreadFrom) {
+
+        GeoCell lowestGeoCell;
+        GeoCell.SedimentBuffer eb = spreadFrom.getSedimentBuffer();
+        GeoCell.SedimentBuffer lowestBuffer;
+        float spreadFromHeight, lowestHeight, diff, mass;
+
+        if (lowestList.size() > 0) {
+
+            lowestGeoCell = lowestList.get(rand.nextInt(lowestList.size()));
+            spreadFromHeight = spreadFrom.getHeightWithoutOceans() / 2.5f;
+            lowestHeight = lowestGeoCell.getHeightWithoutOceans() / 2.5f;
+
+            diff = (spreadFromHeight - lowestHeight) / 2.5f;
+
+            diff = clamp(diff, -lowestHeight, spreadFromHeight);
+
+            if (eb.getSediments() > 0) {
+
+                mass = calcMass(diff, Planet.self().getCellArea(), SEDIMENT);
+                eb.updateSurfaceSedimentMass(-mass);
+
+                lowestBuffer = lowestGeoCell.getSedimentBuffer();
+                lowestBuffer.updateSurfaceSedimentMass(mass);
+            }
+        }
+    }
+
+    /**
+     * Updates surface lava.
+     *
+     * @see planet.surface.Geosphere#updateGeology(int, int)
+     * @param x Cell's x
+     * @param y Cell's y
+     */
+    public void updateLavaFlows(int x, int y) {
+
+        GeoCell toUpdate = getCellAt(x, y);
+
+        if (toUpdate.getMoltenRockFromSurface() > 300) {
+            GeoCell lowest = getLowestCellFrom(toUpdate);
+
+            if (lowest != null && lowest != toUpdate) {
+                float currentCellHeight = toUpdate.getHeightWithoutOceans() / 2.5f;
+                float lowestHeight = lowest.getHeightWithoutOceans() / 2.5f;
+                float diff = (currentCellHeight - lowestHeight) / 2.5f;
+
+                diff = clamp(diff, -lowestHeight, currentCellHeight);
+
+                float mass = calcMass(diff, Planet.self().getCellArea(), LAVA);
+
+                toUpdate.putMoltenRockToSurface(-mass);
+                lowest.putMoltenRockToSurface(mass);
+                lowest.getSedimentBuffer().removeAllSediments();
+            }
+
+            float rate = ((HydroCell) toUpdate).getOceanMass() > 300 ? 0.95f : 0.10f;
+
+            //solidify the rock
+            float massToSolidify = toUpdate.getMoltenRockFromSurface() * rate;
+            toUpdate.putMoltenRockToSurface(-massToSolidify);
+            massToSolidify = changeMass(massToSolidify, LAVA, BASALT);
+            toUpdate.add(BASALT, massToSolidify, true);
+            toUpdate.recalculateHeight();
+        } else {
+            toUpdate.removeAllMoltenRock();
+        }
+    }
+    /**
+     * Updating the surface results in updating lava flows and depositing
+     * sediments.
+     *
+     * @see planet.surface.Geosphere#updateLavaFlows(int, int)
+     * @see planet.surface.Geosphere#depositSediment(int, int)
+     * @param x The x coordinate of the cell
+     * @param y The y coordinate of the cell
+     */
+    public void updateGeology(int x, int y) {
+
+        GeoCell cell = getCellAt(x, y);
+
+        // Update the geosphere
+        if (Planet.self().isTimeScale(Geological)) {
+            cell.cool(1);
+        } else if (!Planet.self().isTimeScale(None)) {
+            if (checkForGeologicalUpdate()) {
+                cell.cool(1);
+                cell.updateHeight();
+                timeStamp();
+            }
+        }
+    }
+
+    public void updateRockFormation(int x, int y) {
+        depositSediment(x, y);
+        updateLavaFlows(x, y);
+    }
+
+    public void heatMantel() {
+        int n = rand.nextInt(heatDistributionCount);
+        for (int i = 0; i < n; i++) {
+            int x = rand.nextInt(worldSize);
+            int y = rand.nextInt(worldSize);
+
+            PlanetCell cell = getCellAt(x, y);
+            cell.addHeat(thermalInc);
+
+            if (cell.checkVolcano()) {
+                cell.putMoltenRockToSurface(averageVolcanicMass);
+                cell.cool(volcanicHeatLoss);
+                cell.addOceanMass(0.0001f);
+            }
+        }
+    }
+        
         
     public boolean checkForGeologicalUpdate() {
         long curPlanetAge = planetAge.get();
@@ -361,17 +358,15 @@ public abstract class Geosphere extends Surface {
         
         private class WindErosionTask implements Task {
 
-            private GeosphereWorker worker;
             private Delay delay;
 
             public WindErosionTask() {
                 delay = new Delay(300);
-                worker = new GeosphereWorker();
             }
             
             @Override
             public void perform(int x, int y) {
-                worker.windErosion(getCellAt(x, y));
+                windErosion(getCellAt(x, y));
             }
 
             @Override
@@ -384,16 +379,9 @@ public abstract class Geosphere extends Surface {
     }
     
     private class SpreadSedimentTask extends TaskAdapter {
-        
-        private GeosphereWorker worker;
-        
-        public SpreadSedimentTask() {
-            worker = new GeosphereWorker();
-        }
-        
         @Override
         public void perform(int x, int y) {
-            worker.spreadToLowest(getCellAt(x, y));
+            spreadToLowest(getCellAt(x, y));
         }
     }
     
@@ -406,17 +394,15 @@ public abstract class Geosphere extends Surface {
 
         private class GeologicalUpdate implements Task {
 
-            private GeosphereWorker worker;
             private Delay geologicDelay;
 
             public GeologicalUpdate() {
                 geologicDelay = new Delay(15);
-                worker = new GeosphereWorker();
             }
 
             @Override
             public void perform(int x, int y) {
-                worker.updateGeology(x, y);
+                updateGeology(x, y);
             }
 
             @Override
@@ -428,12 +414,10 @@ public abstract class Geosphere extends Surface {
     
     private class HeatMantel implements Task {
         
-        private GeosphereWorker worker;
         private Delay mantelHeatingDelay;
         
         public HeatMantel() {
             mantelHeatingDelay = new Delay(125);
-            worker = new GeosphereWorker();
         }
         
         @Override
@@ -443,7 +427,7 @@ public abstract class Geosphere extends Surface {
         public boolean check() {
             if (mantelHeatingDelay.check()){
                 if (!suppressMantelHeating) {
-                    worker.heatMantel();
+                    heatMantel();
                 }
             }
             return false;
@@ -452,16 +436,9 @@ public abstract class Geosphere extends Surface {
     }
     
     private class RockFormation extends TaskAdapter {
-        
-        private GeosphereWorker worker;
-        
-        public RockFormation() {
-            worker = new GeosphereWorker();
-        }
-        
         @Override
         public void perform(int x, int y) {
-            worker.updateRockFormation(x, y);
+            updateRockFormation(x, y);
         }
     }
 }
