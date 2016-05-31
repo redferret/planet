@@ -89,6 +89,13 @@ public abstract class Geosphere extends Surface {
             getCellAt(i).add(type, amount, true);
         }
     }
+    
+    public void addLavaToSurface(float amount){
+        int cellCount = Planet.self().getTotalNumberOfCells();
+        for (int i = 0; i < cellCount; i++) {
+            getCellAt(i).putMoltenRockToSurface(amount);
+        }
+    }
 
     public void depositSediment(int x, int y) {
 
