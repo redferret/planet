@@ -50,9 +50,8 @@ public class Atmosphere extends Hydrosphere {
                     float amount = 15 * rate;
                     amount = cell.addOceanMass(-amount);
                     
-                    int xx = rand.nextInt(worldSize);
-                    int yy = rand.nextInt(worldSize);
-                    getCellAt(xx, yy).addOceanMass(amount);
+                    int index = rand.nextInt(worldSize * worldSize);
+                    getCellAt(index).addOceanMass(amount);
                 }
             }
 
