@@ -94,40 +94,27 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
      * Starts all the threads
      */
     public final void startAll() {
-
-        for (int i = 0; i < threads.size(); i++) {
-            MThread thread = threads.get(i);
-
-            if (thread != null) {
-                thread.start();
-            }
-        }
+        threads.forEach(thread -> {
+            thread.start();
+        });
     }
 
     /**
      * Pauses all the threads
      */
     public final void pauseAll() {
-        for (int i = 0; i < threads.size(); i++) {
-            MThread thread = threads.get(i);
-
-            if (thread != null) {
-                thread.pause();
-            }
-        }
+        threads.forEach(thread -> {
+            thread.pause();
+        });
     }
 
     /**
      * Plays all the threads
      */
     public final void playAll() {
-        for (int i = 0; i < threads.size(); i++) {
-            MThread thread = threads.get(i);
-
-            if (thread != null) {
-                thread.play();
-            }
-        }
+        threads.forEach(thread -> {
+            thread.play();
+        });
     }
 
     /**
@@ -137,13 +124,9 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
      * milliseconds.
      */
     public final void setThreadsDelay(int delay) {
-        for (int i = 0; i < threads.size(); i++) {
-            MThread thread = threads.get(i);
-
-            if (thread != null) {
-                thread.setDelay(delay);
-            }
-        }
+        threads.forEach(thread -> {
+            thread.setDelay(delay);
+        });
     }
 
     /**
@@ -228,9 +211,9 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
     }
     
     public void setThreadsAsContinuous(boolean c){
-        for (SurfaceThread thread : threads){
+        threads.forEach(thread -> {
             thread.setContinuous(c);
-        }
+        });
     }
     
     /**
