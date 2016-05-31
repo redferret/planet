@@ -58,8 +58,8 @@ public class SurfaceMapTest {
     
     @Test
     public void getCellMethodTest(){
-        TestCell cell = testSurface.getCellAt(3);
-        int expectedX = 3, expectedY = 0;
+        TestCell cell = testSurface.getCellAt(5);
+        int expectedX = 0, expectedY = 1;
         
         assertTrue(expectedX == cell.getX());
         assertTrue(expectedY == cell.getY());
