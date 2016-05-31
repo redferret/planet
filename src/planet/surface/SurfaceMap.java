@@ -78,11 +78,11 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
      * will work on the ConcurrentHashMap.
      */
     public SurfaceMap(int planetWidth, int delay, String threadName, int threadCount) {
-
         super(delay, threadName, true);
+        final float loadFactor = 1.0f; 
         gridWidth = new AtomicInteger(planetWidth);
         int capacity = planetWidth * planetWidth;
-        map = new ConcurrentHashMap<>(capacity, 1, threadCount);
+        map = new ConcurrentHashMap<>(capacity, loadFactor, threadCount);
         threads = new ArrayList<>();
         settings = new ArrayList<>();
         prevSubThreadAvg = 0;
