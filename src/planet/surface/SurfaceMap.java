@@ -195,9 +195,8 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
         int expected = threads.size();
         
         if (expected > 0) {
-            boolean paused;
             for (int i = 0; i < expected; i++) {
-                paused = threads.get(i).paused();
+                boolean paused = threads.get(i).paused();
                 if (paused) {
                     sleeping++;
                 }
