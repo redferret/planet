@@ -10,7 +10,6 @@ import planet.enums.Layer;
 import planet.gui.DisplayAdapter;
 import planet.surface.PlanetSurface;
 import planet.util.Delay;
-import planet.util.SurfaceThread;
 import planet.util.Task;
 import planet.util.TaskAdapter;
 
@@ -34,7 +33,7 @@ public class WaterMovementTest extends JFrame implements DisplayAdapter {
         totalAvg = 0;
         
         renderFrame = new Frame(SIZE, SIZE);
-        
+
         testWorld = new TestWorld(30, 1);
         testWorld.getSurface().setDisplay(this);
         renderFrame.registerMap(testWorld.getSurface());
@@ -64,7 +63,7 @@ public class WaterMovementTest extends JFrame implements DisplayAdapter {
         
         for (int y = 4; y < 20; y++){
             for (int x = 0; x < 10; x++){
-                surface.getCellAt(x, y).addToStrata(Layer.SANDSTONE, 100000, true);
+                surface.getCellAt(x, y).addToStrata(Layer.SANDSTONE, 1000000, true);
                 surface.getCellAt(x, y).addToStrata(Layer.SEDIMENT, 10000, true);
             }
         }
@@ -95,7 +94,7 @@ public class WaterMovementTest extends JFrame implements DisplayAdapter {
         @Override
         public void perform(int x, int y) {
             if (x == 1 && y == 4){
-                testWorld.getSurface().getCellAt(1, 11).addOceanMass(1000);
+                testWorld.getSurface().getCellAt(1, 11).addOceanMass(1);
             }
         }
 
