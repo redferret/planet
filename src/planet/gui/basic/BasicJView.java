@@ -112,6 +112,9 @@ class KeyController extends KeyAdapter {
                 }
                 break;
                 
+            case KeyEvent.VK_HOME:
+                Geosphere.drawSediments = !Geosphere.drawSediments;
+                break;
             case KeyEvent.VK_ENTER:
                 
                 break;

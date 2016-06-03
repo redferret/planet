@@ -5,16 +5,18 @@ import java.util.List;
 import planet.Planet;
 import planet.cells.GeoCell;
 import planet.cells.HydroCell;
+import planet.cells.PlanetCell;
 import planet.enums.Layer;
+import planet.util.Delay;
+import planet.util.Task;
+import planet.util.TaskAdapter;
+import planet.util.TaskFactory;
 
 import static planet.enums.Layer.BASALT;
 import static planet.enums.Layer.LAVA;
 import static planet.enums.Layer.SANDSTONE;
 import static planet.enums.Layer.SEDIMENT;
 import static planet.enums.Layer.SHALE;
-import static planet.surface.SurfaceMap.DIR_X_INDEX;
-import static planet.surface.SurfaceMap.DIR_Y_INDEX;
-import static planet.surface.Surface.rand;
 import static planet.util.Tools.calcDepth;
 import static planet.util.Tools.calcHeight;
 import static planet.util.Tools.calcMass;
@@ -24,12 +26,7 @@ import static planet.util.Tools.clamp;
 import static planet.util.Tools.getLowestCellFrom;
 import static planet.Planet.TimeScale.Geological;
 import static planet.Planet.TimeScale.None;
-import planet.cells.PlanetCell;
-import static planet.surface.PlanetSurface.suppressMantelHeating;
-import planet.util.Delay;
-import planet.util.Task;
-import planet.util.TaskAdapter;
-import planet.util.TaskFactory;
+
 
 /**
  * Contains all logic that works on the geology of the planet.
@@ -59,12 +56,15 @@ public abstract class Geosphere extends Surface {
     public static float volcanicHeatLoss;
 
     private long ageStamp;
+    
+    public static boolean drawSediments;
 
     static {
         heatDistributionCount = 5;
         thermalInc = 100;
         volcanicHeatLoss = 100;
         averageVolcanicMass = 2500000;
+        drawSediments = true;
     }
 
     public Geosphere(int worldSize, int surfaceDelay, int threadsDelay, int threadCount) {
@@ -435,7 +435,7 @@ public abstract class Geosphere extends Surface {
         @Override
         public boolean check() {
             if (mantelHeatingDelay.check()) {
-                if (!suppressMantelHeating) {
+                if (!PlanetSurface.suppressMantelHeating) {
                     heatMantel();
                 }
             }

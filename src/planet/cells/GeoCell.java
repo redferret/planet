@@ -789,6 +789,9 @@ public class GeoCell extends Mantel {
                     if (topStratum != null) {
                         Layer layerType = topStratum.getLayer();
                         settings.add(strataMap[layerType.getID()]);
+                        
+                        
+                        
                         return super.render(settings);
                     }
                 } else {
