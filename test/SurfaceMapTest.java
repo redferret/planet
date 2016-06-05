@@ -20,7 +20,6 @@ public class SurfaceMapTest {
                              CELL_COUNT = MAP_SIZE * MAP_SIZE;
     public static CountDownLatch latch;
     
-    private CountDownLatch waitingLatch;
     private TestSurface testSurface;
     
     @Before
@@ -37,12 +36,8 @@ public class SurfaceMapTest {
      */
     @Test
     public void surfaceMapRunningTest() throws InterruptedException{
-        waitingLatch = new CountDownLatch(1);
         
         testSurface.startAll();
-        
-        // Wait for the threads to start up
-        waitingLatch.await(1, TimeUnit.SECONDS);
         testSurface.playAll();
         
         boolean signaled = latch.await(5, TimeUnit.SECONDS);
