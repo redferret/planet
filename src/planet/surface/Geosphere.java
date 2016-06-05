@@ -336,11 +336,11 @@ public abstract class Geosphere extends Surface {
 
     public void heatMantel() {
         int n = rand.nextInt(heatDistributionCount);
+        int totalCells = worldSize * worldSize;
         for (int i = 0; i < n; i++) {
-            int x = rand.nextInt(worldSize);
-            int y = rand.nextInt(worldSize);
+            int index = rand.nextInt(totalCells);
 
-            PlanetCell cell = getCellAt(x, y);
+            PlanetCell cell = getCellAt(index);
             cell.addHeat(thermalInc);
 
             if (cell.checkVolcano()) {
