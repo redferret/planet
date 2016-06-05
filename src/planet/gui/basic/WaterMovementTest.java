@@ -46,6 +46,7 @@ public class WaterMovementTest extends JFrame implements DisplayAdapter {
         setLocationRelativeTo(null);
         setVisible(true);
         
+        PlanetSurface.suppressAtmosphere = true;
         PlanetSurface.suppressMantelHeating = true;
         PlanetSurface surface = (PlanetSurface) testWorld.getSurface();
         surface.addToSurface(Layer.SHALE, 10000000);
@@ -87,14 +88,15 @@ public class WaterMovementTest extends JFrame implements DisplayAdapter {
     }
     
     private class AddWaterTask implements Task {
+        // Time the test for only 40000 frames then stop tasking.
         private Delay timer;
         public AddWaterTask(){
-            timer = new Delay(40000, false);
+            timer = new Delay(60000, false);
         }
         @Override
         public void perform(int x, int y) {
             if (x == 1 && y == 4){
-                testWorld.getSurface().getCellAt(1, 11).addOceanMass(1);
+                testWorld.getSurface().getCellAt(1, 11).addOceanMass(1000);
             }
         }
 
