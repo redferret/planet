@@ -26,7 +26,7 @@ public abstract class MThread extends Thread {
     /**
      * Determines if this thread is finished running
      */
-    private boolean isFinished;
+    private boolean executing;
     
     
     private boolean continuous;
@@ -37,7 +37,7 @@ public abstract class MThread extends Thread {
         miliSeconds = delay;
         this.continuous = continuous;
         running = false;
-        isFinished = false;
+        executing = true;
         timeLapse = new AtomicInteger(0);
         waiter = new CyclicBarrier(2);
         setName(name);
@@ -60,7 +60,7 @@ public abstract class MThread extends Thread {
     }
     
     public void kill(){
-        isFinished = true;
+        executing = false;
     }
     
     public boolean paused(){
@@ -75,7 +75,7 @@ public abstract class MThread extends Thread {
     
     @Override
     public void run() {
-        while(!isFinished){
+        while(executing){
             try {
                 if (running) {
                     long start = System.currentTimeMillis();
