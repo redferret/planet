@@ -10,9 +10,11 @@ package planet.surface;
 public class PlanetSurface extends Atmosphere {
 
     public static boolean suppressMantelHeating;
+    public static boolean suppressAtmosphere;
     
     static {
         suppressMantelHeating = false;
+        suppressAtmosphere = false;
     }
     
     public PlanetSurface(int worldSize, int surfaceDelay, int threadsDelay, int threadCount) {

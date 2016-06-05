@@ -71,7 +71,7 @@ public abstract class Geosphere extends Surface {
         super(worldSize, surfaceDelay, threadsDelay, threadCount);
         ageStamp = 0;
         produceTasks(new GeologicalUpdateFactory());
-        produceTasks(new WindErosionFactory());
+//        produceTasks(new WindErosionFactory());
         addTaskToThreads(new SpreadSedimentTask());
         addTaskToThreads(new RockFormation());
         addTask(new HeatMantel());
@@ -182,7 +182,7 @@ public abstract class Geosphere extends Surface {
         GeoCell.SedimentBuffer eb = spreadFrom.getSedimentBuffer();
         Layer rockLayer = spreadFrom.peekTopStratum().getLayer();
         // Wind erosion
-        if (eb.getSediments() < 50 && !spreadFrom.hasOcean()
+        if (eb.getSediments() < 250 && !spreadFrom.hasOcean()
                 && spreadFrom.getMoltenRockFromSurface() < 300) {
 
             rockMass = calcMass(height, Planet.self().getCellArea(), SEDIMENT);
@@ -249,6 +249,8 @@ public abstract class Geosphere extends Surface {
             if (eb.getSediments() > 0) {
 
                 mass = calcMass(diff, Planet.self().getCellArea(), SEDIMENT);
+                mass = calcFlow(mass);
+                
                 eb.updateSurfaceSedimentMass(-mass);
 
                 lowestBuffer = lowestGeoCell.getSedimentBuffer();
@@ -257,6 +259,10 @@ public abstract class Geosphere extends Surface {
         }
     }
 
+    private float calcFlow(float mass){
+        return (float) Math.pow(90f * mass, 0.5f);
+    }
+    
     /**
      * Updates surface lava.
      *
@@ -378,7 +384,7 @@ public abstract class Geosphere extends Surface {
 
             @Override
             public boolean check() {
-                return false;// 'plug back in later' delay.check();
+                return delay.check();
             }
 
         }

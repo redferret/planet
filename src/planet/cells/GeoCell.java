@@ -16,6 +16,7 @@ import planet.surface.Surface;
 
 import static planet.surface.Surface.*;
 import static planet.enums.Layer.*;
+import planet.surface.Geosphere;
 import planet.surface.PlanetSurface;
 import static planet.util.Tools.*;
 
@@ -41,7 +42,7 @@ public class GeoCell extends Mantel {
         private float pendingSediments;
 
         /**
-         * Represents the amount of pendingSediments on the surface of this
+         * Represents the amount of Sediments on the surface of this
          * cell.
          */
         private float totalSediments;
@@ -187,9 +188,11 @@ public class GeoCell extends Mantel {
 
     private long depositAgeTimeStamp;
 
-    private static Integer[][] heightMap, strataMap, lavaMap;
+    private static Integer[][] heightMap, strataMap, sedimentMap;
 
     public final static int MAX_HEIGHT_INDEX = 50;
+    
+    public final static int MAX_SEDIMENT_INDEX = 50;
     /**
      * The ratio for indexing onto the height map array, by taking a cell height
      * and dividing it by this value will give the proper index to the height
@@ -197,12 +200,16 @@ public class GeoCell extends Mantel {
      */
     public static int heightIndexRatio = 50 / MAX_HEIGHT_INDEX;
     
+    public static int sedimentIndexRatio = 1 / MAX_SEDIMENT_INDEX;
+    
     static {
-        Color[] colors = {new Color(255, 255, 204), new Color(51, 153, 51),
+        Color[] heightColors = {new Color(255, 255, 204), new Color(51, 153, 51),
             new Color(157, 166, 175), new Color(255, 255, 255)};
+        heightMap = Tools.constructSamples(heightColors, MAX_HEIGHT_INDEX);
 
-        heightMap = Tools.constructSamples(colors, 50);
-
+        Color[] sedimentColors = {new Color(195, 195, 195, 0), new Color(195, 195, 195, 255), SEDIMENT.getColor()};
+        sedimentMap = Tools.constructSamples(sedimentColors, MAX_SEDIMENT_INDEX);
+        
         Color[] strataColors = {SEDIMENT.getColor(), SOIL.getColor(),
             GRAVEL.getColor(), SANDSTONE.getColor(),
             SHALE.getColor(), LIMESTONE.getColor(),
@@ -789,10 +796,13 @@ public class GeoCell extends Mantel {
                     if (topStratum != null) {
                         Layer layerType = topStratum.getLayer();
                         settings.add(strataMap[layerType.getID()]);
-                        
-                        
-                        
-                        return super.render(settings);
+                    }
+                    if (Geosphere.drawSediments) {
+                        float mass = getSedimentBuffer().getSediments();
+                        float depth = Tools.calcHeight(mass, Planet.self().getCellArea(), SEDIMENT);
+                        int sedIndex = (int) (depth / sedimentIndexRatio);
+                        setting = sedIndex < MAX_SEDIMENT_INDEX ? sedIndex : MAX_SEDIMENT_INDEX - 1;
+                        settings.add(sedimentMap[setting]);
                     }
                 } else {
                     Integer[] c = {255, 0, 0, 250};

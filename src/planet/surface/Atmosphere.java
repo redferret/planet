@@ -57,7 +57,7 @@ public class Atmosphere extends Hydrosphere {
 
             @Override
             public boolean check() {
-                return delay.check();
+                return delay.check() && !PlanetSurface.suppressAtmosphere;
             }
             
         }
