@@ -91,7 +91,7 @@ public class WaterMovementTest extends JFrame implements DisplayAdapter {
         // Time the test for only 40000 frames then stop tasking.
         private Delay timer;
         public AddWaterTask(){
-            timer = new Delay(60000, false);
+            timer = new Delay(40000, false);
         }
         @Override
         public void perform(int x, int y) {
