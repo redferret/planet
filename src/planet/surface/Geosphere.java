@@ -51,6 +51,11 @@ public abstract class Geosphere extends Surface {
     public static float averageVolcanicMass;
 
     /**
+     * The amount of water added after an eruption in kg.
+     */
+    public static float volcanicWaterVaporConst;
+    
+    /**
      * The amount of heat lost after a volcanic eruption.
      */
     public static float volcanicHeatLoss;
@@ -62,8 +67,9 @@ public abstract class Geosphere extends Surface {
     static {
         heatDistributionCount = 5;
         thermalInc = 100;
-        volcanicHeatLoss = 100;
-        averageVolcanicMass = 2500000;
+        volcanicHeatLoss = 0.0002f;
+        averageVolcanicMass = 55000f;
+        volcanicWaterVaporConst = 0.00001f;
         drawSediments = true;
     }
 
@@ -84,14 +90,14 @@ public abstract class Geosphere extends Surface {
      * @param amount The amount being added
      */
     public void addToSurface(Layer type, float amount) {
-        int cellCount = Planet.self().getTotalNumberOfCells();
+        int cellCount = getTotalNumberOfCells();
         for (int i = 0; i < cellCount; i++) {
             getCellAt(i).add(type, amount, true);
         }
     }
     
     public void addLavaToSurface(float amount){
-        int cellCount = Planet.self().getTotalNumberOfCells();
+        int cellCount = getTotalNumberOfCells();
         for (int i = 0; i < cellCount; i++) {
             getCellAt(i).putMoltenRockToSurface(amount);
         }
@@ -207,8 +213,8 @@ public abstract class Geosphere extends Surface {
             ty = y + DIR_Y_INDEX[s];
 
             // Check the boundaries
-            mx = checkBounds(tx, Planet.self().getGridWidth());
-            my = checkBounds(ty, Planet.self().getGridWidth());
+            mx = checkBounds(tx, getGridWidth());
+            my = checkBounds(ty, getGridWidth());
 
             spreadTo = getCellAt(mx, my);
 
@@ -336,19 +342,32 @@ public abstract class Geosphere extends Surface {
 
     public void heatMantel() {
         int n = rand.nextInt(heatDistributionCount);
-        int totalCells = worldSize * worldSize;
+        int totalCells = getTotalNumberOfCells();
         for (int i = 0; i < n; i++) {
             int index = rand.nextInt(totalCells);
 
             PlanetCell cell = getCellAt(index);
             cell.addHeat(thermalInc);
-
+            float curTemp = cell.getMantelTemperature();
+            
             if (cell.checkVolcano()) {
-                cell.putMoltenRockToSurface(averageVolcanicMass);
-                cell.cool(volcanicHeatLoss);
-                cell.addOceanMass(0.0001f);
+                cell.putMoltenRockToSurface(calcVolcanicMass(curTemp));
+                cell.cool(calcVolcanicHeatLoss(curTemp));
+                cell.addOceanMass(calcVolcanicWaterMass(curTemp));
             }
         }
+    }
+    
+    private float calcVolcanicHeatLoss(float temp){
+        return volcanicHeatLoss * temp * temp;
+    }
+    
+    private float calcVolcanicMass(float temp){
+        return (averageVolcanicMass * temp * temp) / 100000f;
+    }
+    
+    private float calcVolcanicWaterMass(float temp){
+        return (volcanicWaterVaporConst * temp * temp) / 1000000f;
     }
 
     public boolean checkForGeologicalUpdate() {
