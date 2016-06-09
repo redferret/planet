@@ -16,6 +16,12 @@ public class MThreadTest {
     public static CountDownLatch latch;
     private TestThread testThread;
 
+    @Before
+    public void setup(){
+        testThread = new TestThread();
+        testThread.start();
+    }
+    
     /**
      * Tests the MThread for startup execution. By default when threads are
      * started they shouldn't execute any code until signaled to be played.
@@ -23,10 +29,8 @@ public class MThreadTest {
      */
     @Test
     public void threadStartupTest() throws InterruptedException {
-        testThread = new TestThread("Test Thread");
         latch = new CountDownLatch(1);
 
-        testThread.start();
         boolean signaled = latch.await(100, TimeUnit.MILLISECONDS);
         assertFalse("Latch was signaled", signaled);
     }
@@ -38,8 +42,6 @@ public class MThreadTest {
      */
     @Test
     public void nonContinuousExecutionTest() throws InterruptedException {
-        testThread = new TestThread("Non-Continuous Thread");
-        testThread.start();
         
         latch = new CountDownLatch(2);
         testThread.play();
@@ -60,11 +62,9 @@ public class MThreadTest {
      */
     @Test
     public void continuousExecutionTest() throws InterruptedException{
-        testThread = new TestThread("Continuous Thread");
         testThread.setContinuous(true);
         latch = new CountDownLatch(5);
         
-        testThread.start();
         testThread.play();
         boolean signaled = latch.await(100, TimeUnit.MILLISECONDS);
         
@@ -80,8 +80,8 @@ public class MThreadTest {
 
 class TestThread extends MThread {
 
-    public TestThread(String name) {
-        super(1, name, false);
+    public TestThread() {
+        super(1, "Test Thread", false);
     }
 
     @Override
