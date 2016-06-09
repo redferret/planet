@@ -28,6 +28,7 @@ public class BasicJView extends JFrame implements DisplayAdapter {
     private Deque<Integer> averages;
     private int totalAvg;
     
+    private static final int THREAD_COUNT = 2;
     private static final int SIZE = 512;
     
     public BasicJView(){
@@ -38,7 +39,7 @@ public class BasicJView extends JFrame implements DisplayAdapter {
         
         renderFrame = new Frame(SIZE, SIZE);
         
-        testWorld = new TestWorld(2);
+        testWorld = new TestWorld(THREAD_COUNT);
         testWorld.getSurface().setDisplay(this);
         renderFrame.registerMap(testWorld.getSurface());
         add(renderFrame);
