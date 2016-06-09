@@ -342,7 +342,7 @@ public abstract class Geosphere extends Surface {
 
             PlanetCell cell = getCellAt(index);
             cell.addHeat(thermalInc);
-
+            
             if (cell.checkVolcano()) {
                 cell.putMoltenRockToSurface(averageVolcanicMass);
                 cell.cool(volcanicHeatLoss);
@@ -350,7 +350,7 @@ public abstract class Geosphere extends Surface {
             }
         }
     }
-
+    
     public boolean checkForGeologicalUpdate() {
         long curPlanetAge = planetAge.get();
         long diff = (curPlanetAge - ageStamp);
