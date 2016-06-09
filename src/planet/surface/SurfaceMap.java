@@ -248,12 +248,16 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
             for (int y = 0; y < cellCountWidth; y++) {
                 setCellAt(generateCell(x, y));
                 generated++;
-                if (generated % flagUpdate == 0) {
-                    double finished = (double) generated / (double) totalCells;
-                    Logger.getLogger(SurfaceMap.class.getName()).log(Level.INFO,
-                            "Cells created: {0}% finished", Math.round(finished * 100));
-                }
+                logMapSetup(generated, flagUpdate, totalCells);
             }
+        }
+    }
+
+    private void logMapSetup(int generated, int flagUpdate, int totalCells) {
+        if (generated % flagUpdate == 0) {
+            double finished = (double) generated / (double) totalCells;
+            Logger.getLogger(SurfaceMap.class.getName()).log(Level.INFO,
+                    "Cells created: {0}% finished", Math.round(finished * 100));
         }
     }
 
