@@ -208,8 +208,8 @@ public class Tools {
             ty = y + DIR_Y_INDEX[s];
 
             // Check the boundaries
-            mx = checkBounds(tx, Planet.self().getGridWidth());
-            my = checkBounds(ty, Planet.self().getGridWidth());
+            mx = checkBounds(tx, Planet.self().getSurface().getGridWidth());
+            my = checkBounds(ty, Planet.self().getSurface().getGridWidth());
 
             cell = surface.getCellAt(mx, my);
 

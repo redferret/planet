@@ -38,7 +38,7 @@ public class Atmosphere extends Hydrosphere {
             public void perform(int x, int y) {
                 if (y != 0){
                     PlanetCell cell = getCellAt(x, y);
-                    float w = Planet.self().getGridWidth();
+                    float w = getGridWidth();
                     float h = w / 2;
                     float rate = 0;
 
@@ -50,7 +50,7 @@ public class Atmosphere extends Hydrosphere {
                     float amount = 15 * rate;
                     amount = cell.addOceanMass(-amount);
                     
-                    int index = rand.nextInt(worldSize * worldSize);
+                    int index = rand.nextInt(getTotalNumberOfCells());
                     getCellAt(index).addOceanMass(amount);
                 }
             }

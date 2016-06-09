@@ -50,8 +50,7 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
 
     private DisplayAdapter display;
     private Deque<Task> generalTasks;
-    protected int worldSize;
-
+    
     private Delay ageUpdateDelay, threadAverageDelay;
 
     public final static int HEIGHTMAP = 0;
@@ -75,7 +74,7 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
     /**
      * Constructs a new Surface with an empty map.
      *
-     * @param planetWidth The size of the surface
+     * @param planetWidth The number of cells width-wise.
      * @param ageStepDelay The amount of time to delay updating planet age
      * @param threadsDelay The amount of time to delay each frame in
      * milliseconds.
@@ -83,7 +82,6 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
      */
     public Surface(int planetWidth, int ageStepDelay, int threadsDelay, int threadCount) {
         super(planetWidth, DEFAULT_THREAD_DELAY, "Geosphere", threadCount);
-        this.worldSize = planetWidth;
         ageUpdateDelay = new Delay(ageStepDelay);
         set();
         setupThreads(threadCount, threadsDelay);
@@ -138,7 +136,7 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
         if (threadAverageDelay.check()) {
             super.update();
         }
-        
+        int worldSize = getGridWidth();
         generalTasks.forEach(task -> {
             if (task.check()) {
                 for (int y = 0; y < worldSize; y++) {

@@ -13,7 +13,6 @@ import planet.surface.Surface;
  */
 public abstract class Planet {
 
-    private int gridWidth;
     private int cellLength;
     private int area;
     protected TimeScale timescale;
@@ -39,7 +38,6 @@ public abstract class Planet {
     public Planet(int gridWidth, int cellLength, int ageStepDelay, int surfaceThreadsDelay, int threadCount) {
         Logger.getLogger(SurfaceMap.class.getName()).log(Level.INFO, "New Planet");
         current = this;
-        this.gridWidth = gridWidth;
         area = cellLength * cellLength;
         this.cellLength = cellLength;
         timescale = TimeScale.None;
@@ -102,19 +100,6 @@ public abstract class Planet {
      */
     public int getCellArea() {
         return area;
-    }
-
-    /**
-     * The number of cells in the X direction.
-     *
-     * @return
-     */
-    public final int getGridWidth() {
-        return gridWidth;
-    }
-
-    public final int getTotalNumberOfCells() {
-        return gridWidth * gridWidth;
     }
 
 }

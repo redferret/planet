@@ -117,6 +117,15 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
         });
     }
 
+    public int getGridWidth(){
+        return gridWidth.get();
+    }
+    
+    public final int getTotalNumberOfCells() {
+        int gw = this.gridWidth.get();
+        return gw * gw;
+    }
+    
     /**
      * Sets all the threads to this delay.
      *

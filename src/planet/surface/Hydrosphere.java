@@ -32,7 +32,7 @@ public abstract class Hydrosphere extends Geosphere {
      * @param amount The amount being added
      */
     public void addWaterToAllCells(float amount) {
-        int count = Planet.self().getTotalNumberOfCells();
+        int count = getTotalNumberOfCells();
         for (int i = 0; i < count; i++) {
             getCellAt(i).addOceanMass(amount);
         }
