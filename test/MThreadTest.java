@@ -39,6 +39,7 @@ public class MThreadTest {
     @Test
     public void nonContinuousExecutionTest() throws InterruptedException {
         testThread = new TestThread("Non-Continuous Thread");
+        testThread.start();
         
         latch = new CountDownLatch(2);
         testThread.play();
