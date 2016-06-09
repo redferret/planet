@@ -31,7 +31,7 @@ public class MThreadTest {
     public void threadStartupTest() throws InterruptedException {
         latch = new CountDownLatch(1);
 
-        boolean signaled = latch.await(100, TimeUnit.MILLISECONDS);
+        boolean signaled = latch.await(300, TimeUnit.MILLISECONDS);
         assertFalse("Latch was signaled", signaled);
     }
     
