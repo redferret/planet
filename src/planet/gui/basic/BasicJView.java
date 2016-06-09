@@ -54,7 +54,7 @@ public class BasicJView extends JFrame implements DisplayAdapter {
         surface.addToSurface(Layer.BASALT, 1000);
         surface.addLavaToSurface(10000);
         Planet.self().setTimescale(Planet.TimeScale.Geological);
-        Geosphere.heatDistributionCount = 300;
+        Geosphere.heatDistributionCount = 100;
 
         testWorld.play();
     }

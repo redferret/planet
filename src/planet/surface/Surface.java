@@ -50,7 +50,7 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
 
     private DisplayAdapter display;
     private Deque<Task> generalTasks;
-    
+
     private Delay ageUpdateDelay, threadAverageDelay;
 
     public final static int HEIGHTMAP = 0;
@@ -74,7 +74,7 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
     /**
      * Constructs a new Surface with an empty map.
      *
-     * @param planetWidth The number of cells width-wise.
+     * @param planetWidth The size of the surface
      * @param ageStepDelay The amount of time to delay updating planet age
      * @param threadsDelay The amount of time to delay each frame in
      * milliseconds.

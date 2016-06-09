@@ -51,11 +51,6 @@ public abstract class Geosphere extends Surface {
     public static float averageVolcanicMass;
 
     /**
-     * The amount of water added after an eruption in kg.
-     */
-    public static float volcanicWaterVaporConst;
-    
-    /**
      * The amount of heat lost after a volcanic eruption.
      */
     public static float volcanicHeatLoss;
@@ -67,9 +62,8 @@ public abstract class Geosphere extends Surface {
     static {
         heatDistributionCount = 5;
         thermalInc = 100;
-        volcanicHeatLoss = 0.0002f;
-        averageVolcanicMass = 55000f;
-        volcanicWaterVaporConst = 0.00001f;
+        volcanicHeatLoss = 100;
+        averageVolcanicMass = 2500000;
         drawSediments = true;
     }
 
@@ -348,26 +342,13 @@ public abstract class Geosphere extends Surface {
 
             PlanetCell cell = getCellAt(index);
             cell.addHeat(thermalInc);
-            float curTemp = cell.getMantelTemperature();
-            
+
             if (cell.checkVolcano()) {
-                cell.putMoltenRockToSurface(calcVolcanicMass(curTemp));
-                cell.cool(calcVolcanicHeatLoss(curTemp));
-                cell.addOceanMass(calcVolcanicWaterMass(curTemp));
+                cell.putMoltenRockToSurface(averageVolcanicMass);
+                cell.cool(volcanicHeatLoss);
+                cell.addOceanMass(0.0001f);
             }
         }
-    }
-    
-    private float calcVolcanicHeatLoss(float temp){
-        return volcanicHeatLoss * temp * temp;
-    }
-    
-    private float calcVolcanicMass(float temp){
-        return (averageVolcanicMass * temp * temp) / 100000f;
-    }
-    
-    private float calcVolcanicWaterMass(float temp){
-        return (volcanicWaterVaporConst * temp * temp) / 1000000f;
     }
 
     public boolean checkForGeologicalUpdate() {

@@ -117,15 +117,6 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
         });
     }
 
-    public int getGridWidth(){
-        return gridWidth.get();
-    }
-    
-    public final int getTotalNumberOfCells() {
-        int gw = this.gridWidth.get();
-        return gw * gw;
-    }
-    
     /**
      * Sets all the threads to this delay.
      *
@@ -192,6 +183,15 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
         prevSubThreadAvg = avg / threads.size();
     }
 
+    public final int getGridWidth(){
+        return gridWidth.get();
+    }
+    
+    public final int getTotalNumberOfCells() {
+        int gw = getGridWidth();
+        return gw * gw;
+    }
+    
     /**
      * If all the threads are not continuous then this method will check if
      * all threads have finished their iteration. If all threads have finished
