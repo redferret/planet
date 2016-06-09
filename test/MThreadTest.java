@@ -22,6 +22,20 @@ public class MThreadTest {
         testThread.start();
     }
     
+    @Test
+    public void playAndPauseTest() throws InterruptedException {
+        latch = new CountDownLatch(1);
+        
+        testThread.play();
+        boolean signaled = latch.await(500, TimeUnit.MILLISECONDS);
+        assertTrue(signaled);
+        
+        testThread.pause();
+        latch = new CountDownLatch(1);
+        signaled = latch.await(100, TimeUnit.MILLISECONDS);
+        assertFalse("Thread isn't paused", signaled);
+    }
+    
     /**
      * Tests the MThread for startup execution. By default when threads are
      * started they shouldn't execute any code until signaled to be played.
@@ -81,7 +95,7 @@ public class MThreadTest {
 class TestThread extends MThread {
 
     public TestThread() {
-        super(1, "Test Thread", false);
+        super(0, "Test Thread", false);
     }
 
     @Override
