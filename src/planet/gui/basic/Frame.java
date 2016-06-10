@@ -33,9 +33,6 @@ public class Frame extends JPanel {
     @Override
     protected void paintComponent(Graphics graphics) {
 
-        // Used for double buffering the screen reducing any flicker.
-        super.paintComponent(graphics);
-
         Graphics2D g2d = (Graphics2D) graphics;
 
         if (map != null) {
