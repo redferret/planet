@@ -39,7 +39,7 @@ public class Frame extends JPanel {
         Graphics2D g2d = (Graphics2D) graphics;
 
         if (map != null) {
-            setRasterOfEachImage(map);
+            setRasterOfEachImage();
 
             for (int i = images.size() - 1; i >= 0; i--) {
                 g2d.drawImage(images.get(i), 0, 0, getWidth(), getHeight(), null);
@@ -52,10 +52,8 @@ public class Frame extends JPanel {
     /**
      * Accesses the given surface map for each cell's render data and sets each
      * individual image's raster to that data.
-     *
-     * @param map The SurfaceMap being rendered.
      */
-    private void setRasterOfEachImage(SurfaceMap map) {
+    private void setRasterOfEachImage() {
 
         WritableRaster raster = null;
         List<Integer[]> settings;
