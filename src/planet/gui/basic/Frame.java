@@ -35,6 +35,12 @@ public class Frame extends JPanel {
 
         Graphics2D g2d = (Graphics2D) graphics;
 
+        render(g2d);
+
+        g2d.dispose();
+    }
+
+    private void render(Graphics2D g2d) {
         if (map != null) {
             setRasterOfEachImage();
 
@@ -42,8 +48,6 @@ public class Frame extends JPanel {
                 g2d.drawImage(images.get(i), 0, 0, getWidth(), getHeight(), null);
             }
         }
-
-        g2d.dispose();
     }
 
     /**
