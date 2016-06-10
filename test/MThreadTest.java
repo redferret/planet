@@ -92,8 +92,12 @@ public class MThreadTest {
 
 class TestThread extends MThread {
 
+    private static final int NO_DELAY = 0;
+    private static final String THREAD_NAME = "Test Thread";
+    private static final boolean CONTINUOUS = false;
+    
     public TestThread() {
-        super(0, "Test Thread", false);
+        super(NO_DELAY, THREAD_NAME, CONTINUOUS);
     }
 
     @Override
