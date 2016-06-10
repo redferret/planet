@@ -8,6 +8,7 @@ import planet.util.Delay;
 import planet.util.Task;
 import planet.util.TaskFactory;
 import static planet.surface.Surface.rand;
+import planet.util.Tools;
 /**
  *
  * @author Richard DeSilvey
@@ -31,7 +32,7 @@ public class Atmosphere extends Hydrosphere {
             private Delay delay;
 
             public EvaporateTask() {
-                delay = new Delay(40);
+                delay = new Delay(10);
             }
             
             @Override
@@ -42,16 +43,30 @@ public class Atmosphere extends Hydrosphere {
                     float h = w / 2;
                     float rate = 0;
 
-                    if (0 <= y && y < h){
-                        rate = y / h;
-                    }else if (h <= y && y < w){
-                        rate = (w - y) / h;
-                    }
+                    rate = calcLatitudeRate(y, h, w);
+                    
                     float amount = 15 * rate;
                     amount = cell.addOceanMass(-amount);
                     
-                    int index = rand.nextInt(getTotalNumberOfCells());
-                    getCellAt(index).addOceanMass(amount);
+                    int rx = rand.nextInt(getGridWidth());
+                    int ry = rand.nextInt(getGridWidth());
+                    
+                    amount /= 4f;
+                    getCellAt(Tools.checkBounds(rx+1, getGridWidth()), ry).addOceanMass(amount);
+                    getCellAt(Tools.checkBounds(rx-1, getGridWidth()), ry).addOceanMass(amount);
+                    
+                    getCellAt(rx, Tools.checkBounds(ry+1, getGridWidth())).addOceanMass(amount);
+                    getCellAt(rx, Tools.checkBounds(ry-1, getGridWidth())).addOceanMass(amount);
+                }
+            }
+
+            private float calcLatitudeRate(int y, float h, float w) {
+                if (0 <= y && y < h){
+                    return y / h;
+                }else if (h <= y && y < w){
+                    return (w - y) / h;
+                }else{
+                    return 0;
                 }
             }
 
