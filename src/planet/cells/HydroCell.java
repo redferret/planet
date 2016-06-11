@@ -95,27 +95,20 @@ public class HydroCell extends GeoCell {
                 lowestHydroBuffer.transferWater(displacedMass);
                 
                 double theta = Math.atan(differenceHeight / Planet.self().getCellLength());
-                float calcVal = (float) Math.sin(theta);
-                float pressure = (float) Math.min(minAngle, calcVal);
+                float angle = (float) Math.sin(theta);
+                float pressure = (float) Math.min(minAngle, angle);
+                
+                // Move suspended sediments based on angle to lowest cell.
+                float movedSeds = toUpdateSSediments.getSediments() * angle;
+                lowestSSediments.transferSediment(movedSeds);
+                toUpdateSSediments.transferSediment(-movedSeds);
+                
                 float erosion = (displacedMass * pressure);
                 
                 if (eb.getSediments() < Tools.calcMass(0.1f, area, Layer.SEDIMENT)) {
                     float erodedSeds = erode(erosion);
-                    lowestSSediments.transferSediment(erodedSeds);
+                    toUpdateSSediments.transferSediment(erodedSeds);
                 }
-//                float transferSeds = erodedSeds;
-//                float movedSeds = (pressure * displacedMass);
-//                
-//                toUpdateSSediments.transferSediment(-movedSeds);
-                
-//                
-//                eb.updateSurfaceSedimentMass(toUpdateSSediments.getSediments() * pressure);
-//                
-//                if (calcVal < minAngle){
-//                    eb.updateSurfaceSedimentMass(toUpdateSSediments.getSediments());
-//                    toUpdateSSediments.resetBuffer();
-//                }
-                
             }
 
         }
