@@ -1,4 +1,4 @@
-package planet;
+package planet.worlds;
 
 import planet.util.Tools;
 

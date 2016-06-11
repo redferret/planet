@@ -1,6 +1,6 @@
 
 import org.junit.Test;
-import planet.TestWorld;
+import planet.worlds.TestWorld;
 import static org.junit.Assert.*;
 
 /**

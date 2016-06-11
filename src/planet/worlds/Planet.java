@@ -1,4 +1,4 @@
-package planet;
+package planet.worlds;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

@@ -2,7 +2,7 @@
 
 package planet.surface;
 
-import planet.Planet;
+import planet.worlds.Planet;
 import planet.cells.PlanetCell;
 import planet.util.Delay;
 import planet.util.Task;

@@ -5,7 +5,7 @@ package planet.gui.basic;
 import java.util.Deque;
 import java.util.LinkedList;
 import javax.swing.JFrame;
-import planet.TestWorld;
+import planet.worlds.TestWorld;
 import planet.enums.Layer;
 import planet.gui.DisplayAdapter;
 import planet.surface.PlanetSurface;

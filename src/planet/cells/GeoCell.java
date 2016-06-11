@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import planet.Planet;
+import planet.worlds.Planet;
 import planet.util.TBuffer;
 import planet.util.Tools;
 import planet.enums.CrustType;

@@ -1,6 +1,6 @@
 package planet.surface;
 
-import planet.Planet;
+import planet.worlds.Planet;
 import planet.cells.HydroCell;
 import planet.cells.HydroCell.WaterPipeline;
 import planet.util.Task;

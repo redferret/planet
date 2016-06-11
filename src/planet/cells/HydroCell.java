@@ -3,7 +3,7 @@ package planet.cells;
 
 import java.awt.Color;
 import java.util.List;
-import planet.Planet;
+import planet.worlds.Planet;
 import planet.enums.Layer;
 import planet.util.TBuffer;
 import planet.surface.Hydrosphere;
