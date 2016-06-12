@@ -297,7 +297,7 @@ public abstract class Geosphere extends Surface {
             float massToSolidify = toUpdate.getMoltenRockFromSurface() * rate;
             toUpdate.putMoltenRockToSurface(-massToSolidify);
             massToSolidify = changeMass(massToSolidify, LAVA, BASALT);
-            toUpdate.add(BASALT, massToSolidify, true);
+            toUpdate.add(BASALT, Math.max(0, massToSolidify), true);
             toUpdate.recalculateHeight();
         } else {
             toUpdate.removeAllMoltenRock();
