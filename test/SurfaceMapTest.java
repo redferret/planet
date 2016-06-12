@@ -60,6 +60,20 @@ public class SurfaceMapTest {
         assertTrue(expectedY == cell.getY());
     }
     
+    @Test
+    public void calculateIndexTest(){
+        testIndex(1, 1, 3, 4);
+        testIndex(1, 1, 4, 5);
+        testIndex(1, 2, 3, 7);
+        testIndex(9, 3, 4, 21);
+    }
+
+    private void testIndex(int testX, int testY, int width, Integer expectedIndex) {
+        final int WIDTH = width;
+        Integer index = TestSurface.calcIndex(testX, testY, WIDTH);
+        assertEquals(expectedIndex, index);
+    }
+    
     @After
     public void tearDown() {
         testSurface.killAllThreads();
