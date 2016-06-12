@@ -5,6 +5,7 @@ package planet.gui.basic;
 import java.util.Deque;
 import java.util.LinkedList;
 import javax.swing.JFrame;
+import planet.cells.PlanetCell;
 import planet.worlds.TestWorld;
 import planet.enums.Layer;
 import planet.gui.DisplayAdapter;
@@ -84,8 +85,21 @@ public class WaterMovementTest extends JFrame implements DisplayAdapter {
         @Override
         public void perform(int x, int y) {
             if (x == 0 && y == 6){
-                testWorld.getSurface().getCellAt(25, 6).addOceanMass(-100000);
+                
+                PlanetSurface surface = (PlanetSurface) testWorld.getSurface();
+                PlanetCell cell1 = surface.getCellAt(25, 6);
+                PlanetCell cell2 = surface.getCellAt(25, 7);
+                
+                addWaterToCell(cell1, -100000);
+                addWaterToCell(cell2, -100000);
+                
             }
+        }
+
+        private void addWaterToCell(PlanetCell cell, float amount) {
+            cell.addOceanMass(amount);
+            cell.getSedimentBuffer().removeAllSediments();
+            cell.getSedimentMap().resetBuffer();
         }
     }
     
@@ -93,12 +107,12 @@ public class WaterMovementTest extends JFrame implements DisplayAdapter {
         // Time the test for only 40000 frames then stop tasking.
         private Delay timer;
         public AddWaterTask(){
-            timer = new Delay(40000, false);
+            timer = new Delay(10000, false);
         }
         @Override
         public void perform(int x, int y) {
             if (x == 1 && y == 4){
-                testWorld.getSurface().getCellAt(1, 11).addOceanMass(1000);
+                testWorld.getSurface().getCellAt(1, 11).addOceanMass(100);
             }
         }
 
