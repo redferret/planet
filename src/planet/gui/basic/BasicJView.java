@@ -90,7 +90,7 @@ class KeyController extends KeyAdapter {
 
     @Override
     public void keyReleased(KeyEvent e) {
-        
+        Planet p = Planet.self();
         switch(e.getKeyCode()){
             
             case KeyEvent.VK_INSERT:
@@ -98,18 +98,18 @@ class KeyController extends KeyAdapter {
                 break;
             
             case KeyEvent.VK_PAGE_UP:
-                Planet.self().getSurface().displaySetting++;
+                p.getSurface().displaySetting++;
                 
-                if (Planet.self().getSurface().displaySetting > 2){
-                    Planet.self().getSurface().displaySetting = 2;
+                if (p.getSurface().displaySetting > 2){
+                    p.getSurface().displaySetting = 2;
                 }
                 break;
                 
             case KeyEvent.VK_PAGE_DOWN:
-                Planet.self().getSurface().displaySetting--;
+                p.getSurface().displaySetting--;
                 
-                if (Planet.self().getSurface().displaySetting < 0){
-                    Planet.self().getSurface().displaySetting = 0;
+                if (p.getSurface().displaySetting < 0){
+                    p.getSurface().displaySetting = 0;
                 }
                 break;
                 
@@ -117,7 +117,6 @@ class KeyController extends KeyAdapter {
                 Geosphere.drawSediments = !Geosphere.drawSediments;
                 break;
             case KeyEvent.VK_ENTER:
-                Planet p = Planet.self();
                 
                 if (p.getSurface().paused()){
                     p.play();
