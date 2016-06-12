@@ -2,14 +2,11 @@
 
 package planet.surface;
 
-import planet.worlds.Planet;
 import planet.cells.PlanetCell;
-import planet.util.Delay;
-import planet.util.Task;
-import planet.util.TaskFactory;
-import static planet.surface.Surface.rand;
 import planet.util.TaskAdapter;
 import planet.util.Tools;
+import static planet.surface.Surface.rand;
+
 /**
  *
  * @author Richard DeSilvey
@@ -32,7 +29,7 @@ public class Atmosphere extends Hydrosphere {
 
                 rate = calcLatitudeRate(y, h, w);
 
-                float amount = 15 * rate;
+                float amount = 16 * rate;
                 amount = cell.addOceanMass(-amount);
 
                 int rx = rand.nextInt(getGridWidth());
@@ -46,7 +43,7 @@ public class Atmosphere extends Hydrosphere {
                 getCellAt(rx, Tools.checkBounds(ry - 1, getGridWidth())).addOceanMass(amount);
             }
         }
-
+        
         private float calcLatitudeRate(int y, float h, float w) {
             if (0 <= y && y < h) {
                 return y / h;
