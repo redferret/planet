@@ -121,14 +121,7 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
     @Override
     public void update() {
 
-        if (ageUpdateDelay.check()) {
-            long curPlanetAge = planetAge.getAndAdd(timeStep);
-            if (curPlanetAge - geologicalTimeStamp > GEOUPDATE) {
-                // < Update to major geological events go here >
-
-                geologicalTimeStamp = curPlanetAge;
-            }
-        }
+        updatePlanetAge();
 
         if (display != null) {
             display.update();
@@ -136,6 +129,23 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
         if (threadAverageDelay.check()) {
             super.update();
         }
+        
+        performTasks();
+        
+    }
+
+    private void updatePlanetAge() {
+        if (ageUpdateDelay.check()) {
+            long curPlanetAge = planetAge.getAndAdd(timeStep);
+            if (curPlanetAge - geologicalTimeStamp > GEOUPDATE) {
+                // < Update to major geological events go here >
+                
+                geologicalTimeStamp = curPlanetAge;
+            }
+        }
+    }
+
+    private void performTasks() {
         int worldSize = getGridWidth();
         generalTasks.forEach(task -> {
             if (task.check()) {
@@ -146,7 +156,6 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
                 }
             }
         });
-        
     }
 
     @Override
