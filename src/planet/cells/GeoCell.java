@@ -374,7 +374,7 @@ public class GeoCell extends Mantel {
         amount *= (applyErosion) ? f : 1;
 
         if (amount < 0) {
-            throw new IllegalArgumentException("The amount must be positive");
+            throw new IllegalArgumentException("The amount must be positive: " + amount);
         }
         float placedAmount = placeAmount(null, -amount, fromTop);
 
@@ -393,7 +393,7 @@ public class GeoCell extends Mantel {
      */
     public void add(Layer type, float amount, boolean toTop) {
         if (amount < 0) {
-            throw new IllegalArgumentException("The amount must be positive");
+            throw new IllegalArgumentException("The amount must be positive: " + amount);
         }
 
         placeAmount(type, amount, toTop);
