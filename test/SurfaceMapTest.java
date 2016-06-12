@@ -68,8 +68,7 @@ public class SurfaceMapTest {
         testIndex(9, 3, 4, 21);
     }
 
-    private void testIndex(int testX, int testY, int width, Integer expectedIndex) {
-        final int WIDTH = width;
+    private void testIndex(int testX, int testY, final int WIDTH, Integer expectedIndex) {
         Integer index = TestSurface.calcIndex(testX, testY, WIDTH);
         assertEquals(expectedIndex, index);
     }
