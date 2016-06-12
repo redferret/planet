@@ -373,8 +373,10 @@ public class GeoCell extends Mantel {
         float f = (1.0f - peekTopStratum().getLayer().getErosionFactor());
         amount *= (applyErosion) ? f : 1;
 
-        float removal = (amount > 0) ? -amount : amount;
-        float placedAmount = placeAmount(null, removal, fromTop);
+        if (amount < 0) {
+            throw new IllegalArgumentException("The amount must be positive");
+        }
+        float placedAmount = placeAmount(null, -amount, fromTop);
 
         return amount - placedAmount;
     }
@@ -391,7 +393,7 @@ public class GeoCell extends Mantel {
      */
     public void add(Layer type, float amount, boolean toTop) {
         if (amount < 0) {
-            throw new IllegalArgumentException("The amount must be positive if adding");
+            throw new IllegalArgumentException("The amount must be positive");
         }
 
         placeAmount(type, amount, toTop);
