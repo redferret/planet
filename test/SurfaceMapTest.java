@@ -91,6 +91,16 @@ public class SurfaceMapTest {
         int testWidth = 3;
         Integer expectedX = 2, expectedY = 3;
         
+        testXY(testIndex, testWidth, expectedX, expectedY);
+        
+        testIndex = 33;
+        testWidth = 10;
+        expectedX = 3; expectedY = 3;
+        
+        testXY(testIndex, testWidth, expectedX, expectedY);
+    }
+
+    private void testXY(int testIndex, int testWidth, Integer expectedX, Integer expectedY) {
         Integer testX = TestSurface.calcX(testIndex, testWidth);
         Integer testY = TestSurface.calcY(testIndex, testWidth);
         
