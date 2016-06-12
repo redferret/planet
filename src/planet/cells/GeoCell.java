@@ -394,9 +394,8 @@ public class GeoCell extends Mantel {
     }
 
     /**
-     * <p>
      * Adds or removes from the top or bottom of the strata, a negative amount
-     * will remove, a positive amount will add.<p>
+     * will remove, a positive amount will add.
      * <p>
      * There are serveral cases to consider when calling this method to utilize
      * it correctly to help save memory.</p>
@@ -416,7 +415,6 @@ public class GeoCell extends Mantel {
      * <li>If the type is not null and the stratum type matches and the amount
      * is positive then it will add to that layer otherwise a new layer of the
      * given type (if the types don't match) will be added.
-     * </ul>
      * </ul>
      *
      * @param type The type of material to add
