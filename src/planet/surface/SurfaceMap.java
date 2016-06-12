@@ -300,7 +300,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
      * @return Returns the cell at the specified X and Y location.
      */
     public CellType getCellAt(int x, int y) {
-        int index = (gridWidth.get() * y) + x;
+        int index = calcIndex(x, y, gridWidth.get());
         return getCellAt(index);
     }
 
@@ -331,10 +331,43 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
      */
     private void setCellAt(CellType cell) {
         int x = cell.getX(), y = cell.getY();
-        int index = (gridWidth.get() * y) + x;
+        int index = calcIndex(x, y, gridWidth.get());
         map.put(index, cell);
     }
 
+    /**
+     * Calculates the index for the element located at (x, y).
+     * @param x The x coordinate
+     * @param y The y coordinate
+     * @param w The width of the map
+     * @return The index corresponding to the x and y location
+     */
+    public static int calcIndex(int x, int y, int w){
+        return (w * y) + x;
+    }
+    
+    /**
+     * Calculates the X coordinate based on the width (w) of the map and the
+     * given index.
+     * @param index The index of the element
+     * @param w The width of the map
+     * @return The x coordinate
+     */
+    public static int calcX(int index, int w){
+        return index % w;
+    }
+    
+    /**
+     * Calculates the Y coordinate based on the width (w) of the map and the
+     * given index.
+     * @param index The index of the element
+     * @param w The width of the map
+     * @return The y coordinate
+     */
+    public static int calcY(int index, int w){
+        return index / w;
+    }
+    
     @Override
     public List<Integer[]> getCellData(int x, int y) {
 
