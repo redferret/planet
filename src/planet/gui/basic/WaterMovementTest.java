@@ -14,7 +14,10 @@ import planet.util.Task;
 import planet.util.TaskAdapter;
 
 /**
- *
+ * This test shows the movement of water over a surface and the erosion of
+ * that surface. Water will be added and subtracted with the constructed
+ * Tasks. After a given amount of time water will no longer be added and the
+ * rest of the water will drain away.
  * @author Richard DeSilvey
  */
 public class WaterMovementTest extends JFrame implements DisplayAdapter {
