@@ -330,6 +330,10 @@ public class GeoCell extends Mantel {
      */
     public void putMoltenRockToSurface(float mass) {
         moltenRockSurfaceMass += mass;
+        if (moltenRockSurfaceMass < 0){
+            moltenRockSurfaceMass = 0;
+            return;
+        }
         updateMV(mass, LAVA);
     }
 
