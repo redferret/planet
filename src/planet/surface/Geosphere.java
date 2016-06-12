@@ -71,8 +71,6 @@ public abstract class Geosphere extends Surface {
         super(worldSize, surfaceDelay, threadsDelay, threadCount);
         ageStamp = 0;
         produceTasks(new GeologicalUpdateFactory());
-//        produceTasks(new WindErosionFactory());
-        addTaskToThreads(new SpreadSedimentTask());
         addTaskToThreads(new RockFormation());
         addTask(new HeatMantel());
     }
@@ -326,6 +324,8 @@ public abstract class Geosphere extends Surface {
                 cell.updateHeight();
                 timeStamp();
             }
+        }else{
+            cell.updateHeight();
         }
     }
 
