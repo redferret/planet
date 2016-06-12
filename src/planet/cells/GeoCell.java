@@ -394,17 +394,30 @@ public class GeoCell extends Mantel {
     }
 
     /**
+     * <p>
      * Adds or removes from the top or bottom of the strata, a negative amount
-     * will remove, a positive amount will add. If the top or bottom stratum is
-     * less than the amount then the top or bottom stratum is removed completely
-     * and the difference will be returned. Passing in a null type and a
-     * negative amount will remove from the top or bottom layer. If the type is
-     * not null and the amount is negative, nothing will happen. If the amount
-     * is positive and the type is null then the amount will just be added to
-     * the top or bottom stratum regardless of it's type. If the type is not
-     * null and the stratum type matches and the amount is positive then it will
-     * add to that layer otherwise a new layer of the given type (if the types
-     * don't match) will be added.
+     * will remove, a positive amount will add.<p>
+     * <p>
+     * There are serveral cases to consider when calling this method to utilize
+     * it correctly to help save memory.</p>
+     * <ul>
+     * <li>If the top or bottom stratum is less than the amount then the top or
+     * bottom stratum is removed completely and the difference will be returned.
+     * Passing in a null type and a negative amount will remove from the top or
+     * bottom layer.</li>
+     *
+     * <li>If the type is not null and the amount is negative, nothing will
+     * happen.
+     * </li>
+     * <li>
+     * If the amount is positive and the type is null then the amount will just
+     * be added to the top or bottom stratum regardless of it's type.
+     * </li>
+     * <li>If the type is not null and the stratum type matches and the amount
+     * is positive then it will add to that layer otherwise a new layer of the
+     * given type (if the types don't match) will be added.
+     * </ul>
+     * </ul>
      *
      * @param type The type of material to add
      * @param amount The amount to add/remove in kilograms
