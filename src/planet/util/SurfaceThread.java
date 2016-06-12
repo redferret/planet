@@ -53,34 +53,41 @@ public class SurfaceThread extends MThread {
      */
     public final void update() {
 
+        try {
+            waitingGate.await();
+            performTasks();
+        } catch (SurfaceThreadException | InterruptedException | BrokenBarrierException e) {
+            logException(e);
+        }
+        curFrame++;
+    }
+
+    private void logException(final java.lang.Exception e) throws SurfaceThreadException {
+        String msg = "An exception occured when updating the surface:" + getName();
+        if (throwExecption){
+            throw new SurfaceThreadException(e);
+        }else{
+            Logger.getLogger(SurfaceThread.class.getName()).log(Level.SEVERE, msg);
+            e.printStackTrace();
+        }
+    }
+
+    private void performTasks() {
+        
         int lowerYBound = bounds.getLowerYBound();
         int upperYBound = bounds.getUpperYBound();
         int lowerXBound = bounds.getLowerXBound();
         int upperXBound = bounds.getUpperXBound();
         
-        try {
-            waitingGate.await();
-            
-            tasks.forEach(task -> {
-                if (task.check()) {
-                    for (int y = lowerYBound; y < upperYBound; y++) {
-                        for (int x = lowerXBound; x < upperXBound; x++) {
-                            task.perform(x, y);
-                        }
+        tasks.forEach(task -> {
+            if (task.check()) {
+                for (int y = lowerYBound; y < upperYBound; y++) {
+                    for (int x = lowerXBound; x < upperXBound; x++) {
+                        task.perform(x, y);
                     }
                 }
-            });
-            
-        } catch (SurfaceThreadException | InterruptedException | BrokenBarrierException e) {
-            String msg = "An exception occured when updating the surface:" + getName();
-            if (throwExecption){
-                throw new SurfaceThreadException(e);
-            }else{
-                Logger.getLogger(SurfaceThread.class.getName()).log(Level.SEVERE, msg);
-                e.printStackTrace();
             }
-        }
-        curFrame++;
+        });
     }
 
     public void addTask(Task task){
