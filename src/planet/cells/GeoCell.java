@@ -42,8 +42,7 @@ public class GeoCell extends Mantel {
         private float pendingSediments;
 
         /**
-         * Represents the amount of Sediments on the surface of this
-         * cell.
+         * Represents the amount of Sediments on the surface of this cell.
          */
         private float totalSediments;
 
@@ -137,7 +136,8 @@ public class GeoCell extends Mantel {
         }
 
         @Override
-        public void applyBuffer() {}
+        public void applyBuffer() {
+        }
 
     }
 
@@ -191,7 +191,7 @@ public class GeoCell extends Mantel {
     private static Integer[][] heightMap, strataMap, sedimentMap;
 
     public final static int MAX_HEIGHT_INDEX = 50;
-    
+
     public final static int MAX_SEDIMENT_INDEX = 50;
     /**
      * The ratio for indexing onto the height map array, by taking a cell height
@@ -199,9 +199,9 @@ public class GeoCell extends Mantel {
      * map.
      */
     public static int heightIndexRatio = 50 / MAX_HEIGHT_INDEX;
-    
+
     public static int sedimentIndexRatio = 1 / MAX_SEDIMENT_INDEX;
-    
+
     static {
         Color[] heightColors = {new Color(255, 255, 204), new Color(51, 153, 51),
             new Color(157, 166, 175), new Color(255, 255, 255)};
@@ -209,7 +209,7 @@ public class GeoCell extends Mantel {
 
         Color[] sedimentColors = {new Color(195, 195, 195, 0), new Color(195, 195, 195, 255), SEDIMENT.getColor()};
         sedimentMap = Tools.constructSamples(sedimentColors, MAX_SEDIMENT_INDEX);
-        
+
         Color[] strataColors = {SEDIMENT.getColor(), SOIL.getColor(),
             GRAVEL.getColor(), SANDSTONE.getColor(),
             SHALE.getColor(), LIMESTONE.getColor(),
@@ -381,7 +381,8 @@ public class GeoCell extends Mantel {
 
     /**
      * Adds to the top or bottom of the strata or if the type does not match
-     * this cells top or bottom stratum type then a new stratum will be added.
+     * this cell's top or bottom stratum then a new layer will be added.
+     * Negative amounts are not allowed.
      *
      * @param type The type to be added/added to.
      * @param amount The amount as a positive real number, negatives will become
@@ -389,15 +390,18 @@ public class GeoCell extends Mantel {
      * @param toTop Adding to the top or not.
      */
     public void add(Layer type, float amount, boolean toTop) {
-        float addition = (amount < 0) ? -amount : amount;
-        placeAmount(type, addition, toTop);
+        if (amount < 0) {
+            throw new IllegalArgumentException("The amount must be positive if adding");
+        }
+
+        placeAmount(type, amount, toTop);
     }
 
     /**
      * Adds or removes from the top or bottom of the strata, a negative amount
      * will remove, a positive amount will add.
      * <p>
-     * There are serveral cases to consider when calling this method to utilize
+     * There are several cases to consider when calling this method to utilize
      * it correctly to help save memory.</p>
      * <ul>
      * <li>If the top or bottom stratum is less than the amount then the top or
@@ -443,7 +447,7 @@ public class GeoCell extends Mantel {
         if (amount < 0) { // Removing from the Stratum
             difference = mass + amount;// Take the difference (amount is negative)
             if (difference < 0) {
-                
+
                 if (verifyStratumMass(selectedStratum, workOnTop)) {
                     addToStrata(null, amount - difference, workOnTop);
                 }
@@ -490,14 +494,21 @@ public class GeoCell extends Mantel {
     }
 
     /**
-     * Adds a new stratum if a type is specified. If the type is null then the
-     * top or bottom stratum receives the amount being added. Checking for
-     * existing strata is important before calling this method since negative
-     * amounts are allowed but not recommended unless the top or bottom layer
-     * mass is greater or equal to the amount being removed,
-     * <code>placeAmount()</code> helps to accomplish this. If the type is null
-     * then a new layer is added of that type even if the top or bottom layer is
-     * the same.
+     * Adds a new stratum if a type is specified.
+     *
+     * <p>
+     * Consider the cases below when calling this method</p>
+     * <ul>
+     * <li>If the type is null then the top or bottom stratum receives the
+     * amount being added. Checking for existing strata is important before
+     * calling this method since negative amounts are allowed but not
+     * recommended unless the top or bottom layer mass is greater or equal to
+     * the amount being removed, <code>placeAmount()</code> helps to accomplish
+     * this.
+     * </li>
+     * <li>If the type is null then the top or bottom is added or
+     * subtracted</li>
+     * </ul>
      *
      * @param amount The amount of mass the stratum is or is going to receive in
      * kilograms.
@@ -643,7 +654,7 @@ public class GeoCell extends Mantel {
 
         Stratum removed = strata.removeFirst();
         removed.removeBottom();
-        if (strata.peek() != null){
+        if (strata.peek() != null) {
             strata.peek().removeTop();
         }
 
@@ -706,7 +717,7 @@ public class GeoCell extends Mantel {
     }
 
     /**
-     * Get the strata list
+     * Get the strata list.
      *
      * @return The list of strata for this cell
      */
@@ -749,7 +760,7 @@ public class GeoCell extends Mantel {
     }
 
     /**
-     * Shifts the height of this cell to it's equilibrium height
+     * Shifts the height of this cell to it's equilibrium height.
      */
     public void recalculateHeight() {
         float cellHeight, amountSubmerged, density = getDensity();
@@ -786,7 +797,7 @@ public class GeoCell extends Mantel {
     public boolean hasOcean() {
         return ((HydroCell) this).getOceanMass() > 0.001f;
     }
-    
+
     public List<Integer[]> render(List<Integer[]> settings) {
         int setting;
         PlanetSurface surface = (PlanetSurface) Planet.self().getSurface();
