@@ -64,8 +64,7 @@ public class WaterMovementTest extends JFrame implements DisplayAdapter {
         
         for (int y = 4; y < 20; y++){
             for (int x = 0; x < 10; x++){
-                surface.getCellAt(x, y).addToStrata(Layer.SANDSTONE, 1000000, true);
-                surface.getCellAt(x, y).addToStrata(Layer.SEDIMENT, 10000, true);
+                surface.getCellAt(x, y).addToStrata(Layer.SANDSTONE, 1500000, true);
             }
         }
         for (int x = 0; x < 10; x++){
