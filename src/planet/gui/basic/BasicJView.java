@@ -117,7 +117,13 @@ class KeyController extends KeyAdapter {
                 Geosphere.drawSediments = !Geosphere.drawSediments;
                 break;
             case KeyEvent.VK_ENTER:
+                Planet p = Planet.self();
                 
+                if (p.getSurface().paused()){
+                    p.play();
+                }else{
+                    p.pause();
+                }
                 break;
         }
     }

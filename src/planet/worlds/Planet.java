@@ -58,7 +58,7 @@ public abstract class Planet {
         planetSurface.pauseAll();
         planetSurface.pause();
     }
-
+    
     public Surface getSurface() {
         return planetSurface;
     }

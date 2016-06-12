@@ -189,7 +189,7 @@ public class HydroCell extends GeoCell {
         
         evapScale = 2.5f;
         sedimentCapacity = 0.50f;
-        minAngle = 0.0002f;
+        minAngle = 0.02f;
         crossSectionalArea = Planet.self().getCellArea();
     }
     
