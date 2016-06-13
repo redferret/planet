@@ -18,7 +18,8 @@ import planet.surface.Hydrosphere;
 import planet.surface.PlanetSurface;
 
 /**
- *
+ * The BasicJView is to allow a user to see what is happening to the planet
+ * using Java API JFrame and Java graphics.
  * @author Richard DeSilvey
  */
 public class BasicJView extends JFrame implements DisplayAdapter {
