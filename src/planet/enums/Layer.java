@@ -23,37 +23,37 @@ public enum Layer {
      * Gravel is formed when Igneous or metamorphic rocks break down, over time
      * gravel will break down into Sand.
      */
-    GRAVEL("Gravel", RockType.SEDIMENT, new Color(149, 173, 206), 2, 0.10f, 2000f),
+    GRAVEL("Gravel", RockType.SEDIMENT, new Color(149, 173, 206), 2, 0.07f, 2000f),
     /**
      * Sedimentary rock forms by compressing sediments past a certain depth.
      * They are the second easiest to erode next to sediments.
      */
-    SANDSTONE("Sandstone", RockType.SEDIMENTARY, new Color(255, 201, 14), 3, 0.20f, 2350f),
+    SANDSTONE("Sandstone", RockType.SEDIMENTARY, new Color(255, 201, 14), 3, 0.12f, 2350f),
     /**
      * Shale is formed when clay and silt sized particles are compacted
      * together.
      */
-    SHALE("Shale", RockType.SEDIMENTARY, new Color(200, 190, 230), 4, 0.20f, 2400f),
+    SHALE("Shale", RockType.SEDIMENTARY, new Color(200, 190, 230), 4, 0.14f, 2400f),
     /**
      * Limestone is composed of skeletal fragments of marine organisms such as
      * coral biological life deposits this rock.
      */
-    LIMESTONE("Limestone", RockType.SEDIMENTARY, new Color(226, 245, 170), 5, 0.18f, 2550f),
+    LIMESTONE("Limestone", RockType.SEDIMENTARY, new Color(226, 245, 170), 5, 0.15f, 2550f),
     /**
      * Metamorphic rock forms at fault boundaries when rock subducts and get
      * twisted and compressed or if enough sedimentary rock is at a particular
      * depth to form metamorphic rock. Metamorphic rock also takes the longest
      * to erode.
      */
-    METAMORPHIC("Metamorphic", RockType.METAMORPHIC, new Color(136, 0, 20), 6, 0.50f, 2740f),
+    METAMORPHIC("Metamorphic", RockType.METAMORPHIC, new Color(136, 0, 20), 6, 0.22f, 2740f),
     /**
      * Basalt is usually deposited at fault lines or certain volcanoes.
      */
-    BASALT("Basalt", RockType.IGNEOUS, new Color(127, 127, 127), 7, 0.40f, 2990f),
+    BASALT("Basalt", RockType.IGNEOUS, new Color(127, 127, 127), 7, 0.18f, 2990f),
     /**
      * Granite can be from certain volcanoes but mainly intrusive.
      */
-    GRANITE("Granite", RockType.IGNEOUS, new Color(193, 120, 102), 8, 0.45f, 2790f),
+    GRANITE("Granite", RockType.IGNEOUS, new Color(193, 120, 102), 8, 0.20f, 2790f),
     /**
      * Sea water is represented as a top layer. The average density of sea water
      * is around 1.05 cc. Sea water deposits shale rock.
