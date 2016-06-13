@@ -71,6 +71,8 @@ public abstract class Geosphere extends Surface {
         super(worldSize, surfaceDelay, threadsDelay, threadCount);
         ageStamp = 0;
         produceTasks(new GeologicalUpdateFactory());
+        produceTasks(new WindErosionFactory());
+        addTaskToThreads(new SpreadSedimentTask());
         addTaskToThreads(new RockFormation());
         addTask(new HeatMantel());
     }
@@ -165,7 +167,7 @@ public abstract class Geosphere extends Surface {
     }
 
     public void windErosion(GeoCell spreadFrom) {
-        float height = calcHeight(0.00001f, Planet.self().getCellArea(), SEDIMENT);
+        float height = calcHeight(0.1f, Planet.self().getCellArea(), SEDIMENT);
         convertTopLayer(spreadFrom, height);
     }
 
@@ -180,8 +182,8 @@ public abstract class Geosphere extends Surface {
         GeoCell.SedimentBuffer eb = spreadFrom.getSedimentBuffer();
         Layer rockLayer = spreadFrom.peekTopStratum().getLayer();
         // Wind erosion
-        if (eb.getSediments() < 250 && !spreadFrom.hasOcean()
-                && spreadFrom.getMoltenRockFromSurface() < 300) {
+        if (eb.getSediments() == 0 && !spreadFrom.hasOcean()
+                && spreadFrom.getMoltenRockFromSurface() < 1) {
 
             rockMass = calcMass(height, Planet.self().getCellArea(), SEDIMENT);
             rockMass = spreadFrom.erode(rockMass);
