@@ -57,6 +57,7 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
     public final static int STRATAMAP = 1;
     public final static int LANDOCEAN = 2;
 
+    private static final String NAME = "Surface Map Thread";
     private static final int DEFAULT_THREAD_DELAY = 1;
     
     private MinMaxHeightFactory mhFactory;
@@ -81,7 +82,7 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
      * @param threadCount The number of threads that will work on the map
      */
     public Surface(int planetWidth, int ageStepDelay, int threadsDelay, int threadCount) {
-        super(planetWidth, DEFAULT_THREAD_DELAY, "Geosphere", threadCount);
+        super(planetWidth, DEFAULT_THREAD_DELAY, NAME, threadCount);
         ageUpdateDelay = new Delay(ageStepDelay);
         set();
         setupThreads(threadCount, threadsDelay);
