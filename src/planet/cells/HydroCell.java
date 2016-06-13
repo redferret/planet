@@ -29,11 +29,6 @@ public class HydroCell extends GeoCell {
     public static float evapScale;
 
     /**
-     * The cross-sectional area of each virtual pipe in the water pipeline
-     * model.
-     */
-    public static float crossSectionalArea;
-    /**
      * The percentage of water that can dissolve sediments.
      */
     public static float sedimentCapacity;
@@ -190,7 +185,6 @@ public class HydroCell extends GeoCell {
         evapScale = 2.5f;
         sedimentCapacity = 0.50f;
         minAngle = 1.5f;
-        crossSectionalArea = Planet.self().getCellArea();
     }
     
     private WaterPipeline waterPipeline;
