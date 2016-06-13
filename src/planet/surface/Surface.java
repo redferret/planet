@@ -229,7 +229,7 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
                 highestHeightIntPart = new AtomicInteger(0);
                 highestHeightDecPart = new AtomicInteger(0);
                 
-                delayTask = new Delay(50x);
+                delayTask = new Delay(50);
             }
 
             @Override
