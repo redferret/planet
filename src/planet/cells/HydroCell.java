@@ -36,13 +36,13 @@ public class HydroCell extends GeoCell {
     private static Integer[][] oceanMap;
     
     /**
-     * The water pipeline model for the movement of water.
+     * The buffer performs movement of water as well as erosion.
      */
-    public final class WaterPipeline extends TBuffer {
+    public final class ErosionBuffer extends TBuffer {
 
         private float bufferedMass;
         
-        public WaterPipeline(){
+        public ErosionBuffer(){
             super();
         }
         
@@ -60,14 +60,14 @@ public class HydroCell extends GeoCell {
             }
             SedimentBuffer eb = lowestCell.getSedimentBuffer();
             
-            WaterPipeline toUpdateWaterBuffer = getWaterPipeline();
-            WaterPipeline lowestHydroBuffer = lowestCell.getWaterPipeline();
+            ErosionBuffer toUpdateWaterBuffer = getErosionBuffer();
+            ErosionBuffer lowestHydroBuffer = lowestCell.getErosionBuffer();
 
             toUpdateWaterBuffer.applyBuffer();
             lowestHydroBuffer.applyBuffer();
 
-            HydroCell.SuspendedSediments lowestSSediments = getSedimentMap();
-            HydroCell.SuspendedSediments toUpdateSSediments = lowestCell.getSedimentMap();
+            HydroCell.SuspendedSediments lowestSSediments = getSuspendedSedimentBuffer();
+            HydroCell.SuspendedSediments toUpdateSSediments = lowestCell.getSuspendedSedimentBuffer();
 
             lowestSSediments.applyBuffer();
             toUpdateSSediments.applyBuffer();
@@ -127,7 +127,8 @@ public class HydroCell extends GeoCell {
     
     
     /**
-     * Buffer when moving sediments to other cells
+     * Buffer is used for moving sediments to other cells. The buffer is
+     * used to hold sediments in the water as they move down stream.
      */
     public final class SuspendedSediments extends TBuffer {
         
@@ -187,24 +188,24 @@ public class HydroCell extends GeoCell {
         minAngle = 1.5f;
     }
     
-    private WaterPipeline waterPipeline;
-    private SuspendedSediments sedimentMap;
+    private ErosionBuffer erosionBuffer;
+    private SuspendedSediments suspendedSediments;
     private float oceanMass;
     
     public HydroCell(int x, int y) {
         super(x, y);
         
         oceanMass = 0;
-        waterPipeline = new WaterPipeline();
-        sedimentMap = new SuspendedSediments();
+        erosionBuffer = new ErosionBuffer();
+        suspendedSediments = new SuspendedSediments();
     }
     
-    public WaterPipeline getWaterPipeline() {
-        return waterPipeline;
+    public ErosionBuffer getErosionBuffer() {
+        return erosionBuffer;
     }
 
-    public SuspendedSediments getSedimentMap() {
-        return sedimentMap;
+    public SuspendedSediments getSuspendedSedimentBuffer() {
+        return suspendedSediments;
     }
     
     /**

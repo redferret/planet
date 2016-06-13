@@ -99,7 +99,7 @@ public class WaterMovementTest extends JFrame implements DisplayAdapter {
         private void addWaterToCell(PlanetCell cell, float amount) {
             cell.addOceanMass(amount);
             cell.getSedimentBuffer().removeAllSediments();
-            cell.getSedimentMap().resetBuffer();
+            cell.getSuspendedSedimentBuffer().resetBuffer();
         }
     }
     

@@ -2,7 +2,7 @@ package planet.surface;
 
 import planet.worlds.Planet;
 import planet.cells.HydroCell;
-import planet.cells.HydroCell.WaterPipeline;
+import planet.cells.HydroCell.ErosionBuffer;
 import planet.util.Task;
 import planet.util.TaskAdapter;
 import planet.util.TaskFactory;
@@ -40,9 +40,9 @@ public abstract class Hydrosphere extends Geosphere {
 
     public void updateOceans(int x, int y) {
         HydroCell toUpdate = getCellAt(x, y);
-        WaterPipeline wp = toUpdate.getWaterPipeline();
+        ErosionBuffer erosionBuffer = toUpdate.getErosionBuffer();
 
-        wp.update();
+        erosionBuffer.update();
     }
 
     private class UpdateOceansFactory implements TaskFactory {

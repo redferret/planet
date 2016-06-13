@@ -40,7 +40,7 @@ public class AtmoCell extends BioCell {
 
         @Override
         public void applyBuffer() {
-            getWaterPipeline().transferWater(moisture);
+            getErosionBuffer().transferWater(moisture);
             resetBuffer();
         }
         
