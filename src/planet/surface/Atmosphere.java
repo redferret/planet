@@ -1,5 +1,3 @@
-
-
 package planet.surface;
 
 import planet.cells.PlanetCell;
@@ -8,6 +6,7 @@ import planet.util.Task;
 import planet.util.TaskFactory;
 import static planet.surface.Surface.rand;
 import planet.util.Tools;
+
 /**
  *
  * @author Richard DeSilvey
@@ -18,14 +17,14 @@ public class Atmosphere extends Hydrosphere {
         super(worldSize, surfaceDelay, threadsDelay, threadCount);
         produceTasks(new EvaporateFactory());
     }
-    
+
     private class EvaporateFactory implements TaskFactory {
 
         @Override
         public Task buildTask() {
             return new EvaporateTask();
         }
-        
+
         private class EvaporateTask implements Task {
 
             private Delay delay;
@@ -33,39 +32,37 @@ public class Atmosphere extends Hydrosphere {
             public EvaporateTask() {
                 delay = new Delay(1);
             }
-            
+
             @Override
             public void perform(int x, int y) {
-                if (y != 0){
+                if (y != 0) {
                     PlanetCell cell = getCellAt(x, y);
                     float w = getGridWidth();
                     float h = w / 2;
                     float rate = 0;
 
                     rate = calcLatitudeRate(y, h, w);
-                    
+
                     float amount = 15 * rate;
                     amount = cell.addOceanMass(-amount);
-                    
+
                     int rx = rand.nextInt(getGridWidth());
                     int ry = rand.nextInt(getGridWidth());
-                    
+
                     amount /= 4f;
-                    getCellAt(Tools.checkBounds(rx+1, getGridWidth()), ry).addOceanMass(amount);
-                    getCellAt(Tools.checkBounds(rx-1, getGridWidth()), ry).addOceanMass(amount);
-                    
-                    getCellAt(rx, Tools.checkBounds(ry+1, getGridWidth())).addOceanMass(amount);
-                    getCellAt(rx, Tools.checkBounds(ry-1, getGridWidth())).addOceanMass(amount);
+                    getCellAt(Tools.checkBounds(rx + 1, getGridWidth()), ry).addOceanMass(amount);
+                    getCellAt(Tools.checkBounds(rx - 1, getGridWidth()), ry).addOceanMass(amount);
+
+                    getCellAt(rx, Tools.checkBounds(ry + 1, getGridWidth())).addOceanMass(amount);
+                    getCellAt(rx, Tools.checkBounds(ry - 1, getGridWidth())).addOceanMass(amount);
                 }
             }
 
             private float calcLatitudeRate(int y, float h, float w) {
-                if (0 <= y && y < h){
+                if (0 <= y && y < h) {
                     return y / h;
-                }else if (h <= y && y < w){
+                } else {
                     return (w - y) / h;
-                }else{
-                    return 0;
                 }
             }
 
@@ -73,9 +70,9 @@ public class Atmosphere extends Hydrosphere {
             public boolean check() {
                 return delay.check() && !PlanetSurface.suppressAtmosphere;
             }
-            
+
         }
-        
+
     }
-    
+
 }
