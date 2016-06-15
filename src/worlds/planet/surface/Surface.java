@@ -62,8 +62,9 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
     private static final int DEFAULT_THREAD_DELAY = 1;
     
     private MinMaxHeightFactory mhFactory;
+    
     /**
-     * Used primarily for erosion algorithms.
+     * Internal cached Random object for surfaces.
      */
     protected static final Random random;
 
