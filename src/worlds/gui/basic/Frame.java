@@ -1,4 +1,4 @@
-package planet.worlds.gui;
+package worlds.gui.basic;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -8,7 +8,7 @@ import java.awt.image.WritableRaster;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
-import planet.worlds.planet.Planet;
+import worlds.planet.Planet;
 import planet.surface.SurfaceMap;
 
 /**

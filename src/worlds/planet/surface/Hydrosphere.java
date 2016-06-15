@@ -1,8 +1,8 @@
-package planet.worlds.planet.surface;
+package worlds.planet.surface;
 
-import planet.worlds.planet.Planet;
-import planet.worlds.planet.cells.HydroCell;
-import planet.worlds.planet.cells.HydroCell.ErosionBuffer;
+import worlds.planet.Planet;
+import worlds.planet.cells.HydroCell;
+import worlds.planet.cells.HydroCell.ErosionBuffer;
 import planet.util.Task;
 import planet.util.TaskAdapter;
 import planet.util.TaskFactory;

@@ -1,8 +1,8 @@
 
-package planet.worlds.planet.surface;
+package worlds.planet.surface;
 
-import planet.worlds.planet.enums.Layer;
-import planet.worlds.planet.Planet;
+import worlds.planet.enums.Layer;
+import worlds.planet.Planet;
 
 
 /**

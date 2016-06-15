@@ -1,4 +1,4 @@
-package planet.worlds.gui;
+package worlds.gui.basic;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -7,13 +7,13 @@ import java.awt.event.WindowEvent;
 import java.util.Deque;
 import java.util.LinkedList;
 import javax.swing.JFrame;
-import planet.worlds.planet.Planet;
-import planet.worlds.planet.TestWorld;
-import planet.worlds.planet.enums.Layer;
+import worlds.planet.Planet;
+import worlds.planet.TestWorld;
+import worlds.planet.enums.Layer;
 import planet.gui.DisplayAdapter;
-import planet.worlds.planet.surface.Geosphere;
-import planet.worlds.planet.surface.Hydrosphere;
-import planet.worlds.planet.surface.PlanetSurface;
+import worlds.planet.surface.Geosphere;
+import worlds.planet.surface.Hydrosphere;
+import worlds.planet.surface.PlanetSurface;
 
 /**
  * The BasicJView is to allow a user to see what is happening to the planet

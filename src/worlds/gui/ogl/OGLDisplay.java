@@ -1,6 +1,6 @@
 
 
-package planet.worlds.gui.ogl;
+package worlds.gui.ogl;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

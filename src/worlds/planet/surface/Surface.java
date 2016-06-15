@@ -1,4 +1,4 @@
-package planet.surface;
+package worlds.planet.surface;
 
 import java.util.ArrayList;
 import java.util.Deque;
@@ -7,13 +7,14 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
-import planet.worlds.planet.cells.PlanetCell;
+import worlds.planet.cells.PlanetCell;
 import planet.gui.DisplayAdapter;
+import planet.surface.SurfaceMap;
 import planet.util.Delay;
 import planet.util.Task;
 
-import static planet.surface.Surface.GEOUPDATE;
-import static planet.surface.Surface.planetAge;
+import static worlds.planet.surface.Surface.GEOUPDATE;
+import static worlds.planet.surface.Surface.planetAge;
 import planet.util.TaskFactory;
 /**
  * The Surface is the geology for the planet. It provides a foundation for life

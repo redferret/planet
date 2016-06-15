@@ -1,17 +1,17 @@
  
-package planet.worlds.planet.cells;
+package worlds.planet.cells;
 
 import java.awt.Color;
 import java.util.List;
-import planet.worlds.planet.Planet;
-import planet.worlds.planet.enums.Layer;
+import worlds.planet.Planet;
+import worlds.planet.enums.Layer;
 import planet.util.TBuffer;
-import planet.worlds.planet.surface.Hydrosphere;
+import worlds.planet.surface.Hydrosphere;
 import static planet.util.Tools.calcMass;
 import static planet.util.Tools.clamp;
 import static planet.util.Tools.constructGradient;
 import static planet.util.Tools.getLowestCellFrom;
-import static planet.worlds.planet.enums.Layer.OCEAN;
+import static worlds.planet.enums.Layer.OCEAN;
 import planet.util.Tools;
 
 /**

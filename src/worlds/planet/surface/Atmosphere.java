@@ -1,6 +1,6 @@
-package planet.worlds.planet.surface;
+package worlds.planet.surface;
 
-import planet.worlds.planet.cells.PlanetCell;
+import worlds.planet.cells.PlanetCell;
 import planet.util.Delay;
 import planet.util.Task;
 import planet.util.TaskFactory;

@@ -1,4 +1,4 @@
-package planet.worlds.planet.cells;
+package worlds.planet.cells;
 
 import java.awt.Color;
 import java.util.Deque;
@@ -6,18 +6,17 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import planet.worlds.planet.Planet;
+import worlds.planet.Planet;
 import planet.util.TBuffer;
 import planet.util.Tools;
-import planet.worlds.planet.enums.CrustType;
-import planet.worlds.planet.enums.Layer;
-import planet.worlds.planet.surface.Stratum;
-import planet.surface.Surface;
-
-import static planet.surface.Surface.*;
-import static planet.worlds.planet.enums.Layer.*;
-import planet.worlds.planet.surface.Geosphere;
-import planet.worlds.planet.surface.PlanetSurface;
+import worlds.planet.enums.CrustType;
+import worlds.planet.enums.Layer;
+import worlds.planet.surface.Stratum;
+import worlds.planet.surface.Surface;
+import static worlds.planet.surface.Surface.*;
+import static worlds.planet.enums.Layer.*;
+import worlds.planet.surface.Geosphere;
+import worlds.planet.surface.PlanetSurface;
 import static planet.util.Tools.*;
 
 /**

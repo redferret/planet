@@ -1,23 +1,22 @@
-package planet.worlds.planet.surface;
+package worlds.planet.surface;
 
 import java.util.ArrayList;
 import java.util.List;
-import planet.worlds.planet.Planet;
-import planet.worlds.planet.cells.GeoCell;
-import planet.worlds.planet.cells.HydroCell;
-import planet.worlds.planet.cells.PlanetCell;
-import planet.worlds.planet.enums.Layer;
-import planet.surface.Surface;
+import worlds.planet.Planet;
+import worlds.planet.cells.GeoCell;
+import worlds.planet.cells.HydroCell;
+import worlds.planet.cells.PlanetCell;
+import worlds.planet.enums.Layer;
 import planet.util.Delay;
 import planet.util.Task;
 import planet.util.TaskAdapter;
 import planet.util.TaskFactory;
 
-import static planet.worlds.planet.enums.Layer.BASALT;
-import static planet.worlds.planet.enums.Layer.LAVA;
-import static planet.worlds.planet.enums.Layer.SANDSTONE;
-import static planet.worlds.planet.enums.Layer.SEDIMENT;
-import static planet.worlds.planet.enums.Layer.SHALE;
+import static worlds.planet.enums.Layer.BASALT;
+import static worlds.planet.enums.Layer.LAVA;
+import static worlds.planet.enums.Layer.SANDSTONE;
+import static worlds.planet.enums.Layer.SEDIMENT;
+import static worlds.planet.enums.Layer.SHALE;
 import static planet.util.Tools.calcDepth;
 import static planet.util.Tools.calcHeight;
 import static planet.util.Tools.calcMass;
@@ -25,8 +24,8 @@ import static planet.util.Tools.changeMass;
 import static planet.util.Tools.checkBounds;
 import static planet.util.Tools.clamp;
 import static planet.util.Tools.getLowestCellFrom;
-import static planet.worlds.planet.Planet.TimeScale.Geological;
-import static planet.worlds.planet.Planet.TimeScale.None;
+import static worlds.planet.Planet.TimeScale.Geological;
+import static worlds.planet.Planet.TimeScale.None;
 
 
 /**

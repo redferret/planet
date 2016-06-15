@@ -1,10 +1,10 @@
-package planet.worlds.planet;
+package worlds.planet;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import planet.surface.SurfaceMap;
-import planet.worlds.planet.surface.PlanetSurface;
-import planet.surface.Surface;
+import worlds.planet.surface.PlanetSurface;
+import worlds.planet.surface.Surface;
 
 /**
  * The class that encapsulates a surface and keeps track of the timescale.

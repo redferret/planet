@@ -1,5 +1,5 @@
 
-package planet.worlds.planet.enums;
+package worlds.planet.enums;
 
 /**
  * The crust type is given by determining if the crust will subduct and
