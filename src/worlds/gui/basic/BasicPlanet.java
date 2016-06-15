@@ -16,12 +16,12 @@ import worlds.planet.surface.Hydrosphere;
 import worlds.planet.surface.PlanetSurface;
 
 /**
- * The BasicJView is to allow a user to see what is happening to the planet
- * using Java API JFrame and Java graphics.
+ * The BasicPlanet is to allow a user to see what is happening to the planet
+ using Java API JFrame and Java graphics.
  *
  * @author Richard DeSilvey
  */
-public class BasicJView extends JFrame implements DisplayAdapter {
+public class BasicPlanet extends JFrame implements DisplayAdapter {
 
     private Frame renderFrame;
     private TestWorld testWorld;
@@ -31,7 +31,7 @@ public class BasicJView extends JFrame implements DisplayAdapter {
     private static final int THREAD_COUNT = 2;
     private static final int SIZE = 512;
 
-    public BasicJView() {
+    public BasicPlanet() {
         super("Test World");
 
         averages = new LinkedList<>();
@@ -94,7 +94,7 @@ public class BasicJView extends JFrame implements DisplayAdapter {
     }
 
     public static void main(String[] args) {
-        new BasicJView();
+        new BasicPlanet();
     }
 
 }
