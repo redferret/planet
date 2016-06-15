@@ -233,8 +233,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
 
     /**
      * A separate method used for initializing the grid. This method should be
-     * called after the engine is created where each surface map is setup
-     * individually. This is due to the global reference to the engine.
+     * called after the engine is created.
      */
     protected void setupMap() {
         int cellCountWidth = gridWidth.get();
@@ -245,7 +244,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
         Logger.getLogger(SurfaceMap.class.getName()).log(Level.INFO, "Setting up map");
         for (int x = 0; x < cellCountWidth; x++) {
             for (int y = 0; y < cellCountWidth; y++) {
-                setCellAt(generateCell(x, y));
+                setCell(generateCell(x, y));
                 generated++;
                 logMapSetup(generated, flagUpdate, totalCells);
             }
@@ -261,7 +260,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
     }
 
     /**
-     * Method needs to be called internally from the Surface class.
+     * To setup the threads inside this map, call this method.
      *
      * @param threadDivision The value given is the dimensions of the threads. A
      * value n would yield an nxn grid of threads. Each controlling a section of
@@ -311,16 +310,6 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
     public CellType getCellAt(int index){
         return map.get(index);
     }
-
-    /**
-     * Returns the cell of this map using the position of the given cell.
-     *
-     * @param cell The cell to use a look up of it's coordinates?
-     * @return The cell at the location of the cell given at the parameter.
-     */
-    public CellType getCellAt(Cell cell) {
-        return getCellAt(cell.getX(), cell.getY());
-    }
     
     /**
      * This method is reserved for internal use only by the SurfaceMap during
@@ -328,7 +317,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
      *
      * @param cell The cell that is being added to the map
      */
-    private void setCellAt(CellType cell) {
+    private void setCell(CellType cell) {
         int x = cell.getX(), y = cell.getY();
         int index = calcIndex(x, y, gridWidth.get());
         map.put(index, cell);
