@@ -6,7 +6,7 @@ import java.util.Deque;
 import java.util.LinkedList;
 import javax.swing.JFrame;
 import planet.worlds.planet.cells.PlanetCell;
-import planet.worlds.TestWorld;
+import planet.worlds.planet.TestWorld;
 import planet.worlds.planet.enums.Layer;
 import planet.gui.DisplayAdapter;
 import planet.worlds.planet.surface.PlanetSurface;

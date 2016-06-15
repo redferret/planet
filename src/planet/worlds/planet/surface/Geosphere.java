@@ -2,7 +2,7 @@ package planet.worlds.planet.surface;
 
 import java.util.ArrayList;
 import java.util.List;
-import planet.worlds.Planet;
+import planet.worlds.planet.Planet;
 import planet.worlds.planet.cells.GeoCell;
 import planet.worlds.planet.cells.HydroCell;
 import planet.worlds.planet.cells.PlanetCell;
@@ -25,8 +25,8 @@ import static planet.util.Tools.changeMass;
 import static planet.util.Tools.checkBounds;
 import static planet.util.Tools.clamp;
 import static planet.util.Tools.getLowestCellFrom;
-import static planet.worlds.Planet.TimeScale.Geological;
-import static planet.worlds.Planet.TimeScale.None;
+import static planet.worlds.planet.Planet.TimeScale.Geological;
+import static planet.worlds.planet.Planet.TimeScale.None;
 
 
 /**

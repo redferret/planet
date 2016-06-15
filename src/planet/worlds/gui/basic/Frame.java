@@ -8,7 +8,7 @@ import java.awt.image.WritableRaster;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
-import planet.worlds.Planet;
+import planet.worlds.planet.Planet;
 import planet.surface.SurfaceMap;
 
 /**

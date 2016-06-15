@@ -2,7 +2,7 @@
 package planet.worlds.planet.surface;
 
 import planet.worlds.planet.enums.Layer;
-import planet.worlds.Planet;
+import planet.worlds.planet.Planet;
 
 
 /**

@@ -2,7 +2,7 @@
 import org.junit.Test;
 import planet.worlds.planet.cells.GeoCell;
 import planet.worlds.planet.enums.Layer;
-import planet.worlds.TestWorld;
+import planet.worlds.planet.TestWorld;
 
 import static org.junit.Assert.*;
 import planet.worlds.planet.cells.HydroCell;
