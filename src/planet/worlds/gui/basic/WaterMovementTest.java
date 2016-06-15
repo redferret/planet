@@ -1,15 +1,15 @@
 
 
-package planet.gui.basic;
+package planet.worlds.gui;
 
 import java.util.Deque;
 import java.util.LinkedList;
 import javax.swing.JFrame;
-import planet.cells.PlanetCell;
+import planet.worlds.planet.cells.PlanetCell;
 import planet.worlds.TestWorld;
-import planet.enums.Layer;
+import planet.worlds.planet.enums.Layer;
 import planet.gui.DisplayAdapter;
-import planet.surface.PlanetSurface;
+import planet.worlds.planet.surface.PlanetSurface;
 import planet.util.Delay;
 import planet.util.Task;
 import planet.util.TaskAdapter;

@@ -1,12 +1,12 @@
 
 import org.junit.Test;
-import planet.cells.GeoCell;
-import planet.enums.Layer;
+import planet.worlds.planet.cells.GeoCell;
+import planet.worlds.planet.enums.Layer;
 import planet.worlds.TestWorld;
 
 import static org.junit.Assert.*;
-import planet.cells.HydroCell;
-import planet.surface.Stratum;
+import planet.worlds.planet.cells.HydroCell;
+import planet.worlds.planet.surface.Stratum;
 
 
 /**

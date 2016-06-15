@@ -1,10 +1,9 @@
-package planet.surface;
+package planet.worlds.planet.surface;
 
-import planet.cells.PlanetCell;
+import planet.worlds.planet.cells.PlanetCell;
 import planet.util.Delay;
 import planet.util.Task;
 import planet.util.TaskFactory;
-import static planet.surface.Surface.rand;
 import planet.util.Tools;
 
 /**
@@ -46,8 +45,8 @@ public class Atmosphere extends Hydrosphere {
                     float amount = 15 * rate;
                     amount = cell.addOceanMass(-amount);
 
-                    int rx = rand.nextInt(getGridWidth());
-                    int ry = rand.nextInt(getGridWidth());
+                    int rx = random.nextInt(getGridWidth());
+                    int ry = random.nextInt(getGridWidth());
 
                     amount /= 4f;
                     getCellAt(Tools.checkBounds(rx + 1, getGridWidth()), ry).addOceanMass(amount);

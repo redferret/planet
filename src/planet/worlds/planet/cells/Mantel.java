@@ -1,10 +1,11 @@
 
 
-package planet.cells;
+package planet.worlds.planet.cells;
 
 import java.awt.Color;
 import java.util.List;
 import java.util.Random;
+import planet.cells.Cell;
 import planet.util.Tools;
 
 /**

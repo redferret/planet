@@ -1,4 +1,4 @@
-package planet.gui.basic;
+package planet.worlds.gui;
 
 import java.awt.Color;
 import java.awt.Graphics;

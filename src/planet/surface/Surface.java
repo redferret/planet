@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
-import planet.cells.PlanetCell;
+import planet.worlds.planet.cells.PlanetCell;
 import planet.gui.DisplayAdapter;
 import planet.util.Delay;
 import planet.util.Task;
@@ -64,10 +64,10 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
     /**
      * Used primarily for erosion algorithms.
      */
-    protected static final Random rand;
+    protected static final Random random;
 
     static {
-        rand = new Random();
+        random = new Random();
         timeStep = 100000;
         GEOUPDATE = 100000;
     }

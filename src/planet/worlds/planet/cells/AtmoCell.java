@@ -1,6 +1,6 @@
 
 
-package planet.cells;
+package planet.worlds.planet.cells;
 
 import java.util.List;
 import planet.util.TBuffer;

@@ -1,4 +1,4 @@
-package planet.cells;
+package planet.worlds.planet.cells;
 
 import java.awt.Color;
 import java.util.Deque;
@@ -9,15 +9,15 @@ import java.util.logging.Logger;
 import planet.worlds.Planet;
 import planet.util.TBuffer;
 import planet.util.Tools;
-import planet.enums.CrustType;
-import planet.enums.Layer;
-import planet.surface.Stratum;
+import planet.worlds.planet.enums.CrustType;
+import planet.worlds.planet.enums.Layer;
+import planet.worlds.planet.surface.Stratum;
 import planet.surface.Surface;
 
 import static planet.surface.Surface.*;
-import static planet.enums.Layer.*;
-import planet.surface.Geosphere;
-import planet.surface.PlanetSurface;
+import static planet.worlds.planet.enums.Layer.*;
+import planet.worlds.planet.surface.Geosphere;
+import planet.worlds.planet.surface.PlanetSurface;
 import static planet.util.Tools.*;
 
 /**

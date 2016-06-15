@@ -1,22 +1,23 @@
-package planet.surface;
+package planet.worlds.planet.surface;
 
 import java.util.ArrayList;
 import java.util.List;
 import planet.worlds.Planet;
-import planet.cells.GeoCell;
-import planet.cells.HydroCell;
-import planet.cells.PlanetCell;
-import planet.enums.Layer;
+import planet.worlds.planet.cells.GeoCell;
+import planet.worlds.planet.cells.HydroCell;
+import planet.worlds.planet.cells.PlanetCell;
+import planet.worlds.planet.enums.Layer;
+import planet.surface.Surface;
 import planet.util.Delay;
 import planet.util.Task;
 import planet.util.TaskAdapter;
 import planet.util.TaskFactory;
 
-import static planet.enums.Layer.BASALT;
-import static planet.enums.Layer.LAVA;
-import static planet.enums.Layer.SANDSTONE;
-import static planet.enums.Layer.SEDIMENT;
-import static planet.enums.Layer.SHALE;
+import static planet.worlds.planet.enums.Layer.BASALT;
+import static planet.worlds.planet.enums.Layer.LAVA;
+import static planet.worlds.planet.enums.Layer.SANDSTONE;
+import static planet.worlds.planet.enums.Layer.SEDIMENT;
+import static planet.worlds.planet.enums.Layer.SHALE;
 import static planet.util.Tools.calcDepth;
 import static planet.util.Tools.calcHeight;
 import static planet.util.Tools.calcMass;
@@ -238,7 +239,7 @@ public abstract class Geosphere extends Surface {
 
         if (lowestList.size() > 0) {
 
-            lowestGeoCell = lowestList.get(rand.nextInt(lowestList.size()));
+            lowestGeoCell = lowestList.get(random.nextInt(lowestList.size()));
             spreadFromHeight = spreadFrom.getHeightWithoutOceans() / 2.5f;
             lowestHeight = lowestGeoCell.getHeightWithoutOceans() / 2.5f;
 
@@ -274,7 +275,7 @@ public abstract class Geosphere extends Surface {
 
         GeoCell toUpdate = getCellAt(x, y);
 
-        if (toUpdate.getMoltenRockFromSurface() > 300) {
+        if (toUpdate.getMoltenRockFromSurface() > 10) {
             GeoCell lowest = getLowestCellFrom(toUpdate);
 
             if (lowest != null && lowest != toUpdate) {
@@ -337,10 +338,10 @@ public abstract class Geosphere extends Surface {
     }
 
     public void heatMantel() {
-        int n = rand.nextInt(heatDistributionCount);
+        int n = random.nextInt(heatDistributionCount);
         int totalCells = getTotalNumberOfCells();
         for (int i = 0; i < n; i++) {
-            int index = rand.nextInt(totalCells);
+            int index = random.nextInt(totalCells);
 
             PlanetCell cell = getCellAt(index);
             cell.addHeat(thermalInc);
@@ -376,7 +377,7 @@ public abstract class Geosphere extends Surface {
             private Delay delay;
 
             public WindErosionTask() {
-                delay = new Delay(300);
+                delay = new Delay(125);
             }
 
             @Override

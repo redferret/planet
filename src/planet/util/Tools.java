@@ -7,9 +7,9 @@ import java.awt.LinearGradientPaint;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import planet.worlds.Planet;
-import planet.enums.Layer;
-import planet.cells.GeoCell;
-import planet.surface.PlanetSurface;
+import planet.worlds.planet.enums.Layer;
+import planet.worlds.planet.cells.GeoCell;
+import planet.worlds.planet.surface.PlanetSurface;
 
 import static planet.surface.SurfaceMap.DIR_X_INDEX;
 import static planet.surface.SurfaceMap.DIR_Y_INDEX;
