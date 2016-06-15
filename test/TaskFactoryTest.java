@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import planet.util.Boundaries;
-import planet.util.SurfaceThread;
+import planet.surface.SurfaceThread;
 import planet.util.Task;
 import planet.util.TaskFactory;
 

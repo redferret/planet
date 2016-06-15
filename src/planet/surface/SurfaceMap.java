@@ -1,7 +1,6 @@
 package planet.surface;
 
 import planet.cells.Cell;
-import planet.util.SurfaceThread;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

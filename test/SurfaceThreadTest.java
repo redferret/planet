@@ -4,8 +4,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import planet.util.Boundaries;
-import planet.util.SurfaceThread;
-import planet.util.SurfaceThreadException;
+import planet.surface.SurfaceThread;
+import planet.surface.SurfaceThreadException;
 import planet.util.TaskAdapter;
 import static org.junit.Assert.*;
 /**
