@@ -3,8 +3,8 @@ package planet.util;
 import java.io.Serializable;
 
 /**
- * Delay objects are used when something needs a slower update than what your
- * main thread.
+ * Delays are counters that will return false until the counter has counted
+ * to the desired value, the delay can reset or continue to return true.
  *
  * @author Richard DeSilvey
  */
