@@ -19,14 +19,14 @@ public class SurfaceMapTest {
 
     private static final int MAP_SIZE = 5, DELAY = 1, THREAD_COUNT = 1,
             CELL_COUNT = MAP_SIZE * MAP_SIZE;
-    public static CountDownLatch latch;
+    private CountDownLatch latch;
 
     private TestSurface testSurface;
 
     @Before
     public void setUp() {
         latch = new CountDownLatch(CELL_COUNT);
-        testSurface = new TestSurface(MAP_SIZE, DELAY, THREAD_COUNT);
+        testSurface = new TestSurface(MAP_SIZE, DELAY, THREAD_COUNT, latch);
         testSurface.reset();
     }
 
@@ -118,8 +118,11 @@ public class SurfaceMapTest {
 
 class TestSurface extends SurfaceMap<TestCell> {
 
-    public TestSurface(int planetWidth, int delay, int threadCount) {
+    private CountDownLatch latch;
+    
+    public TestSurface(int planetWidth, int delay, int threadCount, CountDownLatch latch) {
         super(planetWidth, delay, "Test Surface", threadCount);
+        this.latch = latch;
         setupThreads(threadCount, delay);
         addTaskToThreads(new SurfaceTask());
     }
@@ -131,14 +134,13 @@ class TestSurface extends SurfaceMap<TestCell> {
 
     @Override
     public TestCell generateCell(int x, int y) {
-        return new TestCell(x, y);
+        return new TestCell(x, y, latch);
     }
 
     class SurfaceTask extends TaskAdapter {
 
         @Override
         public void perform(int x, int y) {
-            SurfaceMapTest.latch.countDown();
             getCellAt(x, y).update();
         }
     }
@@ -147,10 +149,12 @@ class TestSurface extends SurfaceMap<TestCell> {
 
 class TestCell extends Cell {
 
+    private CountDownLatch latch;
     private boolean updated;
 
-    public TestCell(int x, int y) {
+    public TestCell(int x, int y, CountDownLatch latch) {
         super(x, y);
+        this.latch = latch;
         updated = false;
     }
 
@@ -159,6 +163,7 @@ class TestCell extends Cell {
     }
 
     public void update() {
+        latch.countDown();
         updated = true;
     }
 
