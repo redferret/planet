@@ -58,12 +58,12 @@ public class MThreadTest {
     public void nonContinuousExecutionTest() throws InterruptedException {
         
         final int TEST_COUNT = 5;
-        
+
         for (int i = 0; i < TEST_COUNT; i++){
             latch = new CountDownLatch(2);
             testThread.play();
             boolean signaled = latch.await(100, TimeUnit.MILLISECONDS);
-            assertFalse("Thread is not continuous", signaled);
+            assertFalse("Thread is continuous", signaled);
         }
     }
 
