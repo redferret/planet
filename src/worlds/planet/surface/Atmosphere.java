@@ -10,7 +10,7 @@ import planet.util.Tools;
  *
  * @author Richard DeSilvey
  */
-public class Atmosphere extends Hydrosphere {
+public abstract class Atmosphere extends Hydrosphere {
 
     public Atmosphere(int worldSize, int surfaceDelay, int threadsDelay, int threadCount) {
         super(worldSize, surfaceDelay, threadsDelay, threadCount);
