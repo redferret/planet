@@ -92,7 +92,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
     /**
      * Starts all the threads
      */
-    public final void startAll() {
+    public final void startSurfaceThreads() {
         threads.forEach(thread -> {
             thread.start();
         });
@@ -101,7 +101,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
     /**
      * Pauses all the threads
      */
-    public final void pauseAll() {
+    public final void pauseSurfaceThreads() {
         threads.forEach(thread -> {
             thread.pause();
         });
@@ -110,7 +110,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
     /**
      * Plays all the threads
      */
-    public final void playAll() {
+    public final void playSurfaceThreads() {
         threads.forEach(thread -> {
             thread.play();
         });
@@ -210,7 +210,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
                 }
             }
             if (sleeping == expected) {
-                playAll();
+                playSurfaceThreads();
                 return true;
             }
         }

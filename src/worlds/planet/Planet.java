@@ -45,17 +45,17 @@ public abstract class Planet {
     }
 
     protected final void startThreads() {
-        planetSurface.startAll();
+        planetSurface.startSurfaceThreads();
         planetSurface.start();
     }
 
     public final void play() {
-        planetSurface.playAll();
+        planetSurface.playSurfaceThreads();
         planetSurface.play();
     }
 
     public final void pause() {
-        planetSurface.pauseAll();
+        planetSurface.pauseSurfaceThreads();
         planetSurface.pause();
     }
     

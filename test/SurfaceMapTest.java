@@ -39,8 +39,8 @@ public class SurfaceMapTest {
     @Test
     public void surfaceMapRunningTest() throws InterruptedException {
 
-        testSurface.startAll();
-        testSurface.playAll();
+        testSurface.startSurfaceThreads();
+        testSurface.playSurfaceThreads();
 
         boolean signaled = latch.await(5, TimeUnit.SECONDS);
         assertTrue("Latch was never signaled", signaled);
