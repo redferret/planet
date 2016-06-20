@@ -58,7 +58,7 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
     public final static int STRATAMAP = 1;
     public final static int LANDOCEAN = 2;
 
-    private static final String NAME = "Surface Map Thread";
+    private static final String NAME = "SurfaceMap Thread";
     private static final int DEFAULT_THREAD_DELAY = 1;
     
     private MinMaxHeightFactory mhFactory;
