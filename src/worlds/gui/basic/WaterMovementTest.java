@@ -81,21 +81,23 @@ public class WaterMovementTest extends JFrame implements DisplayAdapter {
         testWorld.getSurface().addTask(new EmptyWaterTask());
     }
     
-    private class EmptyWaterTask extends TaskAdapter {
+    private class EmptyWaterTask implements Task {
         @Override
         public void perform(int x, int y) {
-            if (x == 0 && y == 6){
-                
-                PlanetSurface surface = (PlanetSurface) testWorld.getSurface();
-                PlanetCell cell1 = surface.getCellAt(25, 6);
-                PlanetCell cell2 = surface.getCellAt(25, 7);
-                
-                addWaterToCell(cell1, -100000);
-                addWaterToCell(cell2, -100000);
-                
-            }
         }
 
+        @Override
+        public boolean check() {
+            PlanetSurface surface = (PlanetSurface) testWorld.getSurface();
+            PlanetCell cell1 = surface.getCellAt(25, 6);
+            PlanetCell cell2 = surface.getCellAt(25, 7);
+
+            addWaterToCell(cell1, -100000);
+            addWaterToCell(cell2, -100000);
+            
+            return false;
+        }
+        
         private void addWaterToCell(PlanetCell cell, float amount) {
             cell.addOceanMass(amount);
             cell.getSedimentBuffer().removeAllSediments();
@@ -111,14 +113,16 @@ public class WaterMovementTest extends JFrame implements DisplayAdapter {
         }
         @Override
         public void perform(int x, int y) {
-            if (x == 1 && y == 4){
-                testWorld.getSurface().getCellAt(1, 11).addOceanMass(100);
-            }
         }
 
         @Override
         public boolean check() {
-            return !timer.check();
+            
+            if (!timer.check()){
+                testWorld.getSurface().getCellAt(1, 11).addOceanMass(100);
+            }
+            
+            return false;
         }
     }
     
