@@ -12,8 +12,6 @@ import planet.gui.DisplayAdapter;
 import planet.util.BasicTask;
 import worlds.planet.surface.PlanetSurface;
 import planet.util.Delay;
-import planet.util.Task;
-import planet.util.TaskAdapter;
 
 /**
  * This test shows the movement of water over a surface and the erosion of
@@ -102,7 +100,7 @@ public class WaterMovementTest extends JFrame implements DisplayAdapter {
     }
     
     private class AddWaterTask extends BasicTask {
-        // Time the test for only 40000 frames then stop tasking.
+        // Time the test for only 10000 frames then stop tasking.
         private Delay timer;
         public AddWaterTask(){
             timer = new Delay(10000, false);
