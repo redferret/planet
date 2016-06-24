@@ -43,10 +43,13 @@ public class Frame extends JPanel {
     private void render(Graphics2D g2d) {
         if (map != null) {
             setRasterOfEachImage();
+            renderEachImage(g2d);
+        }
+    }
 
-            for (int i = images.size() - 1; i >= 0; i--) {
-                g2d.drawImage(images.get(i), 0, 0, getWidth(), getHeight(), null);
-            }
+    private void renderEachImage(Graphics2D g2d) {
+        for (int i = images.size() - 1; i >= 0; i--) {
+            g2d.drawImage(images.get(i), 0, 0, getWidth(), getHeight(), null);
         }
     }
 
