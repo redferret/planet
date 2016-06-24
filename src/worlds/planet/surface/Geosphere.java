@@ -2,6 +2,7 @@ package worlds.planet.surface;
 
 import java.util.ArrayList;
 import java.util.List;
+import planet.util.BasicTask;
 import worlds.planet.Planet;
 import worlds.planet.cells.GeoCell;
 import worlds.planet.cells.HydroCell;
@@ -428,7 +429,7 @@ public abstract class Geosphere extends Surface {
         }
     }
 
-    private class HeatMantel implements Task {
+    private class HeatMantel extends BasicTask {
 
         private Delay mantelHeatingDelay;
 
@@ -437,18 +438,14 @@ public abstract class Geosphere extends Surface {
         }
 
         @Override
-        public void perform(int x, int y) {
-        }
-
-        @Override
-        public boolean check() {
+        public void perform() {
             if (mantelHeatingDelay.check()) {
                 if (!PlanetSurface.suppressMantelHeating) {
                     heatMantel();
                 }
             }
-            return false;
         }
+
 
     }
 
