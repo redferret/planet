@@ -9,6 +9,7 @@ import worlds.planet.cells.PlanetCell;
 import worlds.planet.TestWorld;
 import worlds.planet.enums.Layer;
 import planet.gui.DisplayAdapter;
+import planet.util.BasicTask;
 import worlds.planet.surface.PlanetSurface;
 import planet.util.Delay;
 import planet.util.Task;
@@ -81,23 +82,18 @@ public class WaterMovementTest extends JFrame implements DisplayAdapter {
         testWorld.getSurface().addTask(new EmptyWaterTask());
     }
     
-    private class EmptyWaterTask implements Task {
+    private class EmptyWaterTask extends BasicTask {
+        
         @Override
-        public void perform(int x, int y) {
-        }
-
-        @Override
-        public boolean check() {
+        public void perform() {
             PlanetSurface surface = (PlanetSurface) testWorld.getSurface();
             PlanetCell cell1 = surface.getCellAt(25, 6);
             PlanetCell cell2 = surface.getCellAt(25, 7);
 
             addWaterToCell(cell1, -100000);
             addWaterToCell(cell2, -100000);
-            
-            return false;
         }
-        
+
         private void addWaterToCell(PlanetCell cell, float amount) {
             cell.addOceanMass(amount);
             cell.getSedimentBuffer().removeAllSediments();
@@ -105,25 +101,20 @@ public class WaterMovementTest extends JFrame implements DisplayAdapter {
         }
     }
     
-    private class AddWaterTask implements Task {
+    private class AddWaterTask extends BasicTask {
         // Time the test for only 40000 frames then stop tasking.
         private Delay timer;
         public AddWaterTask(){
             timer = new Delay(10000, false);
         }
-        @Override
-        public void perform(int x, int y) {
-        }
 
         @Override
-        public boolean check() {
-            
+        public void perform() {
             if (!timer.check()){
                 testWorld.getSurface().getCellAt(1, 11).addOceanMass(100);
             }
-            
-            return false;
         }
+
     }
     
     @Override
