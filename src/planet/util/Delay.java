@@ -8,7 +8,7 @@ import java.io.Serializable;
  *
  * @author Richard DeSilvey
  */
-public final class Delay implements Serializable {
+public class Delay implements Serializable {
 
     private int delayTime, maxDelay;
 
