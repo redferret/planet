@@ -13,6 +13,7 @@ import static planet.util.Tools.constructGradient;
 import static planet.util.Tools.getLowestCellFrom;
 import static worlds.planet.enums.Layer.OCEAN;
 import planet.util.Tools;
+import static worlds.planet.Planet.instance;
 
 /**
  * A HydroCell represents the hydrosphere of the planet. The class contains
@@ -83,13 +84,13 @@ public class HydroCell extends GeoCell {
                 lowestHeight = lowestCell.getHeight() / 2.5f;
 
                 differenceHeight = clamp(differenceHeight, -lowestHeight, curCellHeight);
-                area = Planet.instance().getCellArea();
+                area = instance().getCellArea();
                 displacedMass = calcMass(differenceHeight, area, OCEAN);
 
                 toUpdateWaterBuffer.transferWater(-displacedMass);
                 lowestHydroBuffer.transferWater(displacedMass);
                 
-                double theta = Math.atan(differenceHeight / Planet.instance().getCellLength());
+                double theta = Math.atan(differenceHeight / instance().getCellLength());
                 float angle = (float) Math.sin(theta);
                 float pressure = (float) Math.min(minAngle, angle);
                 
@@ -238,7 +239,7 @@ public class HydroCell extends GeoCell {
     }
     
     public float getOceanHeight() {
-        return getOceanVolume() / Planet.instance().getCellArea();
+        return getOceanVolume() / instance().getCellArea();
     }
     
     public List<Integer[]> render(List<Integer[]> settings) {

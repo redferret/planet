@@ -18,6 +18,7 @@ import static worlds.planet.enums.Layer.*;
 import worlds.planet.surface.Geosphere;
 import worlds.planet.surface.PlanetSurface;
 import static planet.util.Tools.*;
+import static worlds.planet.Planet.instance;
 
 /**
  * A GeoCell is a Cell representing land geographically. The cell contains
@@ -754,9 +755,9 @@ public class GeoCell extends Mantel {
         float cellHeight;
         float oceanVolume = ((HydroCell) this).getOceanVolume();
 
-        cellHeight = (oceanVolume + totalVolume) / Planet.instance().getCellArea();
+        cellHeight = (oceanVolume + totalVolume) / instance().getCellArea();
 
-        if (Planet.instance().getTimeScale() == Planet.TimeScale.Geological) {
+        if (instance().getTimeScale() == Planet.TimeScale.Geological) {
             recalculateHeight();
         }
 
@@ -771,7 +772,7 @@ public class GeoCell extends Mantel {
         float cellHeight, amountSubmerged, density = getDensity();
         float oceanVolume = ((HydroCell) this).getOceanVolume();
 
-        cellHeight = (oceanVolume + totalVolume) / Planet.instance().getCellArea();
+        cellHeight = (oceanVolume + totalVolume) / instance().getCellArea();
         amountSubmerged = cellHeight * (density / mantel_density);
 
         curAmountSubmerged = amountSubmerged;
@@ -785,7 +786,7 @@ public class GeoCell extends Mantel {
         float cellHeight, amountSubmerged, density = getDensity();
         float oceanVolume = ((HydroCell) this).getOceanVolume();
 
-        cellHeight = (oceanVolume + totalVolume) / Planet.instance().getCellArea();
+        cellHeight = (oceanVolume + totalVolume) / instance().getCellArea();
         amountSubmerged = cellHeight * (density / mantel_density);
 
         float diff = Math.abs(amountSubmerged - curAmountSubmerged);
@@ -805,7 +806,7 @@ public class GeoCell extends Mantel {
 
     public List<Integer[]> render(List<Integer[]> settings) {
         int setting;
-        PlanetSurface surface = (PlanetSurface) Planet.instance().getSurface();
+        PlanetSurface surface = (PlanetSurface) instance().getSurface();
         switch (surface.displaySetting) {
             case HEIGHTMAP:
                 float thisHeight = getHeightWithoutOceans();
@@ -826,7 +827,7 @@ public class GeoCell extends Mantel {
                     }
                     if (Geosphere.drawSediments) {
                         float mass = getSedimentBuffer().getSediments();
-                        float depth = Tools.calcHeight(mass, Planet.instance().getCellArea(), SEDIMENT);
+                        float depth = Tools.calcHeight(mass, instance().getCellArea(), SEDIMENT);
                         int sedIndex = (int) (depth / sedimentIndexRatio);
                         setting = sedIndex < MAX_SEDIMENT_INDEX ? sedIndex : MAX_SEDIMENT_INDEX - 1;
                         settings.add(sedimentMap[setting]);

@@ -1,6 +1,5 @@
 package worlds.planet.surface;
 
-import worlds.planet.Planet;
 import worlds.planet.cells.HydroCell;
 import worlds.planet.cells.HydroCell.ErosionBuffer;
 import planet.util.Task;

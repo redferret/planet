@@ -3,11 +3,11 @@ package worlds.planet.surface;
 import java.util.ArrayList;
 import java.util.List;
 import planet.util.BasicTask;
-import worlds.planet.Planet;
 import worlds.planet.cells.GeoCell;
 import worlds.planet.cells.HydroCell;
 import worlds.planet.cells.PlanetCell;
 import worlds.planet.enums.Layer;
+import worlds.planet.cells.GeoCell.SedimentBuffer;
 import planet.util.Delay;
 import planet.util.Task;
 import planet.util.TaskAdapter;
@@ -28,7 +28,7 @@ import static planet.util.Tools.getLowestCellFrom;
 import static worlds.planet.Planet.instance;
 import static worlds.planet.Planet.TimeScale.Geological;
 import static worlds.planet.Planet.TimeScale.None;
-import worlds.planet.cells.GeoCell.SedimentBuffer;
+
 
 
 /**
