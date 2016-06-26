@@ -46,7 +46,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
         PlanetSurface surface = (PlanetSurface) testWorld.getSurface();
         surface.addToSurface(Layer.BASALT, 1000);
         surface.addLavaToSurface(10000);
-        Planet.self().setTimescale(Planet.TimeScale.Geological);
+        Planet.instance().setTimescale(Planet.TimeScale.Geological);
         Geosphere.heatDistributionCount = 180;
 
         testWorld.play();
@@ -103,7 +103,7 @@ class KeyController extends KeyAdapter {
 
     @Override
     public void keyReleased(KeyEvent e) {
-        Planet p = Planet.self();
+        Planet p = Planet.instance();
         switch (e.getKeyCode()) {
 
             case KeyEvent.VK_INSERT:

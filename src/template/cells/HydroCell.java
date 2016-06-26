@@ -78,7 +78,7 @@ public class HydroCell extends GeoCell {
     }
     
     public float getOceanHeight() {
-        return getOceanVolume() / Planet.self().getCellArea();
+        return getOceanVolume() / Planet.instance().getCellArea();
     }
     
     public List<Integer[]> render(List<Integer[]> settings) {

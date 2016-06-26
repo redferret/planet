@@ -196,7 +196,7 @@ public class Tools {
         }
 
         int tx, ty, mx, my;
-        PlanetSurface surface = (PlanetSurface) Planet.self().getSurface();
+        PlanetSurface surface = (PlanetSurface) Planet.instance().getSurface();
 
         int x = central.getX(), y = central.getY();
         int xl = DIR_X_INDEX.length;
@@ -208,8 +208,8 @@ public class Tools {
             ty = y + DIR_Y_INDEX[s];
 
             // Check the boundaries
-            mx = checkBounds(tx, Planet.self().getSurface().getGridWidth());
-            my = checkBounds(ty, Planet.self().getSurface().getGridWidth());
+            mx = checkBounds(tx, Planet.instance().getSurface().getGridWidth());
+            my = checkBounds(ty, Planet.instance().getSurface().getGridWidth());
 
             cell = surface.getCellAt(mx, my);
 

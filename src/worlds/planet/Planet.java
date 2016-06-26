@@ -68,7 +68,7 @@ public abstract class Planet {
      *
      * @return A reference to the current Planet
      */
-    public final static Planet self() {
+    public final static Planet instance() {
         return current;
     }
 

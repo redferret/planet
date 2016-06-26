@@ -83,13 +83,13 @@ public class HydroCell extends GeoCell {
                 lowestHeight = lowestCell.getHeight() / 2.5f;
 
                 differenceHeight = clamp(differenceHeight, -lowestHeight, curCellHeight);
-                area = Planet.self().getCellArea();
+                area = Planet.instance().getCellArea();
                 displacedMass = calcMass(differenceHeight, area, OCEAN);
 
                 toUpdateWaterBuffer.transferWater(-displacedMass);
                 lowestHydroBuffer.transferWater(displacedMass);
                 
-                double theta = Math.atan(differenceHeight / Planet.self().getCellLength());
+                double theta = Math.atan(differenceHeight / Planet.instance().getCellLength());
                 float angle = (float) Math.sin(theta);
                 float pressure = (float) Math.min(minAngle, angle);
                 
@@ -238,7 +238,7 @@ public class HydroCell extends GeoCell {
     }
     
     public float getOceanHeight() {
-        return getOceanVolume() / Planet.self().getCellArea();
+        return getOceanVolume() / Planet.instance().getCellArea();
     }
     
     public List<Integer[]> render(List<Integer[]> settings) {

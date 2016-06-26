@@ -754,9 +754,9 @@ public class GeoCell extends Mantel {
         float cellHeight;
         float oceanVolume = ((HydroCell) this).getOceanVolume();
 
-        cellHeight = (oceanVolume + totalVolume) / Planet.self().getCellArea();
+        cellHeight = (oceanVolume + totalVolume) / Planet.instance().getCellArea();
 
-        if (Planet.self().getTimeScale() == Planet.TimeScale.Geological) {
+        if (Planet.instance().getTimeScale() == Planet.TimeScale.Geological) {
             recalculateHeight();
         }
 
@@ -771,7 +771,7 @@ public class GeoCell extends Mantel {
         float cellHeight, amountSubmerged, density = getDensity();
         float oceanVolume = ((HydroCell) this).getOceanVolume();
 
-        cellHeight = (oceanVolume + totalVolume) / Planet.self().getCellArea();
+        cellHeight = (oceanVolume + totalVolume) / Planet.instance().getCellArea();
         amountSubmerged = cellHeight * (density / mantel_density);
 
         curAmountSubmerged = amountSubmerged;
@@ -785,7 +785,7 @@ public class GeoCell extends Mantel {
         float cellHeight, amountSubmerged, density = getDensity();
         float oceanVolume = ((HydroCell) this).getOceanVolume();
 
-        cellHeight = (oceanVolume + totalVolume) / Planet.self().getCellArea();
+        cellHeight = (oceanVolume + totalVolume) / Planet.instance().getCellArea();
         amountSubmerged = cellHeight * (density / mantel_density);
 
         float diff = Math.abs(amountSubmerged - curAmountSubmerged);
@@ -805,7 +805,7 @@ public class GeoCell extends Mantel {
 
     public List<Integer[]> render(List<Integer[]> settings) {
         int setting;
-        PlanetSurface surface = (PlanetSurface) Planet.self().getSurface();
+        PlanetSurface surface = (PlanetSurface) Planet.instance().getSurface();
         switch (surface.displaySetting) {
             case HEIGHTMAP:
                 float thisHeight = getHeightWithoutOceans();
@@ -826,7 +826,7 @@ public class GeoCell extends Mantel {
                     }
                     if (Geosphere.drawSediments) {
                         float mass = getSedimentBuffer().getSediments();
-                        float depth = Tools.calcHeight(mass, Planet.self().getCellArea(), SEDIMENT);
+                        float depth = Tools.calcHeight(mass, Planet.instance().getCellArea(), SEDIMENT);
                         int sedIndex = (int) (depth / sedimentIndexRatio);
                         setting = sedIndex < MAX_SEDIMENT_INDEX ? sedIndex : MAX_SEDIMENT_INDEX - 1;
                         settings.add(sedimentMap[setting]);

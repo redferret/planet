@@ -47,7 +47,7 @@ public class Stratum {
 
         this.type = type;
         
-        this.age = Planet.self().getSurface().getPlanetAge();
+        this.age = Planet.instance().getSurface().getPlanetAge();
         
         lastAdd = this.age;
         top = null;
@@ -59,7 +59,7 @@ public class Stratum {
      */
     public void resetAge(){
         
-        this.age = Planet.self().getSurface().getPlanetAge();
+        this.age = Planet.instance().getSurface().getPlanetAge();
         
     }
     
@@ -81,12 +81,12 @@ public class Stratum {
     
     /**
      * The height is calculated based on the volume of the stratum and the
- Planet.self().getCellArea()_SQRD.
+ Planet.instance().getCellArea()_SQRD.
      *
      * @return The height of this stratum.
      */
     public float getHeight() {
-        return getVolume() / Planet.self().getCellArea();
+        return getVolume() / Planet.instance().getCellArea();
     }
     
     public void setMass(float m){
@@ -95,7 +95,7 @@ public class Stratum {
     
     public void addToMass(float value){
         this.mass += value;
-        lastAdd = Planet.self().getSurface().getPlanetAge();
+        lastAdd = Planet.instance().getSurface().getPlanetAge();
     }
 
     public long getLastAdd(){
