@@ -164,13 +164,15 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
     }
     
     /**
-     * Produces individual instances of a Task for each thread.
-     * @param factory The object factory that will produce a Task for
+     * Produces individual instances of a Task for each thread using the given
+     * instance of a TaskFactory.
+     * @param factory The factory object that will produce a Task for
      * each thread.
      */
     public void produceTasks(TaskFactory factory){
         threads.forEach(thread -> {
-            thread.addTask(factory.buildTask());
+            Task producedTask = factory.buildTask();
+            thread.addTask(producedTask);
         });
     }
     
