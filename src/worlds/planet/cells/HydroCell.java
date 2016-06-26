@@ -66,8 +66,8 @@ public class HydroCell extends GeoCell {
             toUpdateWaterBuffer.applyBuffer();
             lowestHydroBuffer.applyBuffer();
 
-            HydroCell.SuspendedSediments lowestSSediments = getSuspendedSedimentBuffer();
-            HydroCell.SuspendedSediments toUpdateSSediments = lowestCell.getSuspendedSedimentBuffer();
+            SuspendedSediments lowestSSediments = getSuspendedSedimentBuffer();
+            SuspendedSediments toUpdateSSediments = lowestCell.getSuspendedSedimentBuffer();
 
             lowestSSediments.applyBuffer();
             toUpdateSSediments.applyBuffer();
