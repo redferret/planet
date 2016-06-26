@@ -28,6 +28,7 @@ import static planet.util.Tools.getLowestCellFrom;
 import static worlds.planet.Planet.instance;
 import static worlds.planet.Planet.TimeScale.Geological;
 import static worlds.planet.Planet.TimeScale.None;
+import worlds.planet.cells.GeoCell.SedimentBuffer;
 
 
 /**
@@ -141,7 +142,7 @@ public abstract class Geosphere extends Surface {
 
         float height, diff, massBeingDeposited;
         Layer depositType;
-        GeoCell.SedimentBuffer eb = cell.getSedimentBuffer();
+        SedimentBuffer eb = cell.getSedimentBuffer();
 
         height = calcHeight(eb.getSediments(), instance().getCellArea(), SEDIMENT);
         if (height > maxHeight) {
@@ -181,7 +182,7 @@ public abstract class Geosphere extends Surface {
             return;
         }
 
-        GeoCell.SedimentBuffer eb = spreadFrom.getSedimentBuffer();
+        SedimentBuffer eb = spreadFrom.getSedimentBuffer();
         Layer rockLayer = spreadFrom.peekTopStratum().getLayer();
         // Wind erosion
         if (eb.getSediments() == 0 && !spreadFrom.hasOcean()
@@ -234,8 +235,8 @@ public abstract class Geosphere extends Surface {
     public void spread(ArrayList<GeoCell> lowestList, GeoCell spreadFrom) {
 
         GeoCell lowestGeoCell;
-        GeoCell.SedimentBuffer eb = spreadFrom.getSedimentBuffer();
-        GeoCell.SedimentBuffer lowestBuffer;
+        SedimentBuffer eb = spreadFrom.getSedimentBuffer();
+        SedimentBuffer lowestBuffer;
         float spreadFromHeight, lowestHeight, diff, mass;
 
         if (lowestList.size() > 0) {
