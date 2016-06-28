@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import worlds.planet.Planet;
-import planet.util.TBuffer;
-import planet.util.Tools;
+import engine.util.TBuffer;
+import engine.util.Tools;
 import worlds.planet.enums.CrustType;
 import worlds.planet.enums.Layer;
 import worlds.planet.surface.Stratum;
@@ -17,7 +17,7 @@ import static worlds.planet.surface.Surface.*;
 import static worlds.planet.enums.Layer.*;
 import worlds.planet.surface.Geosphere;
 import worlds.planet.surface.PlanetSurface;
-import static planet.util.Tools.*;
+import static engine.util.Tools.*;
 import static worlds.planet.Planet.instance;
 
 /**

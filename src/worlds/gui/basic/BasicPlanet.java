@@ -10,7 +10,7 @@ import javax.swing.JFrame;
 import worlds.planet.Planet;
 import worlds.planet.TestWorld;
 import worlds.planet.enums.Layer;
-import planet.gui.DisplayAdapter;
+import engine.gui.DisplayAdapter;
 import worlds.planet.surface.Geosphere;
 import worlds.planet.surface.Hydrosphere;
 import worlds.planet.surface.PlanetSurface;
@@ -46,7 +46,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
         PlanetSurface surface = (PlanetSurface) testWorld.getSurface();
         surface.addToSurface(Layer.BASALT, 1000);
         surface.addLavaToSurface(10000);
-        Planet.instance().setTimescale(Planet.TimeScale.Geological);
+        testWorld.setTimescale(Planet.TimeScale.Geological);
         Geosphere.heatDistributionCount = 180;
 
         testWorld.play();

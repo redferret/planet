@@ -1,6 +1,6 @@
 package worlds.planet;
 
-import planet.util.Tools;
+import engine.util.Tools;
 
 /**
  * This class is used for testing purposes.

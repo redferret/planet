@@ -1,5 +1,5 @@
 
-package planet.util;
+package engine.util;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -11,8 +11,8 @@ import worlds.planet.enums.Layer;
 import worlds.planet.cells.GeoCell;
 import worlds.planet.surface.PlanetSurface;
 
-import static planet.surface.SurfaceMap.DIR_X_INDEX;
-import static planet.surface.SurfaceMap.DIR_Y_INDEX;
+import static engine.surface.SurfaceMap.DIR_X_INDEX;
+import static engine.surface.SurfaceMap.DIR_Y_INDEX;
 
 /**
  * A utility class for the system.

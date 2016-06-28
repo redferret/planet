@@ -1,4 +1,4 @@
-package planet.surface;
+package engine.surface;
 
 import java.util.Deque;
 import java.util.LinkedList;
@@ -6,9 +6,9 @@ import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import planet.util.Boundaries;
-import planet.util.MThread;
-import planet.util.Task;
+import engine.util.Boundaries;
+import engine.util.MThread;
+import engine.util.Task;
 
 /**
  * A surface can be broken up into sections where a SurfaceThread can modify and

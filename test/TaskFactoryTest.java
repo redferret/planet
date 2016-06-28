@@ -5,10 +5,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import planet.util.Boundaries;
-import planet.surface.SurfaceThread;
-import planet.util.Task;
-import planet.util.TaskFactory;
+import engine.util.Boundaries;
+import engine.surface.SurfaceThread;
+import engine.util.Task;
+import engine.util.TaskFactory;
 
 /**
  * Tests the functionality of the TaskFactory by proving each thread will

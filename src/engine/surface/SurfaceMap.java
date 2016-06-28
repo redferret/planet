@@ -1,6 +1,6 @@
-package planet.surface;
+package engine.surface;
 
-import planet.cells.Cell;
+import engine.cells.Cell;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -9,11 +9,11 @@ import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import planet.gui.RenderInterface;
-import planet.util.Boundaries;
-import planet.util.MThread;
-import planet.util.Task;
-import planet.util.TaskFactory;
+import engine.gui.RenderInterface;
+import engine.util.Boundaries;
+import engine.util.MThread;
+import engine.util.Task;
+import engine.util.TaskFactory;
 
 /**
  * The SurfaceMap is a generic map for all the systems on the planet. The map

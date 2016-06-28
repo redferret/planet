@@ -1,10 +1,10 @@
 package worlds.planet.surface;
 
 import worlds.planet.cells.PlanetCell;
-import planet.util.Delay;
-import planet.util.Task;
-import planet.util.TaskFactory;
-import planet.util.Tools;
+import engine.util.Delay;
+import engine.util.Task;
+import engine.util.TaskFactory;
+import engine.util.Tools;
 
 /**
  *
@@ -58,11 +58,7 @@ public abstract class Atmosphere extends Hydrosphere {
             }
 
             private float calcLatitudeRate(int y, float h, float w) {
-                if (0 <= y && y < h) {
-                    return y / h;
-                } else {
-                    return (w - y) / h;
-                }
+                return (0 <= y && y < h) ? y / h : (w - y) / h;
             }
 
             @Override

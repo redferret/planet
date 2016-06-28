@@ -5,9 +5,9 @@ import java.util.concurrent.TimeUnit;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import planet.cells.Cell;
-import planet.surface.SurfaceMap;
-import planet.util.TaskAdapter;
+import engine.cells.Cell;
+import engine.surface.SurfaceMap;
+import engine.util.TaskAdapter;
 import static org.junit.Assert.*;
 
 /**

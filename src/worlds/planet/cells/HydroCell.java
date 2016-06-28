@@ -5,14 +5,14 @@ import java.awt.Color;
 import java.util.List;
 import worlds.planet.Planet;
 import worlds.planet.enums.Layer;
-import planet.util.TBuffer;
+import engine.util.TBuffer;
 import worlds.planet.surface.Hydrosphere;
-import static planet.util.Tools.calcMass;
-import static planet.util.Tools.clamp;
-import static planet.util.Tools.constructGradient;
-import static planet.util.Tools.getLowestCellFrom;
+import static engine.util.Tools.calcMass;
+import static engine.util.Tools.clamp;
+import static engine.util.Tools.constructGradient;
+import static engine.util.Tools.getLowestCellFrom;
 import static worlds.planet.enums.Layer.OCEAN;
-import planet.util.Tools;
+import engine.util.Tools;
 import static worlds.planet.Planet.instance;
 
 /**

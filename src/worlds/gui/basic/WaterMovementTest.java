@@ -8,10 +8,10 @@ import javax.swing.JFrame;
 import worlds.planet.cells.PlanetCell;
 import worlds.planet.TestWorld;
 import worlds.planet.enums.Layer;
-import planet.gui.DisplayAdapter;
-import planet.util.BasicTask;
+import engine.gui.DisplayAdapter;
+import engine.util.BasicTask;
 import worlds.planet.surface.PlanetSurface;
-import planet.util.Timer;
+import engine.util.Timer;
 
 /**
  * This test shows the movement of water over a surface and the erosion of

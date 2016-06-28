@@ -8,14 +8,14 @@ import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import worlds.planet.cells.PlanetCell;
-import planet.gui.DisplayAdapter;
-import planet.surface.SurfaceMap;
-import planet.util.Delay;
-import planet.util.Task;
+import engine.gui.DisplayAdapter;
+import engine.surface.SurfaceMap;
+import engine.util.Delay;
+import engine.util.Task;
 
 import static worlds.planet.surface.Surface.GEOUPDATE;
 import static worlds.planet.surface.Surface.planetAge;
-import planet.util.TaskFactory;
+import engine.util.TaskFactory;
 /**
  * The Surface is the geology for the planet. It provides a foundation for life
  * to grow on and to influence climate in many ways. Through the placement of

@@ -1,6 +1,6 @@
 
 import org.junit.Test;
-import planet.util.Delay;
+import engine.util.Delay;
 import static org.junit.Assert.*;
 
 /**

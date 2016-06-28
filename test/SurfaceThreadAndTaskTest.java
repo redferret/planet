@@ -4,10 +4,10 @@ import java.util.concurrent.CyclicBarrier;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import planet.util.Boundaries;
-import planet.surface.SurfaceThread;
-import planet.surface.SurfaceThreadException;
-import planet.util.Task;
+import engine.util.Boundaries;
+import engine.surface.SurfaceThread;
+import engine.surface.SurfaceThreadException;
+import engine.util.Task;
 import static org.junit.Assert.*;
 
 /**

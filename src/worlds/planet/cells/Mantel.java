@@ -5,8 +5,8 @@ package worlds.planet.cells;
 import java.awt.Color;
 import java.util.List;
 import java.util.Random;
-import planet.cells.Cell;
-import planet.util.Tools;
+import engine.cells.Cell;
+import engine.util.Tools;
 
 /**
  * The mantel is below the crust, heat and magma that build up to critical

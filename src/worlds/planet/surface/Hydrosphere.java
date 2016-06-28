@@ -2,9 +2,9 @@ package worlds.planet.surface;
 
 import worlds.planet.cells.HydroCell;
 import worlds.planet.cells.HydroCell.ErosionBuffer;
-import planet.util.Task;
-import planet.util.TaskAdapter;
-import planet.util.TaskFactory;
+import engine.util.Task;
+import engine.util.TaskAdapter;
+import engine.util.TaskFactory;
 
 /**
  * The hydrosphere is everything that deals with rivers, lakes, seas, and
