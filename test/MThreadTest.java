@@ -27,7 +27,7 @@ public class MThreadTest {
         latch = new CountDownLatch(1);
         
         testThread.play();
-        boolean signaled = latch.await(500, TimeUnit.MILLISECONDS);
+        boolean signaled = latch.await(600, TimeUnit.MILLISECONDS);
         assertTrue(signaled);
         
         testThread.pause();
