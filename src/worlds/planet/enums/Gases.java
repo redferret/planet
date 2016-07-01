@@ -21,7 +21,7 @@ package worlds.planet.enums;
  */
 public enum Gases {
     Argon(208), CarbonDioxide(189), CarbonMonoxide(297), 
-    Methane(518), Nitrogen(297), Oxygen(260), Ozone(173);
+    Methane(518), Nitrogen(297), Oxygen(260), Ozone(173), WaterVapor(462);
     
     public static int ALTITUDE = 50000;
     private int gasConstant;

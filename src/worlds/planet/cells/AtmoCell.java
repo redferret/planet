@@ -5,6 +5,7 @@ package worlds.planet.cells;
 import java.util.List;
 import engine.util.TBuffer;
 import java.util.ArrayList;
+import worlds.planet.enums.Gases;
 import worlds.planet.surface.Gas;
 
 
@@ -17,7 +18,7 @@ public class AtmoCell extends BioCell {
 
     public class AirBuffer extends TBuffer {
 
-        private float moisture;
+        private float waterVapor;
         
         public AirBuffer(){
             super();
@@ -27,21 +28,21 @@ public class AtmoCell extends BioCell {
             if (amount < 0){
                 throw new IllegalArgumentException("Amount must be positive");
             }
-            moisture += amount;
+            waterVapor += amount;
         }
         
-        public float getMoisture(){
-            return moisture;
+        public float getWaterVapor(){
+            return waterVapor;
         }
         
         @Override
         protected void init() {
-            moisture = 0;
+            waterVapor = 0;
         }
 
         @Override
         public void applyBuffer() {
-            getErosionBuffer().transferWater(moisture);
+            getErosionBuffer().transferWater(waterVapor);
             resetBuffer();
         }
         
@@ -57,8 +58,20 @@ public class AtmoCell extends BioCell {
         super(x, y);
         airBuffer = new AirBuffer();
         gases = new ArrayList<>();
+        setupGases();
     }
 
+    private void setupGases(){
+        gases.add(new Gas(Gases.Argon));
+        gases.add(new Gas(Gases.CarbonDioxide));
+        gases.add(new Gas(Gases.CarbonMonoxide));
+        gases.add(new Gas(Gases.Methane));
+        gases.add(new Gas(Gases.Nitrogen));
+        gases.add(new Gas(Gases.Oxygen));
+        gases.add(new Gas(Gases.Ozone));
+        gases.add(new Gas(Gases.WaterVapor));
+    }
+    
     public AirBuffer getAirBuffer(){
         return airBuffer;
     }
