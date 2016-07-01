@@ -4,6 +4,8 @@ package worlds.planet.cells;
 
 import java.util.List;
 import engine.util.TBuffer;
+import java.util.ArrayList;
+import worlds.planet.surface.Gas;
 
 
 /**
@@ -49,11 +51,12 @@ public class AtmoCell extends BioCell {
     
     private float temperature;
     
-    private List gases;
+    private List<Gas> gases;
     
     public AtmoCell(int x, int y) {
         super(x, y);
         airBuffer = new AirBuffer();
+        gases = new ArrayList<>();
     }
 
     public AirBuffer getAirBuffer(){
