@@ -20,7 +20,9 @@ import engine.util.TaskFactory;
  * contains generic cells. The RenderInterface is not required for this class
  * but it gives two methods for rendering each map. This implementation may
  * change in the future when new graphic rendering capabilities change.
- *
+ * A SurfaceMap also by default doesn't instantiate any SurfaceThreads,
+ * therefore the <code>setupThreads(int threadDivision, int delay)</code> 
+ * needs to be called after this super class is created.
  * @author Richard DeSilvey
  * @param <CellType> The highest level abstraction of the cell i.e. PlanetCell
  */
@@ -67,7 +69,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
     private final CyclicBarrier waitingGate;
     
     /**
-     * Create a new map
+     * Create a new map with no SurfaceThreads loaded yet.
      *
      * @param planetWidth The size of the map
      * @param delay The number of frames to delay updating
