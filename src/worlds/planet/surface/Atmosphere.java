@@ -5,6 +5,9 @@ import engine.util.Delay;
 import engine.util.Task;
 import engine.util.TaskFactory;
 import engine.util.Tools;
+import java.util.ArrayList;
+import java.util.List;
+import worlds.planet.enums.Gases;
 
 /**
  *
@@ -12,9 +15,23 @@ import engine.util.Tools;
  */
 public abstract class Atmosphere extends Hydrosphere {
 
+    private List<Gas> gases;
+
     public Atmosphere(int worldSize, int surfaceDelay, int threadsDelay, int threadCount) {
         super(worldSize, surfaceDelay, threadsDelay, threadCount);
         produceTasks(new EvaporateFactory());
+        gases = new ArrayList<>();
+        setupGases();
+    }
+    
+    private void setupGases(){
+        gases.add(new Gas(Gases.Argon));
+        gases.add(new Gas(Gases.CarbonDioxide));
+        gases.add(new Gas(Gases.CarbonMonoxide));
+        gases.add(new Gas(Gases.Methane));
+        gases.add(new Gas(Gases.Nitrogen));
+        gases.add(new Gas(Gases.Oxygen));
+        gases.add(new Gas(Gases.Ozone));
     }
 
     private class EvaporateFactory implements TaskFactory {
