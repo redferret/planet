@@ -19,7 +19,6 @@ public class AtmoCell extends BioCell {
         
         public AirBuffer(){
             super();
-            moisture = 0;
         }
         
         public void addWater(float amount){
@@ -35,7 +34,7 @@ public class AtmoCell extends BioCell {
         
         @Override
         protected void init() {
-            
+            moisture = 0;
         }
 
         @Override
@@ -47,6 +46,10 @@ public class AtmoCell extends BioCell {
     }
     
     private AirBuffer airBuffer;
+    
+    private float temperature;
+    
+    private List gases;
     
     public AtmoCell(int x, int y) {
         super(x, y);
