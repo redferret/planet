@@ -52,26 +52,14 @@ public class AtmoCell extends BioCell {
     
     private float temperature;
     
-    private List<Gas> gases;
+    private Gas waterVapor;
     
     public AtmoCell(int x, int y) {
         super(x, y);
         airBuffer = new AirBuffer();
-        gases = new ArrayList<>();
-        setupGases();
+        waterVapor = new Gas(Gases.WaterVapor);
     }
 
-    private void setupGases(){
-        gases.add(new Gas(Gases.Argon));
-        gases.add(new Gas(Gases.CarbonDioxide));
-        gases.add(new Gas(Gases.CarbonMonoxide));
-        gases.add(new Gas(Gases.Methane));
-        gases.add(new Gas(Gases.Nitrogen));
-        gases.add(new Gas(Gases.Oxygen));
-        gases.add(new Gas(Gases.Ozone));
-        gases.add(new Gas(Gases.WaterVapor));
-    }
-    
     public AirBuffer getAirBuffer(){
         return airBuffer;
     }
