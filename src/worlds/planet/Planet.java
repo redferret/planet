@@ -44,15 +44,19 @@ public abstract class Planet {
      */
     public Planet(int gridWidth, int cellLength, int ageStepDelay, int surfaceThreadsDelay, int threadCount) {
         Logger.getLogger(SurfaceMap.class.getName()).log(Level.INFO, "New Planet");
-        if (current != null){
-            Logger.getLogger(SurfaceThread.class.getName()).log(Level.SEVERE, EXISTING_INSTANCE_ERR_MSG);
-            System.exit(EXISTING_INSTANCE_ERR_MSG_CODE);
-        }
+        checkForExistingInstance();
         current = this;
         area = cellLength * cellLength;
         this.cellLength = cellLength;
         timescale = TimeScale.None;
         planetSurface = new PlanetSurface(gridWidth, ageStepDelay, surfaceThreadsDelay, threadCount);
+    }
+
+    private void checkForExistingInstance() {
+        if (current != null){
+            Logger.getLogger(SurfaceThread.class.getName()).log(Level.SEVERE, EXISTING_INSTANCE_ERR_MSG);
+            System.exit(EXISTING_INSTANCE_ERR_MSG_CODE);
+        }
     }
 
     protected final void startThreads() {
