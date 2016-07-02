@@ -17,6 +17,15 @@ import worlds.planet.surface.Gas;
  */
 public class AtmoCell extends BioCell {
 
+    /**
+     * The height of each AirLayer on the surface. This calculation is based
+     * on the maximum altitude for the planet up to the mesosphere.
+     */
+    private static float airLayerThickness;
+    
+    /**
+     * This class is used to represent the layers in an Atmosphere.
+     */
     public class AirLayer {
 
         private float temperature;
@@ -60,6 +69,7 @@ public class AtmoCell extends BioCell {
             airBuffer = new AirBuffer();
             this.temperature = 0;
             this.waterVapor = new Gas(Gases.WaterVapor);
+            airLayerThickness = Gases.MAX_ALTITUDE / airLayers.size();
         }
 
         public AirBuffer getAirBuffer() {
@@ -68,17 +78,17 @@ public class AtmoCell extends BioCell {
 
     }
 
-    private List<AirLayer> layers;
+    private List<AirLayer> airLayers;
     
     public AtmoCell(int x, int y) {
         super(x, y);
-        layers = new ArrayList<>();
+        airLayers = new ArrayList<>();
         setupLayers();
     }
 
     private void setupLayers() {
-        layers.add(new AirLayer());
-        layers.add(new AirLayer());
+        airLayers.add(new AirLayer());
+        airLayers.add(new AirLayer());
     }
 
     /**
@@ -86,9 +96,13 @@ public class AtmoCell extends BioCell {
      * @return The layers as a Stream
      */
     public Stream<AirLayer> getLayers(){
-        return layers.stream();
+        return airLayers.stream();
     }
     
+    /**
+     * Calculates the average temperature of all the layers at this cell.
+     * @return The average temperature for this cell.
+     */
     public float getAverageTemp(){
         return 0;
     }

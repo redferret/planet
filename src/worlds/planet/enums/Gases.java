@@ -19,7 +19,7 @@ public enum Gases {
     Argon(39.948f), CarbonDioxide(44.01f), CarbonMonoxide(28.011f), Chlorine(70.906f), 
     Methane(16.043f), Nitrogen(28.0134f), Oxygen(32f), Ozone(48), WaterVapor(18);
     
-    public static int ALTITUDE = 50000;
+    public static int MAX_ALTITUDE = 50000;
     private float moles;
     
     private Gases(float moles){
