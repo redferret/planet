@@ -16,53 +16,70 @@ import worlds.planet.surface.Gas;
  */
 public class AtmoCell extends BioCell {
 
-    public class AirBuffer extends TBuffer {
+    public class AirLayer {
 
-        private float waterVapor;
-        
-        public AirBuffer(){
-            super();
-        }
-        
-        public void addWater(float amount){
-            if (amount < 0){
-                throw new IllegalArgumentException("Amount must be positive");
+        private float temperature;
+        private Gas waterVapor;
+
+        public class AirBuffer extends TBuffer {
+
+            private float waterVapor;
+
+            public AirBuffer() {
+                super();
             }
-            waterVapor += amount;
-        }
-        
-        public float getWaterVapor(){
-            return waterVapor;
-        }
-        
-        @Override
-        protected void init() {
-            waterVapor = 0;
+
+            public void addWater(float amount) {
+                if (amount < 0) {
+                    throw new IllegalArgumentException("Amount must be positive");
+                }
+                waterVapor += amount;
+            }
+
+            public float getWaterVapor() {
+                return waterVapor;
+            }
+
+            @Override
+            protected void init() {
+                waterVapor = 0;
+            }
+
+            @Override
+            public void applyBuffer() {
+                getErosionBuffer().transferWater(waterVapor);
+                resetBuffer();
+            }
+
         }
 
-        @Override
-        public void applyBuffer() {
-            getErosionBuffer().transferWater(waterVapor);
-            resetBuffer();
+        private AirBuffer airBuffer;
+
+        public AirLayer() {
+            airBuffer = new AirBuffer();
+            this.temperature = 0;
+            this.waterVapor = new Gas(Gases.WaterVapor);
         }
-        
+
+        public AirBuffer getAirBuffer() {
+            return airBuffer;
+        }
+
     }
-    
-    private AirBuffer airBuffer;
-    
-    private float temperature;
-    
-    private Gas waterVapor;
+
+    private List<AirLayer> layers;
     
     public AtmoCell(int x, int y) {
         super(x, y);
-        airBuffer = new AirBuffer();
-        waterVapor = new Gas(Gases.WaterVapor);
+        layers = new ArrayList<>();
+        setupLayers();
     }
 
-    public AirBuffer getAirBuffer(){
-        return airBuffer;
+    private void setupLayers() {
+        layers.add(new AirLayer());
+        layers.add(new AirLayer());
     }
+
     
     public List<Integer[]> render(List<Integer[]> settings) {
         return super.render(settings);
