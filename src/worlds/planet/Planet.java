@@ -19,9 +19,11 @@ public abstract class Planet {
     protected TimeScale timescale;
     private static Planet current;
     private Surface planetSurface;
-
-    private static final String EXISTING_INSTANCE_ERR_MSG = "An instance of Planet is already running: 5000";
+    
     private static final int EXISTING_INSTANCE_ERR_MSG_CODE = 5000;
+    private static final String EXISTING_INSTANCE_ERR_MSG = 
+            "An instance of Planet is already running: " + EXISTING_INSTANCE_ERR_MSG_CODE;
+    
     
     public static enum TimeScale {
         Geological, Evolutionary, Civilization, None
