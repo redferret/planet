@@ -791,6 +791,11 @@ public class GeoCell extends Mantel {
         cellHeight = (oceanVolume + totalVolume) / instance().getCellArea();
         amountSubmerged = cellHeight * (density / mantel_density);
 
+        shiftHeigh(amountSubmerged);
+
+    }
+
+    private void shiftHeigh(float amountSubmerged) {
         float diff = Math.abs(amountSubmerged - curAmountSubmerged);
         float change = diff / 2f;
         change = (change < 0.01f) ? 0.01f : change;
@@ -799,7 +804,6 @@ public class GeoCell extends Mantel {
         } else if (amountSubmerged < curAmountSubmerged) {
             curAmountSubmerged -= change;
         }
-
     }
 
     public boolean hasOcean() {
