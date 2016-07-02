@@ -10,7 +10,7 @@ package worlds.planet.enums;
  * second step, each atom then undergoes a binding collision with another oxygen
  * molecule to form an ozone molecule. In the overall process, three oxygen
  * molecules plus sunlight react to form two ozone molecules.
- *
+ * source: http://www.esrl.noaa.gov/csd/assessments/ozone/2010/twentyquestions/Q2.pdf
  * 
  * @author Richard DeSilvey
  */
