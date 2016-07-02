@@ -23,6 +23,12 @@ public class AtmoCell extends BioCell {
      */
     private static float airLayerThickness;
     
+    public static final int LAYER_COUNT = 2;
+    
+    static {
+        airLayerThickness = Gases.MAX_ALTITUDE / LAYER_COUNT;
+    }
+    
     /**
      * This class is used to represent the layers in an Atmosphere.
      */
@@ -71,6 +77,17 @@ public class AtmoCell extends BioCell {
             this.waterVapor = new Gas(Gases.WaterVapor);
         }
 
+        public float getWaterVapor() {
+            return waterVapor.getMolarMass();
+        }
+        
+        public void addWater(float amount){
+            waterVapor.setMass(waterVapor.getMass() + amount);
+            if (waterVapor.getMass() < 0){
+                waterVapor.setMass(0);
+            }
+        }
+        
         public AirBuffer getAirBuffer() {
             return airBuffer;
         }
@@ -86,9 +103,9 @@ public class AtmoCell extends BioCell {
     }
 
     private void setupLayers() {
-        airLayers.add(new AirLayer());
-        airLayers.add(new AirLayer());
-        airLayerThickness = Gases.MAX_ALTITUDE / airLayers.size();
+        for (int l = 0; l < LAYER_COUNT; l++){
+            airLayers.add(new AirLayer());
+        }
     }
 
     /**
@@ -104,7 +121,18 @@ public class AtmoCell extends BioCell {
      * @return The average temperature for this cell.
      */
     public float getAverageTemp(){
-        return 0;
+        
+        float avgTemp = 0;
+        
+        for(AirLayer layer : airLayers){
+            avgTemp += layer.temperature;
+        }
+        
+        return avgTemp / airLayers.size();
+    }
+    
+    public static float getAirLayerThickness() {
+        return airLayerThickness;
     }
     
     public List<Integer[]> render(List<Integer[]> settings) {
