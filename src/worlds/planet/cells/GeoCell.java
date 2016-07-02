@@ -766,7 +766,9 @@ public class GeoCell extends Mantel {
     }
 
     /**
-     * Shifts the height of this cell to it's equilibrium height.
+     * Shifts the height of this cell to it's equilibrium height. This method
+     * is called while the simulation is in the Geological timescale and the
+     * <code>getHeight()</code> method is called.
      */
     public void recalculateHeight() {
         float cellHeight, amountSubmerged, density = getDensity();
