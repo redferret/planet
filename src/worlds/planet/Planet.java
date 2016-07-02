@@ -3,6 +3,7 @@ package worlds.planet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import engine.surface.SurfaceMap;
+import engine.surface.SurfaceThread;
 import worlds.planet.surface.PlanetSurface;
 import worlds.planet.surface.Surface;
 
@@ -19,11 +20,17 @@ public abstract class Planet {
     private static Planet current;
     private Surface planetSurface;
 
+    private static final String EXISTING_INSTANCE_ERR_MSG = "An instance of Planet is already running: 5000";
+    private static final int EXISTING_INSTANCE_ERR_MSG_CODE = 5000;
+    
     public static enum TimeScale {
-
         Geological, Evolutionary, Civilization, None
     }
 
+    static {
+        current = null;
+    }
+    
     /**
      * Constructs a new Planet.
      *
@@ -37,6 +44,10 @@ public abstract class Planet {
      */
     public Planet(int gridWidth, int cellLength, int ageStepDelay, int surfaceThreadsDelay, int threadCount) {
         Logger.getLogger(SurfaceMap.class.getName()).log(Level.INFO, "New Planet");
+        if (current != null){
+            Logger.getLogger(SurfaceThread.class.getName()).log(Level.SEVERE, EXISTING_INSTANCE_ERR_MSG);
+            System.exit(EXISTING_INSTANCE_ERR_MSG_CODE);
+        }
         current = this;
         area = cellLength * cellLength;
         this.cellLength = cellLength;
