@@ -11,27 +11,23 @@ package worlds.planet.enums;
  * molecule to form an ozone molecule. In the overall process, three oxygen
  * molecules plus sunlight react to form two ozone molecules.
  *
- * atmospheric pressure can be calculated with p = (m / v) R T
- * R = Gas Constant
- * T = Temperature
- * m = mass
- * v = volume
  * 
  * @author Richard DeSilvey
  */
 public enum Gases {
-    Argon(208), CarbonDioxide(189), CarbonMonoxide(297), 
-    Methane(518), Nitrogen(297), Oxygen(260), Ozone(173), WaterVapor(462);
+    
+    Argon(39.948f), CarbonDioxide(44.01f), CarbonMonoxide(28.011f), Chlorine(70.906f), 
+    Methane(16.043f), Nitrogen(28.0134f), Oxygen(32f), Ozone(48), WaterVapor(18);
     
     public static int ALTITUDE = 50000;
-    private int gasConstant;
+    private float moles;
     
-    private Gases(int gasConstant){
-        this.gasConstant = gasConstant;
+    private Gases(float moles){
+        this.moles = moles;
     }
 
-    public int getGasConstant() {
-        return gasConstant;
+    public float getMoles() {
+        return moles;
     }
     
 }

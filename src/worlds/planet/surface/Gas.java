@@ -19,7 +19,7 @@ public class Gas {
     }
 
     public float getMass() {
-        return mass;
+        return mass / gasType.getMoles();
     }
 
     public Gases getGasType() {
