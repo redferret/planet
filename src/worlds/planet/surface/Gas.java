@@ -18,10 +18,14 @@ public class Gas {
         this.gasType = gasType;
     }
 
-    public float getMass() {
+    public float getMolarMass() {
         return mass / gasType.getMoles();
     }
 
+    public float getMass() {
+        return mass;
+    }
+    
     public Gases getGasType() {
         return gasType;
     }
