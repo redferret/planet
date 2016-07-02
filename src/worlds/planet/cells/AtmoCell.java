@@ -5,6 +5,7 @@ package worlds.planet.cells;
 import java.util.List;
 import engine.util.TBuffer;
 import java.util.ArrayList;
+import java.util.stream.Stream;
 import worlds.planet.enums.Gases;
 import worlds.planet.surface.Gas;
 
@@ -80,6 +81,17 @@ public class AtmoCell extends BioCell {
         layers.add(new AirLayer());
     }
 
+    /**
+     * Gets the layers as a Stream
+     * @return The layers as a Stream
+     */
+    public Stream<AirLayer> getLayers(){
+        return layers.stream();
+    }
+    
+    public float getAverageTemp(){
+        return 0;
+    }
     
     public List<Integer[]> render(List<Integer[]> settings) {
         return super.render(settings);
