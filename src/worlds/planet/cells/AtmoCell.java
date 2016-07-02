@@ -69,7 +69,6 @@ public class AtmoCell extends BioCell {
             airBuffer = new AirBuffer();
             this.temperature = 0;
             this.waterVapor = new Gas(Gases.WaterVapor);
-            airLayerThickness = Gases.MAX_ALTITUDE / airLayers.size();
         }
 
         public AirBuffer getAirBuffer() {
@@ -89,6 +88,7 @@ public class AtmoCell extends BioCell {
     private void setupLayers() {
         airLayers.add(new AirLayer());
         airLayers.add(new AirLayer());
+        airLayerThickness = Gases.MAX_ALTITUDE / airLayers.size();
     }
 
     /**
