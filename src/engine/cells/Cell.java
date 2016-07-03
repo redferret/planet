@@ -30,7 +30,7 @@ public abstract class Cell {
     public int getY() {
         return y;
     }
-
+    
     public abstract List<Integer[]> render(List<Integer[]> settings);
     
     public String toString() {
