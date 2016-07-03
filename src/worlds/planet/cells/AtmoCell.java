@@ -6,7 +6,7 @@ import java.util.List;
 import engine.util.TBuffer;
 import java.util.ArrayList;
 import java.util.stream.Stream;
-import worlds.planet.enums.Gases;
+import worlds.planet.enums.GasType;
 import worlds.planet.surface.Gas;
 
 
@@ -26,7 +26,7 @@ public class AtmoCell extends BioCell {
     public static final int LAYER_COUNT = 2;
     
     static {
-        airLayerThickness = Gases.MAX_ALTITUDE / LAYER_COUNT;
+        airLayerThickness = GasType.MAX_ALTITUDE / LAYER_COUNT;
     }
     
     /**
@@ -74,7 +74,7 @@ public class AtmoCell extends BioCell {
         public AirLayer() {
             airBuffer = new AirBuffer();
             this.temperature = 0;
-            this.waterVapor = new Gas(Gases.WaterVapor);
+            this.waterVapor = new Gas(GasType.WaterVapor);
         }
 
         public float getWaterVapor() {

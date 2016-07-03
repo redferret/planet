@@ -7,7 +7,7 @@ import engine.util.TaskFactory;
 import engine.util.Tools;
 import java.util.ArrayList;
 import java.util.List;
-import worlds.planet.enums.Gases;
+import worlds.planet.enums.GasType;
 
 /**
  *
@@ -25,13 +25,13 @@ public abstract class Atmosphere extends Hydrosphere {
     }
     
     private void setupGases(){
-        gases.add(new Gas(Gases.Argon));
-        gases.add(new Gas(Gases.CarbonDioxide));
-        gases.add(new Gas(Gases.CarbonMonoxide));
-        gases.add(new Gas(Gases.Methane));
-        gases.add(new Gas(Gases.Nitrogen));
-        gases.add(new Gas(Gases.Oxygen));
-        gases.add(new Gas(Gases.Ozone));
+        gases.add(new Gas(GasType.Argon));
+        gases.add(new Gas(GasType.CarbonDioxide));
+        gases.add(new Gas(GasType.CarbonMonoxide));
+        gases.add(new Gas(GasType.Methane));
+        gases.add(new Gas(GasType.Nitrogen));
+        gases.add(new Gas(GasType.Oxygen));
+        gases.add(new Gas(GasType.Ozone));
     }
 
     private class EvaporateFactory implements TaskFactory {

@@ -2,7 +2,7 @@
 
 package worlds.planet.surface;
 
-import worlds.planet.enums.Gases;
+import worlds.planet.enums.GasType;
 
 /**
  *
@@ -10,10 +10,10 @@ import worlds.planet.enums.Gases;
  */
 public class Gas {
 
-    private Gases gasType;
+    private GasType gasType;
     private float mass;
     
-    public Gas(Gases gasType){
+    public Gas(GasType gasType){
         mass = 0;
         this.gasType = gasType;
     }
@@ -26,7 +26,7 @@ public class Gas {
         return mass;
     }
     
-    public Gases getGasType() {
+    public GasType getGasType() {
         return gasType;
     }
 
