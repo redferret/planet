@@ -10,13 +10,13 @@ import engine.util.Tools;
 public class TestWorld extends Planet {
 
     private static final int CELL_SIZE_M, DEFAULT_SIZE,
-            PLANET_DELAY, DEFAULT_THREAD_COUNT, AGE_STEP_DELAY;
+            SURFACE_THREAD_DELAY, DEFAULT_THREAD_COUNT, PLANET_SURFACE_DELAY;
 
     static {
         CELL_SIZE_M = 12;
         DEFAULT_THREAD_COUNT = 1;
-        PLANET_DELAY = 1;
-        AGE_STEP_DELAY = 250;
+        SURFACE_THREAD_DELAY = 1;
+        PLANET_SURFACE_DELAY = 250;
         DEFAULT_SIZE = 256;
     }
 
@@ -45,7 +45,7 @@ public class TestWorld extends Planet {
      * @param threadCount The number of thread divisions
      */
     public TestWorld(int worldSize, int threadCount) {
-        super(worldSize * threadCount, CELL_SIZE_M, AGE_STEP_DELAY, PLANET_DELAY, threadCount);
+        super(worldSize * threadCount, CELL_SIZE_M, PLANET_SURFACE_DELAY, SURFACE_THREAD_DELAY, threadCount);
         startThreads();
     }
 }

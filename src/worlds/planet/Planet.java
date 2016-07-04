@@ -47,7 +47,6 @@ public abstract class Planet {
     public Planet(int gridWidth, int cellLength, int ageStepDelay, int surfaceThreadsDelay, int threadCount) {
         Logger.getLogger(SurfaceMap.class.getName()).log(Level.INFO, "New Planet");
         checkForExistingInstance();
-        current = this;
         area = cellLength * cellLength;
         this.cellLength = cellLength;
         timescale = TimeScale.None;
@@ -59,6 +58,7 @@ public abstract class Planet {
             Logger.getLogger(SurfaceThread.class.getName()).log(Level.SEVERE, EXISTING_INSTANCE_ERR_MSG);
             System.exit(EXISTING_INSTANCE_ERR_MSG_CODE);
         }
+        current = this;
     }
 
     protected final void startThreads() {

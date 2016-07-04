@@ -35,7 +35,7 @@ public class SurfaceThread extends MThread {
      * @param delay The amount of time to delay each frame in milliseconds
      * @param bounds The surface boundaries
      * @param name The name of this thread
-     * @param waitingGate The gate for this thread to wait at before running
+     * @param waitingGate The CyclicBarrier to synchronize with other threads
      */
     public SurfaceThread(int delay, Boundaries bounds, String name, CyclicBarrier waitingGate) {
         super(delay, name, CONTINUOUS);
@@ -50,10 +50,6 @@ public class SurfaceThread extends MThread {
         throwExecption = b;
     }
     
-    /**
-     * Each time the thread posts an perform this method is called following a
-     * post-perform call to postUpdate()
-     */
     public final void update() {
 
         try {
