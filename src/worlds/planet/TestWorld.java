@@ -31,7 +31,7 @@ public class TestWorld extends Planet {
      * Constructs a new test world for the simulation with a given thread 
      * divisor on a default sized world.
      *
-     * @param threadCount The size of the world squared.
+     * @param threadCount The number of threads for a default sized world.
      */
     public TestWorld(int threadCount) {
         this(DEFAULT_SIZE, threadCount);
