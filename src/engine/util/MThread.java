@@ -61,6 +61,7 @@ public abstract class MThread extends Thread {
     
     public void kill(){
         executing = false;
+        waiter.reset();
     }
     
     public boolean paused(){
