@@ -39,7 +39,6 @@ class BioSurface extends SurfaceMap<BioNode> {
     private static final int BIO_CELL_COUNT = 3, THREAD_COUNT = 1,
             BIO_TOTAL_COUNT = BIO_CELL_COUNT * BIO_CELL_COUNT;
     private static final String THREAD_NAME = "Bio Surface";
-    private static boolean NOT_CONTINUOUS = false;
     private int cellCount;
     private TaskManager manager;
     
