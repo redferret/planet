@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 import engine.util.Boundaries;
 import engine.util.MThread;
 import engine.util.Task;
+import engine.util.TaskManager;
 
 /**
  * A surface can be broken up into sections where a SurfaceThread can modify and
@@ -18,13 +19,11 @@ import engine.util.Task;
  */
 public class SurfaceThread extends MThread {
 
-    private Deque<Task> tasks;
     /**
      * Lower bounds are inclusive, upper bounds are exclusive
      */
-    protected Boundaries bounds;
     private int curFrame;
-    
+    private TaskManager manager;
     private static final boolean CONTINUOUS = true;
     private boolean throwExecption;
     
@@ -40,9 +39,8 @@ public class SurfaceThread extends MThread {
     public SurfaceThread(int delay, Boundaries bounds, String name, CyclicBarrier waitingGate) {
         super(delay, name, CONTINUOUS);
         this.waitingGate = waitingGate;
-        this.bounds = bounds;
+        manager = new TaskManager(bounds);
         curFrame = 0;
-        tasks = new LinkedList<>();
         throwExecption = false;
     }
     
@@ -54,7 +52,7 @@ public class SurfaceThread extends MThread {
 
         try {
             waitingGate.await();
-            performTasks();
+            manager.performTasks();
         } catch (SurfaceThreadException | InterruptedException | BrokenBarrierException e) {
             logException(e);
         }
@@ -71,26 +69,8 @@ public class SurfaceThread extends MThread {
         }
     }
 
-    private void performTasks() {
-        
-        int lowerYBound = bounds.getLowerYBound();
-        int upperYBound = bounds.getUpperYBound();
-        int lowerXBound = bounds.getLowerXBound();
-        int upperXBound = bounds.getUpperXBound();
-        
-        tasks.forEach(task -> {
-            if (task.check()) {
-                for (int y = lowerYBound; y < upperYBound; y++) {
-                    for (int x = lowerXBound; x < upperXBound; x++) {
-                        task.perform(x, y);
-                    }
-                }
-            }
-        });
-    }
-
     public void addTask(Task task){
-        tasks.add(task);
+        manager.addTask(task);
     }
     
 }

@@ -10,12 +10,14 @@ import java.util.concurrent.atomic.AtomicLong;
 import worlds.planet.cells.PlanetCell;
 import engine.gui.DisplayAdapter;
 import engine.surface.SurfaceMap;
+import engine.util.Boundaries;
 import engine.util.Delay;
 import engine.util.Task;
 
 import static worlds.planet.surface.Surface.GEOUPDATE;
 import static worlds.planet.surface.Surface.planetAge;
 import engine.util.TaskFactory;
+import engine.util.TaskManager;
 /**
  * The Surface is the geology for the planet. It provides a foundation for life
  * to grow on and to influence climate in many ways. Through the placement of
@@ -50,8 +52,9 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
     public static long timeStep;
 
     private DisplayAdapter display;
-    private Deque<Task> generalTasks;
 
+    private TaskManager generalTasks;
+    
     private Delay ageUpdateDelay, threadAverageDelay;
 
     public final static int HEIGHTMAP = 0;
@@ -90,12 +93,13 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
         setupThreads(threadCount, threadsDelay);
         mhFactory = new MinMaxHeightFactory();
         produceTasks(mhFactory);
+        Boundaries bounds = new Boundaries(0, planetWidth, 0, planetWidth);
+        generalTasks = new TaskManager(bounds);
     }
 
     private void set() {
         threadAverageDelay = new Delay(500);
         display = null;
-        generalTasks = new LinkedList<>();
         reset();
     }
 
@@ -118,7 +122,7 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
     }
     
     public void addTask(Task task){
-        generalTasks.add(task);
+        generalTasks.addTask(task);
     }
     
     @Override
@@ -133,7 +137,7 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
             super.update();
         }
         
-        performTasks();
+        generalTasks.performTasks();
         
     }
 
@@ -146,19 +150,6 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
                 geologicalTimeStamp = curPlanetAge;
             }
         }
-    }
-
-    private void performTasks() {
-        int worldSize = getGridWidth();
-        generalTasks.forEach(task -> {
-            if (task.check()) {
-                for (int y = 0; y < worldSize; y++) {
-                    for (int x = 0; x < worldSize; x++) {
-                        task.perform(x, y);
-                    }
-                }
-            }
-        });
     }
 
     @Override
