@@ -1,8 +1,6 @@
 package worlds.planet.surface;
 
 import java.util.ArrayList;
-import java.util.Deque;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -13,11 +11,11 @@ import engine.surface.SurfaceMap;
 import engine.util.Boundaries;
 import engine.util.Delay;
 import engine.util.Task;
-
-import static worlds.planet.surface.Surface.GEOUPDATE;
-import static worlds.planet.surface.Surface.planetAge;
 import engine.util.TaskFactory;
 import engine.util.TaskManager;
+import static worlds.planet.surface.Surface.GEOUPDATE;
+import static worlds.planet.surface.Surface.planetAge;
+
 /**
  * The Surface is the geology for the planet. It provides a foundation for life
  * to grow on and to influence climate in many ways. Through the placement of

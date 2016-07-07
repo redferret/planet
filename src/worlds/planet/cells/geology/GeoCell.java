@@ -6,19 +6,19 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import worlds.planet.Planet;
 import engine.util.TBuffer;
 import engine.util.Tools;
+import worlds.planet.Planet;
 import worlds.planet.cells.HydroCell;
 import worlds.planet.enums.CrustType;
 import worlds.planet.enums.Layer;
 import worlds.planet.surface.Surface;
-import static worlds.planet.surface.Surface.*;
-import static worlds.planet.enums.Layer.*;
 import worlds.planet.surface.Geosphere;
 import worlds.planet.surface.PlanetSurface;
 import static engine.util.Tools.*;
 import static worlds.planet.Planet.instance;
+import static worlds.planet.surface.Surface.*;
+import static worlds.planet.enums.Layer.*;
 
 /**
  * A GeoCell is a Cell representing land geographically. The cell contains
@@ -188,7 +188,7 @@ public class GeoCell extends Mantel {
 
     private long depositAgeTimeStamp;
 
-    private static Integer[][] heightMap, strataMap, sedimentMap;
+    private final static Integer[][] heightMap, strataMap, sedimentMap;
 
     public final static int MAX_HEIGHT_INDEX = 50;
 
