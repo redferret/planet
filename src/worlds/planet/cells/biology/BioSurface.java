@@ -8,13 +8,15 @@ import engine.util.Task;
 import engine.util.TaskManager;
 
 /**
- *
+ * A BioSurface is a SurfaceMap that contains BioNodes that are used to hold
+ * plant and animal life. The maps are only 3x3 and will not update unless a
+ * cell or more is active or alive.
  * @author Richard DeSilvey
  */
 public class BioSurface extends SurfaceMap<BioNode> {
 
     private static final int BIO_CELL_COUNT = 3, THREAD_COUNT = 1,
-            BIO_TOTAL_COUNT = BIO_CELL_COUNT * BIO_CELL_COUNT;
+            BIO_TOTAL_COUNT = BIO_CELL_COUNT * BIO_CELL_COUNT, NO_DELAY = 0;
     private static final String THREAD_NAME = "Bio Surface";
     
     /**
@@ -22,10 +24,11 @@ public class BioSurface extends SurfaceMap<BioNode> {
      * this section of BioNodes are not updated.
      */
     private int cellCount;
+    
     private TaskManager manager;
     
     public BioSurface() {
-        super(BIO_CELL_COUNT, 0, THREAD_NAME, THREAD_COUNT);
+        super(BIO_CELL_COUNT, NO_DELAY, THREAD_NAME, THREAD_COUNT);
         Boundaries bounds = new Boundaries(0, BIO_CELL_COUNT);
         manager = new TaskManager(bounds);
         manager.addTask(new BioTask());
@@ -72,13 +75,14 @@ public class BioSurface extends SurfaceMap<BioNode> {
         @Override
         public void perform(int x, int y) {
             // Update life forms
+            BioNode node = getCellAt(x, y);
         }
 
         @Override
         public boolean check() {
             return cellCount > 0;
         }
-        
+
     }
     
 }

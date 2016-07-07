@@ -2,7 +2,9 @@
 
 package worlds.planet.surface;
 
+import engine.util.Delay;
 import engine.util.Task;
+import engine.util.TaskFactory;
 
 /**
  *
@@ -12,21 +14,34 @@ public abstract class Biosphere extends Hydrosphere {
 
     public Biosphere(int worldSize, int surfaceDelay, int threadsDelay, int threadCount) {
         super(worldSize, surfaceDelay, threadsDelay, threadCount);
-        addTask(new BioCellTask());
+        produceTasks(new BioCellTaskFactory());
     }
 
-    private class BioCellTask implements Task {
+    private class BioCellTaskFactory implements TaskFactory {
 
         @Override
-        public void perform(int x, int y) {
-            getCellAt(x, y).updateBiology();
+        public Task buildTask() {
+            return new BioCellTask();
         }
-
-        @Override
-        public boolean check() {
-            return true; // For now
-        }
-        
-    }
     
+        private class BioCellTask implements Task {
+
+            private Delay delay;
+            
+            public BioCellTask() {
+                delay = new Delay();
+            }
+            
+            @Override
+            public void perform(int x, int y) {
+                getCellAt(x, y).updateBiology();
+            }
+
+            @Override
+            public boolean check() {
+                return true; // For now
+            }
+
+        }
+    }
 }
