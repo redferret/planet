@@ -8,7 +8,7 @@ import engine.util.Task;
  *
  * @author Richard DeSilvey
  */
-public class Biosphere extends Hydrosphere {
+public abstract class Biosphere extends Hydrosphere {
 
     public Biosphere(int worldSize, int surfaceDelay, int threadsDelay, int threadCount) {
         super(worldSize, surfaceDelay, threadsDelay, threadCount);

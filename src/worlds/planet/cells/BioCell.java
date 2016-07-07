@@ -39,6 +39,11 @@ class BioSurface extends SurfaceMap<BioNode> {
     private static final int BIO_CELL_COUNT = 3, THREAD_COUNT = 1,
             BIO_TOTAL_COUNT = BIO_CELL_COUNT * BIO_CELL_COUNT;
     private static final String THREAD_NAME = "Bio Surface";
+    
+    /**
+     * The number of cells that are currently active. If the count is zero then
+     * this section of BioNodes are not updated.
+     */
     private int cellCount;
     private TaskManager manager;
     
@@ -46,7 +51,7 @@ class BioSurface extends SurfaceMap<BioNode> {
         super(BIO_CELL_COUNT, 0, THREAD_NAME, THREAD_COUNT);
         Boundaries bounds = new Boundaries(0, BIO_CELL_COUNT);
         manager = new TaskManager(bounds);
-        
+        manager.addTask(new BioTask());
     }
 
     @Override
@@ -69,6 +74,9 @@ class BioSurface extends SurfaceMap<BioNode> {
         }
     }
     
+    /**
+     * Skips thread averaging by overriding the super method
+     */
     @Override
     public void update() {
         manager.performTasks();
@@ -79,6 +87,9 @@ class BioSurface extends SurfaceMap<BioNode> {
         return new BioNode(x, y);
     }
     
+    /**
+     * LifeForms are updated with this Task
+     */
     private class BioTask implements Task {
 
         @Override
