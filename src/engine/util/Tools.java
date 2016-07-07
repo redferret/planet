@@ -8,7 +8,7 @@ import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import worlds.planet.Planet;
 import worlds.planet.enums.Layer;
-import worlds.planet.cells.GeoCell;
+import worlds.planet.cells.geology.GeoCell;
 import worlds.planet.surface.PlanetSurface;
 
 import static engine.surface.SurfaceMap.DIR_X_INDEX;

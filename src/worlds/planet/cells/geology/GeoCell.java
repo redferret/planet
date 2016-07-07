@@ -1,4 +1,4 @@
-package worlds.planet.cells;
+package worlds.planet.cells.geology;
 
 import java.awt.Color;
 import java.util.Deque;
@@ -9,9 +9,9 @@ import java.util.logging.Logger;
 import worlds.planet.Planet;
 import engine.util.TBuffer;
 import engine.util.Tools;
+import worlds.planet.cells.HydroCell;
 import worlds.planet.enums.CrustType;
 import worlds.planet.enums.Layer;
-import worlds.planet.surface.Stratum;
 import worlds.planet.surface.Surface;
 import static worlds.planet.surface.Surface.*;
 import static worlds.planet.enums.Layer.*;

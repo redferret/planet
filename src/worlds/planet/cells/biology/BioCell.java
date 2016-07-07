@@ -1,12 +1,13 @@
 
 
-package worlds.planet.cells;
+package worlds.planet.cells.biology;
 
 import engine.surface.SurfaceMap;
 import engine.util.Boundaries;
 import engine.util.Task;
 import engine.util.TaskManager;
 import java.util.List;
+import worlds.planet.cells.HydroCell;
 
 /**
  * The Biosphere is represented by this cell. The biosphere includes all life

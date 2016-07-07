@@ -1,13 +1,13 @@
 
 
-package worlds.planet.cells;
+package worlds.planet.cells.atmosphere;
 
+import worlds.planet.cells.biology.BioCell;
 import java.util.List;
 import engine.util.TBuffer;
 import java.util.ArrayList;
 import java.util.stream.Stream;
 import worlds.planet.enums.GasType;
-import worlds.planet.surface.Gas;
 
 
 /**

@@ -1,5 +1,6 @@
 package worlds.planet.surface;
 
+import worlds.planet.cells.atmosphere.Gas;
 import worlds.planet.cells.PlanetCell;
 import engine.util.Delay;
 import engine.util.Task;

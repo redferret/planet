@@ -1,6 +1,6 @@
 
 
-package worlds.planet.surface;
+package worlds.planet.cells.atmosphere;
 
 import worlds.planet.enums.GasType;
 

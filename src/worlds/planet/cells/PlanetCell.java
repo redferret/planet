@@ -2,6 +2,7 @@
 
 package worlds.planet.cells;
 
+import worlds.planet.cells.atmosphere.AtmoCell;
 import java.util.List;
 
 /**

@@ -47,7 +47,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
         surface.addToSurface(Layer.BASALT, 1000);
         surface.addLavaToSurface(10000);
         testWorld.setTimescale(Planet.TimeScale.Geological);
-        Geosphere.heatDistributionCount = 180;
+        Geosphere.heatDistributionCount = 100;
 
         testWorld.play();
     }
@@ -62,7 +62,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
     }
 
     private void constructWorld() {
-        testWorld = new TestWorld(THREAD_COUNT);
+        testWorld = new TestWorld(128, THREAD_COUNT);
         testWorld.getSurface().setDisplay(this);
         renderFrame = new Frame(SIZE, SIZE);
         renderFrame.registerMap(testWorld.getSurface());

@@ -1,6 +1,6 @@
 
 
-package worlds.planet.cells;
+package worlds.planet.cells.biology;
 
 import engine.cells.Cell;
 import java.util.List;

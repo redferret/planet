@@ -1,6 +1,6 @@
 
 
-package worlds.planet.cells;
+package worlds.planet.cells.geology;
 
 import java.awt.Color;
 import java.util.List;
