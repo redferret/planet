@@ -24,11 +24,12 @@ public class BioSurface extends SurfaceMap<BioNode> {
      * this section of BioNodes are not updated.
      */
     private int cellCount;
-    
+    private BioCell parentCell;
     private TaskManager manager;
     
-    public BioSurface() {
+    public BioSurface(BioCell parentCell) {
         super(BIO_CELL_COUNT, NO_DELAY, THREAD_NAME, THREAD_COUNT);
+        this.parentCell = parentCell;
         Boundaries bounds = new Boundaries(0, BIO_CELL_COUNT);
         manager = new TaskManager(bounds);
         manager.addTask(new BioTask());
@@ -75,6 +76,8 @@ public class BioSurface extends SurfaceMap<BioNode> {
         @Override
         public void perform(int x, int y) {
             // Update life forms
+            int parentX = parentCell.getX();
+            int parentY = parentCell.getY();
             BioNode node = getCellAt(x, y);
         }
 

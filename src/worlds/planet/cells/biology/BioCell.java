@@ -17,7 +17,7 @@ public class BioCell extends HydroCell {
     
     public BioCell(int x, int y) {
         super(x, y);
-        bioSurface = new BioSurface();
+        bioSurface = new BioSurface(this);
     }
     
     public void updateBiology(){
