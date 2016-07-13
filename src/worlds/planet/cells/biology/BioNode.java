@@ -35,7 +35,11 @@ public class BioNode extends Cell {
      */
     public void update(BioNode[] neighbors){
         
-        plantLife.forEach(LifeForm -> {
+        plantLife.forEach(lifeForm -> {
+            
+        });
+        
+        animalLife.forEach(lifeForm -> {
             
         });
         

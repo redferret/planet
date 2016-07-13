@@ -14,6 +14,7 @@ import engine.util.Boundaries;
 import engine.util.MThread;
 import engine.util.Task;
 import engine.util.TaskFactory;
+import worlds.planet.cells.PlanetCell;
 
 /**
  * The SurfaceMap is a generic map for all the systems on the planet. The map
@@ -69,7 +70,8 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
     private final CyclicBarrier waitingGate;
     
     /**
-     * Create a new map with no SurfaceThreads loaded yet.
+     * Create a new SurfaceMap. SurfaceThreads and Map need to be initialized
+     * separably.
      *
      * @param mapWidth The number of cells = mapWidth * mapWidth
      * @param delay The number of frames to delay updating
@@ -80,15 +82,28 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
      */
     public SurfaceMap(int mapWidth, int delay, String threadName, int threadCount) {
         super(delay, threadName, true);
-        final float loadFactor = 1.0f; 
         gridWidth = new AtomicInteger(mapWidth);
-        int capacity = mapWidth * mapWidth;
-        map = new ConcurrentHashMap<>(capacity, loadFactor, threadCount);
         threads = new ArrayList<>();
         settings = new ArrayList<>();
         prevSubThreadAvg = 0;
         displaySetting = 0;
         waitingGate = new CyclicBarrier(threadCount);
+    }
+    
+    /**
+     * Using a ConcurrentHashMap as the Map data structure.
+     * @param planetWidth The width of the map.
+     * @param threadCount The number of threads being used.
+     */
+    protected void setupDefaultMap(int planetWidth, int threadCount) {
+        final float loadFactor = 1.0f;
+        final int capacity = planetWidth * planetWidth;
+        Map<Integer, CellType> defaultMap = new ConcurrentHashMap<>(capacity, loadFactor, threadCount);
+        setMap(defaultMap);
+    }
+    
+    public void setMap(Map<Integer, CellType> map){
+        this.map = map;
     }
     
     /**

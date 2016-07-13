@@ -8,7 +8,9 @@ import engine.util.Task;
 import engine.util.TaskManager;
 import engine.util.Tools;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import worlds.planet.surface.PlanetSurface;
 import static worlds.planet.Planet.instance;
 
@@ -38,6 +40,9 @@ public class BioSurface extends SurfaceMap<BioNode> {
         Boundaries bounds = new Boundaries(0, BIO_CELL_COUNT);
         manager = new TaskManager(bounds);
         manager.addTask(new BioTask());
+        
+        Map<Integer, BioNode> map = new HashMap<>();
+        setMap(map);
     }
 
     @Override
@@ -100,18 +105,20 @@ public class BioSurface extends SurfaceMap<BioNode> {
             
             PlanetSurface surface = (PlanetSurface) instance().getSurface();
             final int WIDTH = surface.getGridWidth();
-            final int BIO_NODE_COUNT = WIDTH * BIO_CELL_COUNT;
             
             int nodeX = node.getX(), nodeY = node.getY(), neighborX, neighborY;
             
             List<BioNode> neighbors = new ArrayList<>();
             BioNode neighbor = null;
             
-            final int X_BOUNDS = (nodeX - (BIO_CELL_COUNT / 2)) + BIO_CELL_COUNT;
-            final int Y_BOUNDS = (nodeY - (BIO_CELL_COUNT / 2)) + BIO_CELL_COUNT;
+            final int RE_POS_X = (nodeX - (BIO_CELL_COUNT / 2));
+            final int RE_POS_Y = (nodeY - (BIO_CELL_COUNT / 2));
             
-            for (int x = (nodeX - 1); x < X_BOUNDS; x++) {
-                for (int y = (nodeY - 1); y < Y_BOUNDS; y++) {
+            final int X_BOUNDS = RE_POS_X + BIO_CELL_COUNT;
+            final int Y_BOUNDS = RE_POS_Y + BIO_CELL_COUNT;
+            
+            for (int x = RE_POS_X; x < X_BOUNDS; x++) {
+                for (int y = RE_POS_Y; y < Y_BOUNDS; y++) {
 
                     if (x < 0){
                         neighborX = BIO_CELL_COUNT - 1;

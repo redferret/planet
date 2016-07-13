@@ -13,6 +13,8 @@ import engine.util.Delay;
 import engine.util.Task;
 import engine.util.TaskFactory;
 import engine.util.TaskManager;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import static worlds.planet.surface.Surface.GEOUPDATE;
 import static worlds.planet.surface.Surface.planetAge;
 
@@ -89,6 +91,7 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
         ageUpdateDelay = new Delay(ageStepDelay);
         set();
         setupThreads(threadCount, threadsDelay);
+        setupDefaultMap(planetWidth, threadCount);
         mhFactory = new MinMaxHeightFactory();
         produceTasks(mhFactory);
         Boundaries bounds = new Boundaries(0, planetWidth, 0, planetWidth);
