@@ -8,7 +8,7 @@ import engine.util.Task;
 import engine.util.TaskManager;
 import engine.util.Tools;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import worlds.planet.surface.PlanetSurface;
@@ -41,7 +41,7 @@ public class BioSurface extends SurfaceMap<BioNode> {
         manager = new TaskManager(bounds);
         manager.addTask(new BioTask());
         
-        Map<Integer, BioNode> map = new HashMap<>();
+        Map<Integer, BioNode> map = new Hashtable<>();
         setMap(map);
     }
 
