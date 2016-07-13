@@ -23,6 +23,10 @@ public class BioCell extends HydroCell {
     public void updateBiology(){
         bioSurface.update();
     }
+
+    public BioSurface getBioSurface() {
+        return bioSurface;
+    }
     
     public List<Integer[]> render(List<Integer[]> settings) {
         

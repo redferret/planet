@@ -29,7 +29,7 @@ public abstract class Biosphere extends Hydrosphere {
             private Delay delay;
             
             public BioCellTask() {
-                delay = new Delay();
+                delay = new Delay(5);
             }
             
             @Override
@@ -39,7 +39,7 @@ public abstract class Biosphere extends Hydrosphere {
 
             @Override
             public boolean check() {
-                return true; // For now
+                return delay.check();
             }
 
         }

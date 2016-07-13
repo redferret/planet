@@ -118,7 +118,15 @@ public class Tools {
         
     }
 
-    
+    /**
+     * Wraps the value tx if greater or equal to b, and if tx is less than 0,
+     * then tx will equal tx - b, otherwise the tx value is just returned. b
+     * represents the bounds of tx and tx is the test variable.
+     *
+     * @param tx The test value
+     * @param b The bounds
+     * @return The corrected tx value
+     */
     public static int checkBounds(int tx, int b){
         return (tx >= b) ? tx - b :(tx < 0)? b + tx : tx;
     }

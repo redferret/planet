@@ -2,10 +2,16 @@
 
 package worlds.planet.cells.biology;
 
+import java.util.Random;
 import engine.surface.SurfaceMap;
 import engine.util.Boundaries;
 import engine.util.Task;
 import engine.util.TaskManager;
+import engine.util.Tools;
+import java.util.ArrayList;
+import java.util.List;
+import worlds.planet.surface.PlanetSurface;
+import static worlds.planet.Planet.instance;
 
 /**
  * A BioSurface is a SurfaceMap that contains BioNodes that are used to hold
@@ -27,6 +33,8 @@ public class BioSurface extends SurfaceMap<BioNode> {
     private BioCell parentCell;
     private TaskManager manager;
     
+    private static Random rand = new Random();
+    
     public BioSurface(BioCell parentCell) {
         super(BIO_CELL_COUNT, NO_DELAY, THREAD_NAME, THREAD_COUNT);
         this.parentCell = parentCell;
@@ -41,18 +49,22 @@ public class BioSurface extends SurfaceMap<BioNode> {
         setupMap();
     }
     
-    public void incrementCellCount(){
+    private void incrementCellCount(){
         cellCount++;
         if (cellCount > BIO_TOTAL_COUNT){
             cellCount = BIO_TOTAL_COUNT;
         }
     }
     
-    public void decrementCellCount(){
+    private void decrementCellCount(){
         cellCount--;
         if (cellCount < 0){
             cellCount = 0;
         }
+    }
+    
+    public boolean surfaceHasLife() {
+        return cellCount > 0;
     }
     
     /**
@@ -75,15 +87,120 @@ public class BioSurface extends SurfaceMap<BioNode> {
 
         @Override
         public void perform(int x, int y) {
-            // Update life forms
+            
+            BioNode node = getCellAt(x, y);
+
+            if (node.hasLife()) {
+                BioNode[] neighbors = countNeighbors(node);
+
+                // Does the cell need to die?
+                if ((neighbors.length < 2 || neighbors.length > 3)) {
+//                    gridNode[x][y].setDead();
+                    // Can the cell reproduce?
+                } else if (neighbors.length == 3 && !node.hasLife()) {
+
+                    int m1 = rand.nextInt(3);
+                    int m2 = rand.nextInt(3);
+
+                    while (m1 == m2) {
+                        m1 = rand.nextInt(3);
+                    }
+
+//                    LifeForm lf = LifeForm.mate(neighbors[m1], neighbors[m2]);
+//                    if (lf != null) {
+//                        gridNode[x][y].setAlive(lf);
+//                    }
+                }
+
+                // Remove energy
+                if (node.hasLife()) {
+
+//                    LifeForm lf = gridNode[x][y].getLifeForm();
+//
+//                    int output = lf.getCapacity();
+//                    int rate = lf.getConsumptionRate();
+//
+//                    lf.changeEnergy(-output);
+//
+//                    if (gridNode[x][y].getFoodStock() > 0) {
+//                        gridNode[x][y].changeFood(-rate);
+//                        lf.changeEnergy(rate);
+//                    }
+//
+//                    if (lf.getEnergy() <= 0) {
+//                        gridNode[x][y].setDead();
+//                        return;
+//                    }
+                } else {
+//                    if (rand.nextFloat() <= 0.25f) {
+//                        gridNode[x][y].changeFood(1);
+//                    }
+                }
+
+            }
+            
+        }
+        
+        private BioNode[] countNeighbors(BioNode node){
             int parentX = parentCell.getX();
             int parentY = parentCell.getY();
-            BioNode node = getCellAt(x, y);
-        }
+            BioCell neighborCell;
+            
+            PlanetSurface surface = (PlanetSurface) instance().getSurface();
+            final int WIDTH = surface.getGridWidth();
+            final int BIO_NODE_COUNT = WIDTH * BIO_CELL_COUNT;
+            
+            int nodeX = node.getX(), nodeY = node.getY(), neighborX, neighborY;
+            
+            List<BioNode> neighbors = new ArrayList<>();
+            BioNode neighbor = null;
+            
+            final int X_BOUNDS = (nodeX - 1) + BIO_CELL_COUNT;
+            final int Y_BOUNDS = (nodeY - 1) + BIO_CELL_COUNT;
+            
+            for (int x = (nodeX - 1); x < X_BOUNDS; x++) {
+                for (int y = (nodeY - 1); y < Y_BOUNDS; y++) {
 
+                    if (x < 0){
+                        neighborX = BIO_CELL_COUNT - 1;
+                        parentX = Tools.checkBounds(parentX - 1, WIDTH);
+                    }else if (x >= BIO_NODE_COUNT){
+                        neighborX = 0;
+                        parentX = Tools.checkBounds(parentX + 1, WIDTH);
+                    }else{
+                        neighborX = x;
+                    }
+                    
+                    if (y < 0){
+                        neighborY = BIO_CELL_COUNT - 1;
+                        parentY = Tools.checkBounds(parentY - 1, WIDTH);
+                    }else if (y >= BIO_NODE_COUNT){
+                        neighborY = 0;
+                        parentY = Tools.checkBounds(parentY + 1, WIDTH);
+                    }else{
+                        neighborY = y;
+                    }
+                    
+                    neighborCell = surface.getCellAt(parentX, parentY);
+                    
+                    if (neighborCell != parentCell){
+                        neighbor = neighborCell.getBioSurface().getCellAt(neighborX, neighborY);
+                    }else{
+                        neighbor = getCellAt(neighborX, neighborY);
+                    }
+                    
+                    if ((neighbor != node) && neighbor.hasLife()) {
+                        neighbors.add(neighbor);
+                    }
+                }
+            }
+            
+            return neighbors.toArray(new BioNode[neighbors.size()]);
+        }
+        
         @Override
         public boolean check() {
-            return cellCount > 0;
+            return surfaceHasLife();
         }
 
     }
