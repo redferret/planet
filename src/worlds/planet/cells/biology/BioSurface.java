@@ -2,7 +2,6 @@
 
 package worlds.planet.cells.biology;
 
-import java.util.Random;
 import engine.surface.SurfaceMap;
 import engine.util.Boundaries;
 import engine.util.Task;
@@ -32,8 +31,6 @@ public class BioSurface extends SurfaceMap<BioNode> {
     private int cellCount;
     private BioCell parentCell;
     private TaskManager manager;
-    
-    private static Random rand = new Random();
     
     public BioSurface(BioCell parentCell) {
         super(BIO_CELL_COUNT, NO_DELAY, THREAD_NAME, THREAD_COUNT);
@@ -92,58 +89,13 @@ public class BioSurface extends SurfaceMap<BioNode> {
 
             if (node.hasLife()) {
                 BioNode[] neighbors = countNeighbors(node);
-
-                // Does the cell need to die?
-                if ((neighbors.length < 2 || neighbors.length > 3)) {
-//                    gridNode[x][y].setDead();
-                    // Can the cell reproduce?
-                } else if (neighbors.length == 3 && !node.hasLife()) {
-
-                    int m1 = rand.nextInt(3);
-                    int m2 = rand.nextInt(3);
-
-                    while (m1 == m2) {
-                        m1 = rand.nextInt(3);
-                    }
-
-//                    LifeForm lf = LifeForm.mate(neighbors[m1], neighbors[m2]);
-//                    if (lf != null) {
-//                        gridNode[x][y].setAlive(lf);
-//                    }
-                }
-
-                // Remove energy
-                if (node.hasLife()) {
-
-//                    LifeForm lf = gridNode[x][y].getLifeForm();
-//
-//                    int output = lf.getCapacity();
-//                    int rate = lf.getConsumptionRate();
-//
-//                    lf.changeEnergy(-output);
-//
-//                    if (gridNode[x][y].getFoodStock() > 0) {
-//                        gridNode[x][y].changeFood(-rate);
-//                        lf.changeEnergy(rate);
-//                    }
-//
-//                    if (lf.getEnergy() <= 0) {
-//                        gridNode[x][y].setDead();
-//                        return;
-//                    }
-                } else {
-//                    if (rand.nextFloat() <= 0.25f) {
-//                        gridNode[x][y].changeFood(1);
-//                    }
-                }
-
+                node.update(neighbors);
             }
-            
         }
         
         private BioNode[] countNeighbors(BioNode node){
-            int parentX = parentCell.getX();
-            int parentY = parentCell.getY();
+            int parentX = parentCell.getX(), neighborCellX = parentX;
+            int parentY = parentCell.getY(), neighborCellY = parentY;
             BioCell neighborCell;
             
             PlanetSurface surface = (PlanetSurface) instance().getSurface();
@@ -155,33 +107,33 @@ public class BioSurface extends SurfaceMap<BioNode> {
             List<BioNode> neighbors = new ArrayList<>();
             BioNode neighbor = null;
             
-            final int X_BOUNDS = (nodeX - 1) + BIO_CELL_COUNT;
-            final int Y_BOUNDS = (nodeY - 1) + BIO_CELL_COUNT;
+            final int X_BOUNDS = (nodeX - (BIO_CELL_COUNT / 2)) + BIO_CELL_COUNT;
+            final int Y_BOUNDS = (nodeY - (BIO_CELL_COUNT / 2)) + BIO_CELL_COUNT;
             
             for (int x = (nodeX - 1); x < X_BOUNDS; x++) {
                 for (int y = (nodeY - 1); y < Y_BOUNDS; y++) {
 
                     if (x < 0){
                         neighborX = BIO_CELL_COUNT - 1;
-                        parentX = Tools.checkBounds(parentX - 1, WIDTH);
-                    }else if (x >= BIO_NODE_COUNT){
+                        neighborCellX = Tools.checkBounds(parentX - 1, WIDTH);
+                    }else if (x > BIO_CELL_COUNT - 1) {
                         neighborX = 0;
-                        parentX = Tools.checkBounds(parentX + 1, WIDTH);
+                        neighborCellX = Tools.checkBounds(parentX + 1, WIDTH);
                     }else{
                         neighborX = x;
                     }
                     
                     if (y < 0){
                         neighborY = BIO_CELL_COUNT - 1;
-                        parentY = Tools.checkBounds(parentY - 1, WIDTH);
-                    }else if (y >= BIO_NODE_COUNT){
+                        neighborCellY = Tools.checkBounds(parentY - 1, WIDTH);
+                    }else if (y > BIO_CELL_COUNT - 1) {
                         neighborY = 0;
-                        parentY = Tools.checkBounds(parentY + 1, WIDTH);
+                        neighborCellY = Tools.checkBounds(parentY + 1, WIDTH);
                     }else{
                         neighborY = y;
                     }
                     
-                    neighborCell = surface.getCellAt(parentX, parentY);
+                    neighborCell = surface.getCellAt(neighborCellX, neighborCellY);
                     
                     if (neighborCell != parentCell){
                         neighbor = neighborCell.getBioSurface().getCellAt(neighborX, neighborY);
