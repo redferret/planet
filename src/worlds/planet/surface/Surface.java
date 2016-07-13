@@ -89,9 +89,9 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
     public Surface(int planetWidth, int ageStepDelay, int threadsDelay, int threadCount) {
         super(planetWidth, DEFAULT_THREAD_DELAY, NAME, threadCount);
         ageUpdateDelay = new Delay(ageStepDelay);
-        set();
         setupThreads(threadCount, threadsDelay);
         setupDefaultMap(planetWidth, threadCount);
+        set();
         mhFactory = new MinMaxHeightFactory();
         produceTasks(mhFactory);
         Boundaries bounds = new Boundaries(0, planetWidth, 0, planetWidth);
