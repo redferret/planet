@@ -36,17 +36,21 @@ public class BioNode extends Cell {
     public void update(BioNode[] neighbors){
         
         plantLife.forEach(lifeForm -> {
-            
+            processLifeForm(lifeForm, neighbors);
         });
         
         animalLife.forEach(lifeForm -> {
-            
+            processLifeForm(lifeForm, neighbors);
         });
         
+        
+    }
+    
+    private void processLifeForm(LifeForm lifeForm, BioNode[] neighbors){
         // Does the life form need to die?
         if ((neighbors.length < 2 || neighbors.length > 3)) {
             // kill life form
-        // Can the cell reproduce?
+        // Can the life form reproduce?
         } else if (neighbors.length == 3 && !hasLife()) {
 
             int m1 = rand.nextInt(3);

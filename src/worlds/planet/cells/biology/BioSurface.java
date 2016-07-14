@@ -2,6 +2,7 @@
 
 package worlds.planet.cells.biology;
 
+import engine.cells.Cell;
 import engine.surface.SurfaceMap;
 import engine.util.Boundaries;
 import engine.util.Task;
@@ -87,76 +88,92 @@ public class BioSurface extends SurfaceMap<BioNode> {
      */
     private class BioTask implements Task {
 
+        private NeighborCounter counter;
+        
+        public BioTask() {
+            counter = new NeighborCounter();
+        }
+        
         @Override
         public void perform(int x, int y) {
             
             BioNode node = getCellAt(x, y);
 
             if (node.hasLife()) {
-                BioNode[] neighbors = countNeighbors(node);
+                BioNode[] neighbors = counter.countNeighbors(node);
                 node.update(neighbors);
             }
         }
         
-        private BioNode[] countNeighbors(BioNode node){
-            int parentX = parentCell.getX(), neighborCellX = parentX;
-            int parentY = parentCell.getY(), neighborCellY = parentY;
-            BioCell neighborCell;
+        private class NeighborCounter {
             
-            PlanetSurface surface = (PlanetSurface) instance().getSurface();
-            final int WIDTH = surface.getGridWidth();
+            final int WIDTH = instance().getSurface().getGridWidth();
+            private List<BioNode> neighbors;
             
-            int nodeX = node.getX(), nodeY = node.getY(), neighborX, neighborY;
-            
-            List<BioNode> neighbors = new ArrayList<>();
-            BioNode neighborNode = null;
-            
-            final int RE_POS_X = (nodeX - (BIO_CELL_COUNT / 2));
-            final int RE_POS_Y = (nodeY - (BIO_CELL_COUNT / 2));
-            
-            final int X_BOUNDS = RE_POS_X + BIO_CELL_COUNT;
-            final int Y_BOUNDS = RE_POS_Y + BIO_CELL_COUNT;
-            
-            for (int x = RE_POS_X; x < X_BOUNDS; x++) {
-                for (int y = RE_POS_Y; y < Y_BOUNDS; y++) {
+            public NeighborCounter() {
+                neighbors = new ArrayList<>();
+            }
+         
+            private BioNode[] countNeighbors(BioNode node){
+                int parentX = parentCell.getX(), neighborCellX = parentX;
+                int parentY = parentCell.getY(), neighborCellY = parentY;
+                
+                BioCell neighborCell;
+                PlanetSurface surface = (PlanetSurface) instance().getSurface();
+    
+                int nodeX = node.getX(), nodeY = node.getY(), neighborX, neighborY;
+                
+                neighbors.clear();
 
-                    if (x < 0){
-                        neighborX = BIO_CELL_COUNT - 1;
-                        neighborCellX = Tools.checkBounds(parentX - 1, WIDTH);
-                    }else if (x > BIO_CELL_COUNT - 1) {
-                        neighborX = 0;
-                        neighborCellX = Tools.checkBounds(parentX + 1, WIDTH);
-                    }else{
-                        neighborX = x;
-                    }
-                    
-                    if (y < 0){
-                        neighborY = BIO_CELL_COUNT - 1;
-                        neighborCellY = Tools.checkBounds(parentY - 1, WIDTH);
-                    }else if (y > BIO_CELL_COUNT - 1) {
-                        neighborY = 0;
-                        neighborCellY = Tools.checkBounds(parentY + 1, WIDTH);
-                    }else{
-                        neighborY = y;
-                    }
-                    
-                    neighborCell = surface.getCellAt(neighborCellX, neighborCellY);
-                    
-                    if (neighborCell != parentCell){
-                        neighborNode = neighborCell.getBioSurface().getCellAt(neighborX, neighborY);
-                    }else{
-                        neighborNode = getCellAt(neighborX, neighborY);
-                    }
-                    
-                    if ((neighborNode != node) && neighborNode.hasLife()) {
-                        neighbors.add(neighborNode);
+                BioNode neighborNode = null;
+
+                final int RE_POS_X = (nodeX - (BIO_CELL_COUNT / 2));
+                final int RE_POS_Y = (nodeY - (BIO_CELL_COUNT / 2));
+
+                final int X_BOUNDS = RE_POS_X + BIO_CELL_COUNT;
+                final int Y_BOUNDS = RE_POS_Y + BIO_CELL_COUNT;
+
+                for (int x = RE_POS_X; x < X_BOUNDS; x++) {
+                    for (int y = RE_POS_Y; y < Y_BOUNDS; y++) {
+
+                        if (x < 0) {
+                            neighborX = BIO_CELL_COUNT - 1;
+                            neighborCellX = Tools.checkBounds(parentX - 1, WIDTH);
+                        } else if (x > BIO_CELL_COUNT - 1) {
+                            neighborX = 0;
+                            neighborCellX = Tools.checkBounds(parentX + 1, WIDTH);
+                        } else {
+                            neighborX = x;
+                        }
+
+                        if (y < 0) {
+                            neighborY = BIO_CELL_COUNT - 1;
+                            neighborCellY = Tools.checkBounds(parentY - 1, WIDTH);
+                        } else if (y > BIO_CELL_COUNT - 1) {
+                            neighborY = 0;
+                            neighborCellY = Tools.checkBounds(parentY + 1, WIDTH);
+                        } else {
+                            neighborY = y;
+                        }
+
+                        neighborCell = surface.getCellAt(neighborCellX, neighborCellY);
+
+                        if (neighborCell != parentCell) {
+                            neighborNode = neighborCell.getBioSurface().getCellAt(neighborX, neighborY);
+                        } else {
+                            neighborNode = getCellAt(neighborX, neighborY);
+                        }
+
+                        if ((neighborNode != node) && neighborNode.hasLife()) {
+                            neighbors.add(neighborNode);
+                        }
                     }
                 }
+
+                return neighbors.toArray(new BioNode[neighbors.size()]);
             }
-            
-            return neighbors.toArray(new BioNode[neighbors.size()]);
         }
-        
+
         @Override
         public boolean check() {
             return surfaceHasLife();
