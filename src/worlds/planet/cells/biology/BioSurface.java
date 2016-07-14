@@ -109,7 +109,7 @@ public class BioSurface extends SurfaceMap<BioNode> {
             int nodeX = node.getX(), nodeY = node.getY(), neighborX, neighborY;
             
             List<BioNode> neighbors = new ArrayList<>();
-            BioNode neighbor = null;
+            BioNode neighborNode = null;
             
             final int RE_POS_X = (nodeX - (BIO_CELL_COUNT / 2));
             final int RE_POS_Y = (nodeY - (BIO_CELL_COUNT / 2));
@@ -143,13 +143,13 @@ public class BioSurface extends SurfaceMap<BioNode> {
                     neighborCell = surface.getCellAt(neighborCellX, neighborCellY);
                     
                     if (neighborCell != parentCell){
-                        neighbor = neighborCell.getBioSurface().getCellAt(neighborX, neighborY);
+                        neighborNode = neighborCell.getBioSurface().getCellAt(neighborX, neighborY);
                     }else{
-                        neighbor = getCellAt(neighborX, neighborY);
+                        neighborNode = getCellAt(neighborX, neighborY);
                     }
                     
-                    if ((neighbor != node) && neighbor.hasLife()) {
-                        neighbors.add(neighbor);
+                    if ((neighborNode != node) && neighborNode.hasLife()) {
+                        neighbors.add(neighborNode);
                     }
                 }
             }
