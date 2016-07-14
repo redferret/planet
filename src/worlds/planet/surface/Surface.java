@@ -106,12 +106,12 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
 
     /**
      * Resets the surface to an empty map and resets the planet's age.
-     * This method should be calling the <code>setupMap()</code> method.
+     * This method should be calling the <code>buildMap()</code> method.
      */
     public void reset() {
         planetAge = new AtomicLong(0);
         geologicalTimeStamp = 0;
-        setupMap();
+        buildMap();
     }
 
     public void setDisplay(DisplayAdapter display) {

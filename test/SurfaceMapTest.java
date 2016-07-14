@@ -130,7 +130,7 @@ class TestSurface extends SurfaceMap<TestCell> {
 
     @Override
     public void reset() {
-        setupMap();
+        buildMap();
     }
 
     @Override

@@ -48,7 +48,7 @@ public class BioSurface extends SurfaceMap<BioNode> {
     @Override
     public void reset() {
         cellCount = 0;
-        setupMap();
+        buildMap();
     }
     
     private void incrementCellCount(){

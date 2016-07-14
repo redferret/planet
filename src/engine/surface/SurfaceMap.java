@@ -254,7 +254,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
      * A separate method used for initializing the grid. This method should be
      * called after the engine is created.
      */
-    protected void setupMap() {
+    protected void buildMap() {
         int cellCountWidth = gridWidth.get();
         int totalCells = (cellCountWidth * cellCountWidth);
         int flagUpdate = totalCells / 2;
