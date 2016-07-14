@@ -20,10 +20,11 @@ import worlds.planet.cells.PlanetCell;
  * The SurfaceMap is a generic map for all the systems on the planet. The map
  * contains generic cells. The RenderInterface is not required for this class
  * but it gives two methods for rendering each map. This implementation may
- * change in the future when new graphic rendering capabilities change.
- * A SurfaceMap also by default doesn't instantiate any SurfaceThreads,
- * therefore the <code>setupThreads(int threadDivision, int delay)</code> 
- * needs to be called after this super class is created.
+ * change in the future when new graphic rendering capabilities change. A
+ * SurfaceMap also by default doesn't instantiate any SurfaceThreads, therefore
+ * the <code>setupThreads(int threadDivision, int delay)</code> needs to be
+ * called after this super class is created.
+ *
  * @author Richard DeSilvey
  * @param <CellType> The highest level abstraction of the cell i.e. PlanetCell
  */
@@ -50,7 +51,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
     public static final int[] HDIR_Y_INDEX = {-1, 0, 1, 0};
 
     public int displaySetting;
-    
+
     /**
      * The map containing the references to each data point on the surface.
      */
@@ -62,13 +63,13 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
     protected List<SurfaceThread> threads;
 
     private List<Integer[]> settings;
-    
+
     private int prevSubThreadAvg;
 
     private AtomicInteger gridWidth;
-    
+
     private final CyclicBarrier waitingGate;
-    
+
     /**
      * Create a new SurfaceMap. SurfaceThreads and Map need to be initialized
      * separably.
@@ -89,9 +90,10 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
         displaySetting = 0;
         waitingGate = new CyclicBarrier(threadCount);
     }
-    
+
     /**
      * Using a ConcurrentHashMap as the Map data structure.
+     *
      * @param planetWidth The width of the map.
      * @param threadCount The number of threads being used.
      */
@@ -101,11 +103,11 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
         Map<Integer, CellType> defaultMap = new ConcurrentHashMap<>(capacity, loadFactor, threadCount);
         setMap(defaultMap);
     }
-    
-    public void setMap(Map<Integer, CellType> map){
+
+    public void setMap(Map<Integer, CellType> map) {
         this.map = map;
     }
-    
+
     /**
      * Starts all the threads
      */
@@ -146,14 +148,15 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
     }
 
     /**
-     * When a new world is created at runtime certain configurations need to be
-     * reset or re-initialized.
+     * When a new world is created certain configurations need to be reset or
+     * re-initialized when a new world or surface. It's best to call the
+     * <code>buildMap()</code> method here as it will re-create the map.
      */
     public abstract void reset();
 
     /**
-     * Should return a new instance of an Object of type Cell. This method is
-     * called by the super class when constructing the surface.
+     * A factory method that should return a new instance of a Cell. This method
+     * is called by the super class when constructing the surface.
      *
      * @param x The x coordinate of the cell
      * @param y The y coordinate of the cell
@@ -163,8 +166,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
 
     /**
      * Override this method and call the <code>super.update()</code> to make
-     * additional updates. The <code>super.update()</code> must be called for
-     * the map to function properly.
+     * additional updates.
      */
     public void update() {
         checkSubThreads();
@@ -172,55 +174,57 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
 
     /**
      * Adds the Task instance to each thread.
+     *
      * @param task The task being added to each thread.
      */
-    public void addTaskToThreads(Task task){
+    public void addTaskToThreads(Task task) {
         threads.forEach(thread -> {
             thread.addTask(task);
         });
     }
-    
+
     /**
      * Produces individual instances of a Task for each thread using the given
      * instance of a TaskFactory.
-     * @param factory The factory object that will produce a Task for
-     * each thread.
+     *
+     * @param factory The factory that will produce a Task for each thread.
      */
-    public void produceTasks(TaskFactory factory){
+    public void produceTasks(TaskFactory factory) {
         threads.forEach(thread -> {
             Task producedTask = factory.buildTask();
             thread.addTask(producedTask);
         });
     }
-    
+
     private void checkSubThreads() {
         int avg = 0;
-        for (SurfaceThread thread : threads){
+        for (SurfaceThread thread : threads) {
             avg = thread.timeLapse();
         }
         prevSubThreadAvg = avg / threads.size();
     }
 
-    public final int getGridWidth(){
+    public final int getGridWidth() {
         return gridWidth.get();
     }
-    
+
     public final int getTotalNumberOfCells() {
         int gw = getGridWidth();
         return gw * gw;
     }
-    
+
     /**
-     * If all the threads are not continuous then this method will check if
-     * all threads have finished their iteration. If all threads have finished
-     * their iteration then this method will signal all threads to run and
-     * return true, otherwise this method will return false.
+     * If all the threads are not continuous then this method will check if all
+     * threads have finished their iteration. If all threads have finished their
+     * iteration then this method will signal all threads to run and return
+     * true, otherwise this method will return false.
+     *
      * @return True if all the threads were signaled to run.
      */
-    public boolean synchronizeThreads(){
+    public boolean synchronizeThreads() {
         int sleeping = 0;
         int expected = threads.size();
-        
+
         if (expected > 0) {
             for (int i = 0; i < expected; i++) {
                 boolean paused = threads.get(i).paused();
@@ -235,15 +239,16 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
         }
         return false;
     }
-    
-    public void setThreadsAsContinuous(boolean c){
+
+    public void setThreadsAsContinuous(boolean c) {
         threads.forEach(thread -> {
             thread.setContinuous(c);
         });
     }
-    
+
     /**
      * Gets the average runtime between all threads loaded in the simulation.
+     *
      * @return The average runtime between all threads.
      */
     public int getAverageThreadTime() {
@@ -251,8 +256,8 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
     }
 
     /**
-     * A separate method used for initializing the grid. This method should be
-     * called after the engine is created.
+     * A separate method used for initializing the map. This method should be
+     * called after the engine is created or if the map needs to be reset.
      */
     protected void buildMap() {
         int cellCountWidth = gridWidth.get();
@@ -279,7 +284,12 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
     }
 
     /**
-     * To setup the threads inside this map, call this method.
+     * Sets up each individual thread for this surface. If you are using this
+     * surface with multiple threads working on the same Map it is recommended
+     * to setup the Map by calling the <code>setupDefaultMap()</code> method.
+     * This will setup the Map as a ConcurrentHashMap. Otherwise the Map data
+     * structure needs to be able to handle multiple threads accessing it's
+     * contents at the same time similar to how the ConcurrentHashMap functions.
      *
      * @param threadDivision The value given is the dimensions of the threads. A
      * value n would yield an nxn grid of threads. Each controlling a section of
@@ -302,15 +312,19 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
             }
         }
     }
-    
-    public void killAllThreads(){
+
+    /**
+     * This will remove all threads from the surface. You will need to call the
+     * <code>setupThreads</code> method to make this surface functional again.
+     */
+    public void killAllThreads() {
         threads.forEach(thread -> {
             thread.kill();
         });
     }
 
     /**
-     * Get a cell using the provided coordinates.
+     * Gets a cell using the provided coordinates.
      *
      * @param x The x coordinate of the cell
      * @param y The y coordinate of the cell
@@ -322,14 +336,15 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
     }
 
     /**
-     * Fetches a cell at the given index from the map.
+     * Gets a cell at the given index in the map.
+     *
      * @param index The index
      * @return The cell that maps to the given index.
      */
-    public CellType getCellAt(int index){
+    public CellType getCellAt(int index) {
         return map.get(index);
     }
-    
+
     /**
      * This method is reserved for internal use only by the SurfaceMap during
      * initialization.
@@ -343,38 +358,42 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
     }
 
     /**
-     * Calculates the index for the element located at (x, y).
+     * Calculates the index for the element located at (x, y) based on the width
+     * of a square map.
+     *
      * @param x The x coordinate
      * @param y The y coordinate
      * @param w The width of the map
      * @return The index corresponding to the x and y location
      */
-    public static int calcIndex(int x, int y, int w){
+    public static int calcIndex(int x, int y, int w) {
         return (w * y) + x;
     }
-    
+
     /**
      * Calculates the X coordinate based on the width (w) of the map and the
      * given index.
+     *
      * @param index The index of the element
      * @param w The width of the map
      * @return The x coordinate
      */
-    public static int calcX(int index, int w){
+    public static int calcX(int index, int w) {
         return index % w;
     }
-    
+
     /**
      * Calculates the Y coordinate based on the width (w) of the map and the
      * given index.
+     *
      * @param index The index of the element
      * @param w The width of the map
      * @return The y coordinate
      */
-    public static int calcY(int index, int w){
+    public static int calcY(int index, int w) {
         return index / w;
     }
-    
+
     @Override
     public List<Integer[]> getCellData(int x, int y) {
 
