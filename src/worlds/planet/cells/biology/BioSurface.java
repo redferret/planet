@@ -79,7 +79,7 @@ public class BioSurface extends SurfaceMap<BioNode> {
 
     @Override
     public BioNode generateCell(int x, int y) {
-        return new BioNode(x, y);
+        return new BioNode(x, y, this);
     }
     
     /**

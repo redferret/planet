@@ -14,11 +14,14 @@ import java.util.Random;
 public class BioNode extends Cell {
 
     private static Random rand = new Random();
+    
+    private BioSurface parentSurface;
     private List<LifeForm> animalLife; /*The food chain for animal life*/
     private List<LifeForm> plantLife; /*The plant and bacterial food chain*/
     
-    public BioNode(int x, int y) {
+    public BioNode(int x, int y, BioSurface parentSurface) {
         super(x, y);
+        this.parentSurface = parentSurface;
         animalLife = new ArrayList<>();
         plantLife = new ArrayList<>();
     }
