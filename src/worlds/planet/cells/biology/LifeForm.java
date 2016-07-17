@@ -29,12 +29,15 @@ public class LifeForm {
     
     private Color color;
     
+    private Genetics genes;
+    
     public LifeForm(int size, int energy, LifeFormType type, Color c){
         this.size = size;
         this.color = c;
         this.type = type;
         this.energy = energy;
         metabolicRate = 0;
+        genes = new Genetics();
     }
     
     public Color getColor() {
