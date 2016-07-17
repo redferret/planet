@@ -11,7 +11,10 @@ import engine.util.TaskAdapter;
 import static org.junit.Assert.*;
 
 /**
- * Performs tests on the SurfaceMap class.
+ * Performs tests on the SurfaceMap class. The test creates a TestSurface which
+ * holds a default map implementation that contains TestCells. A count down
+ * latch is used to track each cell update made by a SurfaceThread using
+ * a SurfaceTask.
  *
  * @author Richard
  */
