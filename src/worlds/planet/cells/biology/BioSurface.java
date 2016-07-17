@@ -51,14 +51,14 @@ public class BioSurface extends SurfaceMap<BioNode> {
         buildMap();
     }
     
-    private void incrementCellCount(){
+    public void incrementCellCount(){
         cellCount++;
         if (cellCount > BIO_TOTAL_COUNT){
             cellCount = BIO_TOTAL_COUNT;
         }
     }
     
-    private void decrementCellCount(){
+    public void decrementCellCount(){
         cellCount--;
         if (cellCount < 0){
             cellCount = 0;
@@ -91,7 +91,7 @@ public class BioSurface extends SurfaceMap<BioNode> {
         public void perform(int x, int y) {
             
             BioNode node = getCellAt(x, y);
-
+            
             if (node.hasLife()) {
                 BioNode[] neighbors = countNeighbors(node);
                 node.update(neighbors);
