@@ -38,6 +38,8 @@ public class BioNode extends Cell {
      */
     public void update(BioNode[] neighbors){
         
+        boolean hadLife = hasLife();
+        
         plantLife.forEach(lifeForm -> {
             processLifeForm(lifeForm, neighbors);
         });
@@ -46,7 +48,11 @@ public class BioNode extends Cell {
             processLifeForm(lifeForm, neighbors);
         });
         
-        
+        if (!hasLife() && hadLife) {
+            parentSurface.decrementCellCount();
+        }else if (hasLife() && !hadLife) {
+            parentSurface.incrementCellCount();
+        }
     }
     
     private void processLifeForm(LifeForm lifeForm, BioNode[] neighbors){
