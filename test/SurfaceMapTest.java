@@ -128,7 +128,7 @@ class TestSurface extends SurfaceMap<TestCell> {
         this.latch = latch;
         setupThreads(threadCount, delay);
         setupDefaultMap(planetWidth, threadCount);
-        addTaskToThreads(new SurfaceTask());
+        addTaskToThreads(this.new SurfaceTask());
     }
 
     @Override
