@@ -58,19 +58,19 @@ public enum Layer {
      * Sea water is represented as a top layer. The average density of sea water
      * is around 1.05 cc. Sea water deposits shale rock.
      */
-    OCEAN("Liquid Water", RockType.NULL, Color.BLUE, 9, 0.0f, 1050f),
+    OCEAN("Liquid Water", RockType.FLUID, Color.BLUE, 9, 0.0f, 1050f),
     /**
      * Lava, not magma, is represented by this layer. It's average density is
      * 2.75 cc. lava can erode or deposit. If the lava is hot enough it will
      * carve out rock. If the lava is cool enough it deposits basalt.
      */
-    LAVA("Lava", RockType.NULL, Color.RED, 10, 0.0f, 2750f),
+    LAVA("Lava", RockType.FLUID, Color.RED, 10, 0.0f, 2750f),
     /**
      * Ice is represented by this layer and has a density of 0.9 cc. Ice erodes
      * rock and deposits gravel instead of sand. The gravel is one layer below
      * ice and is only formed when ice moves.
      */
-    ICE("Ice", RockType.NULL, new Color(230, 248, 248), 11, 0.0f, 900f);
+    ICE("Ice", RockType.FLUID, new Color(230, 248, 248), 11, 0.0f, 900f);
 
     /**
      * The name of the material this stratum is. This includes Sediment,
