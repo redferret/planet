@@ -25,7 +25,7 @@ public enum RockType {
     /**
      * Lava, water, rain, ice.
      */
-    NULL            ("Null", -1);
+    FLUID            ("Fluid", -1);
     
     private int typeValue;
     
