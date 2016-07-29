@@ -67,10 +67,19 @@ public class SurfaceMapTest {
 
     @Test
     public void calculateIndexTest() {
-        testIndex(1, 1, 3, 4);
-        testIndex(1, 1, 4, 5);
-        testIndex(1, 2, 3, 7);
-        testIndex(9, 3, 4, 21);
+        
+        for (int testX = 0; testX < 10; testX++){
+            for (int testY = 0; testY < 10; testY++){
+                for (int testWidth = 0; testWidth < 100; testWidth++){
+                    testCaseForIndexTesting(testX, testY, testWidth);
+                }
+            }
+        }
+    }
+
+    private void testCaseForIndexTesting(int testX, int testY, int testWidth) {
+        int expectedIndex = testX + (testY * testWidth);
+        testIndex(testX, testY, testWidth, expectedIndex);
     }
 
     /**
