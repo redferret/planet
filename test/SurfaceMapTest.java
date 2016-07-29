@@ -68,8 +68,8 @@ public class SurfaceMapTest {
     @Test
     public void calculateIndexTest() {
         
-        for (int testX = 0; testX < 10; testX++){
-            for (int testY = 0; testY < 10; testY++){
+        for (int testX = 0; testX < 100; testX++){
+            for (int testY = 0; testY < 100; testY++){
                 for (int testWidth = 0; testWidth < 100; testWidth++){
                     testCaseForIndexTesting(testX, testY, testWidth);
                 }
