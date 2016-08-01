@@ -20,11 +20,6 @@ public enum Layer {
      */
     SOIL("Soil", RockType.SEDIMENT, new Color(90, 56, 37), 1, 0.05f, 1920f),
     /**
-     * Gravel is formed when Igneous or metamorphic rocks break down, over time
-     * gravel will break down into Sand.
-     */
-    GRAVEL("Gravel", RockType.SEDIMENT, new Color(149, 173, 206), 2, 0.07f, 2000f),
-    /**
      * Sedimentary rock forms by compressing sediments past a certain depth.
      * They are the second easiest to erode next to sediments.
      */
