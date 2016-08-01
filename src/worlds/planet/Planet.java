@@ -81,7 +81,7 @@ public abstract class Planet {
     }
 
     /**
-     * References the most recent instantiated object of this class.
+     * References the most recent instantiated instance of this class.
      *
      * @return A reference to the current Planet
      */

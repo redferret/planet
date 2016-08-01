@@ -102,14 +102,15 @@ public abstract class Geosphere extends Surface {
 
     public void depositSediment(int x, int y) {
 
-        float maxPressure;
-        long age;
-
         GeoCell cell = getCellAt(x, y);
         cell.getSedimentBuffer().applyBuffer();
 
-        formNewRock(cell, calcDepth(SEDIMENT, 9.8f, 400));
-        age = cell.getAge();
+        formSedimentaryRock(cell, calcDepth(SEDIMENT, 9.8f, 400));
+        
+    }
+
+    public void meltRock(GeoCell cell){
+        float age = cell.getAge(), maxPressure;
 
         if (age > 1E8) {
             maxPressure = 886655;
@@ -117,10 +118,9 @@ public abstract class Geosphere extends Surface {
             maxPressure = (float) Math.exp((-((age - 717928560.98) / 5E7)) + 25000);
         }
         melt(cell, calcDepth(cell.getDensity(), 9.8f, maxPressure));
-
     }
-
-    public void melt(GeoCell cell, float maxHeight) {
+    
+    private void melt(GeoCell cell, float maxHeight) {
 
         float height, diff, massToChange;
         if (cell.peekBottomStratum() == null) {
@@ -138,7 +138,7 @@ public abstract class Geosphere extends Surface {
 
     }
 
-    public void formNewRock(GeoCell cell, float maxHeight) {
+    public void formSedimentaryRock(GeoCell cell, float maxHeight) {
 
         float height, diff, massBeingDeposited;
         Layer depositType;
