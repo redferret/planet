@@ -23,6 +23,15 @@ public class Stratum {
     private float mass;
     
     /**
+     * Used to determine if this layer is a conglomerate or not. 1f means 
+     * mostly solid rock, 0f means silt like sediments. This percentage is used
+     * to create a measurement for the distance a cell covers. 
+     * If a cell is 10 km long with a granularity of 0.6f then on average
+     * each boulder or spike or nodule would be (10 km * 0.6) / 1000 km = 6 meters long.
+     */
+    private float granularity;
+    
+    /**
      * The age of the stratum in years
      */
     private long age, lastAdd;
@@ -38,6 +47,7 @@ public class Stratum {
         this.bottom = stratum.bottom;
         this.top = stratum.top;
         this.type = stratum.type;
+        granularity = 1;
     }
     
     public Stratum(Layer type, float mass){
@@ -57,9 +67,20 @@ public class Stratum {
      * Sets the age of the Stratum to the current age of the planet.
      */
     public void resetAge(){
-        
         this.age = Planet.instance().getSurface().getPlanetAge();
+    }
+    
+    public void setGranularity(float value){
         
+        if (value > 1f || value < 0){
+            throw new IllegalArgumentException("The granularity must be a value in [0, 1]");
+        }
+        
+        granularity = value;
+    }
+    
+    public float getGranularity() {
+        return granularity;
     }
     
     /**
