@@ -211,7 +211,7 @@ public class GeoCell extends Mantel {
         sedimentMap = Tools.constructSamples(sedimentColors, MAX_SEDIMENT_INDEX);
 
         Color[] strataColors = {SEDIMENT.getColor(), SOIL.getColor(),
-            GRAVEL.getColor(), SANDSTONE.getColor(),
+            new Color(0, 0, 0), SANDSTONE.getColor(),
             SHALE.getColor(), LIMESTONE.getColor(),
             METAMORPHIC.getColor(), BASALT.getColor(),
             GRANITE.getColor(), OCEAN.getColor(),
