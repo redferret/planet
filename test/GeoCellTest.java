@@ -153,14 +153,14 @@ public class GeoCellTest {
         
         assertEquals("The top layer's mass is incorrect", expectedMass, actualMass);
         
-        testCell.add(Layer.GRAVEL, 1000, false);
+        testCell.add(Layer.GRANITE, 1000, false);
         expectedRemoval = 9950f;
         removed = testCell.remove(expectedRemoval, false, true);
         
         assertEquals(incorrectAmtsMsg, expectedRemoval, removed);
         
         top = testCell.peekTopStratum();
-        expectedLayer = Layer.GRAVEL;
+        expectedLayer = Layer.GRANITE;
         topLayer = top.getLayer();
         
         assertEquals(incorrectLayerMsg, expectedLayer, topLayer);
