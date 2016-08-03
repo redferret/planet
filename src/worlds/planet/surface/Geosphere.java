@@ -131,34 +131,6 @@ public abstract class Geosphere extends Surface {
 
     }
 
-    public void windErosion(GeoCell spreadFrom) {
-        float height = calcHeight(0.1f, instance().getCellArea(), SEDIMENT);
-        convertTopLayer(spreadFrom, height);
-    }
-
-    public void convertTopLayer(GeoCell spreadFrom, float height) {
-
-        float rockMass, sandMass;
-
-        if (spreadFrom.peekTopStratum() == null) {
-            return;
-        }
-
-        SedimentBuffer eb = spreadFrom.getSedimentBuffer();
-        Layer rockLayer = spreadFrom.peekTopStratum().getLayer();
-        // Wind erosion
-        if (eb.getSediments() == 0 && !spreadFrom.hasOcean()
-                && spreadFrom.getMoltenRockFromSurface() < 1) {
-
-            rockMass = calcMass(height, instance().getCellArea(), SEDIMENT);
-            rockMass = spreadFrom.erode(rockMass);
-
-            sandMass = changeMass(rockMass, rockLayer, SEDIMENT);
-
-            eb.updateSurfaceSedimentMass(sandMass);
-        }
-    }
-
     public void getLowestCells(GeoCell spreadFrom, List<GeoCell> lowestList, int max) {
 
         int tx, ty, mx, my;
@@ -191,6 +163,12 @@ public abstract class Geosphere extends Surface {
         return (float) Math.pow(90f * mass, 0.5f);
     }
 
+    public static float windErosionConstant;
+    
+    static {
+        windErosionConstant = 5f;
+    }
+    
     private class WindErosionFactory implements TaskFactory {
 
         @Override
@@ -201,9 +179,9 @@ public abstract class Geosphere extends Surface {
         private class WindErosionTask implements Task {
 
             private Delay delay;
-
+            
             public WindErosionTask() {
-                delay = new Delay(1000);
+                delay = new Delay(1);
             }
 
             @Override
@@ -213,6 +191,34 @@ public abstract class Geosphere extends Surface {
             @Override
             public void perform(int x, int y) {
                 windErosion(getCellAt(x, y));
+            }
+
+            public void windErosion(GeoCell spreadFrom) {
+                float height = calcHeight(windErosionConstant, instance().getCellArea(), SEDIMENT);
+                convertTopLayer(spreadFrom, height);
+            }
+
+            public void convertTopLayer(GeoCell spreadFrom, float height) {
+
+                float rockMass, sandMass;
+
+                if (spreadFrom.peekTopStratum() == null) {
+                    return;
+                }
+
+                SedimentBuffer eb = spreadFrom.getSedimentBuffer();
+                Layer rockLayer = spreadFrom.peekTopStratum().getLayer();
+                // Wind erosion
+                if (eb.getSediments() == 0 && !spreadFrom.hasOcean()
+                        && spreadFrom.getMoltenRockFromSurface() < 1) {
+
+                    rockMass = calcMass(height, instance().getCellArea(), SEDIMENT);
+                    rockMass = spreadFrom.erode(rockMass);
+
+                    sandMass = changeMass(rockMass, rockLayer, SEDIMENT);
+
+                    eb.updateSurfaceSedimentMass(sandMass);
+                }
             }
 
             @Override
@@ -300,7 +306,7 @@ public abstract class Geosphere extends Surface {
             private Delay geologicDelay;
 
             public GeologicalUpdate() {
-                geologicDelay = new Delay(1000);
+                geologicDelay = new Delay(150);
             }
 
             @Override
@@ -388,7 +394,7 @@ public abstract class Geosphere extends Surface {
             if (cell.checkVolcano()) {
                 cell.putMoltenRockToSurface(averageVolcanicMass);
                 cell.cool(volcanicHeatLoss);
-                cell.addOceanMass(0.0008f);
+                cell.addOceanMass(0.001f);
             }
         }
 
@@ -429,7 +435,7 @@ public abstract class Geosphere extends Surface {
             public void depositSediment(int x, int y) {
                 GeoCell cell = getCellAt(x, y);
                 cell.getSedimentBuffer().applyBuffer();
-                formSedimentaryRock(cell, calcDepth(SEDIMENT, 9.8f, 400));
+                formSedimentaryRock(cell, calcDepth(SEDIMENT, 9.8f, 500));
             }
 
             public void formSedimentaryRock(GeoCell cell, float maxHeight) {
