@@ -26,12 +26,14 @@ public interface Task {
     boolean check();
     
     /**
-     * Called after perform(x, y) finishes on the entire map.
+     * A post-processing method called after perform(x, y) or perform() 
+     * finishes.
      */
     void post();
     
     /**
-     * Called before perform(x, y) starts on the entire map.
+     * A pre-processing method called before perform(x, y) or perform() 
+     * starts.
      */
     void pre();
 }
