@@ -67,7 +67,7 @@ public abstract class Geosphere extends Surface {
         heatDistributionCount = 5;
         thermalInc = 100;
         volcanicHeatLoss = 100;
-        averageVolcanicMass = 2500000;
+        averageVolcanicMass = 25000;
         rand = new Random();
         drawSediments = true;
     }
@@ -185,7 +185,7 @@ public abstract class Geosphere extends Surface {
             }
 
             @Override
-            public void pre() {
+            public void before() {
             }
             
             @Override
@@ -227,7 +227,7 @@ public abstract class Geosphere extends Surface {
             }
 
             @Override
-            public void post() {
+            public void after() {
             }
 
         }
@@ -237,7 +237,7 @@ public abstract class Geosphere extends Surface {
     private class SpreadSedimentTask extends TaskAdapter {
 
         @Override
-        public void pre() {
+        public void before() {
         }
         
         @Override
@@ -290,7 +290,7 @@ public abstract class Geosphere extends Surface {
         }
 
         @Override
-        public void post() {
+        public void after() {
         }
     }
 
@@ -358,11 +358,11 @@ public abstract class Geosphere extends Surface {
             }
 
             @Override
-            public void pre() {
+            public void before() {
             }
 
             @Override
-            public void post() {
+            public void after() {
             }
         }
     }
@@ -399,11 +399,11 @@ public abstract class Geosphere extends Surface {
         }
 
         @Override
-        public void pre() {
+        public void before() {
         }
 
         @Override
-        public void post() {
+        public void after() {
         }
     }
 
@@ -423,7 +423,7 @@ public abstract class Geosphere extends Surface {
             }
 
             @Override
-            public void pre() {
+            public void before() {
             }
             
             @Override
@@ -495,7 +495,7 @@ public abstract class Geosphere extends Surface {
                         }
                     }
 
-                    float rate = ((HydroCell) toUpdate).getOceanMass() > 0 ? 1f : 0.45f;
+                    float rate = ((HydroCell) toUpdate).getOceanMass() > 1 ? 0.35f : 0.05f;
 
                     //solidify the rock
                     float massToSolidify = toUpdate.getMoltenRockFromSurface() * rate;
@@ -514,7 +514,7 @@ public abstract class Geosphere extends Surface {
             }
 
             @Override
-            public void post() {
+            public void after() {
             }
         }
     }

@@ -75,10 +75,10 @@ class TestTask implements Task {
     }
 
     @Override
-    public void pre() {
+    public void before() {
     }
 
     @Override
-    public void post() {
+    public void after() {
     }
 }

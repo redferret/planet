@@ -163,11 +163,11 @@ public class BioSurface extends SurfaceMap<BioNode> {
         }
 
         @Override
-        public void pre() {
+        public void before() {
         }
 
         @Override
-        public void post() {
+        public void after() {
         }
         
     }

@@ -29,13 +29,13 @@ public class TaskManager {
         
         tasks.forEach(task -> {
             if (task.check()) {
-                task.pre();
+                task.before();
                 for (int y = lowerYBound; y < upperYBound; y++) {
                     for (int x = lowerXBound; x < upperXBound; x++) {
                         task.perform(x, y);
                     }
                 }
-                task.post();
+                task.after();
             }
         });
     }

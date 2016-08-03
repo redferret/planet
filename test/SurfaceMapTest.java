@@ -153,7 +153,7 @@ class TestSurface extends SurfaceMap<TestCell> {
     class SurfaceTask extends TaskAdapter {
 
         @Override
-        public void pre() {
+        public void before() {
         }
 
         @Override
@@ -162,7 +162,7 @@ class TestSurface extends SurfaceMap<TestCell> {
         }
 
         @Override
-        public void post() {
+        public void after() {
         }
     }
 

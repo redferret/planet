@@ -26,14 +26,14 @@ public interface Task {
     boolean check();
     
     /**
-     * A post-processing method called after perform(x, y) or perform() 
-     * finishes.
+     * A after-processing method called after perform(x, y) or perform() 
+ finishes.
      */
-    void post();
+    void after();
     
     /**
-     * A pre-processing method called before perform(x, y) or perform() 
-     * starts.
+     * A before-processing method called before perform(x, y) or perform() 
+ starts.
      */
-    void pre();
+    void before();
 }

@@ -1,15 +1,10 @@
 package worlds.planet.surface;
 
-import engine.util.BasicTask;
-import engine.util.Boundaries;
 import worlds.planet.cells.atmosphere.Gas;
 import worlds.planet.cells.PlanetCell;
 import engine.util.Delay;
 import engine.util.Task;
-import engine.util.TaskAdapter;
 import engine.util.TaskFactory;
-import engine.util.TaskManager;
-import engine.util.Tools;
 import java.util.ArrayList;
 import java.util.List;
 import worlds.planet.enums.GasType;
@@ -59,11 +54,14 @@ public abstract class Atmosphere extends Hydrosphere {
             }
 
             @Override
+            public void before() {
+            }
+            
+            @Override
             public void perform(int x, int y) {
                 if (evaporate){
                     PlanetCell cell = getCellAt(x, y);
-                    float rate = getRate(cell);
-                    float amount = 0.001f;// * rate;
+                    float amount = 0.001f;
                     float returnValue = -cell.addOceanMass(-amount);
                     totalEvaportatedMass += returnValue;
                 }else{
@@ -76,6 +74,9 @@ public abstract class Atmosphere extends Hydrosphere {
                 
             }
 
+            /*
+             * Calculates the rate based on latitude.
+             */
             private float getRate(PlanetCell cell){
                 int y = cell.getY();
                 float w = getGridWidth();
@@ -90,11 +91,7 @@ public abstract class Atmosphere extends Hydrosphere {
             }
             
             @Override
-            public void pre() {
-            }
-
-            @Override
-            public void post() {
+            public void after() {
                 if (!evaporate){
                     totalEvaportatedMass = 0;
                 }

@@ -43,11 +43,11 @@ public abstract class Biosphere extends Hydrosphere {
             }
 
             @Override
-            public void pre() {
+            public void before() {
             }
 
             @Override
-            public void post() {
+            public void after() {
             }
 
         }

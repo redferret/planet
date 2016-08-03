@@ -58,11 +58,11 @@ public abstract class Hydrosphere extends Geosphere {
             }
 
             @Override
-            public void pre() {
+            public void before() {
             }
 
             @Override
-            public void post() {
+            public void after() {
             }
         }
     }

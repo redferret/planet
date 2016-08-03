@@ -102,11 +102,11 @@ class MyFactory implements TaskFactory {
         }
         
         @Override
-        public void pre() {
+        public void before() {
         }
 
         @Override
-        public void post() {
+        public void after() {
         }
     }
 }

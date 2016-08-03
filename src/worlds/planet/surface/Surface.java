@@ -259,7 +259,7 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
             }
             
             @Override
-            public void pre() {
+            public void before() {
                 absLowestHeight = absLowestHeight < 0 ? 0 : absLowestHeight;
                 int intPart = (int) absLowestHeight;
                 int decPart = (int) ((absLowestHeight - intPart) * 10);
@@ -278,7 +278,7 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
             }
 
             @Override
-            public void post() {
+            public void after() {
             }
         }
     }

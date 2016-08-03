@@ -15,16 +15,16 @@ public abstract class BasicTask implements Task {
     }
     
     /**
-     * Implement this method to perform this task. pre() and post() are called
-     * to their respective order for perform(x, y).
+     * Implement this method to perform this task. before() and after() are called
+ to their respective order for perform(x, y).
      */
     public abstract void perform();
     
     @Override
     public final boolean check() {
-        pre();
+        before();
         perform();
-        post();
+        after();
         return false;
     }
 
