@@ -1,10 +1,14 @@
 package worlds.planet.surface;
 
+import engine.util.BasicTask;
+import engine.util.Boundaries;
 import worlds.planet.cells.atmosphere.Gas;
 import worlds.planet.cells.PlanetCell;
 import engine.util.Delay;
 import engine.util.Task;
+import engine.util.TaskAdapter;
 import engine.util.TaskFactory;
+import engine.util.TaskManager;
 import engine.util.Tools;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +24,7 @@ public abstract class Atmosphere extends Hydrosphere {
 
     public Atmosphere(int worldSize, int surfaceDelay, int threadsDelay, int threadCount) {
         super(worldSize, surfaceDelay, threadsDelay, threadCount);
-        produceTasks(new EvaporateFactory());
+        produceTasks(new SimpleClimateFactory());
         gases = new ArrayList<>();
         setupGases();
     }
@@ -35,47 +39,48 @@ public abstract class Atmosphere extends Hydrosphere {
         gases.add(new Gas(GasType.Ozone));
     }
 
-    private class EvaporateFactory implements TaskFactory {
+    private class SimpleClimateFactory implements TaskFactory {
 
         @Override
         public Task buildTask() {
-            return new EvaporateTask();
+            return new SimpleClimateTask();
         }
 
-        private class EvaporateTask implements Task {
+        private class SimpleClimateTask implements Task {
 
             private Delay delay;
-
-            public EvaporateTask() {
+            private boolean evaporate;
+            private float totalEvaportatedMass;
+            
+            public SimpleClimateTask() {
                 delay = new Delay(1);
+                totalEvaportatedMass = 0;
+                evaporate = true;
             }
 
             @Override
             public void perform(int x, int y) {
-                if (y != 0) {
+                if (evaporate){
                     PlanetCell cell = getCellAt(x, y);
-                    float w = getGridWidth();
-                    float h = w / 2;
-                    float rate = 0;
+                    float rate = getRate(cell);
+                    float amount = 0.001f;// * rate;
+                    float returnValue = -cell.addOceanMass(-amount);
+                    totalEvaportatedMass += returnValue;
+                }else{
+                    PlanetCell cell = getCellAt(x, y);
+                        
+                    float rate = totalEvaportatedMass / getTotalNumberOfCells();
 
-                    rate = calcLatitudeRate(y, h, w);
-
-                    float amount = 15 * rate;
-                    amount = cell.addOceanMass(-amount);
-
-                    int rx = random.nextInt(getGridWidth());
-                    int ry = random.nextInt(getGridWidth());
-
-                    amount /= 4f;
-                    getCellAt(Tools.checkBounds(rx + 1, getGridWidth()), ry).addOceanMass(amount);
-                    getCellAt(Tools.checkBounds(rx - 1, getGridWidth()), ry).addOceanMass(amount);
-
-                    getCellAt(rx, Tools.checkBounds(ry + 1, getGridWidth())).addOceanMass(amount);
-                    getCellAt(rx, Tools.checkBounds(ry - 1, getGridWidth())).addOceanMass(amount);
+                    cell.addOceanMass(rate);
                 }
+                
             }
 
-            private float calcLatitudeRate(int y, float h, float w) {
+            private float getRate(PlanetCell cell){
+                int y = cell.getY();
+                float w = getGridWidth();
+                float h = w / 2;
+
                 return (0 <= y && y < h) ? y / h : (w - y) / h;
             }
 
@@ -83,7 +88,18 @@ public abstract class Atmosphere extends Hydrosphere {
             public boolean check() {
                 return delay.check() && !PlanetSurface.suppressAtmosphere;
             }
+            
+            @Override
+            public void pre() {
+            }
 
+            @Override
+            public void post() {
+                if (!evaporate){
+                    totalEvaportatedMass = 0;
+                }
+                evaporate = !evaporate;
+            }
         }
 
     }

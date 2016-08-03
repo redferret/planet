@@ -56,6 +56,14 @@ public abstract class Hydrosphere extends Geosphere {
             public void perform(int x, int y) {
                 updateOceans(x, y);
             }
+
+            @Override
+            public void pre() {
+            }
+
+            @Override
+            public void post() {
+            }
         }
     }
 

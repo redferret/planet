@@ -219,7 +219,7 @@ public class HydroCell extends GeoCell {
         if (oceanMass + amount < 0) {
             float temp = oceanMass;
             oceanMass = 0;
-            return temp;
+            return -temp;
         }else {
             oceanMass += amount;
             return amount;

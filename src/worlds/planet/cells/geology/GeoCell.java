@@ -79,9 +79,15 @@ public class GeoCell extends Mantel {
             }
         }
 
-        public void removeAllSediments() {
+        /**
+         * Removes all sediments and returns the total amount what was here.
+         * @return The total amount of sediments.
+         */
+        public float removeAllSediments() {
+            float temp = totalSediments;
             updateMV(-totalSediments, SEDIMENT);
             totalSediments = 0;
+            return temp;
         }
 
         /**

@@ -73,5 +73,12 @@ class TestTask implements Task {
     public boolean check() {
         return checkPass;
     }
-    
+
+    @Override
+    public void pre() {
+    }
+
+    @Override
+    public void post() {
+    }
 }

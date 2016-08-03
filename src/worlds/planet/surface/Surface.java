@@ -13,8 +13,6 @@ import engine.util.Delay;
 import engine.util.Task;
 import engine.util.TaskFactory;
 import engine.util.TaskManager;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import static worlds.planet.surface.Surface.GEOUPDATE;
 import static worlds.planet.surface.Surface.planetAge;
 
@@ -146,8 +144,6 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
         if (ageUpdateDelay.check()) {
             long curPlanetAge = planetAge.getAndAdd(timeStep);
             if (curPlanetAge - geologicalTimeStamp > GEOUPDATE) {
-                // < Update to major geological events go here >
-                
                 geologicalTimeStamp = curPlanetAge;
             }
         }
@@ -259,26 +255,30 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
 
             @Override
             public boolean check() {
-                if (delayTask.check()){
-                    absLowestHeight = absLowestHeight < 0 ? 0 : absLowestHeight;
-                    int intPart = (int) absLowestHeight;
-                    int decPart = (int) ((absLowestHeight - intPart) * 10);
+                return delayTask.check();
+            }
+            
+            @Override
+            public void pre() {
+                absLowestHeight = absLowestHeight < 0 ? 0 : absLowestHeight;
+                int intPart = (int) absLowestHeight;
+                int decPart = (int) ((absLowestHeight - intPart) * 10);
 
-                    lowestHeightIntPart.set(intPart);
-                    lowestHeightDecPart.set(decPart);
+                lowestHeightIntPart.set(intPart);
+                lowestHeightDecPart.set(decPart);
 
-                    intPart = (int) absHighestHeight;
-                    decPart = (int) ((absHighestHeight - intPart) * 10);
+                intPart = (int) absHighestHeight;
+                decPart = (int) ((absHighestHeight - intPart) * 10);
 
-                    highestHeightIntPart.set(intPart);
-                    highestHeightDecPart.set(decPart);
+                highestHeightIntPart.set(intPart);
+                highestHeightDecPart.set(decPart);
 
-                    absLowestHeight = Integer.MAX_VALUE;
-                    absHighestHeight = Integer.MIN_VALUE;
-                    return true;
-                }else{
-                    return false;
-                }
+                absLowestHeight = Integer.MAX_VALUE;
+                absHighestHeight = Integer.MIN_VALUE;
+            }
+
+            @Override
+            public void post() {
             }
         }
     }

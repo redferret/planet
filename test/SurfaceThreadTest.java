@@ -58,4 +58,12 @@ class ExecptionTask extends TaskAdapter {
     public void perform(int x, int y) {
         throw new SurfaceThreadException("The task threw an error");
     }
+
+    @Override
+    public void pre() {
+    }
+
+    @Override
+    public void post() {
+    }
 }

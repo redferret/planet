@@ -83,6 +83,14 @@ public class WaterMovementTest extends JFrame implements DisplayAdapter {
     private class EmptyWaterTask extends BasicTask {
         
         @Override
+        public void pre() {
+        }
+        
+        @Override
+        public void post() {
+        }
+
+        @Override
         public void perform() {
             PlanetSurface surface = (PlanetSurface) testWorld.getSurface();
             PlanetCell cell1 = surface.getCellAt(25, 6);
@@ -111,6 +119,14 @@ public class WaterMovementTest extends JFrame implements DisplayAdapter {
             if (timer.check()){
                 testWorld.getSurface().getCellAt(1, 11).addOceanMass(100);
             }
+        }
+
+        @Override
+        public void pre() {
+        }
+
+        @Override
+        public void post() {
         }
 
     }

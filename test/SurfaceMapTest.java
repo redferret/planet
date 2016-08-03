@@ -153,8 +153,16 @@ class TestSurface extends SurfaceMap<TestCell> {
     class SurfaceTask extends TaskAdapter {
 
         @Override
+        public void pre() {
+        }
+
+        @Override
         public void perform(int x, int y) {
             getCellAt(x, y).update();
+        }
+
+        @Override
+        public void post() {
         }
     }
 

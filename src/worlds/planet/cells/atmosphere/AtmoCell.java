@@ -108,11 +108,15 @@ public class AtmoCell extends BioCell {
         }
     }
 
+    public void addMoisture(float amount){
+        airLayers.get(0).getAirBuffer().addWater(amount);
+    }
+    
     /**
      * Gets the layers as a Stream
      * @return The layers as a Stream
      */
-    public Stream<AirLayer> getLayers(){
+    public Stream<AirLayer> getAirLayersStream(){
         return airLayers.stream();
     }
     

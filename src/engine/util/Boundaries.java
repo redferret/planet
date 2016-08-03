@@ -10,6 +10,10 @@ public final class Boundaries {
 
     private int lowerXBound, upperXBound, lowerYBound, upperYBound;
 
+    public Boundaries() {
+        this(0, 0, 0, 0);
+    }
+    
     public Boundaries(int lowerBound, int upperBound){
         this(lowerBound, upperBound, lowerBound, upperBound);
     }

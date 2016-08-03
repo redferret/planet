@@ -24,4 +24,14 @@ public interface Task {
      * will skip the current frame.
      */
     boolean check();
+    
+    /**
+     * Called after perform(x, y) finishes on the entire map.
+     */
+    void post();
+    
+    /**
+     * Called before perform(x, y) starts on the entire map.
+     */
+    void pre();
 }

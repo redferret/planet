@@ -101,5 +101,12 @@ class MyFactory implements TaskFactory {
             return false;
         }
         
+        @Override
+        public void pre() {
+        }
+
+        @Override
+        public void post() {
+        }
     }
 }

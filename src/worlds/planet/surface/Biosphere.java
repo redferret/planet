@@ -42,6 +42,14 @@ public abstract class Biosphere extends Hydrosphere {
                 return delay.check();
             }
 
+            @Override
+            public void pre() {
+            }
+
+            @Override
+            public void post() {
+            }
+
         }
     }
 }

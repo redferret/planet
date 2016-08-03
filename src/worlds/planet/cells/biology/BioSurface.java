@@ -162,6 +162,14 @@ public class BioSurface extends SurfaceMap<BioNode> {
             return surfaceHasLife();
         }
 
+        @Override
+        public void pre() {
+        }
+
+        @Override
+        public void post() {
+        }
+        
     }
     
 }
