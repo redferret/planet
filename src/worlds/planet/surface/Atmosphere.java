@@ -25,13 +25,9 @@ public abstract class Atmosphere extends Hydrosphere {
     }
     
     private void setupGases(){
-        gases.add(new Gas(GasType.Argon));
-        gases.add(new Gas(GasType.CarbonDioxide));
-        gases.add(new Gas(GasType.CarbonMonoxide));
-        gases.add(new Gas(GasType.Methane));
-        gases.add(new Gas(GasType.Nitrogen));
-        gases.add(new Gas(GasType.Oxygen));
-        gases.add(new Gas(GasType.Ozone));
+        for (GasType gas : GasType.values()){
+            gases.add(new Gas(gas));
+        }
     }
 
     private class SimpleClimateFactory implements TaskFactory {
@@ -62,20 +58,20 @@ public abstract class Atmosphere extends Hydrosphere {
                 if (evaporate){
                     PlanetCell cell = getCellAt(x, y);
                     float amount = 0.001f;
-                    float returnValue = -cell.addOceanMass(-amount);
-                    totalEvaportatedMass += returnValue;
+                    if (cell.getOceanMass() > 5000){
+                        float returnValue = -cell.addOceanMass(-amount);
+                        totalEvaportatedMass += returnValue;
+                    }
                 }else{
                     PlanetCell cell = getCellAt(x, y);
-                        
                     float rate = totalEvaportatedMass / getTotalNumberOfCells();
-
                     cell.addOceanMass(rate);
                 }
                 
             }
 
             /*
-             * Calculates the rate based on latitude.
+             * Calculates a rate based on latitude.
              */
             private float getRate(PlanetCell cell){
                 int y = cell.getY();
