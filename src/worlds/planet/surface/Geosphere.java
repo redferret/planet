@@ -30,6 +30,7 @@ import java.util.Hashtable;
 import static worlds.planet.Planet.instance;
 import static worlds.planet.Planet.TimeScale.Geological;
 import static worlds.planet.Planet.TimeScale.None;
+import worlds.planet.cells.geology.Stratum;
 import static worlds.planet.surface.Surface.planetAge;
 import static worlds.planet.surface.Surface.random;
 
@@ -86,7 +87,8 @@ public abstract class Geosphere extends Surface {
     }
 
     /**
-     * Add a uniformed layer on the whole surface.
+     * Add a uniformed layer on the whole surface. Adds a new layer even if
+     * the layer type is the same.
      *
      * @param type The layer being added
      * @param amount The amount being added
@@ -94,7 +96,7 @@ public abstract class Geosphere extends Surface {
     public void addToSurface(Layer type, float amount) {
         int cellCount = getTotalNumberOfCells();
         for (int i = 0; i < cellCount; i++) {
-            getCellAt(i).add(type, amount, true);
+            getCellAt(i).pushStratum(new Stratum(type, amount));
         }
     }
 
@@ -145,7 +147,7 @@ public abstract class Geosphere extends Surface {
             private Delay meltDelay;
             
             public MeltRockTask() {
-                meltDelay = new Delay(1000);
+                meltDelay = new Delay(1);
             }
             
             @Override
@@ -160,29 +162,61 @@ public abstract class Geosphere extends Surface {
             @Override
             public void perform(int x, int y) {
                 PlanetCell cell = getCellAt(x, y);
-                metamorphisize(cell, calcDepth(cell.getDensity(), 9.8f, 25000));
-                melt(cell, calcDepth(cell.getDensity(), 9.8f, 35000));
+                Stratum temp = null;
+                if (cell.peekBottomStratum().getLayer() == Layer.METAMORPHIC){
+                    temp = cell.removeBottomStratum();
+                }
+                float density = cell.getDensity();
+                float height = cell.getHeight();
+                
+                cell.appendStratum(temp);
+                
+                metamorphisize(cell, calcDepth(density, 9.8f, 40000), height);
+//                melt(cell, calcDepth(cell.getDensity(), 9.8f, 7500));
             }
 
             @Override
             public void after() {
             }
 
-            private void metamorphisize(GeoCell cell, float maxDepth){
-                float height, massToChange;
+            private void metamorphisize(GeoCell cell, float maxDepth, float height){
+                float massToChange;
+                
                 if (cell.peekBottomStratum() == null) {
                     return;
                 }
-                Layer bottomType = cell.peekBottomStratum().getLayer();
-
-                height = cell.getHeight();
-
+                
+                Stratum bottom = cell.peekBottomStratum();
+                Layer bottomType = bottom.getLayer();
+                boolean thereIsMetamorphicRock = false;
+                
+                while (bottomType == Layer.METAMORPHIC){
+                    thereIsMetamorphicRock = true;
+                    bottom = bottom.previous();
+                    bottomType = bottom.getLayer();
+                }
+                
                 if (height > maxDepth) {
-                    massToChange = calcMass(1, instance().getCellArea(), bottomType);
-                    massToChange = cell.remove(massToChange, false, false);
-                    massToChange = Tools.changeMass(massToChange, bottomType, Layer.METAMORPHIC);
+                    massToChange = calcMass(0.01f, instance().getCellArea(), bottomType);
+                    
+                    if (thereIsMetamorphicRock){
+                        // pull off the metamorphic rock first
+                        Stratum temp = cell.removeBottomStratum();
+                        // remove the rock that is to become metamorphic
+                        massToChange = removeAndChangeMass(cell, massToChange, bottomType);
+                        // add back the metamorphic rock
+                        cell.appendStratum(temp);
+                    }else{
+                        massToChange = removeAndChangeMass(cell, massToChange, bottomType);
+                    }
                     cell.add(Layer.METAMORPHIC, massToChange, false);
                 }
+            }
+            
+            private float removeAndChangeMass(GeoCell cell, float mass, Layer bottomType){
+                float massToChange = cell.remove(mass, false, false);
+                massToChange = Tools.changeMass(massToChange, bottomType, Layer.METAMORPHIC);
+                return massToChange;
             }
             
             private void melt(GeoCell cell, float maxHeight) {
@@ -196,7 +230,7 @@ public abstract class Geosphere extends Surface {
                 height = cell.getHeight();
 
                 if (height > maxHeight) {
-                    massToChange = calcMass(1, instance().getCellArea(), bottomType);
+                    massToChange = calcMass(0.001f, instance().getCellArea(), bottomType);
                     cell.remove(massToChange, false, false);
                 }
             }
@@ -478,7 +512,7 @@ public abstract class Geosphere extends Surface {
             public void depositSediment(int x, int y) {
                 GeoCell cell = getCellAt(x, y);
                 cell.getSedimentBuffer().applyBuffer();
-                formSedimentaryRock(cell, calcDepth(SEDIMENT, 9.8f, 500));
+                formSedimentaryRock(cell, calcDepth(SEDIMENT, 9.8f, 2000));
             }
 
             public void formSedimentaryRock(GeoCell cell, float maxHeight) {

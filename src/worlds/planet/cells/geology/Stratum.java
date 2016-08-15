@@ -152,6 +152,10 @@ public class Stratum {
         top = stratum;
     }
     
+    public Stratum previous(){
+        return top;
+    }
+    
     /**
      * The stratum below this stratum. 
      * @return The next stratum below this.

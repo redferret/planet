@@ -637,8 +637,11 @@ public class GeoCell extends Mantel {
     public void appendStratum(Stratum stratum) {
 
         if (stratum != null) {
-            peekBottomStratum().setBottom(stratum);
-            stratum.setTop(peekBottomStratum());
+            Stratum bottom = peekBottomStratum();
+            if (bottom != null){
+                bottom.setBottom(stratum);
+                stratum.setTop(bottom);
+            }
             strata.addLast(stratum);
             updateMV(stratum, false);
         }
@@ -698,12 +701,15 @@ public class GeoCell extends Mantel {
         Stratum removed = strata.removeLast();
         Stratum bottom = peekBottomStratum();
 
-        if (bottom == null) {
-            throw new RuntimeException("No strata!");
+        if (bottom != null) {
+            bottom.removeTop();
         }
-        bottom.removeTop();
-        peekBottomStratum().removeBottom();
-
+        
+        Stratum nextBottom = peekBottomStratum();
+        if (nextBottom != null) {
+            nextBottom.removeBottom();
+        }
+        
         return updateRemoved(removed);
     }
 

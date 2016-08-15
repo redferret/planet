@@ -58,7 +58,15 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
 
     private void prepareWorld() {
         PlanetSurface surface = (PlanetSurface) testWorld.getSurface();
-        surface.addToSurface(Layer.BASALT, 300000);
+        for (int i = 0; i < 4; i++){
+            surface.addToSurface(Layer.BASALT, 100000);
+        }
+        surface.getCellAt(10).remove(400000, false, true);
+        surface.getCellAt(10).add(Layer.GRANITE, 1000000, true);
+        
+        surface.getCellAt(11).remove(400000, false, true);
+        surface.getCellAt(11).add(Layer.SANDSTONE, 1000000, true);
+        
         testWorld.setTimescale(Planet.TimeScale.Geological);
         Geosphere.heatDistributionCount = 100;
 
@@ -69,7 +77,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
         addWindowListener(new JAdapter());
         addKeyListener(new KeyController());
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setSize(SIZE+128, SIZE);
+        setSize(SIZE*2, SIZE);
         setLocationRelativeTo(null);
         setVisible(true);
         
@@ -251,8 +259,8 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
             // Draw the cross section
             for (int cellIndex = 0; cellIndex < cutToolWidth; cellIndex++) {
 
-                cx = Tools.checkBounds(cellIndex + cx, surface.getGridWidth());
-                cy = Tools.checkBounds(cy, surface.getGridWidth());
+                cx = Tools.checkBounds(cellIndex + viewX, surface.getGridWidth());
+                cy = Tools.checkBounds(viewY, surface.getGridWidth());
 
                 cell = surface.getCellAt(cx, cy);
 
