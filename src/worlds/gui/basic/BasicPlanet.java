@@ -12,9 +12,11 @@ import worlds.planet.TestWorld;
 import worlds.planet.enums.Layer;
 import engine.gui.DisplayAdapter;
 import engine.surface.SurfaceMap;
+import engine.util.Tools;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -22,6 +24,8 @@ import java.awt.image.WritableRaster;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
+import worlds.planet.cells.PlanetCell;
+import worlds.planet.cells.geology.Stratum;
 import worlds.planet.surface.Geosphere;
 import worlds.planet.surface.Hydrosphere;
 import worlds.planet.surface.PlanetSurface;
@@ -38,9 +42,8 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
     private TestWorld testWorld;
     private Deque<Integer> averages;
     private int totalAvg;
-    private CrossSection crossSection;
+    private StrataFrame crossSection;
     
-    private static final int THREAD_COUNT = 1;
     private static final int SIZE = 512;
 
     public BasicPlanet() {
@@ -48,7 +51,6 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
 
         averages = new LinkedList<>();
         totalAvg = 0;
-        crossSection = new CrossSection(512, 512);
         constructWorld();
         setupJFrame();
         prepareWorld();
@@ -67,9 +69,16 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
         addWindowListener(new JAdapter());
         addKeyListener(new KeyController());
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setSize(SIZE, SIZE);
+        setSize(SIZE+128, SIZE);
         setLocationRelativeTo(null);
         setVisible(true);
+        
+        GridLayout layout = new GridLayout(1, 2);
+        setLayout(layout);
+        crossSection = new StrataFrame();
+        crossSection.setSize(128, 128);
+        add(renderFrame);
+        add(crossSection);
     }
 
     private void constructWorld() {
@@ -77,13 +86,12 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
         testWorld.getSurface().setDisplay(this);
         renderFrame = new Frame(SIZE, SIZE);
         renderFrame.registerMap(testWorld.getSurface());
-        add(renderFrame);
     }
 
     @Override
     public void update() {
         renderFrame.repaint();
-        crossSection.update();
+        crossSection.repaint();
         calculateAverage();
 
         long age = testWorld.getSurface().getPlanetAge();
@@ -104,6 +112,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
         }
     }
 
+    /* **************************** Keyboard ******************************/
     private class KeyController extends KeyAdapter {
 
 
@@ -186,7 +195,130 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
 
     }
 
-    public class Frame extends JPanel {
+    /* **************************** Panels ********************************/
+    private class StrataFrame extends JPanel {
+
+        private int viewX = 0, viewY = 0;
+        
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            draw((Graphics2D) g);
+            setBackground(Color.BLACK);
+        }
+
+        public int getViewX() {
+            return viewX;
+        }
+        public int getViewY() {
+            return viewY;
+        }
+        public void setViewX(int viewX) {
+            this.viewX = viewX;
+        }
+        public void setViewY(int viewY) {
+            this.viewY = viewY;
+        }
+        
+        public void draw(Graphics2D g2d) {
+
+            if (Planet.instance() == null) {
+                return;
+            }
+
+            PlanetSurface surface = (PlanetSurface) Planet.instance().getSurface();
+
+            if (surface == null) {
+                return;
+            }
+
+            int windowWidth = getWidth(),
+                    windowHeight = getHeight(), cutToolWidth = 50;
+            int cellWidth = windowWidth / cutToolWidth, cx = viewX, cy = viewY;
+            final int MAX_THICKNESS = 10;
+
+            double layerThickness, cellThicknessRatio, startDrawHeight;
+
+            Color color;
+            PlanetCell cell;
+            Stratum nextStratum;
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("[").append(cx).append(", ").append(cy).append("]");
+
+            g2d.drawString(sb.toString(), cx, cy);
+
+            // Draw the cross section
+            for (int cellIndex = 0; cellIndex < cutToolWidth; cellIndex++) {
+
+                cx = Tools.checkBounds(cellIndex + cx, surface.getGridWidth());
+                cy = Tools.checkBounds(cy, surface.getGridWidth());
+
+                cell = surface.getCellAt(cx, cy);
+
+                if (cell != null) {
+
+                    cellThicknessRatio = ((float) windowHeight / MAX_THICKNESS);
+                    startDrawHeight = (MAX_THICKNESS - cell.getHeight());
+                    startDrawHeight *= cellThicknessRatio;
+
+                    // Draw Ocean
+                    layerThickness = cell.getOceanHeight() * cellThicknessRatio;
+
+                    drawLayer(g2d, Color.BLUE, cellIndex, cellWidth,
+                            startDrawHeight, windowHeight, layerThickness, cellThicknessRatio);
+
+                    startDrawHeight += layerThickness;
+
+                    // Draw Sediments
+                    float sedDepth = Tools.calcHeight(cell.getSedimentBuffer().getSediments(), Planet.instance().getCellArea(), Layer.SEDIMENT.getDensity());
+                    layerThickness = sedDepth * cellThicknessRatio;
+
+                    drawLayer(g2d, Layer.SEDIMENT.getColor(), cellIndex, cellWidth,
+                            startDrawHeight, windowHeight, layerThickness, cellThicknessRatio);
+
+                    startDrawHeight += layerThickness;
+
+                    nextStratum = cell.peekTopStratum();
+
+                    while (nextStratum != null) {
+                        layerThickness = nextStratum.getHeight() * cellThicknessRatio;
+                        color = nextStratum.getLayer().getColor();
+                        drawLayer(g2d, color, cellIndex, cellWidth,
+                                startDrawHeight, windowHeight, layerThickness, cellThicknessRatio);
+                        startDrawHeight += layerThickness;
+                        nextStratum = nextStratum.next();
+                    }
+                }
+            }
+        }
+
+        /**
+         * Draws a rectangle on the screen representing the stratum.
+         *
+         * @param g2d The graphics device
+         * @param color The color of the stratum
+         * @param cellIndex The cell index (The cell being rendered)
+         * @param cellWidth The width of the cell in pixels
+         * @param startDrawHeight The top position of the stratum
+         * @param windowHeight The height of the window
+         * @param layerThickness The thickness of the stratum
+         * @param cellThicknessRatio A scaling value for the thickness of the
+         * stratum on the screen
+         */
+        private void drawLayer(Graphics2D g2d, Color color, int cellIndex, int cellWidth,
+                double startDrawHeight, int windowHeight, double layerThickness, double cellThicknessRatio) {
+
+            g2d.setColor(color);
+
+            int x = cellIndex * cellWidth;
+            int y = (int) (startDrawHeight - (windowHeight * (1f / 3f)));
+            int height = (int) (layerThickness + 1);
+
+            g2d.fillRect(x, y, cellWidth, height);
+        }
+    }
+    private class Frame extends JPanel {
 
         private SurfaceMap map;
         private List<BufferedImage> images;
@@ -280,6 +412,8 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
 
     }
 
+    
+    /* **************************** Main ******************************/
     public static void main(String[] args) {
         new BasicPlanet();
         

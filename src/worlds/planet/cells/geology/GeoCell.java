@@ -195,7 +195,7 @@ public class GeoCell extends Mantel {
 
     public final static int MAX_HEIGHT_INDEX = 17;
 
-    public final static int MAX_SEDIMENT_INDEX = 50;
+    public final static int MAX_SEDIMENT_INDEX = 17;
     /**
      * The ratio for indexing onto the height map array, by taking a cell height
      * and dividing it by this value will give the proper index to the height
@@ -203,7 +203,7 @@ public class GeoCell extends Mantel {
      */
     public static int heightIndexRatio = 17 / MAX_HEIGHT_INDEX;
 
-    public static int sedimentIndexRatio = 1 / MAX_SEDIMENT_INDEX;
+    public static int sedimentIndexRatio = 17 / MAX_SEDIMENT_INDEX;
 
     static {
         Color[] heightColors = {new Color(255, 255, 204), new Color(51, 153, 51),
