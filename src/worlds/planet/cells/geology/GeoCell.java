@@ -21,11 +21,8 @@ import static worlds.planet.surface.Surface.*;
 import static worlds.planet.enums.Layer.*;
 
 /**
- * A GeoCell is a Cell representing land geographically. The cell contains
+ * A GeoCell is a Cell representing land Geologically. The cell contains
  * strata and specialized methods for adding and/or removing from the strata.
- * The GeoCell doesn't contain information about oceans but accesses the
- * Hydrosphere to obtain the quantity of sea water at this cell location to
- * calculate the average density of this cell.
  *
  * @author Richard DeSilvey
  */
@@ -196,7 +193,7 @@ public class GeoCell extends Mantel {
 
     private final static Integer[][] heightMap, strataMap, sedimentMap;
 
-    public final static int MAX_HEIGHT_INDEX = 50;
+    public final static int MAX_HEIGHT_INDEX = 17;
 
     public final static int MAX_SEDIMENT_INDEX = 50;
     /**
@@ -204,7 +201,7 @@ public class GeoCell extends Mantel {
      * and dividing it by this value will give the proper index to the height
      * map.
      */
-    public static int heightIndexRatio = 50 / MAX_HEIGHT_INDEX;
+    public static int heightIndexRatio = 17 / MAX_HEIGHT_INDEX;
 
     public static int sedimentIndexRatio = 1 / MAX_SEDIMENT_INDEX;
 
@@ -261,6 +258,19 @@ public class GeoCell extends Mantel {
         depositAgeTimeStamp = 0;
 
         recalculateHeight();
+    }
+
+    public GeoCell copy() {
+
+        GeoCell copy = new GeoCell(getX(), getY());
+        Deque<Stratum> copyStrata = new LinkedList<>();
+        
+        strata.forEach(stratum -> {
+            copyStrata.push(stratum.copy());
+        });
+        copy.strata = copyStrata;
+        
+        return copy;
     }
 
     /**
@@ -352,10 +362,13 @@ public class GeoCell extends Mantel {
 
     /**
      * Removes all molten rock from this cell.
+     * @return The total amount of molten rock that was at this cell.
      */
-    public void removeAllMoltenRock() {
+    public float removeAllMoltenRock() {
+        float temp = moltenRockSurfaceMass;
         updateMV(-moltenRockSurfaceMass, LAVA);
         moltenRockSurfaceMass = 0;
+        return temp;
     }
 
     /* !! Marked as another abstraction !!*/

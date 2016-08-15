@@ -37,13 +37,6 @@ public abstract class Hydrosphere extends Geosphere {
         }
     }
 
-    public void updateOceans(int x, int y) {
-        HydroCell toUpdate = getCellAt(x, y);
-        ErosionBuffer erosionBuffer = toUpdate.getErosionBuffer();
-
-        erosionBuffer.update();
-    }
-
     private class UpdateOceansFactory implements TaskFactory {
 
         @Override
@@ -52,13 +45,17 @@ public abstract class Hydrosphere extends Geosphere {
         }
         
         private class UpdateOceansTask extends TaskAdapter {
-            @Override
-            public void perform(int x, int y) {
-                updateOceans(x, y);
-            }
-
+            
             @Override
             public void before() {
+            }
+            
+            @Override
+            public void perform(int x, int y) {
+                HydroCell toUpdate = getCellAt(x, y);
+                ErosionBuffer erosionBuffer = toUpdate.getErosionBuffer();
+
+                erosionBuffer.update();
             }
 
             @Override

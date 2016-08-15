@@ -40,7 +40,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
     private int totalAvg;
     private CrossSection crossSection;
     
-    private static final int THREAD_COUNT = 2;
+    private static final int THREAD_COUNT = 1;
     private static final int SIZE = 512;
 
     public BasicPlanet() {
@@ -56,8 +56,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
 
     private void prepareWorld() {
         PlanetSurface surface = (PlanetSurface) testWorld.getSurface();
-        surface.addToSurface(Layer.BASALT, 100000);
-        surface.addWaterToAllCells(10000);
+        surface.addToSurface(Layer.BASALT, 300000);
         testWorld.setTimescale(Planet.TimeScale.Geological);
         Geosphere.heatDistributionCount = 100;
 
@@ -67,8 +66,6 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
     private void setupJFrame() {
         addWindowListener(new JAdapter());
         addKeyListener(new KeyController());
-        addMouseListener(new MouseController());
-        addMouseMotionListener(new MouseController());
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setSize(SIZE, SIZE);
         setLocationRelativeTo(null);
@@ -76,7 +73,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
     }
 
     private void constructWorld() {
-        testWorld = new TestWorld(128, THREAD_COUNT);
+        testWorld = new TestWorld();
         testWorld.getSurface().setDisplay(this);
         renderFrame = new Frame(SIZE, SIZE);
         renderFrame.registerMap(testWorld.getSurface());
@@ -106,14 +103,87 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
             totalAvg /= SAMPLES;
         }
     }
-    
-    class MouseController extends MouseAdapter {
+
+    private class KeyController extends KeyAdapter {
+
 
         @Override
-        public void mouseReleased(MouseEvent e) {
-            crossSection.setViewX((int) ((e.getX() - 5) * (128f / 512f)));
-            crossSection.setViewY((int) ((e.getY() - 28) * (128f / 512f)));
+        public void keyPressed(KeyEvent e) {
+            moveCrossSection(e);
         }
+        
+        private void moveCrossSection(KeyEvent e){
+            switch (e.getKeyCode()) {
+                case KeyEvent.VK_UP:
+                    int curY = crossSection.getViewY();
+                    if (--curY < 0){
+                        curY = testWorld.getSurface().getGridWidth() - 1;
+                    }
+                    crossSection.setViewY(curY);
+                    break;
+                case KeyEvent.VK_DOWN:
+                    curY = crossSection.getViewY();
+                    if (++curY >= testWorld.getSurface().getGridWidth()){
+                        curY = 0;
+                    }
+                    crossSection.setViewY(curY);
+                    break;
+                case KeyEvent.VK_LEFT:
+                    int curX = crossSection.getViewX();
+                    if (--curX < 0){
+                        curX = testWorld.getSurface().getGridWidth() - 1;
+                    }
+                    crossSection.setViewX(curX);
+                    break;
+                case KeyEvent.VK_RIGHT:
+                    curX = crossSection.getViewX();
+                    if (++curX < 0){
+                        curX = testWorld.getSurface().getGridWidth() - 1;
+                    }
+                    crossSection.setViewX(curX);
+                    break;
+            }
+        }
+        
+        @Override
+        public void keyReleased(KeyEvent e) {
+            Planet p = Planet.instance();
+            switch (e.getKeyCode()) {
+
+                case KeyEvent.VK_INSERT:
+                    Hydrosphere.drawOcean = !Hydrosphere.drawOcean;
+                    break;
+
+                case KeyEvent.VK_PAGE_UP:
+                    p.getSurface().displaySetting++;
+
+                    if (p.getSurface().displaySetting > 2) {
+                        p.getSurface().displaySetting = 2;
+                    }
+                    break;
+
+                case KeyEvent.VK_PAGE_DOWN:
+                    p.getSurface().displaySetting--;
+
+                    if (p.getSurface().displaySetting < 0) {
+                        p.getSurface().displaySetting = 0;
+                    }
+                    break;
+
+                case KeyEvent.VK_HOME:
+                    Geosphere.drawSediments = !Geosphere.drawSediments;
+                    break;
+                case KeyEvent.VK_ENTER:
+
+                    if (p.getSurface().paused()) {
+                        p.play();
+                    } else {
+                        p.pause();
+                    }
+                    break;
+            }
+        }
+
     }
 
     public class Frame extends JPanel {
@@ -144,9 +214,19 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
                 setRasterOfEachImage();
                 renderEachImage(g2d);
             }
-            int x = (int)(crossSection.getViewX() * (512f/128f));
-            int y = (int)(crossSection.getViewY() * (512f/128f));
-            g2d.drawLine(x, y, x + 35, y);
+            g2d.setColor(Color.BLACK);
+            int vx = crossSection.getViewX();
+            int vy = crossSection.getViewY();
+            
+            int x = (int)(vx * (512f/(128f)));
+            int y = (int)(vy * (512f/(128f)));
+            g2d.drawLine(x, y, x+35, y);
+            g2d.drawLine(x, y+1, x+35, y+1);
+            
+            StringBuilder sb = new StringBuilder();
+            sb.append("[").append(vx).append(", ").append(vy).append("]");
+            
+            g2d.drawString(sb.toString(), x, y);
         }
 
         private void renderEachImage(Graphics2D g2d) {
@@ -203,49 +283,6 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
     public static void main(String[] args) {
         new BasicPlanet();
         
-    }
-
-}
-
-class KeyController extends KeyAdapter {
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-        Planet p = Planet.instance();
-        switch (e.getKeyCode()) {
-
-            case KeyEvent.VK_INSERT:
-                Hydrosphere.drawOcean = !Hydrosphere.drawOcean;
-                break;
-
-            case KeyEvent.VK_PAGE_UP:
-                p.getSurface().displaySetting++;
-
-                if (p.getSurface().displaySetting > 2) {
-                    p.getSurface().displaySetting = 2;
-                }
-                break;
-
-            case KeyEvent.VK_PAGE_DOWN:
-                p.getSurface().displaySetting--;
-
-                if (p.getSurface().displaySetting < 0) {
-                    p.getSurface().displaySetting = 0;
-                }
-                break;
-
-            case KeyEvent.VK_HOME:
-                Geosphere.drawSediments = !Geosphere.drawSediments;
-                break;
-            case KeyEvent.VK_ENTER:
-
-                if (p.getSurface().paused()) {
-                    p.play();
-                } else {
-                    p.pause();
-                }
-                break;
-        }
     }
 
 }

@@ -13,6 +13,7 @@ import engine.util.Delay;
 import engine.util.Task;
 import engine.util.TaskAdapter;
 import engine.util.TaskFactory;
+import engine.util.Tools;
 
 import static worlds.planet.enums.Layer.BASALT;
 import static worlds.planet.enums.Layer.LAVA;
@@ -25,6 +26,7 @@ import static engine.util.Tools.calcMass;
 import static engine.util.Tools.changeMass;
 import static engine.util.Tools.checkBounds;
 import static engine.util.Tools.clamp;
+import java.util.Hashtable;
 import static worlds.planet.Planet.instance;
 import static worlds.planet.Planet.TimeScale.Geological;
 import static worlds.planet.Planet.TimeScale.None;
@@ -67,7 +69,7 @@ public abstract class Geosphere extends Surface {
         heatDistributionCount = 5;
         thermalInc = 100;
         volcanicHeatLoss = 100;
-        averageVolcanicMass = 25000;
+        averageVolcanicMass = 100000;
         rand = new Random();
         drawSediments = true;
     }
@@ -76,8 +78,9 @@ public abstract class Geosphere extends Surface {
         super(worldSize, surfaceDelay, threadsDelay, threadCount);
         ageStamp = 0;
         produceTasks(new GeologicalUpdateFactory());
-        produceTasks(new WindErosionFactory());
-        produceTasks(new RockFormationFactory());
+        produceTasks(new AeolianFactory());
+        produceTasks(new SedimentationFactory());
+        produceTasks(new MetamorphicFactory());
         addTaskToThreads(new SpreadSedimentTask());
         addTask(new HeatMantel());
     }
@@ -100,35 +103,6 @@ public abstract class Geosphere extends Surface {
         for (int i = 0; i < cellCount; i++) {
             getCellAt(i).putMoltenRockToSurface(amount);
         }
-    }
-
-    public void meltRock(GeoCell cell) {
-        float age = cell.getAge(), maxPressure;
-
-        if (age > 1E8) {
-            maxPressure = 886655;
-        } else {
-            maxPressure = (float) Math.exp((-((age - 717928560.98) / 5E7)) + 25000);
-        }
-        melt(cell, calcDepth(cell.getDensity(), 9.8f, maxPressure));
-    }
-
-    private void melt(GeoCell cell, float maxHeight) {
-
-        float height, diff, massToChange;
-        if (cell.peekBottomStratum() == null) {
-            return;
-        }
-        Layer bottomType = cell.peekBottomStratum().getLayer();
-
-        height = cell.getHeight();
-
-        if (height > maxHeight) {
-            diff = (height - maxHeight) / 2f;
-            massToChange = calcMass(diff, instance().getCellArea(), bottomType);
-            cell.remove(massToChange, false, false);
-        }
-
     }
 
     public void getLowestCells(GeoCell spreadFrom, List<GeoCell> lowestList, int max) {
@@ -159,17 +133,82 @@ public abstract class Geosphere extends Surface {
         }
     }
 
-    private float calcFlow(float mass) {
-        return (float) Math.pow(90f * mass, 0.5f);
+    private class MetamorphicFactory implements TaskFactory {
+
+        @Override
+        public Task buildTask() {
+            return new MeltRockTask();
+        }
+
+        private class MeltRockTask implements Task {
+
+            private Delay meltDelay;
+            
+            public MeltRockTask() {
+                meltDelay = new Delay(1000);
+            }
+            
+            @Override
+            public boolean check() {
+                return meltDelay.check();
+            }
+
+            @Override
+            public void before() {
+            }
+
+            @Override
+            public void perform(int x, int y) {
+                PlanetCell cell = getCellAt(x, y);
+                metamorphisize(cell, calcDepth(cell.getDensity(), 9.8f, 25000));
+                melt(cell, calcDepth(cell.getDensity(), 9.8f, 35000));
+            }
+
+            @Override
+            public void after() {
+            }
+
+            private void metamorphisize(GeoCell cell, float maxDepth){
+                float height, massToChange;
+                if (cell.peekBottomStratum() == null) {
+                    return;
+                }
+                Layer bottomType = cell.peekBottomStratum().getLayer();
+
+                height = cell.getHeight();
+
+                if (height > maxDepth) {
+                    massToChange = calcMass(1, instance().getCellArea(), bottomType);
+                    massToChange = cell.remove(massToChange, false, false);
+                    massToChange = Tools.changeMass(massToChange, bottomType, Layer.METAMORPHIC);
+                    cell.add(Layer.METAMORPHIC, massToChange, false);
+                }
+            }
+            
+            private void melt(GeoCell cell, float maxHeight) {
+
+                float height, massToChange;
+                if (cell.peekBottomStratum() == null) {
+                    return;
+                }
+                Layer bottomType = cell.peekBottomStratum().getLayer();
+
+                height = cell.getHeight();
+
+                if (height > maxHeight) {
+                    massToChange = calcMass(1, instance().getCellArea(), bottomType);
+                    cell.remove(massToChange, false, false);
+                }
+            }
+        }
     }
 
     public static float windErosionConstant;
-    
     static {
-        windErosionConstant = 5f;
+        windErosionConstant = 0.95f;
     }
     
-    private class WindErosionFactory implements TaskFactory {
+    private class AeolianFactory implements TaskFactory {
 
         @Override
         public Task buildTask() {
@@ -289,6 +328,10 @@ public abstract class Geosphere extends Surface {
             }
         }
 
+        private float calcFlow(float mass) {
+            return (float) Math.pow(90f * mass, 0.5f);
+        }
+
         @Override
         public void after() {
         }
@@ -394,7 +437,7 @@ public abstract class Geosphere extends Surface {
             if (cell.checkVolcano()) {
                 cell.putMoltenRockToSurface(averageVolcanicMass);
                 cell.cool(volcanicHeatLoss);
-                cell.addOceanMass(0.001f);
+                cell.addOceanMass(65000f);
             }
         }
 
@@ -407,7 +450,7 @@ public abstract class Geosphere extends Surface {
         }
     }
 
-    private class RockFormationFactory implements TaskFactory {
+    private class SedimentationFactory implements TaskFactory {
 
         @Override
         public Task buildTask() {
@@ -471,8 +514,8 @@ public abstract class Geosphere extends Surface {
 
                 GeoCell toUpdate = getCellAt(x, y);
 
-                if (toUpdate.getMoltenRockFromSurface() > 10) {
-                    int maxCellCount = 5;
+                if (toUpdate.getMoltenRockFromSurface() > 1000) {
+                    int maxCellCount = 7;
                     ArrayList<GeoCell> lowestList = new ArrayList<>(maxCellCount);
                     getLowestCells(toUpdate, lowestList, maxCellCount);
 
@@ -504,7 +547,10 @@ public abstract class Geosphere extends Surface {
                     toUpdate.add(BASALT, massToSolidify, true);
                     toUpdate.recalculateHeight();
                 } else {
-                    toUpdate.removeAllMoltenRock();
+                    float massToSolidify = toUpdate.removeAllMoltenRock();
+                    massToSolidify = changeMass(massToSolidify, LAVA, BASALT);
+                    toUpdate.add(BASALT, massToSolidify, true);
+                    toUpdate.recalculateHeight();
                 }
             }
 

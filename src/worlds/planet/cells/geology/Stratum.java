@@ -171,4 +171,7 @@ public class Stratum {
         top = null;
     }
 
+    public Stratum copy() {
+        return new Stratum(this);
+    }
 }

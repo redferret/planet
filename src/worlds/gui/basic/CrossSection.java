@@ -63,6 +63,7 @@ public class CrossSection extends JFrame implements DisplayAdapter {
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
             draw((Graphics2D) g);
+            setBackground(Color.BLACK);
         }
         
         public void draw(Graphics2D g2d) {
@@ -71,16 +72,12 @@ public class CrossSection extends JFrame implements DisplayAdapter {
             
             PlanetSurface surface = (PlanetSurface) Planet.instance().getSurface();
 
+            if (surface == null) return;
+            
             int windowWidth = getWidth(), 
-                windowHeight = getHeight() - HEIGHT_OFFSET;
-
-            int cutToolWidth = 50;
-
-            int cellWidth = windowWidth/cutToolWidth;
-
+                windowHeight = getHeight() - HEIGHT_OFFSET, cutToolWidth = 50;
+            int cellWidth = windowWidth/cutToolWidth, cx = viewX.get(), cy = viewY.get();
             final int MAX_THICKNESS = 10;
-
-            int cx, cy;
 
             double layerThickness, cellThicknessRatio, startDrawHeight;
 
@@ -88,11 +85,16 @@ public class CrossSection extends JFrame implements DisplayAdapter {
             PlanetCell cell;
             Stratum nextStratum;
 
+            StringBuilder sb = new StringBuilder();
+            sb.append("[").append(cx).append(", ").append(cy).append("]");
+            
+            g2d.drawString(sb.toString(), cx, cy);
+            
             // Draw the cross section
             for (int cellIndex = 0; cellIndex < cutToolWidth; cellIndex++){
 
-                cx = Tools.checkBounds(cellIndex + viewX.get(), surface.getGridWidth());
-                cy = Tools.checkBounds(viewY.get(), surface.getGridWidth());
+                cx = Tools.checkBounds(cellIndex + cx, surface.getGridWidth());
+                cy = Tools.checkBounds(cy, surface.getGridWidth());
 
                 cell = surface.getCellAt(cx, cy);
 
