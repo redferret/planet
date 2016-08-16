@@ -43,12 +43,15 @@ public class GeoCell extends Mantel {
          */
         private float totalSediments;
 
+        private Layer sedimentType;
+        
         public SedimentBuffer() {
             super();
         }
 
         protected final void init() {
             pendingSediments = 0;
+            sedimentType = null;
         }
 
         /**
@@ -56,11 +59,22 @@ public class GeoCell extends Mantel {
          * cells, this acts as a sediment map where changes will be applied
          * later after erosion occurs.
          *
+         * @param type The sediment type being added, this changes the 
+         * composition of the sediment from Mafic to Felsic
          * @param amount The amount to transfer in kilograms
          */
-        public void transferSediment(float amount) {
+        public void transferSediment(Layer type, float amount) {
             if (!bufferSet()) {
                 bufferSet(true);
+            }
+            if (sedimentType == Layer.MAFIC){
+                if (type == Layer.MFMIX || type == Layer.FELSIC){
+                    sedimentType = Layer.MFMIX;
+                }
+            }else if (sedimentType == Layer.FELSIC){
+                if (type == Layer.MFMIX || type == Layer.MAFIC){
+                    sedimentType = Layer.MFMIX;
+                }
             }
             pendingSediments += amount;
         }
@@ -90,6 +104,7 @@ public class GeoCell extends Mantel {
         /**
          * Adds or removes pendingSediments from this cell.
          *
+         * @param type
          * @param mass The amount of pendingSediments in kilograms.
          * @return The amount that was removed or added
          */
@@ -112,6 +127,10 @@ public class GeoCell extends Mantel {
          */
         public float getSediments() {
             return totalSediments;
+        }
+
+        public Layer getSedimentType() {
+            return sedimentType;
         }
 
     }
@@ -343,7 +362,7 @@ public class GeoCell extends Mantel {
             moltenRockSurfaceMass = 0;
             return;
         }
-        updateMV(mass, MOLTENROCK);
+        updateMV(mass, MAFICMOLTENROCK);
     }
 
     /**
@@ -359,7 +378,7 @@ public class GeoCell extends Mantel {
      */
     public float removeAllMoltenRock() {
         float temp = moltenRockSurfaceMass;
-        updateMV(-moltenRockSurfaceMass, MOLTENROCK);
+        updateMV(-moltenRockSurfaceMass, MAFICMOLTENROCK);
         moltenRockSurfaceMass = 0;
         return temp;
     }

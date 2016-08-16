@@ -14,6 +14,7 @@ import static engine.util.Tools.constructGradient;
 import static engine.util.Tools.getLowestCellFrom;
 import static worlds.planet.enums.Layer.OCEAN;
 import static worlds.planet.Planet.instance;
+import static worlds.planet.enums.SilicateContent.*;
 
 /**
  * A HydroCell represents the hydrosphere of the planet. The class contains
@@ -59,7 +60,7 @@ public class HydroCell extends GeoCell {
             if (lowestCell == null) {
                 return;
             }
-            SedimentBuffer eb = lowestCell.getSedimentBuffer();
+            SedimentBuffer sb = getSedimentBuffer();
             
             ErosionBuffer toUpdateWaterBuffer = getErosionBuffer();
             ErosionBuffer lowestHydroBuffer = lowestCell.getErosionBuffer();
@@ -67,8 +68,8 @@ public class HydroCell extends GeoCell {
             toUpdateWaterBuffer.applyBuffer();
             lowestHydroBuffer.applyBuffer();
 
-            SuspendedSediments lowestSSediments = getSuspendedSedimentBuffer();
-            SuspendedSediments toUpdateSSediments = lowestCell.getSuspendedSedimentBuffer();
+            SuspendedSediments lowestSSediments = lowestCell.getSuspendedSedimentBuffer();
+            SuspendedSediments toUpdateSSediments = getSuspendedSedimentBuffer();
 
             lowestSSediments.applyBuffer();
             toUpdateSSediments.applyBuffer();
@@ -96,14 +97,26 @@ public class HydroCell extends GeoCell {
                 
                 // Move suspended sediments based on angle to lowest cell.
                 float movedSeds = toUpdateSSediments.getSediments() * angle;
-                lowestSSediments.transferSediment(movedSeds);
-                toUpdateSSediments.transferSediment(-movedSeds);
+                Layer sedimentType = toUpdateSSediments.sedimentType;
+                lowestSSediments.transferSediment(sedimentType, movedSeds);
+                toUpdateSSediments.transferSediment(sedimentType, -movedSeds);
                 
                 float erosion = (displacedMass * pressure);
-                
-                if (eb.getSediments() < Tools.calcMass(0.1f, area, Layer.MAFIC)) {
+                sedimentType = sb.getSedimentType();
+                if (sb.getSediments() < Tools.calcMass(0.1f, area, sedimentType)) {
+                    
+                    sedimentType = peekTopStratum().getLayer();
+                    
+                    if (sedimentType.getSilicates() == Rich){
+                        sedimentType = Layer.FELSIC;
+                    }else if (sedimentType.getSilicates() == Mix){
+                        sedimentType = Layer.MFMIX;
+                    }else {
+                        sedimentType = Layer.MAFIC;
+                    }
+                    
                     float erodedSeds = erode(erosion);
-                    toUpdateSSediments.transferSediment(erodedSeds);
+                    toUpdateSSediments.transferSediment(sedimentType, erodedSeds);
                 }
             }
 
@@ -134,6 +147,7 @@ public class HydroCell extends GeoCell {
     public final class SuspendedSediments extends TBuffer {
         
         private float sediments;
+        private Layer sedimentType;
         
         public SuspendedSediments(){
             super();
@@ -144,14 +158,20 @@ public class HydroCell extends GeoCell {
             sediments = 0;
         }
        
-        public void transferSediment(float amount) {
+        public void transferSediment(Layer type, float amount) {
             if (!bufferSet()) {
                 bufferSet(true);
             }
-
-            if (amount > 0) {
-                sediments += amount;
+            if (sedimentType == Layer.MAFIC){
+                if (type == Layer.MFMIX || type == Layer.FELSIC){
+                    sedimentType = Layer.MFMIX;
+                }
+            }else if (sedimentType == Layer.FELSIC){
+                if (type == Layer.MFMIX || type == Layer.MAFIC){
+                    sedimentType = Layer.MFMIX;
+                }
             }
+            sediments += amount;
         }
 
         public float getSediments() {
@@ -171,7 +191,7 @@ public class HydroCell extends GeoCell {
             SedimentBuffer eb = getSedimentBuffer();
             if (atCapacity()){
                 float diff = sediments - getCap();
-                eb.updateSurfaceSedimentMass(diff);
+                eb.transferSediment(sedimentType, diff);
                 sediments = getCap();
             }
         }

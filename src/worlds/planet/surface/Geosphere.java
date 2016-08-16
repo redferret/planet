@@ -16,7 +16,7 @@ import engine.util.TaskFactory;
 import engine.util.Tools;
 
 import static worlds.planet.enums.Layer.BASALT;
-import static worlds.planet.enums.Layer.MOLTENROCK;
+import static worlds.planet.enums.Layer.MAFICMOLTENROCK;
 import static worlds.planet.enums.Layer.MAFIC_SANDSTONE;
 import static worlds.planet.enums.Layer.MAFIC;
 import static worlds.planet.enums.Layer.SHALE;
@@ -34,6 +34,7 @@ import static worlds.planet.Planet.TimeScale.Geological;
 import static worlds.planet.Planet.TimeScale.None;
 import worlds.planet.cells.geology.Stratum;
 import worlds.planet.enums.RockType;
+import worlds.planet.enums.SilicateContent;
 import static worlds.planet.surface.Surface.planetAge;
 import static worlds.planet.surface.Surface.random;
 
@@ -150,7 +151,7 @@ public abstract class Geosphere extends Surface {
             private Delay meltDelay;
             
             public MeltRockTask() {
-                meltDelay = new Delay(1);
+                meltDelay = new Delay(5);
             }
             
             @Override
@@ -201,7 +202,7 @@ public abstract class Geosphere extends Surface {
                     cell.add(type, mass, false);
                 }
                 
-                melt(cell, calcDepth(cell.getDensity(), 9.8f, 125000));
+                melt(cell, calcDepth(cell.getDensity(), 9.8f, 85000));
             }
 
             @Override
@@ -227,7 +228,7 @@ public abstract class Geosphere extends Surface {
                 Stratum bottom = cell.peekBottomStratum();
                 Layer bottomType = bottom.getLayer();
 
-                massToChange = calcMass(0.05f, instance().getCellArea(), bottomType);
+                massToChange = calcMass(0.25f, instance().getCellArea(), bottomType);
                 massToChange = removeAndChangeMass(cell, massToChange, bottomType, metaType);
                 cell.add(metaType, massToChange, false);
             }
@@ -235,7 +236,7 @@ public abstract class Geosphere extends Surface {
             private Layer getMetaLayer(Layer bottomType, float pressure){
                 Layer metaType = null;
                 if (bottomType.getRockType() == RockType.SEDIMENTARY &&
-                        pressure >= 25000) {
+                        pressure >= 75000) {
                     if (bottomType == Layer.FELSIC_SANDSTONE) {
                         metaType = Layer.QUARTZITE;
                     } else if (bottomType == Layer.LIMESTONE) {
@@ -244,14 +245,14 @@ public abstract class Geosphere extends Surface {
                         metaType = Layer.SLATE;
                     }
                 } else if (bottomType.getRockType() == RockType.IGNEOUS &&
-                        pressure >= 85000){
+                        pressure >= 82000){
                     metaType = Layer.GNEISS;
                 } else {
-                    if (bottomType == Layer.SLATE && pressure >= 45000){
+                    if (bottomType == Layer.SLATE && pressure >= 78000){
                         metaType = Layer.PHYLITE;
-                    }else if (bottomType == Layer.PHYLITE && pressure >= 65000){
+                    }else if (bottomType == Layer.PHYLITE && pressure >= 80000){
                         metaType = Layer.SCHIST;
-                    }else if (bottomType == Layer.SCHIST && pressure >= 85000){
+                    }else if (bottomType == Layer.SCHIST && pressure >= 82000){
                         metaType = Layer.GNEISS;
                     }
                 }
@@ -275,7 +276,7 @@ public abstract class Geosphere extends Surface {
                 height = cell.getHeight();
 
                 if (height > maxHeight) {
-                    massToChange = calcMass(0.15f, instance().getCellArea(), bottomType);
+                    massToChange = calcMass(0.25f, instance().getCellArea(), bottomType);
                     cell.remove(massToChange, false, false);
                 }
             }
@@ -551,32 +552,42 @@ public abstract class Geosphere extends Surface {
             @Override
             public void perform(int x, int y) {
                 depositSediment(x, y);
-                updateLavaFlows(x, y);
+                updateBasaltFlows(x, y);
             }
 
             public void depositSediment(int x, int y) {
                 GeoCell cell = getCellAt(x, y);
-                cell.getSedimentBuffer().applyBuffer();
-                formSedimentaryRock(cell, calcDepth(MAFIC, 9.8f, 2000));
+                formSedimentaryRock(cell);
             }
 
-            public void formSedimentaryRock(GeoCell cell, float maxHeight) {
+            public void formSedimentaryRock(GeoCell cell) {
 
                 float height, diff, massBeingDeposited;
-                Layer depositType;
                 SedimentBuffer eb = cell.getSedimentBuffer();
+                eb.applyBuffer();
+                Layer sedimentType = eb.getSedimentType();
+                Layer depositType;
 
-                height = calcHeight(eb.getSediments(), instance().getCellArea(), MAFIC);
+                height = calcHeight(eb.getSediments(), instance().getCellArea(), sedimentType);
+                float maxHeight = calcDepth(sedimentType, 9.8f, 2500);
+                
                 if (height > maxHeight) {
 
                     diff = (height - maxHeight);
 
-                    massBeingDeposited = calcMass(diff, instance().getCellArea(), MAFIC);
-                    depositType = (((HydroCell) cell).getOceanMass() > 9000) ? SHALE : MAFIC_SANDSTONE;
+                    massBeingDeposited = calcMass(diff, instance().getCellArea(), sedimentType);
 
+                    if (sedimentType.getSilicates() == SilicateContent.Rich){
+                        depositType = Layer.FELSIC_SANDSTONE;
+                    }else if (sedimentType.getSilicates() == SilicateContent.Mix){
+                        depositType = Layer.MIX_SANDSTONE;
+                    }else {
+                        depositType = Layer.MAFIC_SANDSTONE;
+                    }
+                    
                     eb.updateSurfaceSedimentMass(-massBeingDeposited);
 
-                    massBeingDeposited = changeMass(massBeingDeposited, MAFIC, depositType);
+                    massBeingDeposited = changeMass(massBeingDeposited, sedimentType, depositType);
                     cell.add(depositType, massBeingDeposited, true);
 
                 }
@@ -589,7 +600,7 @@ public abstract class Geosphere extends Surface {
              * @param x Cell's x
              * @param y Cell's y
              */
-            public void updateLavaFlows(int x, int y) {
+            public void updateBasaltFlows(int x, int y) {
 
                 GeoCell toUpdate = getCellAt(x, y);
 
@@ -609,7 +620,7 @@ public abstract class Geosphere extends Surface {
 
                             diff = clamp(diff, -lowestHeight, currentCellHeight);
 
-                            float mass = calcMass(diff, instance().getCellArea(), MOLTENROCK);
+                            float mass = calcMass(diff, instance().getCellArea(), MAFICMOLTENROCK);
 
                             toUpdate.putMoltenRockToSurface(-mass);
                             float sediments = lowest.getSedimentBuffer().removeAllSediments();
@@ -622,12 +633,12 @@ public abstract class Geosphere extends Surface {
                     //solidify the rock
                     float massToSolidify = toUpdate.getMoltenRockFromSurface() * rate;
                     toUpdate.putMoltenRockToSurface(-massToSolidify);
-                    massToSolidify = changeMass(massToSolidify, MOLTENROCK, BASALT);
+                    massToSolidify = changeMass(massToSolidify, MAFICMOLTENROCK, BASALT);
                     toUpdate.add(BASALT, massToSolidify, true);
                     toUpdate.recalculateHeight();
                 } else {
                     float massToSolidify = toUpdate.removeAllMoltenRock();
-                    massToSolidify = changeMass(massToSolidify, MOLTENROCK, BASALT);
+                    massToSolidify = changeMass(massToSolidify, MAFICMOLTENROCK, BASALT);
                     toUpdate.add(BASALT, massToSolidify, true);
                     toUpdate.recalculateHeight();
                 }

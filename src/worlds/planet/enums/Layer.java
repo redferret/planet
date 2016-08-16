@@ -1,6 +1,8 @@
 package worlds.planet.enums;
 
 import java.awt.Color;
+import static worlds.planet.enums.SilicateContent.*;
+import static worlds.planet.enums.RockType.*;
 
 /**
  * Describes what type of layer a stratum is. The layer describes density,
@@ -16,82 +18,88 @@ public enum Layer {
      *//**
      * Sand is formed when gravel breaks down, also from other rock types like
      * sedimentary rocks.
+     *//**
+     * Sand is formed when gravel breaks down, also from other rock types like
+     * sedimentary rocks.
+     *//**
+     * Sand is formed when gravel breaks down, also from other rock types like
+     * sedimentary rocks.
      */
     MAFIC("Sediments that are derived from silicate poor igneous rock", 
-            new Color(200, 200, 180), RockType.SEDIMENT, 0.00f, 1990f),
+            new Color(200, 200, 180), SEDIMENT, Poor, 0.00f, 1990f),
     
     MFMIX("Sediments that contain an intermidate amount of silicate", 
-            new Color(236, 220, 165), RockType.SEDIMENT, 0, 1850f),
+            new Color(236, 220, 165), SEDIMENT, Mix, 0, 1850f),
     
     FELSIC("Sediments that are derived from silicate rich rock", 
-            new Color(245, 240, 207), RockType.SEDIMENT, 0, 1750f),
+            new Color(245, 240, 207), SEDIMENT, Rich, 0, 1750f),
     
     /**
      * Soil is formed when life interacts with sediments and contains biomass.
      */
-    SOIL("Soil", new Color(90, 56, 37), RockType.SEDIMENT, 0.05f, 1920f),
+    SOIL("Soil", new Color(90, 56, 37), SEDIMENT, Mix, 0.05f, 1920f),
     
     /**
      * 
      */
     MAFIC_SANDSTONE("Sandstone composed mostly of mafic sediments", 
-            new Color(255, 201, 14).darker(), RockType.SEDIMENTARY, 0.10f, 2350f),
+            new Color(255, 201, 14).darker(), SEDIMENTARY, Poor, 0.10f, 2350f),
     
     /**
      * 
      */
     MIX_SANDSTONE("Sandstone intermediate silicates", 
-            new Color(255, 201, 14), RockType.SEDIMENTARY, 0.10f, 2350f),
+            new Color(255, 201, 14), SEDIMENTARY, Mix, 0.10f, 2350f),
     
     /**
      * 
      */
     FELSIC_SANDSTONE("Sandstone composed mostly of felsic sediments", 
-            new Color(255, 201, 14).brighter(), RockType.SEDIMENTARY, 0.10f, 2350f),
+            new Color(255, 201, 14).brighter(), SEDIMENTARY, Rich, 0.10f, 2350f),
     
     /**
      * Shale is formed when clay and silt sized particles are compacted
      * together.
      */
-    SHALE("Shale", new Color(200, 190, 230), RockType.SEDIMENTARY, 0.13f, 2400f),
+    SHALE("Shale", new Color(200, 190, 230), SEDIMENTARY, Mix, 0.13f, 2400f),
     
     /**
      * Limestone is composed of skeletal fragments of marine organisms such as
      * coral biological life deposits this rock.
      */
-    LIMESTONE("Limestone", new Color(226, 245, 170), RockType.SEDIMENTARY, 0.15f, 2550f),
+    LIMESTONE("Limestone", new Color(226, 245, 170), SEDIMENTARY, Poor, 0.15f, 2550f),
     
     /**
      * Sandstones that are metamorphisized.
      */
     QUARTZITE("Sandstones that are metamorphisized", 
-            new Color(255, 208, 175), RockType.METAMORPHIC, 0.33f, 2645f),
+            new Color(255, 208, 175), METAMORPHIC, Rich, 0.33f, 2645f),
     
     /**
      * Shale that is metamorphisized
      */
-    SLATE("", new Color(147,147,202), RockType.METAMORPHIC, 0.25f, 2750f),
+    SLATE("", new Color(147,147,202), METAMORPHIC, Mix, 0.25f, 2750f),
     
     /**
      * Limestone that is metamorphisized
      */
     MARBLE("", 
-            new Color(220, 168, 163), RockType.METAMORPHIC, 0.19f, 2711f),
+            new Color(220, 168, 163), METAMORPHIC, Poor, 0.19f, 2711f),
     
     PHYLITE("", 
-            new Color(64, 128, 128), RockType.METAMORPHIC, 0.28f, 2900f),
+            new Color(64, 128, 128), METAMORPHIC, Mix, 0.28f, 2900f),
     
     /**
      * First stage of foliated metamorphisized rock.
      */
     SCHIST("Metamorphic rock with smaller crystals", 
-            new Color(125, 130, 145), RockType.METAMORPHIC, 0.30f, 3000f),
+            new Color(125, 130, 145), METAMORPHIC, Mix, 0.30f, 3000f),
     
     /**
      * Second stage of foliated metamorphisized rock of schist or volcanic rocks.
      */
     GNEISS("Metamorphic rock with large crystals", 
-            new Color(136, 0, 20), RockType.METAMORPHIC, 0.33f, 3100f),
+            new Color(136, 0, 20), METAMORPHIC, Mix, 0.33f, 3100f),
     
     
     /**
@@ -99,62 +107,68 @@ public enum Layer {
      * spots like Hawaii, usually extrusive.
      */
     BASALT("Basalt, Silicate Poor Extrusive Igneous", 
-            new Color(127, 127, 127), RockType.IGNEOUS, 0.17f, 2990f),
+            new Color(127, 127, 127), IGNEOUS, Poor, 0.17f, 2990f),
     /**
      * Rhyolite is from explosive extrusive volcanoes that are silicate rich, 
      * usually extrusive
      */
     RHYOLITE("Rhyolite, Silicate Rich Extrusive Igneous", 
-            new Color(190, 126, 126), RockType.IGNEOUS, 0.25f, 2690f),
+            new Color(190, 126, 126), IGNEOUS, Rich, 0.25f, 2690f),
     
     /**
      * Silicate intermediate igneous rock, usually extrusive
      */
     ANDESITE("Andesite, Silicate Intermediate Extrusive Igneous", 
-            new Color(205, 180, 165), RockType.IGNEOUS, 0.2f, 2790f),
+            new Color(205, 180, 165), IGNEOUS, Mix, 0.2f, 2790f),
     
     /**
      * A silicate poor intrusive igneous rock that cooled slowly.
      */
     GABBRO("Gabbro, Silicate Poor Intrusive Igneous", 
-            new Color(195, 195, 195), RockType.IGNEOUS, 0.19f, 3200f),
+            new Color(195, 195, 195), IGNEOUS, Poor, 0.19f, 3200f),
     
     /**
      * A Silicate intermediate intrusive igneous rock that cooled slowly.
      */
     DIORITE("Diorite, Silicate Intermediate Intrusive Igneous", 
-            new Color(220, 220, 220), RockType.IGNEOUS, 0.23f, 2990f),
+            new Color(220, 220, 220), IGNEOUS, Mix, 0.23f, 2990f),
     
     /**
      * A silicate rich intrusive igneous rock that cooled slowly.
      */
     GRANITE("Granite, Silicate Rich Intrusive Igneous", 
-            new Color(190, 126, 126), RockType.IGNEOUS, 0.28f, 2750f),
+            new Color(190, 126, 126), IGNEOUS, Rich, 0.28f, 2750f),
     
     /**
      * Volcanic glass formed when molten rock cools quickly, considered as 
      * a silicate intermediate.
      */
     OBSIDIAN("Obsidian, Igneous rock that cooled fast", 
-            new Color(70, 0, 70), RockType.IGNEOUS, 0.23f, 2600f),
+            new Color(70, 0, 70), IGNEOUS, Mix, 0.23f, 2600f),
     /**
      * Sea water is represented as a top layer. The average density of sea water
      * is around 1.05 cc. Sea water deposits shale rock.
      */
-    OCEAN("Liquid Water", Color.BLUE, RockType.FLUID, 0.0f, 1050f),
+    OCEAN("Liquid Water", Color.BLUE, FLUID, None, 0.0f, 1050f),
     /**
      * Lava, or magma, is represented by this layer. Depending on how it is
      * deposited, intrusive or extrusive will form different kinds of igneous
      * rock.
      */
+    MAFICMOLTENROCK("Molten rock that forms igneous deposits", 
+            Color.RED.darker(), FLUID, Poor, 0.0f, 2750f),
+    
     MOLTENROCK("Molten rock that forms igneous deposits", 
-            Color.RED, RockType.FLUID, 0.0f, 2750f),
+            Color.RED, FLUID, Mix, 0.0f, 2750f),
+    
+    FELSICMOLTENROCK("Molten rock that forms igneous deposits", 
+            Color.RED.brighter(), FLUID, Rich, 0.0f, 2750f),
     /**
      * Ice is represented by this layer and has a density of 0.9 cc. Ice erodes
      * rock and deposits gravel instead of sand. The gravel is one layer below
      * ice and is only formed when ice moves.
      */
-    ICE("Ice", new Color(230, 248, 248), RockType.FLUID, 0.0f, 900f);
+    ICE("Ice", new Color(230, 248, 248), FLUID, None, 0.0f, 900f);
 
     /**
      * The name of the material this stratum is. This includes Sediment,
@@ -183,6 +197,8 @@ public enum Layer {
      */
     private Color color;
 
+    private SilicateContent silicates;
+    
     private RockType rockType;
     
     static {
@@ -194,8 +210,9 @@ public enum Layer {
     }
     
     /* Hidden Constructor */
-    private Layer(String name, Color color, RockType rockType, 
+    private Layer(String name, Color color, RockType rockType, SilicateContent silicates,
             float erosionFactor, float density) {
+        this.silicates = silicates;
         this.rockType = rockType;
         this.color = color;
         this.typeid = typeid;
@@ -229,6 +246,10 @@ public enum Layer {
 
     public RockType getRockType() {
         return rockType;
+    }
+    
+    public SilicateContent getSilicates() {
+        return silicates;
     }
     
     /**

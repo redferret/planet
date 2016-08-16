@@ -61,19 +61,9 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
 
     private void prepareWorld() {
         PlanetSurface surface = (PlanetSurface) testWorld.getSurface();
-        PlanetSurface.suppressMantelHeating = true;
         for (int i = 0; i < 4; i++){
             surface.addToSurface(Layer.BASALT, 100000);
         }
-        surface.getCellAt(0).remove(400000, false, true);
-        surface.getCellAt(0).add(Layer.GNEISS, 100000, true);
-        surface.getCellAt(0).add(Layer.SCHIST, 100000, true);
-        surface.getCellAt(0).add(Layer.PHYLITE, 100000, true);
-        surface.getCellAt(0).add(Layer.SLATE, 100000, true);
-        surface.getCellAt(0).add(Layer.MAFIC_SANDSTONE, 1000000, true);
-        
-//        surface.getCellAt(0).remove(400000, false, true);
-//        surface.getCellAt(0).add(Layer.MAFIC_SANDSTONE, 1000000, true);
         
         testWorld.setTimescale(Planet.TimeScale.Geological);
         Geosphere.heatDistributionCount = 100;
