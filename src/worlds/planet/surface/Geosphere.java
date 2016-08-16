@@ -110,10 +110,10 @@ public abstract class Geosphere extends Surface {
         }
     }
 
-    public void getLowestCells(GeoCell spreadFrom, List<GeoCell> lowestList, int max) {
+    public void getLowestCells(GeoCell from, List<GeoCell> lowestList, int max) {
 
         int tx, ty, mx, my;
-        int x = spreadFrom.getX(), y = spreadFrom.getY();
+        int x = from.getX(), y = from.getY();
         int xl = DIR_X_INDEX.length;
         GeoCell spreadTo;
 
@@ -128,7 +128,7 @@ public abstract class Geosphere extends Surface {
 
             spreadTo = getCellAt(mx, my);
 
-            if (spreadTo.getHeightWithoutOceans() < spreadFrom.getHeightWithoutOceans()) {
+            if (spreadTo.getHeightWithoutOceans() < from.getHeightWithoutOceans()) {
                 if (lowestList.size() < max) {
                     lowestList.add(spreadTo);
                 } else {
