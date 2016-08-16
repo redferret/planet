@@ -103,23 +103,25 @@ public class HydroCell extends GeoCell {
                 
                 float erosion = (displacedMass * pressure);
                 sedimentType = sb.getSedimentType();
-                if (sb.getSediments() < Tools.calcMass(0.1f, area, sedimentType)) {
-                    
-                    Layer rockType = peekTopStratum().getLayer();
-                    
-                    if (rockType.getSilicates() == Rich){
-                        sedimentType = Layer.FELSIC;
-                    }else if (rockType.getSilicates() == Mix){
-                        sedimentType = Layer.MFMIX;
-                    }else {
-                        sedimentType = Layer.MAFIC;
+
+                if (sedimentType != null) {
+                    if (sb.getSediments() < Tools.calcMass(0.1f, area, sedimentType)) {
+
+                        Layer rockType = peekTopStratum().getLayer();
+
+                        if (rockType.getSilicates() == Rich) {
+                            sedimentType = Layer.FELSIC;
+                        } else if (rockType.getSilicates() == Mix) {
+                            sedimentType = Layer.MFMIX;
+                        } else {
+                            sedimentType = Layer.MAFIC;
+                        }
+
+                        float erodedSeds = erode(erosion);
+                        toUpdateSSediments.transferSediment(sedimentType, erodedSeds);
                     }
-                    
-                    float erodedSeds = erode(erosion);
-                    toUpdateSSediments.transferSediment(sedimentType, erodedSeds);
                 }
             }
-
         }
 
         public void transferWater(float amount){
@@ -212,7 +214,7 @@ public class HydroCell extends GeoCell {
         
         evapScale = 2.5f;
         sedimentCapacity = 0.50f;
-        minAngle = 1.5f;
+        minAngle = 0.02f;
     }
     
     private ErosionBuffer erosionBuffer;

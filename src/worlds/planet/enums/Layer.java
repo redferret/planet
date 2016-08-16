@@ -12,23 +12,14 @@ import static worlds.planet.enums.RockType.*;
  */
 public enum Layer {
 
-//    MAFIC("Sediments that are derived from silicate poor igneous rock", 
-//            new Color(200, 200, 180), SEDIMENT, Poor, 0.00f, 1990f),
-//    
-//    MFMIX("Sediments that contain an intermidate amount of silicate", 
-//            new Color(236, 220, 165), SEDIMENT, Mix, 0, 1850f),
-//    
-//    FELSIC("Sediments that are derived from silicate rich rock", 
-//            new Color(245, 240, 207), SEDIMENT, Rich, 0, 1750f),
-    
     MAFIC("Sediments that are derived from silicate poor igneous rock", 
-            Color.CYAN, SEDIMENT, Poor, 0.00f, 1990f),
+            new Color(200, 200, 180), SEDIMENT, Poor, 0.00f, 1990f),
     
     MFMIX("Sediments that contain an intermidate amount of silicate", 
-            Color.MAGENTA, SEDIMENT, Mix, 0, 1850f),
+            new Color(236, 220, 165), SEDIMENT, Mix, 0, 1850f),
     
     FELSIC("Sediments that are derived from silicate rich rock", 
-            Color.WHITE, SEDIMENT, Rich, 0, 1750f),
+            new Color(245, 240, 207), SEDIMENT, Rich, 0, 1750f),
     
     /**
      * Soil is formed when life interacts with sediments and contains biomass.

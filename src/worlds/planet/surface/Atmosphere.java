@@ -58,7 +58,7 @@ public abstract class Atmosphere extends Hydrosphere {
                 if (evaporate){
                     PlanetCell cell = getCellAt(x, y);
                     float amount = 0.001f;
-                    if (cell.getOceanMass() > 5000){
+                    if (cell.hasOcean()){
                         float returnValue = -cell.addOceanMass(-amount);
                         totalEvaportatedMass += returnValue;
                     }

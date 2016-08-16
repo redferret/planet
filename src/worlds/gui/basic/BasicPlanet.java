@@ -65,7 +65,6 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
         for (int i = 0; i < 4; i++){
             surface.addToSurface(Layer.BASALT, 100000);
         }
-        PlanetSurface.suppressMantelHeating = true;
         testWorld.setTimescale(Planet.TimeScale.Geological);
         Geosphere.heatDistributionCount = 100;
 
@@ -93,7 +92,6 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
         testWorld.getSurface().setDisplay(this);
         renderFrame = new Frame(SIZE, SIZE);
         renderFrame.registerMap(testWorld.getSurface());
-        testWorld.getSurface().addTaskToThreads(new AddRockToSurfaceCellTask());
     }
 
     @Override
@@ -120,33 +118,6 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
         }
     }
 
-    private class AddRockToSurfaceCellTask extends BasicTask {
-
-        private Delay delay;
-        
-        public AddRockToSurfaceCellTask() {
-            delay = new Delay(1);
-        }
-
-        @Override
-        public void perform() {
-            if (delay.check()){
-                testWorld.getSurface().getCellAt(0).add(Layer.RHYOLITE, 1000, true);
-                testWorld.getSurface().getCellAt(10).add(Layer.ANDESITE, 1000, true);
-                testWorld.getSurface().getCellAt(20).add(Layer.BASALT, 1000, true);
-            }
-        }
-
-        @Override
-        public void after() {
-        }
-
-        @Override
-        public void before() {
-        }
-        
-
-    }
 
     /* **************************** Keyboard ******************************/
     private class KeyController extends KeyAdapter {

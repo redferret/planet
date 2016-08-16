@@ -102,11 +102,15 @@ public class GeoCell extends Mantel {
          * @return The total amount of sediments.
          */
         public float removeAllSediments() {
-            float temp = totalSediments;
-            updateMV(-totalSediments, sedimentType);
-            totalSediments = 0;
-            sedimentType = null;
-            return temp;
+            if (sedimentType != null) {
+                float temp = totalSediments;
+                updateMV(-totalSediments, sedimentType);
+                totalSediments = 0;
+                sedimentType = null;
+                return temp;
+            } else {
+                return 0;
+            }
         }
 
         /**
@@ -844,7 +848,7 @@ public class GeoCell extends Mantel {
     }
 
     public boolean hasOcean() {
-        return ((HydroCell) this).getOceanMass() > 1000;
+        return ((HydroCell) this).getOceanMass() > 500;
     }
 
     public List<Integer[]> render(List<Integer[]> settings) {

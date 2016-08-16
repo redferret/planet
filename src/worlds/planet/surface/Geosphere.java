@@ -70,8 +70,8 @@ public abstract class Geosphere extends Surface {
     static {
         heatDistributionCount = 5;
         thermalInc = 100;
-        volcanicHeatLoss = 100;
-        averageVolcanicMass = 100000;
+        volcanicHeatLoss = 50;
+        averageVolcanicMass = 500000;
         rand = new Random();
         drawSediments = true;
     }
@@ -83,7 +83,8 @@ public abstract class Geosphere extends Surface {
         produceTasks(new AeolianFactory());
         produceTasks(new SedimentationFactory());
         produceTasks(new MetamorphicFactory());
-        addTaskToThreads(new SpreadSedimentTask());
+        produceTasks(new AeolianSpreadFactory());
+        produceTasks(new WaveErosionFactory());
         addTask(new HeatMantel());
     }
 
@@ -282,7 +283,7 @@ public abstract class Geosphere extends Surface {
 
     public static float windErosionConstant;
     static {
-        windErosionConstant = 5;
+        windErosionConstant = 100;
     }
     
     private class AeolianFactory implements TaskFactory {
@@ -360,76 +361,137 @@ public abstract class Geosphere extends Surface {
 
     }
 
-    private class SpreadSedimentTask extends TaskAdapter {
+    private class WaveErosionFactory implements TaskFactory {
 
         @Override
-        public void before() {
+        public Task buildTask() {
+            return new WaveErosionTask();
         }
         
-        @Override
-        public void perform(int x, int y) {
-            spreadToLowest(getCellAt(x, y));
-        }
+        private class WaveErosionTask implements Task {
 
-        public void spreadToLowest(GeoCell spreadFrom) {
-            int maxCellCount = 8;
-            ArrayList<GeoCell> lowestList = new ArrayList<>(maxCellCount);
-            getLowestCells(spreadFrom, lowestList, maxCellCount);
-            spread(lowestList, spreadFrom);
-        }
-
-        /**
-         * Selects a random cell from the given list and spreads the sediments
-         * to that cell.
-         *
-         * @param lowestList The list of lowest cells from the central cell
-         * @param spreadFrom The central cell
-         */
-        public void spread(ArrayList<GeoCell> lowestList, GeoCell spreadFrom) {
-
-            GeoCell lowestGeoCell;
-            SedimentBuffer spreadFromEB = spreadFrom.getSedimentBuffer();
-            Layer spreadFromSedType = spreadFromEB.getSedimentType();
+            private Delay delay;
             
-            if (spreadFromSedType == null){
-                return;
+            public WaveErosionTask() {
+                delay = new Delay(20);
             }
             
-            SedimentBuffer lowestBuffer;
-            float spreadFromHeight, lowestHeight, diff, mass;
+            @Override
+            public boolean check() {
+                return false;
+            }
+            
+            @Override
+            public void before() {
+            }
+            
+            @Override
+            public void perform(int x, int y) {
+                
+            }
 
-            if (lowestList.size() > 0) {
+            @Override
+            public void after() {
+            }
 
-                lowestGeoCell = lowestList.get(random.nextInt(lowestList.size()));
-                spreadFromHeight = spreadFrom.getHeightWithoutOceans() / 2.5f;
-                lowestHeight = lowestGeoCell.getHeightWithoutOceans() / 2.5f;
+            
+            
+        }
+        
+    }
+    
+    private class AeolianSpreadFactory implements TaskFactory {
 
-                diff = (spreadFromHeight - lowestHeight) / 2.5f;
+        @Override
+        public Task buildTask() {
+            return new SpreadSedimentTask();
+        }
 
-                diff = clamp(diff, -lowestHeight, spreadFromHeight);
+        private class SpreadSedimentTask implements Task {
 
-                if (spreadFromEB.getSediments() > 0) {
-                    mass = calcMass(diff, instance().getCellArea(), spreadFromSedType);
-                    mass = calcFlow(mass);
+            private Delay delay;
 
-                    spreadFromEB.transferSediment(spreadFromSedType, -mass);
+            public SpreadSedimentTask() {
+                delay = new Delay(25);
+            }
 
-                    lowestBuffer = lowestGeoCell.getSedimentBuffer();
-                    lowestBuffer.transferSediment(spreadFromSedType, mass);
+            @Override
+            public void before() {
+            }
+
+            @Override
+            public void perform(int x, int y) {
+                spreadToLowest(getCellAt(x, y));
+            }
+
+            public void spreadToLowest(GeoCell spreadFrom) {
+                if (!spreadFrom.hasOcean()) {
+                    int maxCellCount = 8;
+                    ArrayList<GeoCell> lowestList = new ArrayList<>(maxCellCount);
+                    getLowestCells(spreadFrom, lowestList, maxCellCount);
+                    spread(lowestList, spreadFrom);
                 }
             }
+
+            /**
+             * Selects a random cell from the given list and spreads the
+             * sediments to that cell.
+             *
+             * @param lowestList The list of lowest cells from the central cell
+             * @param spreadFrom The central cell
+             */
+            public void spread(ArrayList<GeoCell> lowestList, GeoCell spreadFrom) {
+
+                GeoCell lowestGeoCell;
+                SedimentBuffer spreadFromEB = spreadFrom.getSedimentBuffer();
+                Layer spreadFromSedType = spreadFromEB.getSedimentType();
+
+                if (spreadFromSedType == null) {
+                    return;
+                }
+
+                SedimentBuffer lowestBuffer;
+                float spreadFromHeight, lowestHeight, diff, mass;
+
+                if (lowestList.size() > 0) {
+
+                    lowestGeoCell = lowestList.get(random.nextInt(lowestList.size()));
+                    spreadFromHeight = spreadFrom.getHeightWithoutOceans() / 2.5f;
+                    lowestHeight = lowestGeoCell.getHeightWithoutOceans() / 2.5f;
+
+                    diff = (spreadFromHeight - lowestHeight) / 2.5f;
+
+                    diff = clamp(diff, -lowestHeight, spreadFromHeight);
+
+                    if (spreadFromEB.getSediments() > 0) {
+                        mass = calcMass(diff, instance().getCellArea(), spreadFromSedType);
+                        mass = calcFlow(mass);
+
+                        spreadFromEB.transferSediment(spreadFromSedType, -mass);
+
+                        lowestBuffer = lowestGeoCell.getSedimentBuffer();
+                        lowestBuffer.transferSediment(spreadFromSedType, mass);
+                    }
+                }
+            }
+
+            /**
+             * As the mass increases the flow decreases.
+             */
+            private float calcFlow(float mass) {
+                return (float) Math.pow(90f * mass, 0.5f);
+            }
+
+            @Override
+            public void after() {
+            }
+
+            @Override
+            public boolean check() {
+                return delay.check();
+            }
         }
 
-        /**
-         * As the mass increases the flow decreases.
-         */
-        private float calcFlow(float mass) {
-            return (float) Math.pow(90f * mass, 0.5f);
-        }
-
-        @Override
-        public void after() {
-        }
     }
 
     private class GeologicalUpdateFactory implements TaskFactory {
@@ -510,7 +572,7 @@ public abstract class Geosphere extends Surface {
         private Delay mantelHeatingDelay;
 
         public HeatMantel() {
-            mantelHeatingDelay = new Delay(75);
+            mantelHeatingDelay = new Delay(50);
         }
 
         @Override
@@ -579,16 +641,16 @@ public abstract class Geosphere extends Surface {
 
                 float height, diff, massBeingDeposited;
                 SedimentBuffer eb = cell.getSedimentBuffer();
-                eb.applyBuffer();
+                
                 Layer sedimentType = eb.getSedimentType();
                 Layer depositType;
 
                 if (sedimentType == null){
                     return;
                 }
-                
+                eb.applyBuffer();
                 height = calcHeight(eb.getSediments(), instance().getCellArea(), sedimentType);
-                float maxHeight = calcDepth(sedimentType, 9.8f, 2500);
+                float maxHeight = calcDepth(sedimentType, 9.8f, 1500);
                 
                 if (height > maxHeight) {
 
@@ -647,7 +709,7 @@ public abstract class Geosphere extends Surface {
                         }
                     }
 
-                    float rate = ((HydroCell) toUpdate).getOceanMass() > 1 ? 0.35f : 0.05f;
+                    float rate = toUpdate.hasOcean() ? 0.50f : 0.35f;
 
                     //solidify the rock
                     float massToSolidify = toUpdate.getMoltenRockFromSurface() * rate;
