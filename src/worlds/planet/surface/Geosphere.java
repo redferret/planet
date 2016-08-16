@@ -115,7 +115,7 @@ public abstract class Geosphere extends Surface {
         int tx, ty, mx, my;
         int x = from.getX(), y = from.getY();
         int xl = DIR_X_INDEX.length;
-        GeoCell spreadTo;
+        GeoCell selectedCell;
 
         for (int s = 0; s < xl; s++) {
 
@@ -126,11 +126,11 @@ public abstract class Geosphere extends Surface {
             mx = checkBounds(tx, getGridWidth());
             my = checkBounds(ty, getGridWidth());
 
-            spreadTo = getCellAt(mx, my);
+            selectedCell = getCellAt(mx, my);
 
-            if (spreadTo.getHeightWithoutOceans() < from.getHeightWithoutOceans()) {
+            if (selectedCell.getHeightWithoutOceans() < from.getHeightWithoutOceans()) {
                 if (lowestList.size() < max) {
-                    lowestList.add(spreadTo);
+                    lowestList.add(selectedCell);
                 } else {
                     break;
                 }
@@ -186,8 +186,9 @@ public abstract class Geosphere extends Surface {
                             nextLayerUp = true;
                         }
                     }
-
-                    if (nextLayerUp && cell.peekBottomStratum().getLayer().getRockType() == RockType.METAMORPHIC){
+                    bottomType = cell.peekBottomStratum().getLayer();
+                    
+                    if (nextLayerUp && bottomType.getRockType() == RockType.METAMORPHIC){
                         metamorphicStrata.add(cell.removeBottomStratum());
                         nextLayerUp = false;
                     }
