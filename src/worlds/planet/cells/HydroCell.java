@@ -170,6 +170,8 @@ public class HydroCell extends GeoCell {
                 if (type == Layer.MFMIX || type == Layer.MAFIC){
                     sedimentType = Layer.MFMIX;
                 }
+            }else{
+                sedimentType = type;
             }
             sediments += amount;
         }

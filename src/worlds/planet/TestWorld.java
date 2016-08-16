@@ -15,7 +15,7 @@ public class TestWorld extends Planet {
         DEFAULT_THREAD_COUNT = 1;
         SURFACE_THREAD_DELAY = 1;
         PLANET_SURFACE_DELAY = 250;
-        DEFAULT_SIZE = 256;
+        DEFAULT_SIZE = 40;
     }
 
     /**

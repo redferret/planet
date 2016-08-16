@@ -75,6 +75,8 @@ public class GeoCell extends Mantel {
                 if (type == Layer.MFMIX || type == Layer.MAFIC){
                     sedimentType = Layer.MFMIX;
                 }
+            }else{
+                sedimentType = type;
             }
             pendingSediments += amount;
         }

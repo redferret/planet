@@ -63,9 +63,9 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
     private void prepareWorld() {
         PlanetSurface surface = (PlanetSurface) testWorld.getSurface();
         for (int i = 0; i < 4; i++){
-            surface.addToSurface(Layer.BASALT, 100000);
+            surface.addToSurface(Layer.ANDESITE, 100000);
         }
-        
+        PlanetSurface.suppressMantelHeating = true;
         testWorld.setTimescale(Planet.TimeScale.Geological);
         Geosphere.heatDistributionCount = 100;
 
@@ -131,9 +131,9 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
         @Override
         public void perform() {
             if (delay.check()){
-                testWorld.getSurface().getCellAt(0).add(Layer.RHYOLITE, 1000, true);
+//                testWorld.getSurface().getCellAt(0).add(Layer.RHYOLITE, 1000, true);
                 testWorld.getSurface().getCellAt(10).add(Layer.ANDESITE, 1000, true);
-                testWorld.getSurface().getCellAt(20).add(Layer.BASALT, 1000, true);
+//                testWorld.getSurface().getCellAt(20).add(Layer.BASALT, 1000, true);
             }
         }
 
