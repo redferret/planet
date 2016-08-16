@@ -101,7 +101,7 @@ public class HydroCell extends GeoCell {
                 
                 float erosion = (displacedMass * pressure);
                 
-                if (eb.getSediments() < Tools.calcMass(0.1f, area, Layer.SEDIMENT)) {
+                if (eb.getSediments() < Tools.calcMass(0.1f, area, Layer.MAFIC)) {
                     float erodedSeds = erode(erosion);
                     toUpdateSSediments.transferSediment(erodedSeds);
                 }

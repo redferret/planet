@@ -58,14 +58,26 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
 
     private void prepareWorld() {
         PlanetSurface surface = (PlanetSurface) testWorld.getSurface();
+        PlanetSurface.suppressMantelHeating = true;
         for (int i = 0; i < 4; i++){
             surface.addToSurface(Layer.BASALT, 100000);
         }
-        surface.getCellAt(10).remove(400000, false, true);
-        surface.getCellAt(10).add(Layer.GRANITE, 1000000, true);
+        surface.getCellAt(0).remove(400000, false, true);
+        surface.getCellAt(0).add(Layer.GNEISS, 10000, true);
+        surface.getCellAt(0).add(Layer.SCHIST, 50000, true);
+        surface.getCellAt(0).add(Layer.PHYLITE, 100000, true);
+        surface.getCellAt(0).add(Layer.SLATE, 200000, true);
+        surface.getCellAt(0).add(Layer.RHYOLITE, 250000, true);
         
-        surface.getCellAt(11).remove(400000, false, true);
-        surface.getCellAt(11).add(Layer.SANDSTONE, 1000000, true);
+        surface.getCellAt(1).remove(400000, false, true);
+        surface.getCellAt(1).add(Layer.MAFIC_SANDSTONE, 1000000, true);
+        
+        surface.getCellAt(2).remove(400000, false, true);
+        surface.getCellAt(2).add(Layer.FELSIC_SANDSTONE, 1000000, true);
+        
+        surface.getCellAt(3).remove(400000, false, true);
+        surface.getCellAt(3).add(Layer.SHALE, 1000000, true);
+        
         
         testWorld.setTimescale(Planet.TimeScale.Geological);
         Geosphere.heatDistributionCount = 100;
@@ -279,10 +291,10 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
                     startDrawHeight += layerThickness;
 
                     // Draw Sediments
-                    float sedDepth = Tools.calcHeight(cell.getSedimentBuffer().getSediments(), Planet.instance().getCellArea(), Layer.SEDIMENT.getDensity());
+                    float sedDepth = Tools.calcHeight(cell.getSedimentBuffer().getSediments(), Planet.instance().getCellArea(), Layer.MAFIC.getDensity());
                     layerThickness = sedDepth * cellThicknessRatio;
 
-                    drawLayer(g2d, Layer.SEDIMENT.getColor(), cellIndex, cellWidth,
+                    drawLayer(g2d, Layer.MAFIC.getColor(), cellIndex, cellWidth,
                             startDrawHeight, windowHeight, layerThickness, cellThicknessRatio);
 
                     startDrawHeight += layerThickness;

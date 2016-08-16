@@ -9,29 +9,36 @@ public enum RockType {
     /**
      * Sand, gravel, soil.
      */
-    SEDIMENT        ("Sediment", 0),
+    SEDIMENT        ("Sediment"),
     /**
      * Shale, sandstone.
      */
-    SEDIMENTARY     ("Sedimentary", 1),
+    SEDIMENTARY     ("Sedimentary"),
     /**
      * No other sub-types yet.
      */
-    METAMORPHIC     ("Metamorphic", 2),
+    METAMORPHIC     ("Metamorphic"),
     /**
      * Basalt, granite.
      */
-    IGNEOUS         ("Igneous", 3),
+    IGNEOUS         ("Igneous"),
     /**
      * Lava, water, rain, ice.
      */
-    FLUID            ("Fluid", -1);
+    FLUID            ("Fluid");
+    
+    static {
+        RockType types[] = RockType.values();
+        int typeValue = 0;
+        for (RockType rockType : types){
+            rockType.typeValue = typeValue++;
+        }
+    }
     
     private int typeValue;
-    
     private String name;
     
-    private RockType(String name, int typeValue){
+    private RockType(String name){
         
         this.name = name;
         this.typeValue = typeValue;

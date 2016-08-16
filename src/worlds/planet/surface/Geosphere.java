@@ -16,9 +16,9 @@ import engine.util.TaskFactory;
 import engine.util.Tools;
 
 import static worlds.planet.enums.Layer.BASALT;
-import static worlds.planet.enums.Layer.LAVA;
-import static worlds.planet.enums.Layer.SANDSTONE;
-import static worlds.planet.enums.Layer.SEDIMENT;
+import static worlds.planet.enums.Layer.MOLTENROCK;
+import static worlds.planet.enums.Layer.MAFIC_SANDSTONE;
+import static worlds.planet.enums.Layer.MAFIC;
 import static worlds.planet.enums.Layer.SHALE;
 import static engine.util.Tools.calcDepth;
 import static engine.util.Tools.calcHeight;
@@ -26,11 +26,14 @@ import static engine.util.Tools.calcMass;
 import static engine.util.Tools.changeMass;
 import static engine.util.Tools.checkBounds;
 import static engine.util.Tools.clamp;
+import java.util.Deque;
 import java.util.Hashtable;
+import java.util.LinkedList;
 import static worlds.planet.Planet.instance;
 import static worlds.planet.Planet.TimeScale.Geological;
 import static worlds.planet.Planet.TimeScale.None;
 import worlds.planet.cells.geology.Stratum;
+import worlds.planet.enums.RockType;
 import static worlds.planet.surface.Surface.planetAge;
 import static worlds.planet.surface.Surface.random;
 
@@ -147,7 +150,7 @@ public abstract class Geosphere extends Surface {
             private Delay meltDelay;
             
             public MeltRockTask() {
-                meltDelay = new Delay(1);
+                meltDelay = new Delay(10);
             }
             
             @Override
@@ -162,24 +165,50 @@ public abstract class Geosphere extends Surface {
             @Override
             public void perform(int x, int y) {
                 PlanetCell cell = getCellAt(x, y);
-                Stratum temp = null;
-                if (cell.peekBottomStratum().getLayer() == Layer.METAMORPHIC){
-                    temp = cell.removeBottomStratum();
+                List<Stratum> metamorphicStrata = new LinkedList<>();
+                
+                
+                
+                for (int i = 4; i >= 0; i--){
+                    createMetamorphicRock(cell, (i * 1000) + 1000);
+                    if (cell.peekBottomStratum().getLayer().getRockType() == RockType.METAMORPHIC){
+                        metamorphicStrata.add(cell.removeBottomStratum());
+                    }
                 }
-                float density = cell.getDensity();
-                float height = cell.getHeight();
                 
-                cell.appendStratum(temp);
+                for (int i = metamorphicStrata.size() - 1; i >= 0; i--){
+                    Stratum toAdd = metamorphicStrata.get(i);
+                    Layer type = toAdd.getLayer();
+                    float mass = toAdd.getMass();
+                    cell.add(type, mass, false);
+                }
                 
-                metamorphisize(cell, calcDepth(density, 9.8f, 40000), height);
-//                melt(cell, calcDepth(cell.getDensity(), 9.8f, 7500));
+                melt(cell, calcDepth(cell.getDensity(), 9.8f, 5000));
             }
 
             @Override
             public void after() {
             }
 
-            private void metamorphisize(GeoCell cell, float maxDepth, float height){
+            private void createMetamorphicRock(GeoCell cell, float pressure){
+                float density = cell.getDensity();
+                float height = cell.getHeight();
+                Layer bottomType = cell.peekBottomStratum().getLayer();
+                Layer metaType = getMetaLayer(bottomType, pressure);
+                
+                if (metaType != null){
+                    metamorphic(cell, calcDepth(density, 9.8f, pressure), height, metaType);
+                }
+            }
+            
+            /**
+             * Turns rock into metamorphic rock given the maxDepth. The height
+             * is the height of the cell without metamorphic layers.
+             * @param cell
+             * @param maxDepth
+             * @param height 
+             */
+            private void metamorphic(GeoCell cell, float maxDepth, float height, Layer metaType){
                 float massToChange;
                 
                 if (cell.peekBottomStratum() == null) {
@@ -188,34 +217,42 @@ public abstract class Geosphere extends Surface {
                 
                 Stratum bottom = cell.peekBottomStratum();
                 Layer bottomType = bottom.getLayer();
-                boolean thereIsMetamorphicRock = false;
-                
-                while (bottomType == Layer.METAMORPHIC){
-                    thereIsMetamorphicRock = true;
-                    bottom = bottom.previous();
-                    bottomType = bottom.getLayer();
-                }
-                
+
                 if (height > maxDepth) {
-                    massToChange = calcMass(0.01f, instance().getCellArea(), bottomType);
-                    
-                    if (thereIsMetamorphicRock){
-                        // pull off the metamorphic rock first
-                        Stratum temp = cell.removeBottomStratum();
-                        // remove the rock that is to become metamorphic
-                        massToChange = removeAndChangeMass(cell, massToChange, bottomType);
-                        // add back the metamorphic rock
-                        cell.appendStratum(temp);
-                    }else{
-                        massToChange = removeAndChangeMass(cell, massToChange, bottomType);
-                    }
-                    cell.add(Layer.METAMORPHIC, massToChange, false);
+                    massToChange = calcMass(0.03f, instance().getCellArea(), bottomType);
+                    massToChange = removeAndChangeMass(cell, massToChange, bottomType, metaType);
+                    cell.add(metaType, massToChange, false);
                 }
             }
             
-            private float removeAndChangeMass(GeoCell cell, float mass, Layer bottomType){
+            private Layer getMetaLayer(Layer bottomType, float pressure){
+                Layer metaType = null;
+                if (bottomType.getRockType() == RockType.SEDIMENTARY) {
+                    if (bottomType == Layer.FELSIC_SANDSTONE) {
+                        metaType = Layer.QUARTZITE;
+                    } else if (bottomType == Layer.LIMESTONE) {
+                        metaType = Layer.MARBLE;
+                    } else {
+                        metaType = Layer.SLATE;
+                    }
+                } else if (bottomType.getRockType() == RockType.IGNEOUS &&
+                        pressure >= 50000){
+                    metaType = Layer.GNEISS;
+                } else {
+                    if (bottomType == Layer.SLATE && pressure >= 2000){
+                        metaType = Layer.PHYLITE;
+                    }else if (bottomType == Layer.PHYLITE && pressure >= 3000){
+                        metaType = Layer.SCHIST;
+                    }else if (bottomType == Layer.SCHIST && pressure >= 4000){
+                        metaType = Layer.GNEISS;
+                    }
+                }
+                return metaType;
+            }
+            
+            private float removeAndChangeMass(GeoCell cell, float mass, Layer bottomType, Layer toType){
                 float massToChange = cell.remove(mass, false, false);
-                massToChange = Tools.changeMass(massToChange, bottomType, Layer.METAMORPHIC);
+                massToChange = Tools.changeMass(massToChange, bottomType, toType);
                 return massToChange;
             }
             
@@ -230,7 +267,7 @@ public abstract class Geosphere extends Surface {
                 height = cell.getHeight();
 
                 if (height > maxHeight) {
-                    massToChange = calcMass(0.001f, instance().getCellArea(), bottomType);
+                    massToChange = calcMass(0.01f, instance().getCellArea(), bottomType);
                     cell.remove(massToChange, false, false);
                 }
             }
@@ -246,14 +283,14 @@ public abstract class Geosphere extends Surface {
 
         @Override
         public Task buildTask() {
-            return new WindErosionTask();
+            return new AeolianTask();
         }
 
-        private class WindErosionTask implements Task {
+        private class AeolianTask implements Task {
 
             private Delay delay;
             
-            public WindErosionTask() {
+            public AeolianTask() {
                 delay = new Delay(1);
             }
 
@@ -263,11 +300,11 @@ public abstract class Geosphere extends Surface {
             
             @Override
             public void perform(int x, int y) {
-                windErosion(getCellAt(x, y));
+                aeolianErosion(getCellAt(x, y));
             }
 
-            public void windErosion(GeoCell spreadFrom) {
-                float height = calcHeight(windErosionConstant, instance().getCellArea(), SEDIMENT);
+            public void aeolianErosion(GeoCell spreadFrom) {
+                float height = calcHeight(windErosionConstant, instance().getCellArea(), MAFIC);
                 convertTopLayer(spreadFrom, height);
             }
 
@@ -285,10 +322,10 @@ public abstract class Geosphere extends Surface {
                 if (eb.getSediments() == 0 && !spreadFrom.hasOcean()
                         && spreadFrom.getMoltenRockFromSurface() < 1) {
 
-                    rockMass = calcMass(height, instance().getCellArea(), SEDIMENT);
+                    rockMass = calcMass(height, instance().getCellArea(), MAFIC);
                     rockMass = spreadFrom.erode(rockMass);
 
-                    sandMass = changeMass(rockMass, rockLayer, SEDIMENT);
+                    sandMass = changeMass(rockMass, rockLayer, MAFIC);
 
                     eb.updateSurfaceSedimentMass(sandMass);
                 }
@@ -351,7 +388,7 @@ public abstract class Geosphere extends Surface {
 
                 if (eb.getSediments() > 0) {
 
-                    mass = calcMass(diff, instance().getCellArea(), SEDIMENT);
+                    mass = calcMass(diff, instance().getCellArea(), MAFIC);
                     mass = calcFlow(mass);
 
                     eb.updateSurfaceSedimentMass(-mass);
@@ -512,7 +549,7 @@ public abstract class Geosphere extends Surface {
             public void depositSediment(int x, int y) {
                 GeoCell cell = getCellAt(x, y);
                 cell.getSedimentBuffer().applyBuffer();
-                formSedimentaryRock(cell, calcDepth(SEDIMENT, 9.8f, 2000));
+                formSedimentaryRock(cell, calcDepth(MAFIC, 9.8f, 2000));
             }
 
             public void formSedimentaryRock(GeoCell cell, float maxHeight) {
@@ -521,17 +558,17 @@ public abstract class Geosphere extends Surface {
                 Layer depositType;
                 SedimentBuffer eb = cell.getSedimentBuffer();
 
-                height = calcHeight(eb.getSediments(), instance().getCellArea(), SEDIMENT);
+                height = calcHeight(eb.getSediments(), instance().getCellArea(), MAFIC);
                 if (height > maxHeight) {
 
                     diff = (height - maxHeight);
 
-                    massBeingDeposited = calcMass(diff, instance().getCellArea(), SEDIMENT);
-                    depositType = (((HydroCell) cell).getOceanMass() > 9000) ? SHALE : SANDSTONE;
+                    massBeingDeposited = calcMass(diff, instance().getCellArea(), MAFIC);
+                    depositType = (((HydroCell) cell).getOceanMass() > 9000) ? SHALE : MAFIC_SANDSTONE;
 
                     eb.updateSurfaceSedimentMass(-massBeingDeposited);
 
-                    massBeingDeposited = changeMass(massBeingDeposited, SEDIMENT, depositType);
+                    massBeingDeposited = changeMass(massBeingDeposited, MAFIC, depositType);
                     cell.add(depositType, massBeingDeposited, true);
 
                 }
@@ -564,7 +601,7 @@ public abstract class Geosphere extends Surface {
 
                             diff = clamp(diff, -lowestHeight, currentCellHeight);
 
-                            float mass = calcMass(diff, instance().getCellArea(), LAVA);
+                            float mass = calcMass(diff, instance().getCellArea(), MOLTENROCK);
 
                             toUpdate.putMoltenRockToSurface(-mass);
                             float sediments = lowest.getSedimentBuffer().removeAllSediments();
@@ -577,12 +614,12 @@ public abstract class Geosphere extends Surface {
                     //solidify the rock
                     float massToSolidify = toUpdate.getMoltenRockFromSurface() * rate;
                     toUpdate.putMoltenRockToSurface(-massToSolidify);
-                    massToSolidify = changeMass(massToSolidify, LAVA, BASALT);
+                    massToSolidify = changeMass(massToSolidify, MOLTENROCK, BASALT);
                     toUpdate.add(BASALT, massToSolidify, true);
                     toUpdate.recalculateHeight();
                 } else {
                     float massToSolidify = toUpdate.removeAllMoltenRock();
-                    massToSolidify = changeMass(massToSolidify, LAVA, BASALT);
+                    massToSolidify = changeMass(massToSolidify, MOLTENROCK, BASALT);
                     toUpdate.add(BASALT, massToSolidify, true);
                     toUpdate.recalculateHeight();
                 }

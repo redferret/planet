@@ -13,59 +13,148 @@ public enum Layer {
     /**
      * Sand is formed when gravel breaks down, also from other rock types like
      * sedimentary rocks.
+     *//**
+     * Sand is formed when gravel breaks down, also from other rock types like
+     * sedimentary rocks.
      */
-    SEDIMENT("Sand", new Color(240, 228, 176), 0, 0.00f, 1850f),
+    MAFIC("Sediments that are derived from silicate poor igneous rock", 
+            new Color(200, 200, 180), RockType.SEDIMENT, 0.00f, 1990f),
+    
+    MFMIX("Sediments that contain an intermidate amount of silicate", 
+            new Color(236, 220, 165), RockType.SEDIMENT, 0, 1850f),
+    
+    FELSIC("Sediments that are derived from silicate rich rock", 
+            new Color(245, 240, 207), RockType.SEDIMENT, 0, 1750f),
+    
     /**
-     * Soil is formed when life interacts with Sand.
+     * Soil is formed when life interacts with sediments and contains biomass.
      */
-    SOIL("Soil", new Color(90, 56, 37), 1, 0.05f, 1920f),
+    SOIL("Soil", new Color(90, 56, 37), RockType.SEDIMENT, 0.05f, 1920f),
+    
     /**
-     * Sedimentary rock forms by compressing sediments past a certain depth.
-     * They are the second easiest to erode next to sediments.
+     * 
      */
-    SANDSTONE("Sandstone", new Color(255, 201, 14), 3, 0.12f, 2350f),
+    MAFIC_SANDSTONE("Sandstone composed mostly of mafic sediments", 
+            new Color(255, 201, 14).darker(), RockType.SEDIMENTARY, 0.10f, 2350f),
+    
+    /**
+     * 
+     */
+    MIX_SANDSTONE("Sandstone intermediate silicates", 
+            new Color(255, 201, 14), RockType.SEDIMENTARY, 0.10f, 2350f),
+    
+    /**
+     * 
+     */
+    FELSIC_SANDSTONE("Sandstone composed mostly of felsic sediments", 
+            new Color(255, 201, 14).brighter(), RockType.SEDIMENTARY, 0.10f, 2350f),
+    
     /**
      * Shale is formed when clay and silt sized particles are compacted
      * together.
      */
-    SHALE("Shale", new Color(200, 190, 230), 4, 0.14f, 2400f),
+    SHALE("Shale", new Color(200, 190, 230), RockType.SEDIMENTARY, 0.13f, 2400f),
+    
     /**
      * Limestone is composed of skeletal fragments of marine organisms such as
      * coral biological life deposits this rock.
      */
-    LIMESTONE("Limestone", new Color(226, 245, 170), 5, 0.15f, 2550f),
+    LIMESTONE("Limestone", new Color(226, 245, 170), RockType.SEDIMENTARY, 0.15f, 2550f),
+    
     /**
-     * Metamorphic rock forms at fault boundaries when rock subducts and get
-     * twisted and compressed or if enough sedimentary rock is at a particular
-     * depth to form metamorphic rock. Metamorphic rock also takes the longest
-     * to erode.
+     * Sandstones that are metamorphisized.
      */
-    METAMORPHIC("Metamorphic", new Color(136, 0, 20), 6, 0.22f, 3100f),
+    QUARTZITE("Sandstones that are metamorphisized", 
+            new Color(255, 208, 175), RockType.METAMORPHIC, 0.33f, 2645f),
+    
     /**
-     * Basalt is usually deposited at fault lines or certain volcanoes.
+     * Shale that is metamorphisized
      */
-    BASALT("Basalt", new Color(127, 127, 127), 7, 0.18f, 2990f),
+    SLATE("", new Color(147,147,202), RockType.METAMORPHIC, 0.25f, 2750f),
+    
     /**
-     * Granite can be from certain volcanoes but mainly intrusive.
+     * Limestone that is metamorphisized
      */
-    GRANITE("Granite", new Color(193, 120, 102), 8, 0.20f, 2790f),
+    MARBLE("", 
+            new Color(220, 168, 163), RockType.METAMORPHIC, 0.19f, 2711f),
+    
+    PHYLITE("", 
+            new Color(64, 128, 128), RockType.METAMORPHIC, 0.28f, 2900f),
+    
+    /**
+     * First stage of foliated metamorphisized rock.
+     */
+    SCHIST("Metamorphic rock with smaller crystals", 
+            new Color(125, 130, 145), RockType.METAMORPHIC, 0.30f, 3000f),
+    
+    /**
+     * Second stage of foliated metamorphisized rock of schist or volcanic rocks.
+     */
+    GNEISS("Metamorphic rock with large crystals", 
+            new Color(136, 0, 20), RockType.METAMORPHIC, 0.33f, 3100f),
+    
+    
+    /**
+     * Basalt is usually deposited at fault lines in the ocean or some hot
+     * spots like Hawaii, usually extrusive.
+     */
+    BASALT("Basalt, Silicate Poor Extrusive Igneous", 
+            new Color(127, 127, 127), RockType.IGNEOUS, 0.17f, 2990f),
+    /**
+     * Rhyolite is from explosive extrusive volcanoes that are silicate rich, 
+     * usually extrusive
+     */
+    RHYOLITE("Rhyolite, Silicate Rich Extrusive Igneous", 
+            new Color(190, 126, 126), RockType.IGNEOUS, 0.25f, 2690f),
+    
+    /**
+     * Silicate intermediate igneous rock, usually extrusive
+     */
+    ANDESITE("Andesite, Silicate Intermediate Extrusive Igneous", 
+            new Color(205, 180, 165), RockType.IGNEOUS, 0.2f, 2790f),
+    
+    /**
+     * A silicate poor intrusive igneous rock that cooled slowly.
+     */
+    GABBRO("Gabbro, Silicate Poor Intrusive Igneous", 
+            new Color(195, 195, 195), RockType.IGNEOUS, 0.19f, 3200f),
+    
+    /**
+     * A Silicate intermediate intrusive igneous rock that cooled slowly.
+     */
+    DIORITE("Diorite, Silicate Intermediate Intrusive Igneous", 
+            new Color(220, 220, 220), RockType.IGNEOUS, 0.23f, 2990f),
+    
+    /**
+     * A silicate rich intrusive igneous rock that cooled slowly.
+     */
+    GRANITE("Granite, Silicate Rich Intrusive Igneous", 
+            new Color(190, 126, 126), RockType.IGNEOUS, 0.28f, 2750f),
+    
+    /**
+     * Volcanic glass formed when molten rock cools quickly, considered as 
+     * a silicate intermediate.
+     */
+    OBSIDIAN("Obsidian, Igneous rock that cooled fast", 
+            new Color(70, 0, 70), RockType.IGNEOUS, 0.23f, 2600f),
     /**
      * Sea water is represented as a top layer. The average density of sea water
      * is around 1.05 cc. Sea water deposits shale rock.
      */
-    OCEAN("Liquid Water", Color.BLUE, 9, 0.0f, 1050f),
+    OCEAN("Liquid Water", Color.BLUE, RockType.FLUID, 0.0f, 1050f),
     /**
-     * Lava, not magma, is represented by this layer. It's average density is
-     * 2.75 cc. lava can erode or deposit. If the lava is hot enough it will
-     * carve out rock. If the lava is cool enough it deposits basalt.
+     * Lava, or magma, is represented by this layer. Depending on how it is
+     * deposited, intrusive or extrusive will form different kinds of igneous
+     * rock.
      */
-    LAVA("Lava", Color.RED, 10, 0.0f, 2750f),
+    MOLTENROCK("Molten rock that forms igneous deposits", 
+            Color.RED, RockType.FLUID, 0.0f, 2750f),
     /**
      * Ice is represented by this layer and has a density of 0.9 cc. Ice erodes
      * rock and deposits gravel instead of sand. The gravel is one layer below
      * ice and is only formed when ice moves.
      */
-    ICE("Ice", new Color(230, 248, 248), 11, 0.0f, 900f);
+    ICE("Ice", new Color(230, 248, 248), RockType.FLUID, 0.0f, 900f);
 
     /**
      * The name of the material this stratum is. This includes Sediment,
@@ -94,9 +183,20 @@ public enum Layer {
      */
     private Color color;
 
+    private RockType rockType;
+    
+    static {
+        Layer layers[] = Layer.values();
+        int index = 0;
+        for (Layer layer : layers){
+            layer.typeid = index++;
+        }
+    }
+    
     /* Hidden Constructor */
-    private Layer(String name, Color color, int typeid,
+    private Layer(String name, Color color, RockType rockType, 
             float erosionFactor, float density) {
+        this.rockType = rockType;
         this.color = color;
         this.typeid = typeid;
         this.name = name;
@@ -127,6 +227,10 @@ public enum Layer {
         return name;
     }
 
+    public RockType getRockType() {
+        return rockType;
+    }
+    
     /**
      * The erosion factor is based on an average and the value is between 1.0f
      * and 0.0f Sand is 0.0f since it is already eroded into sediment. The

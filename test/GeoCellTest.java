@@ -91,7 +91,7 @@ public class GeoCellTest {
 
         GeoCell testCell = testWorld.getSurface().getCellAt(50, 50);
 
-        testCell.add(Layer.GRANITE, 10000, true);
+        testCell.add(Layer.RHYOLITE, 10000, true);
         testCell.add(Layer.BASALT, 500, true);
 
         Float expectedTotalMass = 10500f;
@@ -134,7 +134,7 @@ public class GeoCellTest {
         
         GeoCell testCell = testWorld.getSurface().getCellAt(25, 25);
 
-        testCell.add(Layer.GRANITE, 10000, true);
+        testCell.add(Layer.RHYOLITE, 10000, true);
         testCell.add(Layer.BASALT, 500, true);
         
         Float expectedRemoval = 550f;
@@ -143,7 +143,7 @@ public class GeoCellTest {
         assertEquals(incorrectAmtsMsg, expectedRemoval, removed);
         
         Layer topLayer = testCell.peekTopStratum().getLayer();
-        Layer expectedLayer = Layer.GRANITE;
+        Layer expectedLayer = Layer.RHYOLITE;
         
         assertEquals(incorrectLayerMsg, expectedLayer, topLayer);
         
@@ -153,14 +153,14 @@ public class GeoCellTest {
         
         assertEquals("The top layer's mass is incorrect", expectedMass, actualMass);
         
-        testCell.add(Layer.GRANITE, 1000, false);
+        testCell.add(Layer.RHYOLITE, 1000, false);
         expectedRemoval = 9950f;
         removed = testCell.remove(expectedRemoval, false, true);
         
         assertEquals(incorrectAmtsMsg, expectedRemoval, removed);
         
         top = testCell.peekTopStratum();
-        expectedLayer = Layer.GRANITE;
+        expectedLayer = Layer.RHYOLITE;
         topLayer = top.getLayer();
         
         assertEquals(incorrectLayerMsg, expectedLayer, topLayer);
@@ -172,8 +172,8 @@ public class GeoCellTest {
     @Test
     public void multipleLayerRemovalTest(){
         
-        Layer strata[] = {Layer.BASALT, Layer.GRANITE, Layer.SANDSTONE, Layer.SHALE,
-                          Layer.BASALT, Layer.GRANITE, Layer.SANDSTONE, Layer.SHALE};
+        Layer strata[] = {Layer.BASALT, Layer.RHYOLITE, Layer.MAFIC_SANDSTONE, Layer.SHALE,
+                          Layer.BASALT, Layer.RHYOLITE, Layer.MAFIC_SANDSTONE, Layer.SHALE};
         GeoCell testCell = testWorld.getSurface().getCellAt(30, 30);
         
         for (Layer layer : strata){

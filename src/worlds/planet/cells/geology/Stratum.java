@@ -152,6 +152,10 @@ public class Stratum {
         top = stratum;
     }
     
+    /**
+     * Fetches the stratum layer above this one if it exists, null otherwise.
+     * @return The layer above this layer.
+     */
     public Stratum previous(){
         return top;
     }

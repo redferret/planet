@@ -82,7 +82,7 @@ public class GeoCell extends Mantel {
          */
         public float removeAllSediments() {
             float temp = totalSediments;
-            updateMV(-totalSediments, SEDIMENT);
+            updateMV(-totalSediments, MAFIC);
             totalSediments = 0;
             return temp;
         }
@@ -102,7 +102,7 @@ public class GeoCell extends Mantel {
                 }
             }
             totalSediments += mass;
-            updateMV(mass, SEDIMENT);
+            updateMV(mass, MAFIC);
             return mass;
         }
 
@@ -155,8 +155,7 @@ public class GeoCell extends Mantel {
     private PlateBuffer plateBuffer;
 
     /**
-     * Temporarily holds pendingSediments, rain water, and ice to be transfered
-     * over to this cell. This better to use than a separate transfer map.
+     * Holds pending sediments to be added as well as the layer of sediments.
      */
     private SedimentBuffer erosionBuffer;
 
@@ -210,20 +209,14 @@ public class GeoCell extends Mantel {
             new Color(157, 166, 175), new Color(255, 255, 255)};
         heightMap = Tools.constructSamples(heightColors, MAX_HEIGHT_INDEX);
 
-        Color[] sedimentColors = {new Color(195, 195, 195, 0), new Color(195, 195, 195, 255), SEDIMENT.getColor()};
+        Color[] sedimentColors = {new Color(195, 195, 195, 0), new Color(195, 195, 195, 255), MAFIC.getColor()};
         sedimentMap = Tools.constructSamples(sedimentColors, MAX_SEDIMENT_INDEX);
 
-        Color[] strataColors = {SEDIMENT.getColor(), SOIL.getColor(),
-            new Color(0, 0, 0), SANDSTONE.getColor(),
-            SHALE.getColor(), LIMESTONE.getColor(),
-            METAMORPHIC.getColor(), BASALT.getColor(),
-            GRANITE.getColor(), OCEAN.getColor(),
-            LAVA.getColor(), ICE.getColor()};
+        Layer[] layerTypes = Layer.values();
+        strataMap = new Integer[layerTypes.length][4];
 
-        strataMap = new Integer[strataColors.length][4];
-
-        for (int i = 0; i < strataColors.length; i++) {
-            Color c = strataColors[i];
+        for (int i = 0; i < layerTypes.length; i++) {
+            Color c = layerTypes[i].getColor();
             strataMap[i][0] = c.getRed();
             strataMap[i][1] = c.getGreen();
             strataMap[i][2] = c.getBlue();
@@ -350,7 +343,7 @@ public class GeoCell extends Mantel {
             moltenRockSurfaceMass = 0;
             return;
         }
-        updateMV(mass, LAVA);
+        updateMV(mass, MOLTENROCK);
     }
 
     /**
@@ -366,7 +359,7 @@ public class GeoCell extends Mantel {
      */
     public float removeAllMoltenRock() {
         float temp = moltenRockSurfaceMass;
-        updateMV(-moltenRockSurfaceMass, LAVA);
+        updateMV(-moltenRockSurfaceMass, MOLTENROCK);
         moltenRockSurfaceMass = 0;
         return temp;
     }
@@ -666,7 +659,7 @@ public class GeoCell extends Mantel {
 
         ref = (bottom == null) ? peekTopStratum().getLayer() : bottom.getLayer();
 
-        float changedMass = changeMass(amount, ref, SEDIMENT);
+        float changedMass = changeMass(amount, ref, MAFIC);
 
         return remove(changedMass, true, true);
     }
@@ -858,7 +851,7 @@ public class GeoCell extends Mantel {
                     }
                     if (Geosphere.drawSediments) {
                         float mass = getSedimentBuffer().getSediments();
-                        float depth = Tools.calcHeight(mass, instance().getCellArea(), SEDIMENT);
+                        float depth = Tools.calcHeight(mass, instance().getCellArea(), MAFIC);
                         int sedIndex = (int) (depth / sedimentIndexRatio);
                         setting = sedIndex < MAX_SEDIMENT_INDEX ? sedIndex : MAX_SEDIMENT_INDEX - 1;
                         settings.add(sedimentMap[setting]);
