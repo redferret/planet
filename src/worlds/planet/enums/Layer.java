@@ -27,19 +27,20 @@ public enum Layer {
     SOIL("Soil", new Color(90, 56, 37), SEDIMENT, Mix, 0.05f, 1920f),
     
     /**
-     * 
+     * Sandstones that are derived from silicate poor sediments,
      */
     MAFIC_SANDSTONE("Sandstone composed mostly of mafic sediments", 
             new Color(255, 201, 14).darker(), SEDIMENTARY, Poor, 0.10f, 2350f),
     
     /**
-     * 
+     * Sandstones that are a mix between poor and rich silicate sediments.
      */
     MIX_SANDSTONE("Sandstone intermediate silicates", 
             new Color(255, 201, 14), SEDIMENTARY, Mix, 0.10f, 2350f),
     
     /**
-     * 
+     * Sandstones that are silicate rich, when metamorphisized Felsic sandstone
+     * will form Quartzite.
      */
     FELSIC_SANDSTONE("Sandstone composed mostly of felsic sediments", 
             new Color(255, 201, 14).brighter(), SEDIMENTARY, Rich, 0.10f, 2350f),
@@ -57,7 +58,7 @@ public enum Layer {
     LIMESTONE("Limestone", new Color(226, 245, 170), SEDIMENTARY, Poor, 0.15f, 2550f),
     
     /**
-     * Sandstones that are metamorphisized.
+     * Silicate rich sandstones that are metamorphisized.
      */
     QUARTZITE("Sandstones that are metamorphisized", 
             new Color(255, 208, 175), METAMORPHIC, Rich, 0.33f, 2645f),
@@ -70,22 +71,22 @@ public enum Layer {
     /**
      * Limestone that is metamorphisized
      */
-    MARBLE("", 
+    MARBLE("Limestone that is metamorphisized is turned into Marble", 
             new Color(220, 168, 163), METAMORPHIC, Poor, 0.19f, 2711f),
     
-    PHYLITE("", 
+    PHYLITE("First stage of metamorphism, very small crystals", 
             new Color(64, 128, 128), METAMORPHIC, Mix, 0.28f, 2900f),
     
     /**
      * First stage of foliated metamorphisized rock.
      */
-    SCHIST("Metamorphic rock with smaller crystals", 
+    SCHIST("Second stage of metamorphism, small crystals", 
             new Color(125, 130, 145), METAMORPHIC, Mix, 0.30f, 3000f),
     
     /**
      * Second stage of foliated metamorphisized rock of schist or volcanic rocks.
      */
-    GNEISS("Metamorphic rock with large crystals", 
+    GNEISS("Last stage of metamorphism, large crystals", 
             new Color(136, 0, 20), METAMORPHIC, Mix, 0.33f, 3100f),
     
     

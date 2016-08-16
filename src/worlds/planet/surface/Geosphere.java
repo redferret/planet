@@ -3,33 +3,34 @@ package worlds.planet.surface;
 import java.util.Random;
 import java.util.ArrayList;
 import java.util.List;
-import engine.util.BasicTask;
+import java.util.LinkedList;
+
 import worlds.planet.cells.geology.GeoCell;
-import worlds.planet.cells.HydroCell;
 import worlds.planet.cells.PlanetCell;
 import worlds.planet.enums.Layer;
 import worlds.planet.cells.geology.GeoCell.SedimentBuffer;
+import worlds.planet.cells.geology.Stratum;
+import worlds.planet.enums.RockType;
+import worlds.planet.enums.SilicateContent;
+
 import engine.util.Delay;
 import engine.util.Task;
-import engine.util.TaskAdapter;
 import engine.util.TaskFactory;
 import engine.util.Tools;
+import engine.util.BasicTask;
 
-import static worlds.planet.enums.Layer.BASALT;
-import static worlds.planet.enums.Layer.MAFICMOLTENROCK;
 import static engine.util.Tools.calcDepth;
 import static engine.util.Tools.calcHeight;
 import static engine.util.Tools.calcMass;
 import static engine.util.Tools.changeMass;
 import static engine.util.Tools.checkBounds;
 import static engine.util.Tools.clamp;
-import java.util.LinkedList;
+
 import static worlds.planet.Planet.instance;
 import static worlds.planet.Planet.TimeScale.Geological;
 import static worlds.planet.Planet.TimeScale.None;
-import worlds.planet.cells.geology.Stratum;
-import worlds.planet.enums.RockType;
-import worlds.planet.enums.SilicateContent;
+import static worlds.planet.enums.Layer.BASALT;
+import static worlds.planet.enums.Layer.MAFICMOLTENROCK;
 import static worlds.planet.enums.SilicateContent.Mix;
 import static worlds.planet.enums.SilicateContent.Rich;
 import static worlds.planet.surface.Surface.planetAge;
@@ -207,21 +208,12 @@ public abstract class Geosphere extends Surface {
             public void after() {
             }
 
-            
-            /**
-             * Turns rock into metamorphic rock given the maxDepth. The height
-             * is the height of the cell without metamorphic layers.
-             * @param cell
-             * @param maxDepth
-             * @param height 
-             */
             private void metamorphisize(GeoCell cell, Layer metaType){
                 float massToChange;
                 
                 if (cell.peekBottomStratum() == null) {
                     return;
                 }
-                float height = cell.getHeight();
                 
                 Stratum bottom = cell.peekBottomStratum();
                 Layer bottomType = bottom.getLayer();
@@ -661,7 +653,11 @@ public abstract class Geosphere extends Surface {
                     if (sedimentType.getSilicates() == SilicateContent.Rich){
                         depositType = Layer.FELSIC_SANDSTONE;
                     }else if (sedimentType.getSilicates() == SilicateContent.Mix){
-                        depositType = Layer.MIX_SANDSTONE;
+                        if (cell.hasOcean()){
+                            depositType = Layer.SHALE;
+                        }else{
+                            depositType = Layer.MIX_SANDSTONE;
+                        }
                     }else {
                         depositType = Layer.MAFIC_SANDSTONE;
                     }
