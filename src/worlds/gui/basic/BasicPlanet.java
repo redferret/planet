@@ -63,7 +63,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
     private void prepareWorld() {
         PlanetSurface surface = (PlanetSurface) testWorld.getSurface();
         for (int i = 0; i < 4; i++){
-            surface.addToSurface(Layer.ANDESITE, 100000);
+            surface.addToSurface(Layer.BASALT, 100000);
         }
         PlanetSurface.suppressMantelHeating = true;
         testWorld.setTimescale(Planet.TimeScale.Geological);
@@ -131,9 +131,9 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
         @Override
         public void perform() {
             if (delay.check()){
-//                testWorld.getSurface().getCellAt(0).add(Layer.RHYOLITE, 1000, true);
+                testWorld.getSurface().getCellAt(0).add(Layer.RHYOLITE, 1000, true);
                 testWorld.getSurface().getCellAt(10).add(Layer.ANDESITE, 1000, true);
-//                testWorld.getSurface().getCellAt(20).add(Layer.BASALT, 1000, true);
+                testWorld.getSurface().getCellAt(20).add(Layer.BASALT, 1000, true);
             }
         }
 
@@ -309,13 +309,15 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
                     // Draw Sediments
                     GeoCell.SedimentBuffer sedimentBuffer = cell.getSedimentBuffer();
                     Layer sedimentType = sedimentBuffer.getSedimentType();
-                    float sedDepth = Tools.calcHeight(sedimentBuffer.getSediments(), Planet.instance().getCellArea(), sedimentType.getDensity());
-                    layerThickness = sedDepth * cellThicknessRatio;
-                    drawLayer(g2d, sedimentType.getColor(), cellIndex, cellWidth,
-                            startDrawHeight, windowHeight, layerThickness, cellThicknessRatio);
+                    if (sedimentType != null){
+                        float sedDepth = Tools.calcHeight(sedimentBuffer.getSediments(), Planet.instance().getCellArea(), sedimentType.getDensity());
+                        layerThickness = sedDepth * cellThicknessRatio;
+                        drawLayer(g2d, sedimentType.getColor(), cellIndex, cellWidth,
+                                startDrawHeight, windowHeight, layerThickness, cellThicknessRatio);
 
-                    startDrawHeight += layerThickness;
-
+                        startDrawHeight += layerThickness;
+                    }
+                    
                     nextStratum = cell.peekTopStratum();
 
                     while (nextStratum != null) {

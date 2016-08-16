@@ -17,17 +17,12 @@ import engine.util.Tools;
 
 import static worlds.planet.enums.Layer.BASALT;
 import static worlds.planet.enums.Layer.MAFICMOLTENROCK;
-import static worlds.planet.enums.Layer.MAFIC_SANDSTONE;
-import static worlds.planet.enums.Layer.MAFIC;
-import static worlds.planet.enums.Layer.SHALE;
 import static engine.util.Tools.calcDepth;
 import static engine.util.Tools.calcHeight;
 import static engine.util.Tools.calcMass;
 import static engine.util.Tools.changeMass;
 import static engine.util.Tools.checkBounds;
 import static engine.util.Tools.clamp;
-import java.util.Deque;
-import java.util.Hashtable;
 import java.util.LinkedList;
 import static worlds.planet.Planet.instance;
 import static worlds.planet.Planet.TimeScale.Geological;
@@ -394,6 +389,12 @@ public abstract class Geosphere extends Surface {
 
             GeoCell lowestGeoCell;
             SedimentBuffer spreadFromEB = spreadFrom.getSedimentBuffer();
+            Layer spreadFromSedType = spreadFromEB.getSedimentType();
+            
+            if (spreadFromSedType == null){
+                return;
+            }
+            
             SedimentBuffer lowestBuffer;
             float spreadFromHeight, lowestHeight, diff, mass;
 
@@ -408,8 +409,6 @@ public abstract class Geosphere extends Surface {
                 diff = clamp(diff, -lowestHeight, spreadFromHeight);
 
                 if (spreadFromEB.getSediments() > 0) {
-
-                    Layer spreadFromSedType = spreadFromEB.getSedimentType();
                     mass = calcMass(diff, instance().getCellArea(), spreadFromSedType);
                     mass = calcFlow(mass);
 
@@ -584,6 +583,10 @@ public abstract class Geosphere extends Surface {
                 Layer sedimentType = eb.getSedimentType();
                 Layer depositType;
 
+                if (sedimentType == null){
+                    return;
+                }
+                
                 height = calcHeight(eb.getSediments(), instance().getCellArea(), sedimentType);
                 float maxHeight = calcDepth(sedimentType, 9.8f, 2500);
                 

@@ -162,16 +162,20 @@ public class HydroCell extends GeoCell {
             if (!bufferSet()) {
                 bufferSet(true);
             }
-            if (sedimentType == Layer.MAFIC){
-                if (type == Layer.MFMIX || type == Layer.FELSIC){
-                    sedimentType = Layer.MFMIX;
-                }
-            }else if (sedimentType == Layer.FELSIC){
-                if (type == Layer.MFMIX || type == Layer.MAFIC){
-                    sedimentType = Layer.MFMIX;
-                }
-            }else{
+            if (sedimentType == null){
                 sedimentType = type;
+            }else{
+                if (sedimentType == Layer.MAFIC){
+                    if (type == Layer.MFMIX || type == Layer.FELSIC){
+                        sedimentType = Layer.MFMIX;
+                    }
+                }else if (sedimentType == Layer.FELSIC){
+                    if (type == Layer.MFMIX || type == Layer.MAFIC){
+                        sedimentType = Layer.MFMIX;
+                    }
+                }else{
+                    sedimentType = type;
+                }
             }
             sediments += amount;
         }

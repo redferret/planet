@@ -47,11 +47,11 @@ public class GeoCell extends Mantel {
         
         public SedimentBuffer() {
             super();
+            sedimentType = null;
         }
 
         protected final void init() {
             pendingSediments = 0;
-            sedimentType = Layer.MAFIC;
         }
 
         /**
@@ -67,16 +67,21 @@ public class GeoCell extends Mantel {
             if (!bufferSet()) {
                 bufferSet(true);
             }
-            if (sedimentType == Layer.MAFIC){
-                if (type == Layer.MFMIX || type == Layer.FELSIC){
-                    sedimentType = Layer.MFMIX;
-                }
-            }else if (sedimentType == Layer.FELSIC){
-                if (type == Layer.MFMIX || type == Layer.MAFIC){
-                    sedimentType = Layer.MFMIX;
-                }
-            }else{
+            
+            if (sedimentType == null){
                 sedimentType = type;
+            }else{
+                if (sedimentType == Layer.MAFIC){
+                    if (type == Layer.MFMIX || type == Layer.FELSIC){
+                        sedimentType = Layer.MFMIX;
+                    }
+                }else if (sedimentType == Layer.FELSIC){
+                    if (type == Layer.MFMIX || type == Layer.MAFIC){
+                        sedimentType = Layer.MFMIX;
+                    }
+                }else{
+                    sedimentType = type;
+                }
             }
             pendingSediments += amount;
         }
@@ -98,15 +103,15 @@ public class GeoCell extends Mantel {
          */
         public float removeAllSediments() {
             float temp = totalSediments;
-            updateMV(-totalSediments, MAFIC);
+            updateMV(-totalSediments, sedimentType);
             totalSediments = 0;
+            sedimentType = null;
             return temp;
         }
 
         /**
          * Adds or removes pendingSediments from this cell.
          *
-         * @param type
          * @param mass The amount of pendingSediments in kilograms.
          * @return The amount that was removed or added
          */
@@ -119,7 +124,7 @@ public class GeoCell extends Mantel {
                 }
             }
             totalSediments += mass;
-            updateMV(mass, MAFIC);
+            updateMV(mass, sedimentType);
             return mass;
         }
 
