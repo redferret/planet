@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
 import worlds.planet.cells.PlanetCell;
+import worlds.planet.cells.geology.GeoCell;
 import worlds.planet.cells.geology.Stratum;
 import worlds.planet.surface.Geosphere;
 import worlds.planet.surface.Hydrosphere;
@@ -129,8 +130,11 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
 
         @Override
         public void perform() {
-            if (delay.check())
-                testWorld.getSurface().getCellAt(0).add(Layer.MAFIC_SANDSTONE, 3000, true);
+            if (delay.check()){
+                testWorld.getSurface().getCellAt(0).add(Layer.RHYOLITE, 1000, true);
+                testWorld.getSurface().getCellAt(10).add(Layer.ANDESITE, 1000, true);
+                testWorld.getSurface().getCellAt(20).add(Layer.BASALT, 1000, true);
+            }
         }
 
         @Override
@@ -267,7 +271,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
             int windowWidth = getWidth(),
                     windowHeight = getHeight(), cutToolWidth = 50;
             int cellWidth = windowWidth / cutToolWidth, cx = viewX, cy = viewY;
-            final int MAX_THICKNESS = 15;
+            final int MAX_THICKNESS = 6;
 
             double layerThickness, cellThicknessRatio, startDrawHeight;
 
@@ -291,7 +295,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
                 if (cell != null) {
 
                     cellThicknessRatio = ((float) windowHeight / MAX_THICKNESS);
-                    startDrawHeight = (MAX_THICKNESS - cell.getHeight()) - 5;
+                    startDrawHeight = (MAX_THICKNESS - cell.getHeight());
                     startDrawHeight *= cellThicknessRatio;
 
                     // Draw Ocean
@@ -303,10 +307,11 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
                     startDrawHeight += layerThickness;
 
                     // Draw Sediments
-                    float sedDepth = Tools.calcHeight(cell.getSedimentBuffer().getSediments(), Planet.instance().getCellArea(), Layer.MAFIC.getDensity());
+                    GeoCell.SedimentBuffer sedimentBuffer = cell.getSedimentBuffer();
+                    Layer sedimentType = sedimentBuffer.getSedimentType();
+                    float sedDepth = Tools.calcHeight(sedimentBuffer.getSediments(), Planet.instance().getCellArea(), sedimentType.getDensity());
                     layerThickness = sedDepth * cellThicknessRatio;
-
-                    drawLayer(g2d, Layer.MAFIC.getColor(), cellIndex, cellWidth,
+                    drawLayer(g2d, sedimentType.getColor(), cellIndex, cellWidth,
                             startDrawHeight, windowHeight, layerThickness, cellThicknessRatio);
 
                     startDrawHeight += layerThickness;

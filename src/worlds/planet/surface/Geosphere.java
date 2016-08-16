@@ -35,6 +35,8 @@ import static worlds.planet.Planet.TimeScale.None;
 import worlds.planet.cells.geology.Stratum;
 import worlds.planet.enums.RockType;
 import worlds.planet.enums.SilicateContent;
+import static worlds.planet.enums.SilicateContent.Mix;
+import static worlds.planet.enums.SilicateContent.Rich;
 import static worlds.planet.surface.Surface.planetAge;
 import static worlds.planet.surface.Surface.random;
 
@@ -285,7 +287,7 @@ public abstract class Geosphere extends Surface {
 
     public static float windErosionConstant;
     static {
-        windErosionConstant = 0.95f;
+        windErosionConstant = 5;
     }
     
     private class AeolianFactory implements TaskFactory {
@@ -313,11 +315,10 @@ public abstract class Geosphere extends Surface {
             }
 
             public void aeolianErosion(GeoCell spreadFrom) {
-                float height = calcHeight(windErosionConstant, instance().getCellArea(), MAFIC);
-                convertTopLayer(spreadFrom, height);
+                convertTopLayer(spreadFrom);
             }
 
-            public void convertTopLayer(GeoCell spreadFrom, float height) {
+            public void convertTopLayer(GeoCell spreadFrom) {
 
                 float rockMass, sandMass;
 
@@ -325,18 +326,29 @@ public abstract class Geosphere extends Surface {
                     return;
                 }
 
+                Layer rockType = spreadFrom.peekTopStratum().getLayer();
+                
+                float height = calcHeight(windErosionConstant, instance().getCellArea(), rockType);
+                
                 SedimentBuffer eb = spreadFrom.getSedimentBuffer();
-                Layer rockLayer = spreadFrom.peekTopStratum().getLayer();
                 // Wind erosion
                 if (eb.getSediments() == 0 && !spreadFrom.hasOcean()
-                        && spreadFrom.getMoltenRockFromSurface() < 1) {
+                        && spreadFrom.getMoltenRockFromSurface() < 1000) {
 
-                    rockMass = calcMass(height, instance().getCellArea(), MAFIC);
+                    rockMass = calcMass(height, instance().getCellArea(), rockType);
+                    Layer sedimentType;
+                    if (rockType.getSilicates() == Rich) {
+                        sedimentType = Layer.FELSIC;
+                    } else if (rockType.getSilicates() == Mix) {
+                        sedimentType = Layer.MFMIX;
+                    } else {
+                        sedimentType = Layer.MAFIC;
+                    }
+
                     rockMass = spreadFrom.erode(rockMass);
+                    sandMass = changeMass(rockMass, rockType, sedimentType);
 
-                    sandMass = changeMass(rockMass, rockLayer, MAFIC);
-
-                    eb.updateSurfaceSedimentMass(sandMass);
+                    eb.transferSediment(sedimentType, sandMass);
                 }
             }
 
@@ -381,7 +393,7 @@ public abstract class Geosphere extends Surface {
         public void spread(ArrayList<GeoCell> lowestList, GeoCell spreadFrom) {
 
             GeoCell lowestGeoCell;
-            SedimentBuffer eb = spreadFrom.getSedimentBuffer();
+            SedimentBuffer spreadFromEB = spreadFrom.getSedimentBuffer();
             SedimentBuffer lowestBuffer;
             float spreadFromHeight, lowestHeight, diff, mass;
 
@@ -395,19 +407,23 @@ public abstract class Geosphere extends Surface {
 
                 diff = clamp(diff, -lowestHeight, spreadFromHeight);
 
-                if (eb.getSediments() > 0) {
+                if (spreadFromEB.getSediments() > 0) {
 
-                    mass = calcMass(diff, instance().getCellArea(), MAFIC);
+                    Layer spreadFromSedType = spreadFromEB.getSedimentType();
+                    mass = calcMass(diff, instance().getCellArea(), spreadFromSedType);
                     mass = calcFlow(mass);
 
-                    eb.updateSurfaceSedimentMass(-mass);
+                    spreadFromEB.transferSediment(spreadFromSedType, -mass);
 
                     lowestBuffer = lowestGeoCell.getSedimentBuffer();
-                    lowestBuffer.updateSurfaceSedimentMass(mass);
+                    lowestBuffer.transferSediment(spreadFromSedType, mass);
                 }
             }
         }
 
+        /**
+         * As the mass increases the flow decreases.
+         */
         private float calcFlow(float mass) {
             return (float) Math.pow(90f * mass, 0.5f);
         }

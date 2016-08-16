@@ -51,7 +51,7 @@ public class GeoCell extends Mantel {
 
         protected final void init() {
             pendingSediments = 0;
-            sedimentType = null;
+            sedimentType = Layer.MAFIC;
         }
 
         /**
@@ -209,11 +209,9 @@ public class GeoCell extends Mantel {
 
     private long depositAgeTimeStamp;
 
-    private final static Integer[][] heightMap, strataMap, sedimentMap;
+    private final static Integer[][] heightMap, strataMap;
 
     public final static int MAX_HEIGHT_INDEX = 17;
-
-    public final static int MAX_SEDIMENT_INDEX = 17;
     /**
      * The ratio for indexing onto the height map array, by taking a cell height
      * and dividing it by this value will give the proper index to the height
@@ -221,16 +219,11 @@ public class GeoCell extends Mantel {
      */
     public static int heightIndexRatio = 17 / MAX_HEIGHT_INDEX;
 
-    public static int sedimentIndexRatio = 17 / MAX_SEDIMENT_INDEX;
-
     static {
         Color[] heightColors = {new Color(255, 255, 204), new Color(51, 153, 51),
             new Color(157, 166, 175), new Color(255, 255, 255)};
         heightMap = Tools.constructSamples(heightColors, MAX_HEIGHT_INDEX);
-
-        Color[] sedimentColors = {new Color(195, 195, 195, 0), new Color(195, 195, 195, 255), MAFIC.getColor()};
-        sedimentMap = Tools.constructSamples(sedimentColors, MAX_SEDIMENT_INDEX);
-
+        
         Layer[] layerTypes = Layer.values();
         strataMap = new Integer[layerTypes.length][4];
 
@@ -844,7 +837,7 @@ public class GeoCell extends Mantel {
     }
 
     public boolean hasOcean() {
-        return ((HydroCell) this).getOceanMass() > 0.001f;
+        return ((HydroCell) this).getOceanMass() > 1000;
     }
 
     public List<Integer[]> render(List<Integer[]> settings) {
@@ -869,11 +862,7 @@ public class GeoCell extends Mantel {
                         settings.add(strataMap[layerType.getID()]);
                     }
                     if (Geosphere.drawSediments) {
-                        float mass = getSedimentBuffer().getSediments();
-                        float depth = Tools.calcHeight(mass, instance().getCellArea(), MAFIC);
-                        int sedIndex = (int) (depth / sedimentIndexRatio);
-                        setting = sedIndex < MAX_SEDIMENT_INDEX ? sedIndex : MAX_SEDIMENT_INDEX - 1;
-                        settings.add(sedimentMap[setting]);
+
                     }
                 } else {
                     Integer[] c = {255, 0, 0, 250};

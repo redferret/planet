@@ -12,27 +12,23 @@ import static worlds.planet.enums.RockType.*;
  */
 public enum Layer {
 
-    /**
-     * Sand is formed when gravel breaks down, also from other rock types like
-     * sedimentary rocks.
-     *//**
-     * Sand is formed when gravel breaks down, also from other rock types like
-     * sedimentary rocks.
-     *//**
-     * Sand is formed when gravel breaks down, also from other rock types like
-     * sedimentary rocks.
-     *//**
-     * Sand is formed when gravel breaks down, also from other rock types like
-     * sedimentary rocks.
-     */
+//    MAFIC("Sediments that are derived from silicate poor igneous rock", 
+//            new Color(200, 200, 180), SEDIMENT, Poor, 0.00f, 1990f),
+//    
+//    MFMIX("Sediments that contain an intermidate amount of silicate", 
+//            new Color(236, 220, 165), SEDIMENT, Mix, 0, 1850f),
+//    
+//    FELSIC("Sediments that are derived from silicate rich rock", 
+//            new Color(245, 240, 207), SEDIMENT, Rich, 0, 1750f),
+    
     MAFIC("Sediments that are derived from silicate poor igneous rock", 
-            new Color(200, 200, 180), SEDIMENT, Poor, 0.00f, 1990f),
+            Color.CYAN, SEDIMENT, Poor, 0.00f, 1990f),
     
     MFMIX("Sediments that contain an intermidate amount of silicate", 
-            new Color(236, 220, 165), SEDIMENT, Mix, 0, 1850f),
+            Color.MAGENTA, SEDIMENT, Mix, 0, 1850f),
     
     FELSIC("Sediments that are derived from silicate rich rock", 
-            new Color(245, 240, 207), SEDIMENT, Rich, 0, 1750f),
+            Color.WHITE, SEDIMENT, Rich, 0, 1750f),
     
     /**
      * Soil is formed when life interacts with sediments and contains biomass.
