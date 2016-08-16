@@ -12,6 +12,9 @@ import worlds.planet.TestWorld;
 import worlds.planet.enums.Layer;
 import engine.gui.DisplayAdapter;
 import engine.surface.SurfaceMap;
+import engine.util.BasicTask;
+import engine.util.Delay;
+import engine.util.Task;
 import engine.util.Tools;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -63,21 +66,14 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
             surface.addToSurface(Layer.BASALT, 100000);
         }
         surface.getCellAt(0).remove(400000, false, true);
-        surface.getCellAt(0).add(Layer.GNEISS, 10000, true);
-        surface.getCellAt(0).add(Layer.SCHIST, 50000, true);
+        surface.getCellAt(0).add(Layer.GNEISS, 100000, true);
+        surface.getCellAt(0).add(Layer.SCHIST, 100000, true);
         surface.getCellAt(0).add(Layer.PHYLITE, 100000, true);
-        surface.getCellAt(0).add(Layer.SLATE, 200000, true);
-        surface.getCellAt(0).add(Layer.RHYOLITE, 250000, true);
+        surface.getCellAt(0).add(Layer.SLATE, 100000, true);
+        surface.getCellAt(0).add(Layer.MAFIC_SANDSTONE, 1000000, true);
         
-        surface.getCellAt(1).remove(400000, false, true);
-        surface.getCellAt(1).add(Layer.MAFIC_SANDSTONE, 1000000, true);
-        
-        surface.getCellAt(2).remove(400000, false, true);
-        surface.getCellAt(2).add(Layer.FELSIC_SANDSTONE, 1000000, true);
-        
-        surface.getCellAt(3).remove(400000, false, true);
-        surface.getCellAt(3).add(Layer.SHALE, 1000000, true);
-        
+//        surface.getCellAt(0).remove(400000, false, true);
+//        surface.getCellAt(0).add(Layer.MAFIC_SANDSTONE, 1000000, true);
         
         testWorld.setTimescale(Planet.TimeScale.Geological);
         Geosphere.heatDistributionCount = 100;
@@ -106,6 +102,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
         testWorld.getSurface().setDisplay(this);
         renderFrame = new Frame(SIZE, SIZE);
         renderFrame.registerMap(testWorld.getSurface());
+        testWorld.getSurface().addTaskToThreads(new AddRockToSurfaceCellTask());
     }
 
     @Override
@@ -130,6 +127,31 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
             }
             totalAvg /= SAMPLES;
         }
+    }
+
+    private class AddRockToSurfaceCellTask extends BasicTask {
+
+        private Delay delay;
+        
+        public AddRockToSurfaceCellTask() {
+            delay = new Delay(1);
+        }
+
+        @Override
+        public void perform() {
+            if (delay.check())
+                testWorld.getSurface().getCellAt(0).add(Layer.MAFIC_SANDSTONE, 3000, true);
+        }
+
+        @Override
+        public void after() {
+        }
+
+        @Override
+        public void before() {
+        }
+        
+
     }
 
     /* **************************** Keyboard ******************************/
@@ -255,7 +277,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
             int windowWidth = getWidth(),
                     windowHeight = getHeight(), cutToolWidth = 50;
             int cellWidth = windowWidth / cutToolWidth, cx = viewX, cy = viewY;
-            final int MAX_THICKNESS = 10;
+            final int MAX_THICKNESS = 15;
 
             double layerThickness, cellThicknessRatio, startDrawHeight;
 
@@ -279,7 +301,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
                 if (cell != null) {
 
                     cellThicknessRatio = ((float) windowHeight / MAX_THICKNESS);
-                    startDrawHeight = (MAX_THICKNESS - cell.getHeight());
+                    startDrawHeight = (MAX_THICKNESS - cell.getHeight()) - 5;
                     startDrawHeight *= cellThicknessRatio;
 
                     // Draw Ocean
