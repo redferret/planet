@@ -95,7 +95,7 @@ public enum Layer {
      * spots like Hawaii, usually extrusive.
      */
     BASALT("Basalt, Silicate Poor Extrusive Igneous", 
-            new Color(127, 127, 127), IGNEOUS, Poor, 0.17f, 2990f),
+            new Color(70, 70, 70), IGNEOUS, Poor, 0.17f, 2990f),
     /**
      * Rhyolite is from explosive extrusive volcanoes that are silicate rich, 
      * usually extrusive
@@ -113,7 +113,7 @@ public enum Layer {
      * A silicate poor intrusive igneous rock that cooled slowly.
      */
     GABBRO("Gabbro, Silicate Poor Intrusive Igneous", 
-            new Color(195, 195, 195), IGNEOUS, Poor, 0.19f, 3200f),
+            new Color(140, 140, 140), IGNEOUS, Poor, 0.19f, 3200f),
     
     /**
      * A Silicate intermediate intrusive igneous rock that cooled slowly.
