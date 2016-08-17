@@ -26,11 +26,9 @@ import static engine.util.Tools.changeMass;
 import static engine.util.Tools.checkBounds;
 import static engine.util.Tools.clamp;
 
-import static worlds.planet.Planet.instance;
 import static worlds.planet.Planet.TimeScale.Geological;
 import static worlds.planet.Planet.TimeScale.None;
 import static worlds.planet.Planet.instance;
-import static worlds.planet.cells.HydroCell.minAngle;
 import static worlds.planet.enums.Layer.BASALT;
 import static worlds.planet.enums.Layer.MAFICMOLTENROCK;
 import static worlds.planet.enums.SilicateContent.Mix;
@@ -533,7 +531,7 @@ public abstract class Geosphere extends Surface {
         private Delay mantelHeatingDelay;
 
         public HeatMantel() {
-            mantelHeatingDelay = new Delay(25);
+            mantelHeatingDelay = new Delay(20);
         }
 
         @Override
@@ -555,7 +553,7 @@ public abstract class Geosphere extends Surface {
             if (cell.checkExtrusive()) {
                 cell.putMoltenRockToSurface(averageVolcanicMass);
                 cell.cool(volcanicHeatLoss);
-                cell.addOceanMass(5000f);
+                cell.addOceanMass(15000f);
             }
             if (cell.checkIntrusive()){
                 cell.add(Layer.GABBRO, 15000, false);
