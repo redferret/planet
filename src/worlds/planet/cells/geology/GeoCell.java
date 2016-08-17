@@ -72,12 +72,12 @@ public class GeoCell extends Mantel {
                 sedimentType = type;
             }else{
                 if (sedimentType == Layer.MAFIC){
-                    if (type == Layer.MFMIX || type == Layer.FELSIC){
-                        sedimentType = Layer.MFMIX;
+                    if (type == Layer.MIX || type == Layer.FELSIC){
+                        sedimentType = Layer.MIX;
                     }
                 }else if (sedimentType == Layer.FELSIC){
-                    if (type == Layer.MFMIX || type == Layer.MAFIC){
-                        sedimentType = Layer.MFMIX;
+                    if (type == Layer.MIX || type == Layer.MAFIC){
+                        sedimentType = Layer.MIX;
                     }
                 }else{
                     sedimentType = type;
@@ -358,15 +358,19 @@ public class GeoCell extends Mantel {
      * Adds or removes molten rock from this cell. The total mass and volume of
      * this cell is effected by this addition or subtraction.
      *
-     * @param mass The amount of molten rock being added.
+     * @param mass The amount of molten rock being added, always positive.
+     * @return 
      */
-    public void putMoltenRockToSurface(float mass) {
+    public float putMoltenRockToSurface(float mass) {
         moltenRockSurfaceMass += mass;
         if (moltenRockSurfaceMass < 0){
+            float temp = moltenRockSurfaceMass;
+            updateMV(moltenRockSurfaceMass, MAFICMOLTENROCK);
             moltenRockSurfaceMass = 0;
-            return;
+            return -temp;
         }
         updateMV(mass, MAFICMOLTENROCK);
+        return mass < 0 ? -mass : mass;
     }
 
     /**

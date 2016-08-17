@@ -105,14 +105,14 @@ public class HydroCell extends GeoCell {
                 sedimentType = sb.getSedimentType();
 
                 if (sedimentType != null) {
-                    if (sb.getSediments() < Tools.calcMass(0.1f, area, sedimentType)) {
+                    if (sb.getSediments() < 1000) {
 
                         Layer rockType = peekTopStratum().getLayer();
 
                         if (rockType.getSilicates() == Rich) {
                             sedimentType = Layer.FELSIC;
                         } else if (rockType.getSilicates() == Mix) {
-                            sedimentType = Layer.MFMIX;
+                            sedimentType = Layer.MIX;
                         } else {
                             sedimentType = Layer.MAFIC;
                         }
@@ -168,12 +168,12 @@ public class HydroCell extends GeoCell {
                 sedimentType = type;
             }else{
                 if (sedimentType == Layer.MAFIC){
-                    if (type == Layer.MFMIX || type == Layer.FELSIC){
-                        sedimentType = Layer.MFMIX;
+                    if (type == Layer.MIX || type == Layer.FELSIC){
+                        sedimentType = Layer.MIX;
                     }
                 }else if (sedimentType == Layer.FELSIC){
-                    if (type == Layer.MFMIX || type == Layer.MAFIC){
-                        sedimentType = Layer.MFMIX;
+                    if (type == Layer.MIX || type == Layer.MAFIC){
+                        sedimentType = Layer.MIX;
                     }
                 }else{
                     sedimentType = type;

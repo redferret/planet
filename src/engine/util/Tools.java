@@ -11,8 +11,6 @@ import worlds.planet.enums.Layer;
 import worlds.planet.cells.geology.GeoCell;
 import worlds.planet.surface.PlanetSurface;
 
-import static engine.surface.SurfaceMap.DIR_X_INDEX;
-import static engine.surface.SurfaceMap.DIR_Y_INDEX;
 
 /**
  * A utility class for the system.
@@ -206,6 +204,9 @@ public class Tools {
         int tx, ty, mx, my;
         PlanetSurface surface = (PlanetSurface) Planet.instance().getSurface();
 
+        final int[] DIR_X_INDEX = {-1, 0, 1, 1, 1, 0, -1, -1};
+        final int[] DIR_Y_INDEX = {-1, -1, -1, 0, 1, 1, 1, 0};
+        
         int x = central.getX(), y = central.getY();
         int xl = DIR_X_INDEX.length;
 

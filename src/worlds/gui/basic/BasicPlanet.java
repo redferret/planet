@@ -242,7 +242,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
             int windowWidth = getWidth(),
                     windowHeight = getHeight(), cutToolWidth = 50;
             int cellWidth = windowWidth / cutToolWidth, cx = viewX, cy = viewY;
-            final int MAX_THICKNESS = 6;
+            final int MAX_THICKNESS = 8;
 
             double layerThickness, cellThicknessRatio, startDrawHeight;
 

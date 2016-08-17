@@ -29,6 +29,8 @@ import static engine.util.Tools.clamp;
 import static worlds.planet.Planet.instance;
 import static worlds.planet.Planet.TimeScale.Geological;
 import static worlds.planet.Planet.TimeScale.None;
+import static worlds.planet.Planet.instance;
+import static worlds.planet.cells.HydroCell.minAngle;
 import static worlds.planet.enums.Layer.BASALT;
 import static worlds.planet.enums.Layer.MAFICMOLTENROCK;
 import static worlds.planet.enums.SilicateContent.Mix;
@@ -70,9 +72,9 @@ public abstract class Geosphere extends Surface {
 
     static {
         heatDistributionCount = 5;
-        thermalInc = 100;
+        thermalInc = 150;
         volcanicHeatLoss = 50;
-        averageVolcanicMass = 500000;
+        averageVolcanicMass = 1000000;
         rand = new Random();
         drawSediments = true;
     }
@@ -84,8 +86,7 @@ public abstract class Geosphere extends Surface {
         produceTasks(new AeolianFactory());
         produceTasks(new SedimentationFactory());
         produceTasks(new MetamorphicFactory());
-        produceTasks(new AeolianSpreadFactory());
-        produceTasks(new WaveErosionFactory());
+        produceTasks(new SedimentSpreadFactory());
         addTask(new HeatMantel());
     }
 
@@ -329,7 +330,7 @@ public abstract class Geosphere extends Surface {
                     if (rockType.getSilicates() == Rich) {
                         sedimentType = Layer.FELSIC;
                     } else if (rockType.getSilicates() == Mix) {
-                        sedimentType = Layer.MFMIX;
+                        sedimentType = Layer.MIX;
                     } else {
                         sedimentType = Layer.MAFIC;
                     }
@@ -354,46 +355,7 @@ public abstract class Geosphere extends Surface {
 
     }
 
-    private class WaveErosionFactory implements TaskFactory {
-
-        @Override
-        public Task buildTask() {
-            return new WaveErosionTask();
-        }
-        
-        private class WaveErosionTask implements Task {
-
-            private Delay delay;
-            
-            public WaveErosionTask() {
-                delay = new Delay(20);
-            }
-            
-            @Override
-            public boolean check() {
-                return false;
-            }
-            
-            @Override
-            public void before() {
-            }
-            
-            @Override
-            public void perform(int x, int y) {
-                
-            }
-
-            @Override
-            public void after() {
-            }
-
-            
-            
-        }
-        
-    }
-    
-    private class AeolianSpreadFactory implements TaskFactory {
+    private class SedimentSpreadFactory implements TaskFactory {
 
         @Override
         public Task buildTask() {
@@ -418,12 +380,15 @@ public abstract class Geosphere extends Surface {
             }
 
             public void spreadToLowest(GeoCell spreadFrom) {
+                int maxCellCount;
                 if (!spreadFrom.hasOcean()) {
-                    int maxCellCount = 8;
-                    ArrayList<GeoCell> lowestList = new ArrayList<>(maxCellCount);
-                    getLowestCells(spreadFrom, lowestList, maxCellCount);
-                    spread(lowestList, spreadFrom);
+                    maxCellCount = 8;
+                }else{
+                    maxCellCount = 3;
                 }
+                ArrayList<GeoCell> lowestList = new ArrayList<>(maxCellCount);
+                getLowestCells(spreadFrom, lowestList, maxCellCount);
+                spread(lowestList, spreadFrom);
             }
 
             /**
@@ -457,6 +422,9 @@ public abstract class Geosphere extends Surface {
                     diff = clamp(diff, -lowestHeight, spreadFromHeight);
 
                     if (spreadFromEB.getSediments() > 0) {
+                        if (spreadFrom.hasOcean()){
+                            diff *= 0.05f;
+                        }
                         mass = calcMass(diff, instance().getCellArea(), spreadFromSedType);
                         mass = calcFlow(mass);
 
@@ -565,7 +533,7 @@ public abstract class Geosphere extends Surface {
         private Delay mantelHeatingDelay;
 
         public HeatMantel() {
-            mantelHeatingDelay = new Delay(50);
+            mantelHeatingDelay = new Delay(25);
         }
 
         @Override
@@ -584,10 +552,14 @@ public abstract class Geosphere extends Surface {
             PlanetCell cell = getCellAt(index);
             cell.addHeat(thermalInc);
 
-            if (cell.checkVolcano()) {
+            if (cell.checkExtrusive()) {
                 cell.putMoltenRockToSurface(averageVolcanicMass);
                 cell.cool(volcanicHeatLoss);
-                cell.addOceanMass(65000f);
+                cell.addOceanMass(5000f);
+            }
+            if (cell.checkIntrusive()){
+                cell.add(Layer.GABBRO, 15000, false);
+                cell.cool(volcanicHeatLoss / 2);
             }
         }
 
@@ -643,7 +615,7 @@ public abstract class Geosphere extends Surface {
                 }
                 eb.applyBuffer();
                 height = calcHeight(eb.getSediments(), instance().getCellArea(), sedimentType);
-                float maxHeight = calcDepth(sedimentType, 9.8f, 1500);
+                float maxHeight = calcDepth(sedimentType, 9.8f, 500);
                 
                 if (height > maxHeight) {
 
@@ -682,7 +654,7 @@ public abstract class Geosphere extends Surface {
 
                 GeoCell toUpdate = getCellAt(x, y);
 
-                if (toUpdate.getMoltenRockFromSurface() > 1000) {
+                if (toUpdate.getMoltenRockFromSurface() > 10000) {
                     int maxCellCount = 7;
                     ArrayList<GeoCell> lowestList = new ArrayList<>(maxCellCount);
                     getLowestCells(toUpdate, lowestList, maxCellCount);
@@ -696,24 +668,34 @@ public abstract class Geosphere extends Surface {
                             float lowestHeight = lowest.getHeightWithoutOceans() / 2.5f;
                             float diff = (currentCellHeight - lowestHeight) / 2.5f;
 
+                            double theta = Math.atan((currentCellHeight - lowestHeight) / instance().getCellLength());
+                            float angle = (float) Math.sin(theta);
+
                             diff = clamp(diff, -lowestHeight, currentCellHeight);
 
                             float mass = calcMass(diff, instance().getCellArea(), MAFICMOLTENROCK);
-
-                            toUpdate.putMoltenRockToSurface(-mass);
+                            mass = toUpdate.putMoltenRockToSurface(-mass)/2f;
+                            if (angle >= 0.71f) {
+                                mass = changeMass(mass * angle * 200f, MAFICMOLTENROCK, BASALT);
+                            }else{
+                                float rate = toUpdate.hasOcean() ? 0.50f : 0.05f;
+                                float massToSolidify = toUpdate.getMoltenRockFromSurface() * rate;
+                                toUpdate.putMoltenRockToSurface(-massToSolidify);
+                                massToSolidify = changeMass(massToSolidify, MAFICMOLTENROCK, BASALT);
+                                toUpdate.add(BASALT, massToSolidify, true);
+                                toUpdate.recalculateHeight();
+                            }
+                            float carvedOutMass = toUpdate.remove(mass, true, true);
                             float sediments = lowest.getSedimentBuffer().removeAllSediments();
-                            lowest.putMoltenRockToSurface(mass + sediments);
+                            float totalMoved = carvedOutMass + sediments + mass;
+                            
+                            lowest.putMoltenRockToSurface(totalMoved);
+
+                            
                         }
                     }
 
-                    float rate = toUpdate.hasOcean() ? 0.50f : 0.35f;
-
-                    //solidify the rock
-                    float massToSolidify = toUpdate.getMoltenRockFromSurface() * rate;
-                    toUpdate.putMoltenRockToSurface(-massToSolidify);
-                    massToSolidify = changeMass(massToSolidify, MAFICMOLTENROCK, BASALT);
-                    toUpdate.add(BASALT, massToSolidify, true);
-                    toUpdate.recalculateHeight();
+                    
                 } else {
                     float massToSolidify = toUpdate.removeAllMoltenRock();
                     massToSolidify = changeMass(massToSolidify, MAFICMOLTENROCK, BASALT);

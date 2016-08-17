@@ -15,7 +15,7 @@ public enum Layer {
     MAFIC("Sediments that are derived from silicate poor igneous rock", 
             new Color(200, 200, 180), SEDIMENT, Poor, 0.00f, 1990f),
     
-    MFMIX("Sediments that contain an intermidate amount of silicate", 
+    MIX("Sediments that contain an intermidate amount of silicate", 
             new Color(236, 220, 165), SEDIMENT, Mix, 0, 1850f),
     
     FELSIC("Sediments that are derived from silicate rich rock", 
