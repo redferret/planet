@@ -44,7 +44,7 @@ public abstract class Atmosphere extends Hydrosphere {
             private float totalEvaportatedMass;
             
             public SimpleClimateTask() {
-                delay = new Delay(1);
+                delay = new Delay(10);
                 totalEvaportatedMass = 0;
                 evaporate = true;
             }
@@ -57,7 +57,7 @@ public abstract class Atmosphere extends Hydrosphere {
             public void perform(int x, int y) {
                 if (evaporate){
                     PlanetCell cell = getCellAt(x, y);
-                    float amount = 0.001f;
+                    float amount = 25;
                     if (cell.hasOcean()){
                         float returnValue = -cell.addOceanMass(-amount);
                         totalEvaportatedMass += returnValue;
