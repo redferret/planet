@@ -654,8 +654,8 @@ public abstract class Geosphere extends Surface {
 
                 GeoCell toUpdate = getCellAt(x, y);
 
-                if (toUpdate.getMoltenRockFromSurface() > 10000) {
-                    int maxCellCount = 7;
+                if (toUpdate.getMoltenRockFromSurface() > 7000) {
+                    int maxCellCount = 8;
                     ArrayList<GeoCell> lowestList = new ArrayList<>(maxCellCount);
                     getLowestCells(toUpdate, lowestList, maxCellCount);
 
@@ -690,12 +690,8 @@ public abstract class Geosphere extends Surface {
                             float totalMoved = carvedOutMass + sediments + mass;
                             
                             lowest.putMoltenRockToSurface(totalMoved);
-
-                            
                         }
                     }
-
-                    
                 } else {
                     float massToSolidify = toUpdate.removeAllMoltenRock();
                     massToSolidify = changeMass(massToSolidify, MAFICMOLTENROCK, BASALT);
