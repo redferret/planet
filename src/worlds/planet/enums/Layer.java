@@ -5,8 +5,8 @@ import static worlds.planet.enums.SilicateContent.*;
 import static worlds.planet.enums.RockType.*;
 
 /**
- * Describes what type of layer a stratum is. The layer describes density,
- * color, the name (String), an erosion factor, an ID, and a rock type.
+ * Describes what type of layer rock is. The layer describes density,
+ * color, a description (name), an erosion factor, an ID, and a rock type.
  *
  * @author Richard DeSilvey
  */
