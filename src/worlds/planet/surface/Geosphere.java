@@ -85,7 +85,6 @@ public abstract class Geosphere extends Surface {
         produceTasks(new SedimentationFactory());
         produceTasks(new MetamorphicFactory());
         produceTasks(new AeolianSpreadFactory());
-        produceTasks(new WaveErosionFactory());
         addTask(new HeatMantel());
     }
 
@@ -110,14 +109,44 @@ public abstract class Geosphere extends Surface {
         }
     }
 
+    public void getRightCells(GeoCell from, List<GeoCell> cellList){
+        getCells(from, cellList, 2, 4);
+    }
+    
+    public void getCells(GeoCell from, List<GeoCell> lowestList, int lower, int upper){
+        int tx, ty, mx, my;
+        int x = from.getX(), y = from.getY();
+        GeoCell selectedCell;
+        final int[] DIR_X_INDEX = {-1, 0, 1, 1, 1, 0, -1, -1};
+        final int[] DIR_Y_INDEX = {-1, -1, -1, 0, 1, 1, 1, 0};
+        for (int s = lower; s < upper; s++) {
+
+            tx = x + DIR_X_INDEX[s];
+            ty = y + DIR_Y_INDEX[s];
+
+            // Check the boundaries
+            mx = checkBounds(tx, getGridWidth());
+            my = checkBounds(ty, getGridWidth());
+
+            selectedCell = getCellAt(mx, my);
+
+            lowestList.add(selectedCell);
+        }
+    }
+    
     public void getLowestCells(GeoCell from, List<GeoCell> lowestList, int max) {
+        getLowestCells(from, lowestList, max, 0, 8);
+    }
+    
+    public void getLowestCells(GeoCell from, List<GeoCell> lowestList, int max, int lower, int upper) {
 
         int tx, ty, mx, my;
         int x = from.getX(), y = from.getY();
-        int xl = DIR_X_INDEX.length;
         GeoCell selectedCell;
-
-        for (int s = 0; s < xl; s++) {
+        final int[] DIR_X_INDEX = {-1, 0, 1, 1, 1, 0, -1, -1};
+        final int[] DIR_Y_INDEX = {-1, -1, -1, 0, 1, 1, 1, 0};
+        
+        for (int s = lower; s < upper; s++) {
 
             tx = x + DIR_X_INDEX[s];
             ty = y + DIR_Y_INDEX[s];
@@ -353,45 +382,6 @@ public abstract class Geosphere extends Surface {
         }
 
     }
-
-    private class WaveErosionFactory implements TaskFactory {
-
-        @Override
-        public Task buildTask() {
-            return new WaveErosionTask();
-        }
-        
-        private class WaveErosionTask implements Task {
-
-            private Delay delay;
-            
-            public WaveErosionTask() {
-                delay = new Delay(20);
-            }
-            
-            @Override
-            public boolean check() {
-                return false;
-            }
-            
-            @Override
-            public void before() {
-            }
-            
-            @Override
-            public void perform(int x, int y) {
-                
-            }
-
-            @Override
-            public void after() {
-            }
-
-            
-            
-        }
-        
-    }
     
     private class AeolianSpreadFactory implements TaskFactory {
 
@@ -418,24 +408,27 @@ public abstract class Geosphere extends Surface {
             }
 
             public void spreadToLowest(GeoCell spreadFrom) {
+                int maxCellCount = 5;
+                List<GeoCell> lowestList = new ArrayList<>(maxCellCount);
+                
                 if (!spreadFrom.hasOcean()) {
-                    int maxCellCount = 8;
-                    ArrayList<GeoCell> lowestList = new ArrayList<>(maxCellCount);
+                    getRightCells(spreadFrom, lowestList);
+                }else{
                     getLowestCells(spreadFrom, lowestList, maxCellCount);
-                    spread(lowestList, spreadFrom);
                 }
+                spread(lowestList, spreadFrom);
             }
 
             /**
              * Selects a random cell from the given list and spreads the
              * sediments to that cell.
              *
-             * @param lowestList The list of lowest cells from the central cell
+             * @param toCellList The list of toCell cells from the central cell
              * @param spreadFrom The central cell
              */
-            public void spread(ArrayList<GeoCell> lowestList, GeoCell spreadFrom) {
+            public void spread(List<GeoCell> toCellList, GeoCell spreadFrom) {
 
-                GeoCell lowestGeoCell;
+                GeoCell toCellGeoCell;
                 SedimentBuffer spreadFromEB = spreadFrom.getSedimentBuffer();
                 Layer spreadFromSedType = spreadFromEB.getSedimentType();
 
@@ -443,18 +436,18 @@ public abstract class Geosphere extends Surface {
                     return;
                 }
 
-                SedimentBuffer lowestBuffer;
-                float spreadFromHeight, lowestHeight, diff, mass;
+                SedimentBuffer toCellBuffer;
+                float spreadFromHeight, toCellHeight, diff, mass;
 
-                if (lowestList.size() > 0) {
+                if (toCellList.size() > 0) {
 
-                    lowestGeoCell = lowestList.get(random.nextInt(lowestList.size()));
+                    toCellGeoCell = toCellList.get(random.nextInt(toCellList.size()));
                     spreadFromHeight = spreadFrom.getHeightWithoutOceans() / 2.5f;
-                    lowestHeight = lowestGeoCell.getHeightWithoutOceans() / 2.5f;
+                    toCellHeight = toCellGeoCell.getHeightWithoutOceans() / 2.5f;
 
-                    diff = (spreadFromHeight - lowestHeight) / 2.5f;
+                    diff = (spreadFromHeight - toCellHeight) / 2.5f;
 
-                    diff = clamp(diff, -lowestHeight, spreadFromHeight);
+                    diff = clamp(diff, -toCellHeight, spreadFromHeight);
 
                     if (spreadFromEB.getSediments() > 0) {
                         mass = calcMass(diff, instance().getCellArea(), spreadFromSedType);
@@ -462,12 +455,13 @@ public abstract class Geosphere extends Surface {
 
                         spreadFromEB.transferSediment(spreadFromSedType, -mass);
 
-                        lowestBuffer = lowestGeoCell.getSedimentBuffer();
-                        lowestBuffer.transferSediment(spreadFromSedType, mass);
+                        toCellBuffer = toCellGeoCell.getSedimentBuffer();
+                        toCellBuffer.transferSediment(spreadFromSedType, mass);
                     }
                 }
             }
 
+            
             /**
              * As the mass increases the flow decreases.
              */
