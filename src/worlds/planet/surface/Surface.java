@@ -130,7 +130,9 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
         updatePlanetAge();
 
         if (display != null) {
+            pauseSurfaceThreads();
             display.update();
+            playSurfaceThreads();
         }
         if (threadAverageDelay.check()) {
             super.update();
