@@ -1,6 +1,6 @@
 package engine.surface;
 
-import engine.cells.Cell;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -14,8 +14,7 @@ import engine.util.Boundaries;
 import engine.util.MThread;
 import engine.util.Task;
 import engine.util.TaskFactory;
-import worlds.planet.cells.PlanetCell;
-
+import engine.cells.Cell;
 /**
  * The SurfaceMap is a generic map for all the systems on the planet. The map
  * contains generic cells. The RenderInterface is not required for this class

@@ -89,11 +89,12 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
         ageUpdateDelay = new Delay(ageStepDelay);
         setupThreads(threadCount, threadsDelay);
         setupDefaultMap(planetWidth, threadCount);
-        set();
         mhFactory = new MinMaxHeightFactory();
         produceTasks(mhFactory);
         Boundaries bounds = new Boundaries(0, planetWidth, 0, planetWidth);
         generalTasks = new TaskManager(bounds);
+        setThreadsAsContinuous(false);
+        set();
     }
 
     private void set() {
@@ -130,9 +131,8 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
         updatePlanetAge();
 
         if (display != null) {
-            pauseSurfaceThreads();
             display.update();
-            playSurfaceThreads();
+            while(synchronizeThreads()){}
         }
         if (threadAverageDelay.check()) {
             super.update();
