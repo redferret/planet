@@ -25,6 +25,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.swing.JPanel;
 import worlds.planet.cells.PlanetCell;
@@ -125,38 +126,38 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
 
         @Override
         public void keyPressed(KeyEvent e) {
-            moveCrossSection(e);
+            checkKeys(e);
         }
         
-        private void moveCrossSection(KeyEvent e){
+        private void checkKeys(KeyEvent e){
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_UP:
-                    int curY = crossSection.getViewY();
+                    int curY = crossSection.viewY;
                     if (--curY < 0){
                         curY = testWorld.getSurface().getGridWidth() - 1;
                     }
-                    crossSection.setViewY(curY);
+                    crossSection.viewY = curY;
                     break;
                 case KeyEvent.VK_DOWN:
-                    curY = crossSection.getViewY();
+                    curY = crossSection.viewY;
                     if (++curY >= testWorld.getSurface().getGridWidth()){
                         curY = 0;
                     }
-                    crossSection.setViewY(curY);
+                    crossSection.viewY = curY;
                     break;
                 case KeyEvent.VK_LEFT:
-                    int curX = crossSection.getViewX();
+                    int curX = crossSection.viewX;
                     if (--curX < 0){
                         curX = testWorld.getSurface().getGridWidth() - 1;
                     }
-                    crossSection.setViewX(curX);
+                    crossSection.viewX = curX;
                     break;
                 case KeyEvent.VK_RIGHT:
-                    curX = crossSection.getViewX();
+                    curX = crossSection.viewX;
                     if (++curX < 0){
                         curX = testWorld.getSurface().getGridWidth() - 1;
                     }
-                    crossSection.setViewX(curX);
+                    crossSection.viewX = curX;
                     break;
             }
         }
@@ -197,6 +198,15 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
                         p.pause();
                     }
                     break;
+                case KeyEvent.VK_NUMPAD7:
+                    crossSection.LAYER_THICKNESS--;
+                    if (crossSection.LAYER_THICKNESS < 1){
+                        crossSection.LAYER_THICKNESS = 1;
+                    }
+                    break;
+                case KeyEvent.VK_NUMPAD4:
+                    crossSection.LAYER_THICKNESS++;
+                    break;
             }
         }
 
@@ -205,26 +215,14 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
     /* **************************** Panels ********************************/
     private class StrataFrame extends JPanel {
 
-        private int viewX = 0, viewY = 0;
+        public int viewX = 0, viewY = 0;
+        public int LAYER_THICKNESS = 8;
         
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
             draw((Graphics2D) g);
             setBackground(Color.BLACK);
-        }
-
-        public int getViewX() {
-            return viewX;
-        }
-        public int getViewY() {
-            return viewY;
-        }
-        public void setViewX(int viewX) {
-            this.viewX = viewX;
-        }
-        public void setViewY(int viewY) {
-            this.viewY = viewY;
         }
         
         public void draw(Graphics2D g2d) {
@@ -242,7 +240,6 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
             int windowWidth = getWidth(),
                     windowHeight = getHeight(), cutToolWidth = 50;
             int cellWidth = windowWidth / cutToolWidth, cx = viewX, cy = viewY;
-            final int MAX_THICKNESS = 8;
 
             double layerThickness, cellThicknessRatio, startDrawHeight;
 
@@ -265,8 +262,8 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
 
                 if (cell != null) {
 
-                    cellThicknessRatio = ((float) windowHeight / MAX_THICKNESS);
-                    startDrawHeight = (MAX_THICKNESS - cell.getHeight());
+                    cellThicknessRatio = ((float) windowHeight / LAYER_THICKNESS);
+                    startDrawHeight = (LAYER_THICKNESS - cell.getHeight());
                     startDrawHeight *= cellThicknessRatio;
 
                     // Draw Ocean
@@ -357,8 +354,8 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
                 renderEachImage(g2d);
             }
             g2d.setColor(Color.BLACK);
-            int vx = crossSection.getViewX();
-            int vy = crossSection.getViewY();
+            int vx = crossSection.viewX;
+            int vy = crossSection.viewY;
             
             int x = (int)(vx * (512f/(128f)));
             int y = (int)(vy * (512f/(128f)));
