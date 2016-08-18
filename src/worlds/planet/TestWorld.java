@@ -7,15 +7,15 @@ package worlds.planet;
  */
 public class TestWorld extends Planet {
 
-    private static final int CELL_SIZE_M, DEFAULT_SIZE,
+    private static final int CELL_SIZE, DEFAULT_SIZE,
             SURFACE_THREAD_DELAY, DEFAULT_THREAD_COUNT, PLANET_SURFACE_DELAY;
 
     static {
-        CELL_SIZE_M = 10;
-        DEFAULT_THREAD_COUNT = 1;
+        CELL_SIZE = 10;
+        DEFAULT_THREAD_COUNT = 2;
         SURFACE_THREAD_DELAY = 1;
         PLANET_SURFACE_DELAY = 250;
-        DEFAULT_SIZE = 64;
+        DEFAULT_SIZE = 128;
     }
 
     /**
@@ -43,7 +43,7 @@ public class TestWorld extends Planet {
      * @param threadCount The number of thread divisions
      */
     public TestWorld(int worldSize, int threadCount) {
-        super(worldSize * threadCount, CELL_SIZE_M, PLANET_SURFACE_DELAY, SURFACE_THREAD_DELAY, threadCount);
+        super(worldSize * threadCount, CELL_SIZE, PLANET_SURFACE_DELAY, SURFACE_THREAD_DELAY, threadCount);
         startThreads();
     }
 }
