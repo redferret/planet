@@ -412,10 +412,9 @@ public abstract class Geosphere extends Surface {
                 if (lowestList.size() > 0) {
 
                     lowestGeoCell = lowestList.get(random.nextInt(lowestList.size()));
-                    spreadFromHeight = spreadFrom.getHeightWithoutOceans() / 2.5f;
-                    lowestHeight = lowestGeoCell.getHeightWithoutOceans() / 2.5f;
-
-                    diff = (spreadFromHeight - lowestHeight) / 2.5f;
+                    spreadFromHeight = spreadFrom.getHeightWithoutOceans() / 2f;
+                    lowestHeight = lowestGeoCell.getHeightWithoutOceans() / 2f;
+                    diff = (spreadFromHeight - lowestHeight) / 2f;
 
                     diff = clamp(diff, -lowestHeight, spreadFromHeight);
 
@@ -553,10 +552,10 @@ public abstract class Geosphere extends Surface {
             if (cell.checkExtrusive()) {
                 cell.putMoltenRockToSurface(averageVolcanicMass);
                 cell.cool(volcanicHeatLoss);
-                cell.addOceanMass(15000f);
+                cell.addMoisture(8000000);
             }
             if (cell.checkIntrusive()){
-                cell.add(Layer.GABBRO, 15000, false);
+                cell.add(Layer.GABBRO, 16000, false);
                 cell.cool(volcanicHeatLoss / 2);
             }
         }
@@ -613,7 +612,7 @@ public abstract class Geosphere extends Surface {
                 }
                 eb.applyBuffer();
                 height = calcHeight(eb.getSediments(), instance().getCellArea(), sedimentType);
-                float maxHeight = calcDepth(sedimentType, 9.8f, 500);
+                float maxHeight = calcDepth(sedimentType, 9.8f, 250);
                 
                 if (height > maxHeight) {
 
@@ -652,7 +651,7 @@ public abstract class Geosphere extends Surface {
 
                 GeoCell toUpdate = getCellAt(x, y);
 
-                if (toUpdate.getMoltenRockFromSurface() > 7000) {
+                if (toUpdate.getMoltenRockFromSurface() > 8000) {
                     int maxCellCount = 8;
                     ArrayList<GeoCell> lowestList = new ArrayList<>(maxCellCount);
                     getLowestCells(toUpdate, lowestList, maxCellCount);
@@ -662,9 +661,9 @@ public abstract class Geosphere extends Surface {
                         GeoCell lowest = lowestList.get(rIndex);
 
                         if (lowest != null && lowest != toUpdate) {
-                            float currentCellHeight = toUpdate.getHeightWithoutOceans() / 2.5f;
-                            float lowestHeight = lowest.getHeightWithoutOceans() / 2.5f;
-                            float diff = (currentCellHeight - lowestHeight) / 2.5f;
+                            float currentCellHeight = toUpdate.getHeightWithoutOceans() / 2f;
+                            float lowestHeight = lowest.getHeightWithoutOceans() / 2f;
+                            float diff = (currentCellHeight - lowestHeight) / 2f;
 
                             double theta = Math.atan((currentCellHeight - lowestHeight) / instance().getCellLength());
                             float angle = (float) Math.sin(theta);

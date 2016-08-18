@@ -7,6 +7,9 @@ import engine.util.Task;
 import engine.util.TaskFactory;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
+import worlds.planet.cells.atmosphere.AtmoCell;
 import worlds.planet.enums.GasType;
 
 /**
@@ -31,7 +34,7 @@ public abstract class Atmosphere extends Hydrosphere {
     }
 
     private class SimpleClimateFactory implements TaskFactory {
-
+        
         @Override
         public Task buildTask() {
             return new SimpleClimateTask();
@@ -57,7 +60,12 @@ public abstract class Atmosphere extends Hydrosphere {
             public void perform(int x, int y) {
                 if (evaporate){
                     PlanetCell cell = getCellAt(x, y);
-                    float amount = 25;
+                    float amount = 32;
+                    Stream<AtmoCell.AirLayer> layers = cell.getAirLayersStream();
+                        layers.forEach(layer -> {
+                        totalEvaportatedMass += layer.getAirBuffer().getWaterVapor();
+                        layer.getAirBuffer().resetBuffer();
+                    });
                     if (cell.hasOcean()){
                         float returnValue = -cell.addOceanMass(-amount);
                         totalEvaportatedMass += returnValue;

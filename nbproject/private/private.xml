@@ -5,13 +5,15 @@
         <group>
             <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/src/worlds/planet/TestWorld.java</file>
             <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/src/worlds/planet/enums/Layer.java</file>
-            <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/src/engine/surface/SurfaceMap.java</file>
+            <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/src/worlds/planet/cells/atmosphere/AtmoCell.java</file>
             <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/src/worlds/planet/surface/Geosphere.java</file>
             <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/src/worlds/planet/cells/HydroCell.java</file>
+            <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/src/worlds/planet/cells/atmosphere/Gas.java</file>
             <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/src/worlds/planet/surface/Atmosphere.java</file>
             <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/src/worlds/planet/surface/Hydrosphere.java</file>
             <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/src/worlds/gui/basic/BasicPlanet.java</file>
             <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/src/worlds/planet/cells/geology/GeoCell.java</file>
+            <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/src/worlds/planet/cells/geology/Mantel.java</file>
         </group>
     </open-files>
 </project-private>

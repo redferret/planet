@@ -80,9 +80,9 @@ public class HydroCell extends GeoCell {
                 curCellHeight = getHeight();
 
                 // Move the water
-                differenceHeight = (curCellHeight - lowestHeight) / 2.5f;
-                curCellHeight = getHeight() / 2.5f;
-                lowestHeight = lowestCell.getHeight() / 2.5f;
+                differenceHeight = (curCellHeight - lowestHeight) / 2f;
+                curCellHeight = getHeight() / 2f;
+                lowestHeight = lowestCell.getHeight() / 2f;
 
                 differenceHeight = clamp(differenceHeight, -lowestHeight, curCellHeight);
                 area = instance().getCellArea();

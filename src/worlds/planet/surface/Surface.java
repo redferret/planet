@@ -93,7 +93,6 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
         produceTasks(mhFactory);
         Boundaries bounds = new Boundaries(0, planetWidth, 0, planetWidth);
         generalTasks = new TaskManager(bounds);
-        setThreadsAsContinuous(false);
         set();
     }
 
@@ -132,7 +131,6 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
 
         if (display != null) {
             display.update();
-            while(synchronizeThreads()){}
         }
         if (threadAverageDelay.check()) {
             super.update();
