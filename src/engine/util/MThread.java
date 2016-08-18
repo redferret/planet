@@ -87,7 +87,6 @@ public abstract class MThread extends Thread {
                 sleep(miliSeconds);
                 
                 if (!running || !continuous){
-                    running = false;
                     waiter.await();
                 }
             } catch (InterruptedException | BrokenBarrierException e) {
