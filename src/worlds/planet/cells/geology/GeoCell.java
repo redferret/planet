@@ -450,7 +450,9 @@ public class GeoCell extends Mantel {
      * it correctly to help save memory.</p>
      * <ul>
      * <li>If the top or bottom stratum is less than the amount then the top or
-     * bottom stratum is removed completely and the difference will be returned.
+     * bottom stratum is removed completely and this method will recur until
+     * the amount is 0 this will remove other layers too or just work on a 
+     * single thick layer.
      * Passing in a null type and a negative amount will remove from the top or
      * bottom layer.</li>
      *
