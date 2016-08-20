@@ -19,7 +19,7 @@ public class TestWorld extends Planet {
     }
 
     /**
-     * Constructs a default test world with a size of 256 with one thread.
+     * Constructs a default test world.
      */
     public TestWorld() {
         this(DEFAULT_THREAD_COUNT);
