@@ -137,6 +137,24 @@ public abstract class Geosphere extends Surface {
         }
     }
 
+    public static int MELT_PRESSURE;
+    public static int SEDIMENTARY_TO_METAMORPHIC;
+    public static int IGNEOUS_TO_METAMORPHIC;
+    public static int SLATE_TO_PHYLITE;
+    public static int PHYLITE_TO_SCHIST;
+    public static int SCHIST_TO_GNEISS;
+    public static float DEPTH_TO_CHANGE;
+
+    static {
+        MELT_PRESSURE = 85000;
+        SEDIMENTARY_TO_METAMORPHIC = 75000;
+        IGNEOUS_TO_METAMORPHIC = 82000;
+        SLATE_TO_PHYLITE = 78000;
+        PHYLITE_TO_SCHIST = 80000;
+        SCHIST_TO_GNEISS = 82000;
+        DEPTH_TO_CHANGE = 0.25f;
+    }
+
     private class MetamorphicFactory implements TaskFactory {
 
         @Override
@@ -201,7 +219,7 @@ public abstract class Geosphere extends Surface {
                     cell.add(type, mass, false);
                 }
                 
-                melt(cell, calcDepth(cell.getDensity(), 9.8f, 85000));
+                melt(cell, calcDepth(cell.getDensity(), 9.8f, MELT_PRESSURE));
             }
 
             @Override
@@ -218,7 +236,7 @@ public abstract class Geosphere extends Surface {
                 Stratum bottom = cell.peekBottomStratum();
                 Layer bottomType = bottom.getLayer();
 
-                massToChange = calcMass(0.25f, instance().getCellArea(), bottomType);
+                massToChange = calcMass(DEPTH_TO_CHANGE, instance().getCellArea(), bottomType);
                 massToChange = removeAndChangeMass(cell, massToChange, bottomType, metaType);
                 cell.add(metaType, massToChange, false);
             }
@@ -226,7 +244,7 @@ public abstract class Geosphere extends Surface {
             private Layer getMetaLayer(Layer bottomType, float pressure){
                 Layer metaType = null;
                 if (bottomType.getRockType() == RockType.SEDIMENTARY &&
-                        pressure >= 75000) {
+                        pressure >= SEDIMENTARY_TO_METAMORPHIC) {
                     if (bottomType == Layer.FELSIC_SANDSTONE) {
                         metaType = Layer.QUARTZITE;
                     } else if (bottomType == Layer.LIMESTONE) {
@@ -235,14 +253,14 @@ public abstract class Geosphere extends Surface {
                         metaType = Layer.SLATE;
                     }
                 } else if (bottomType.getRockType() == RockType.IGNEOUS &&
-                        pressure >= 82000){
+                        pressure >= IGNEOUS_TO_METAMORPHIC){
                     metaType = Layer.GNEISS;
                 } else {
-                    if (bottomType == Layer.SLATE && pressure >= 78000){
+                    if (bottomType == Layer.SLATE && pressure >= SLATE_TO_PHYLITE){
                         metaType = Layer.PHYLITE;
-                    }else if (bottomType == Layer.PHYLITE && pressure >= 80000){
+                    }else if (bottomType == Layer.PHYLITE && pressure >= PHYLITE_TO_SCHIST){
                         metaType = Layer.SCHIST;
-                    }else if (bottomType == Layer.SCHIST && pressure >= 82000){
+                    }else if (bottomType == Layer.SCHIST && pressure >= SCHIST_TO_GNEISS){
                         metaType = Layer.GNEISS;
                     }
                 }
@@ -266,7 +284,7 @@ public abstract class Geosphere extends Surface {
                 height = cell.getHeight();
 
                 if (height > maxHeight) {
-                    massToChange = calcMass(0.25f, instance().getCellArea(), bottomType);
+                    massToChange = calcMass(DEPTH_TO_CHANGE, instance().getCellArea(), bottomType);
                     cell.remove(massToChange, false, false);
                 }
             }
