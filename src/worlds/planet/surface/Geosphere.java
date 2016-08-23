@@ -137,7 +137,7 @@ public abstract class Geosphere extends Surface {
         }
     }
 
-    public static int MELT_PRESSURE;
+    public static int MELTING_PRESSURE;
     public static int SEDIMENTARY_TO_METAMORPHIC;
     public static int IGNEOUS_TO_METAMORPHIC;
     public static int SLATE_TO_PHYLITE;
@@ -146,7 +146,7 @@ public abstract class Geosphere extends Surface {
     public static float DEPTH_TO_CHANGE;
 
     static {
-        MELT_PRESSURE = 85000;
+        MELTING_PRESSURE = 85000;
         SEDIMENTARY_TO_METAMORPHIC = 75000;
         IGNEOUS_TO_METAMORPHIC = 82000;
         SLATE_TO_PHYLITE = 78000;
@@ -219,7 +219,7 @@ public abstract class Geosphere extends Surface {
                     cell.add(type, mass, false);
                 }
                 
-                melt(cell, calcDepth(cell.getDensity(), 9.8f, MELT_PRESSURE));
+                melt(cell, calcDepth(cell.getDensity(), 9.8f, MELTING_PRESSURE));
             }
 
             @Override
