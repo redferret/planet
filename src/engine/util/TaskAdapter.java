@@ -7,7 +7,7 @@ package engine.util;
  * method can't be overridden.
  * @author Richard DeSilvey
  */
-public abstract class TaskAdapter implements Task {
+public abstract class TaskAdapter extends Task {
     @Override
     public final boolean check() {
         return true;

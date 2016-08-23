@@ -24,7 +24,7 @@ public abstract class Biosphere extends Hydrosphere {
             return new BioCellTask();
         }
     
-        private class BioCellTask implements Task {
+        private class BioCellTask extends Task {
 
             private Delay delay;
             

@@ -84,7 +84,7 @@ public class BioSurface extends SurfaceMap<BioNode> {
     /**
      * LifeForms are updated with this Task
      */
-    private class BioTask implements Task {
+    private class BioTask extends Task {
 
         @Override
         public void perform(int x, int y) {

@@ -191,6 +191,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
     public void produceTasks(TaskFactory factory) {
         threads.forEach(thread -> {
             Task producedTask = factory.buildTask();
+            producedTask.taskThread = thread;
             thread.addTask(producedTask);
         });
     }

@@ -80,7 +80,7 @@ class MyFactory implements TaskFactory {
         return new MyTask();
     }
     
-    public class MyTask implements Task {
+    public class MyTask extends Task {
 
         private Integer counter;
         

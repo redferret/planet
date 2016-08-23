@@ -7,7 +7,6 @@ import engine.util.Task;
 import engine.util.TaskFactory;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 import worlds.planet.cells.atmosphere.AtmoCell;
 import worlds.planet.enums.GasType;
@@ -40,7 +39,7 @@ public abstract class Atmosphere extends Hydrosphere {
             return new SimpleClimateTask();
         }
 
-        private class SimpleClimateTask implements Task {
+        private class SimpleClimateTask extends Task {
 
             private Delay delay;
             private boolean evaporate;

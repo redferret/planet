@@ -55,7 +55,7 @@ public class SurfaceThreadAndTaskTest {
 
 }
 
-class TestTask implements Task {
+class TestTask extends Task {
 
     private boolean checkPass;
     

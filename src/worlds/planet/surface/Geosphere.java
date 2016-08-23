@@ -18,6 +18,8 @@ import engine.util.Task;
 import engine.util.TaskFactory;
 import engine.util.Tools;
 import engine.util.BasicTask;
+import engine.util.Boundaries;
+import engine.util.TaskManager;
 
 import static engine.util.Tools.calcDepth;
 import static engine.util.Tools.calcHeight;
@@ -83,7 +85,7 @@ public abstract class Geosphere extends Surface {
         produceTasks(new GeologicalUpdateFactory());
         produceTasks(new AeolianFactory());
         produceTasks(new SedimentationFactory());
-        produceTasks(new MetamorphicFactory());
+        produceTasks(new MetamorphicAndMeltingFactory());
         produceTasks(new SedimentSpreadFactory());
         addTask(new HeatMantel());
     }
@@ -155,140 +157,194 @@ public abstract class Geosphere extends Surface {
         DEPTH_TO_CHANGE = 0.25f;
     }
 
-    private class MetamorphicFactory implements TaskFactory {
+    private class MetamorphicAndMeltingFactory implements TaskFactory {
 
         @Override
         public Task buildTask() {
-            return new MeltRockTask();
+            return new MeltAndMetaTasks();
         }
 
-        private class MeltRockTask implements Task {
+        private class MeltAndMetaTasks extends BasicTask {
 
-            private Delay meltDelay;
+            private TaskManager manager;
             
-            public MeltRockTask() {
-                meltDelay = new Delay(5);
+            public MeltAndMetaTasks() {
+                Boundaries taskBounds = taskThread.getManager().getBounds();
+                manager = new TaskManager(taskBounds);
+                manager.addTask(new MeltSubTask());
+                manager.addTask(new MetaRockSubTask());
             }
             
-            @Override
-            public boolean check() {
-                return meltDelay.check();
-            }
-
             @Override
             public void before() {
             }
 
             @Override
-            public void perform(int x, int y) {
-                PlanetCell cell = getCellAt(x, y);
-                List<Stratum> metamorphicStrata = new LinkedList<>();
-                boolean metamorphicRockCanForm = true;
-                boolean nextLayerUp = false;
-                
-                while (metamorphicRockCanForm){
-                    float density = cell.getDensity();
-                    float cellDepth = cell.getHeight();
-                    float pressure = Tools.calcPressure(density, 9.8f, cellDepth);
-
-                    Layer bottomType = cell.peekBottomStratum().getLayer();
-                    Layer metaType = getMetaLayer(bottomType, pressure);
-
-                    if (metaType != null){
-                        metamorphisize(cell, metaType);
-                    }else{
-                        if (bottomType.getRockType() != RockType.METAMORPHIC){
-                            metamorphicRockCanForm = false;
-                        }else{
-                            nextLayerUp = true;
-                        }
-                    }
-                    bottomType = cell.peekBottomStratum().getLayer();
-                    
-                    if (nextLayerUp && bottomType.getRockType() == RockType.METAMORPHIC){
-                        metamorphicStrata.add(cell.removeBottomStratum());
-                        nextLayerUp = false;
-                    }
-                    
-                }
-                
-                for (int i = metamorphicStrata.size() - 1; i >= 0; i--){
-                    Stratum toAdd = metamorphicStrata.get(i);
-                    Layer type = toAdd.getLayer();
-                    float mass = toAdd.getMass();
-                    cell.add(type, mass, false);
-                }
-                
-                melt(cell, calcDepth(cell.getDensity(), 9.8f, MELTING_PRESSURE));
+            public void perform() {
+                manager.performTasks();
             }
 
             @Override
             public void after() {
             }
 
-            private void metamorphisize(GeoCell cell, Layer metaType){
-                float massToChange;
-                
-                if (cell.peekBottomStratum() == null) {
-                    return;
-                }
-                
-                Stratum bottom = cell.peekBottomStratum();
-                Layer bottomType = bottom.getLayer();
+            private class MeltSubTask extends Task {
 
-                massToChange = calcMass(DEPTH_TO_CHANGE, instance().getCellArea(), bottomType);
-                massToChange = removeAndChangeMass(cell, massToChange, bottomType, metaType);
-                cell.add(metaType, massToChange, false);
-            }
-            
-            private Layer getMetaLayer(Layer bottomType, float pressure){
-                Layer metaType = null;
-                if (bottomType.getRockType() == RockType.SEDIMENTARY &&
-                        pressure >= SEDIMENTARY_TO_METAMORPHIC) {
-                    if (bottomType == Layer.FELSIC_SANDSTONE) {
-                        metaType = Layer.QUARTZITE;
-                    } else if (bottomType == Layer.LIMESTONE) {
-                        metaType = Layer.MARBLE;
-                    } else {
-                        metaType = Layer.SLATE;
+                private Delay meltDelay;
+
+                public MeltSubTask() {
+                    meltDelay = new Delay(25);
+                }
+
+                @Override
+                public boolean check() {
+                    return meltDelay.check();
+                }
+
+                @Override
+                public void before() {
+                }
+
+                @Override
+                public void perform(int x, int y) {
+                    PlanetCell cell = getCellAt(x, y);
+                    melt(cell, calcDepth(cell.getDensity(), 9.8f, MELTING_PRESSURE));
+                }
+
+                @Override
+                public void after() {
+                }
+
+                private void melt(GeoCell cell, float maxHeight) {
+
+                    float height, massToChange;
+                    if (cell.peekBottomStratum() == null) {
+                        return;
                     }
-                } else if (bottomType.getRockType() == RockType.IGNEOUS &&
-                        pressure >= IGNEOUS_TO_METAMORPHIC){
-                    metaType = Layer.GNEISS;
-                } else {
-                    if (bottomType == Layer.SLATE && pressure >= SLATE_TO_PHYLITE){
-                        metaType = Layer.PHYLITE;
-                    }else if (bottomType == Layer.PHYLITE && pressure >= PHYLITE_TO_SCHIST){
-                        metaType = Layer.SCHIST;
-                    }else if (bottomType == Layer.SCHIST && pressure >= SCHIST_TO_GNEISS){
-                        metaType = Layer.GNEISS;
+                    Layer bottomType = cell.peekBottomStratum().getLayer();
+
+                    height = cell.getHeight();
+
+                    if (height > maxHeight) {
+                        massToChange = calcMass(DEPTH_TO_CHANGE, instance().getCellArea(), bottomType);
+                        cell.remove(massToChange, false, false);
                     }
                 }
-                return metaType;
-            }
-            
-            private float removeAndChangeMass(GeoCell cell, float mass, Layer bottomType, Layer toType){
-                float massToChange = cell.remove(mass, false, false);
-                massToChange = Tools.changeMass(massToChange, bottomType, toType);
-                return massToChange;
-            }
-            
-            private void melt(GeoCell cell, float maxHeight) {
 
-                float height, massToChange;
-                if (cell.peekBottomStratum() == null) {
-                    return;
+            }
+
+            private class MetaRockSubTask extends Task {
+
+                private Delay metaDelay;
+
+                public MetaRockSubTask() {
+                    metaDelay = new Delay(10);
                 }
-                Layer bottomType = cell.peekBottomStratum().getLayer();
 
-                height = cell.getHeight();
+                @Override
+                public boolean check() {
+                    return metaDelay.check();
+                }
 
-                if (height > maxHeight) {
+                @Override
+                public void before() {
+                }
+
+                @Override
+                public void perform(int x, int y) {
+                    PlanetCell cell = getCellAt(x, y);
+                    List<Stratum> metamorphicStrata = new LinkedList<>();
+                    boolean metamorphicRockCanForm = true;
+                    boolean nextLayerUp = false;
+
+                    while (metamorphicRockCanForm) {
+                        float density = cell.getDensity();
+                        float cellDepth = cell.getHeight();
+                        float pressure = Tools.calcPressure(density, 9.8f, cellDepth);
+
+                        Layer bottomType = cell.peekBottomStratum().getLayer();
+                        Layer metaType = getMetaLayer(bottomType, pressure);
+
+                        if (metaType != null) {
+                            metamorphisize(cell, metaType);
+                        } else {
+                            if (bottomType.getRockType() != RockType.METAMORPHIC) {
+                                metamorphicRockCanForm = false;
+                            } else {
+                                nextLayerUp = true;
+                            }
+                        }
+                        bottomType = cell.peekBottomStratum().getLayer();
+
+                        if (nextLayerUp && bottomType.getRockType() == RockType.METAMORPHIC) {
+                            metamorphicStrata.add(cell.removeBottomStratum());
+                            nextLayerUp = false;
+                        }
+
+                    }
+
+                    for (int i = metamorphicStrata.size() - 1; i >= 0; i--) {
+                        Stratum toAdd = metamorphicStrata.get(i);
+                        Layer type = toAdd.getLayer();
+                        float mass = toAdd.getMass();
+                        cell.add(type, mass, false);
+                    }
+                }
+
+                @Override
+                public void after() {
+                }
+
+                private void metamorphisize(GeoCell cell, Layer metaType) {
+                    float massToChange;
+
+                    if (cell.peekBottomStratum() == null) {
+                        return;
+                    }
+
+                    Stratum bottom = cell.peekBottomStratum();
+                    Layer bottomType = bottom.getLayer();
+
                     massToChange = calcMass(DEPTH_TO_CHANGE, instance().getCellArea(), bottomType);
-                    cell.remove(massToChange, false, false);
+                    massToChange = removeAndChangeMass(cell, massToChange, bottomType, metaType);
+                    cell.add(metaType, massToChange, false);
+                }
+
+                private Layer getMetaLayer(Layer bottomType, float pressure) {
+                    Layer metaType = null;
+                    if (bottomType.getRockType() == RockType.SEDIMENTARY
+                            && pressure >= SEDIMENTARY_TO_METAMORPHIC) {
+                        if (bottomType == Layer.FELSIC_SANDSTONE) {
+                            metaType = Layer.QUARTZITE;
+                        } else if (bottomType == Layer.LIMESTONE) {
+                            metaType = Layer.MARBLE;
+                        } else {
+                            metaType = Layer.SLATE;
+                        }
+                    } else if (bottomType.getRockType() == RockType.IGNEOUS
+                            && pressure >= IGNEOUS_TO_METAMORPHIC) {
+                        metaType = Layer.GNEISS;
+                    } else {
+                        if (bottomType == Layer.SLATE && pressure >= SLATE_TO_PHYLITE) {
+                            metaType = Layer.PHYLITE;
+                        } else if (bottomType == Layer.PHYLITE && pressure >= PHYLITE_TO_SCHIST) {
+                            metaType = Layer.SCHIST;
+                        } else if (bottomType == Layer.SCHIST && pressure >= SCHIST_TO_GNEISS) {
+                            metaType = Layer.GNEISS;
+                        }
+                    }
+                    return metaType;
+                }
+
+                private float removeAndChangeMass(GeoCell cell, float mass, Layer bottomType, Layer toType) {
+                    float massToChange = cell.remove(mass, false, false);
+                    massToChange = Tools.changeMass(massToChange, bottomType, toType);
+                    return massToChange;
                 }
             }
+
         }
+
     }
 
     public static float windErosionConstant;
@@ -303,7 +359,7 @@ public abstract class Geosphere extends Surface {
             return new AeolianTask();
         }
 
-        private class AeolianTask implements Task {
+        private class AeolianTask extends Task {
 
             private Delay delay;
             
@@ -378,7 +434,7 @@ public abstract class Geosphere extends Surface {
             return new SpreadSedimentTask();
         }
 
-        private class SpreadSedimentTask implements Task {
+        private class SpreadSedimentTask extends Task {
 
             private Delay delay;
 
@@ -477,7 +533,7 @@ public abstract class Geosphere extends Surface {
             return new GeologicalUpdate();
         }
 
-        private class GeologicalUpdate implements Task {
+        private class GeologicalUpdate extends Task {
 
             private Delay geologicDelay;
 
@@ -594,7 +650,7 @@ public abstract class Geosphere extends Surface {
             return new RockFormation();
         }
 
-        private class RockFormation implements Task {
+        private class RockFormation extends Task {
 
             private Delay updateDelay;
 

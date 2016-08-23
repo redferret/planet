@@ -21,6 +21,10 @@ public class TaskManager {
         tasks.add(task);
     }
     
+    public Boundaries getBounds() {
+        return bounds;
+    }
+    
     public void performTasks() {
         int lowerYBound = bounds.getLowerYBound();
         int upperYBound = bounds.getUpperYBound();

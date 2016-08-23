@@ -8,7 +8,7 @@ package engine.util;
  * false and calls the new method <code>perform()</code>
  * @author Richard DeSilvey
  */
-public abstract class BasicTask implements Task {
+public abstract class BasicTask extends Task {
 
     @Override
     public final void perform(int x, int y) {

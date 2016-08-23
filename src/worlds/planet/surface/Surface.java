@@ -202,7 +202,7 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
             return task;
         }
 
-        private class MinMaxHeightTask implements Task {
+        private class MinMaxHeightTask extends Task {
 
             private Delay delayTask;
             private float absLowestHeight, absHighestHeight;

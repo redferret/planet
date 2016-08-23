@@ -72,5 +72,9 @@ public class SurfaceThread extends MThread {
     public void addTask(Task task){
         manager.addTask(task);
     }
+
+    public TaskManager getManager() {
+        return manager;
+    }
     
 }
