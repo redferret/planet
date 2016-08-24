@@ -108,7 +108,7 @@ public class HydroCell extends GeoCell {
                     if (sb.getSediments() < 1000) {
 
                         Layer rockType = peekTopStratum().getLayer();
-
+                        
                         if (rockType.getSilicates() == Rich) {
                             sedimentType = Layer.FELSIC;
                         } else if (rockType.getSilicates() == Mix) {
