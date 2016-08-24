@@ -4,12 +4,13 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Font;
 import java.util.Random;
+import static worlds.planet.Planet.instance;
 import worlds.planet.enums.Layer;
 /**
  *
  * @author Richard DeSilvey
  */
-public class VolcanoDeposit {
+public class VolcanoDeposit implements PlanetObject {
     public static int instances;
 
     private long birthAge, maxAge;
@@ -30,7 +31,7 @@ public class VolcanoDeposit {
             boolean totop, float amount, int size, Layer type) {
         this.maxAge = maxAge;
         this.eruptionProb = eruptprob;
-        birthAge = engine.getGeosphere().getPlanetAge();
+        birthAge = instance().getSurface().getPlanetAge();
         
         this.totop = totop;
         this.size = size;
@@ -41,7 +42,7 @@ public class VolcanoDeposit {
     
     @Override
     public void update() {
-        if ((engine.getGeosphere().getPlanetAge() - birthAge) >= maxAge){
+        if ((instance().getSurface().getPlanetAge() - birthAge) >= maxAge){
             instances--;
             engine.kill(this);
         }

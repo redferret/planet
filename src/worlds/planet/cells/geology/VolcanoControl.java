@@ -9,7 +9,7 @@ import worlds.planet.enums.Layer;
  *
  * @author Richard DeSilvey
  */
-public class VolcanoControl {
+public class VolcanoControl implements PlanetObject {
 
     private static Random rand = new Random();
     private boolean totop;

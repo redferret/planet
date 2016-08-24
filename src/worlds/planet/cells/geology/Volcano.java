@@ -5,13 +5,14 @@ import java.awt.Graphics2D;
 import java.util.Random;
 import java.util.ArrayList;
 import worlds.planet.enums.Layer;
+import worlds.planet.enums.RockType;
 /**
  * The Volcano sprite deposits large amounts of Igneous rock and can be found
  * at plate boundaries and hot spots.
  * 
  * @author Richard DeSilvey
  */
-public class Volcano {
+public class Volcano implements PlanetObject {
 
     private float amount;
     private int radius;
@@ -121,11 +122,10 @@ public class Volcano {
             cell.appendStratum(temp);
         }
         
-        cell.calcHeightValues(true);// ??? Don't know if this makes sense
+        cell.recalculateHeight();
         
         deposited.add(cell);
         
-        cell.timeStamp((long) (cell.getAge() - 1e4));
     }
     
     private float compressTopSedimentLayer(GeoCell cell){
@@ -137,7 +137,7 @@ public class Volcano {
         if (top != null){
          
             if (top.getLayer().getRockType() == RockType.SEDIMENT){
-                if (top.getMass() > (erosionAmount * ssMul)){
+                if (top.getMass() > 1000){
                     top.setStratumType(Layer.BASALT);
                     cell.remove((offset = (long) (top.getMass()*0.95f)), false, true);
                 }else{
@@ -155,8 +155,6 @@ public class Volcano {
         
         if (showEvents){
             Graphics2D g2d = device;
-
-            SpritePoint sp = getPosition();
 
             g2d.setColor(Color.RED);
             g2d.drawArc((int)sp.getX()-(radius/2), 
