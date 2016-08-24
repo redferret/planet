@@ -51,7 +51,7 @@ public class Mantel extends Cell {
     }
     
     public boolean checkIntrusive(){
-        if (temperature >= (criticalTemperature * 1/4)){
+        if (temperature >= (criticalTemperature / 8f)){
             return rand.nextInt(100) < 79;
         }
         return false;
