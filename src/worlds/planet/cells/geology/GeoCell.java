@@ -756,7 +756,11 @@ public class GeoCell extends Mantel {
      * @return The stratum at the top of the strata.
      */
     public Stratum peekTopStratum() {
-        return strata.peekFirst();
+        Stratum peeked = strata.peekFirst();
+        if (peeked == null){
+            throw new RuntimeException("Cell has no strata");
+        }
+        return peeked;
     }
 
     /**
@@ -766,7 +770,11 @@ public class GeoCell extends Mantel {
      * @return The stratum at the bottom of the strata.
      */
     public Stratum peekBottomStratum() {
-        return strata.peekLast();
+        Stratum peeked = strata.peekLast();
+        if (peeked == null){
+            throw new RuntimeException("Cell has no strata");
+        }
+        return peeked;
     }
 
     /**
