@@ -63,8 +63,8 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
 
     private void prepareWorld() {
         PlanetSurface surface = (PlanetSurface) testWorld.getSurface();
-        for (int i = 0; i < 4; i++){
-            surface.addToSurface(Layer.BASALT, 100000);
+        for (int i = 0; i < 30; i++){
+            surface.addToSurface(Layer.BASALT, 20000);
         }
         testWorld.setTimescale(Planet.TimeScale.Geological);
         Geosphere.heatDistributionCount = 100;
