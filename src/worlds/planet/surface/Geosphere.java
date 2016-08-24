@@ -154,7 +154,7 @@ public abstract class Geosphere extends Surface {
         SLATE_TO_PHYLITE = 78000;
         PHYLITE_TO_SCHIST = 80000;
         SCHIST_TO_GNEISS = 82000;
-        DEPTH_TO_CHANGE = 0.25f;
+        DEPTH_TO_CHANGE = 0.025f;
     }
 
     private class MetamorphicAndMeltingFactory implements TaskFactory {
@@ -166,17 +166,16 @@ public abstract class Geosphere extends Surface {
 
         private class MeltAndMetaTasks extends BasicTask {
 
-            private TaskManager manager;
-            
-            public MeltAndMetaTasks() {
-                Boundaries taskBounds = taskThread.getManager().getBounds();
-                manager = new TaskManager(taskBounds);
-                manager.addTask(new MeltSubTask());
-                manager.addTask(new MetaRockSubTask());
-            }
-            
+            private TaskManager manager = null;
+
             @Override
             public void before() {
+                if (manager == null) {
+                    Boundaries taskBounds = taskThread.getManager().getBounds();
+                    manager = new TaskManager(taskBounds);
+                    manager.addTask(new MetaRockSubTask());
+                    manager.addTask(new MeltSubTask());
+                }
             }
 
             @Override
@@ -193,7 +192,7 @@ public abstract class Geosphere extends Surface {
                 private Delay meltDelay;
 
                 public MeltSubTask() {
-                    meltDelay = new Delay(25);
+                    meltDelay = new Delay(250);
                 }
 
                 @Override
@@ -238,7 +237,7 @@ public abstract class Geosphere extends Surface {
                 private Delay metaDelay;
 
                 public MetaRockSubTask() {
-                    metaDelay = new Delay(10);
+                    metaDelay = new Delay(125);
                 }
 
                 @Override
@@ -262,6 +261,9 @@ public abstract class Geosphere extends Surface {
                         float cellDepth = cell.getHeight();
                         float pressure = Tools.calcPressure(density, 9.8f, cellDepth);
 
+                        Stratum bottom = cell.peekBottomStratum();
+                        if (bottom == null) return;
+                        
                         Layer bottomType = cell.peekBottomStratum().getLayer();
                         Layer metaType = getMetaLayer(bottomType, pressure);
 
@@ -309,7 +311,7 @@ public abstract class Geosphere extends Surface {
                     massToChange = removeAndChangeMass(cell, massToChange, bottomType, metaType);
                     cell.add(metaType, massToChange, false);
                 }
-
+ 
                 private Layer getMetaLayer(Layer bottomType, float pressure) {
                     Layer metaType = null;
                     if (bottomType.getRockType() == RockType.SEDIMENTARY
@@ -325,7 +327,8 @@ public abstract class Geosphere extends Surface {
                             && pressure >= IGNEOUS_TO_METAMORPHIC) {
                         metaType = Layer.GNEISS;
                     } else {
-                        if (bottomType == Layer.SLATE && pressure >= SLATE_TO_PHYLITE) {
+                        if ((bottomType == Layer.SLATE || bottomType == Layer.MARBLE
+                            || bottomType == Layer.QUARTZITE) && pressure >= SLATE_TO_PHYLITE) {
                             metaType = Layer.PHYLITE;
                         } else if (bottomType == Layer.PHYLITE && pressure >= PHYLITE_TO_SCHIST) {
                             metaType = Layer.SCHIST;
