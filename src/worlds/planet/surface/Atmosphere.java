@@ -61,7 +61,7 @@ public abstract class Atmosphere extends Hydrosphere {
                     PlanetCell cell = getCellAt(x, y);
                     float amount = 32;
                     Stream<AtmoCell.AirLayer> layers = cell.getAirLayersStream();
-                        layers.forEach(layer -> {
+                    layers.forEach(layer -> {
                         totalEvaportatedMass += layer.getAirBuffer().getWaterVapor();
                         layer.getAirBuffer().resetBuffer();
                     });
