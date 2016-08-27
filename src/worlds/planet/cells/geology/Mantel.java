@@ -44,15 +44,15 @@ public class Mantel extends Cell {
     }
     
     public boolean checkExtrusive(){
-        if (temperature >= (criticalTemperature * 7/8)){
-            return rand.nextInt(100) < 25;
+        if (temperature >= (criticalTemperature * .75f)){
+            return rand.nextInt(100) < 75;
         }
         return false;
     }
     
     public boolean checkIntrusive(){
-        if (temperature >= (criticalTemperature / 8f)){
-            return rand.nextInt(100) < 79;
+        if (temperature >= (criticalTemperature * 7/8)){
+            return rand.nextInt(100) < 25;
         }
         return false;
     }

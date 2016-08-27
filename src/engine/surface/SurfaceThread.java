@@ -1,5 +1,6 @@
 package engine.surface;
 
+import engine.util.BasicTask;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.concurrent.BrokenBarrierException;
@@ -7,9 +8,13 @@ import java.util.concurrent.CyclicBarrier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import engine.util.Boundaries;
+import engine.util.Delay;
 import engine.util.MThread;
 import engine.util.Task;
 import engine.util.TaskManager;
+import java.util.Iterator;
+import java.util.concurrent.ConcurrentLinkedDeque;
+import worlds.planet.cells.geology.PlanetObject;
 
 /**
  * A surface can be broken up into sections where a SurfaceThread can modify and
@@ -24,6 +29,7 @@ public class SurfaceThread extends MThread {
      */
     private int curFrame;
     private TaskManager manager;
+    private Deque<PlanetObject> objects;
     private static final boolean CONTINUOUS = true;
     private boolean throwExecption;
     
@@ -42,19 +48,45 @@ public class SurfaceThread extends MThread {
         manager = new TaskManager(bounds);
         curFrame = 0;
         throwExecption = false;
+        objects = new ConcurrentLinkedDeque<>();
+        addTask(new UpdateObjectsTask());
     }
     
-    public void throwExecption(boolean b){
+    public void addObject(PlanetObject o) {
+        objects.add(o);
+    }
+
+    public void throwExecption(boolean b) {
         throwExecption = b;
     }
     
+    public Iterator<PlanetObject> getObjectIterator(){
+        return objects.iterator();
+    }
+    
+    private void updateObjects() {
+        
+        Iterator<PlanetObject> iter = objects.iterator();
+        
+        while(iter.hasNext()){
+            PlanetObject object = iter.next();
+            if (object.isDead()) {
+                iter.remove();
+            } else {
+                object.update();
+            }
+        }
+        
+    }
     public final void update() {
 
         try {
             waitingGate.await();
             manager.performTasks();
-        } catch (SurfaceThreadException | InterruptedException | BrokenBarrierException e) {
+        } catch (RuntimeException e) {
             logException(e);
+        } catch (InterruptedException | BrokenBarrierException ex) {
+            Logger.getLogger(SurfaceThread.class.getName()).log(Level.SEVERE, null, ex);
         }
         curFrame++;
     }
@@ -69,12 +101,39 @@ public class SurfaceThread extends MThread {
         }
     }
 
-    public void addTask(Task task){
+    public final void addTask(Task task){
         manager.addTask(task);
     }
 
     public TaskManager getManager() {
         return manager;
+    }
+    
+    private class UpdateObjectsTask extends BasicTask {
+
+        private Delay updateDelay;
+        
+        public UpdateObjectsTask() {
+            updateDelay = new Delay(1);
+        }
+
+        @Override
+        public void perform() {
+            if (updateDelay.check()){
+                updateObjects();
+            }
+        }
+
+        @Override
+        public void before() {
+        }
+
+        @Override
+        public void after() {
+        }
+        
+
+        
     }
     
 }

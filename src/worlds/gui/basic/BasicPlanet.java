@@ -12,6 +12,7 @@ import worlds.planet.TestWorld;
 import worlds.planet.enums.Layer;
 import engine.gui.DisplayAdapter;
 import engine.surface.SurfaceMap;
+import engine.surface.SurfaceThread;
 import engine.util.BasicTask;
 import engine.util.Delay;
 import engine.util.Task;
@@ -27,6 +28,8 @@ import java.awt.image.WritableRaster;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JPanel;
 import worlds.planet.cells.PlanetCell;
 import worlds.planet.cells.geology.GeoCell;
@@ -64,8 +67,9 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
     private void prepareWorld() {
         PlanetSurface surface = (PlanetSurface) testWorld.getSurface();
         for (int i = 0; i < 30; i++){
-            surface.addToSurface(Layer.BASALT, 20000);
+            surface.addToSurface(Layer.BASALT, 10000);
         }
+        surface.addWaterToAllCells(12000);
         testWorld.setTimescale(Planet.TimeScale.Geological);
         Geosphere.heatDistributionCount = 100;
 
@@ -221,8 +225,12 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
-            draw((Graphics2D) g);
-            setBackground(Color.BLACK);
+            try {
+                draw((Graphics2D) g);
+                setBackground(Color.BLACK);
+            } catch (Exception e) {
+                Logger.getLogger(SurfaceThread.class.getName()).log(Level.SEVERE, null, e);
+            }
         }
         
         public void draw(Graphics2D g2d) {
@@ -267,13 +275,14 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
                     startDrawHeight *= cellThicknessRatio;
 
                     // Draw Ocean
-                    layerThickness = cell.getOceanHeight() * cellThicknessRatio;
+                    if (cell.hasOcean()){
+                        layerThickness = cell.getOceanHeight() * cellThicknessRatio;
 
-                    drawLayer(g2d, Color.BLUE, cellIndex, cellWidth,
-                            startDrawHeight, windowHeight, layerThickness, cellThicknessRatio);
+                        drawLayer(g2d, Color.BLUE, cellIndex, cellWidth,
+                                startDrawHeight, windowHeight, layerThickness, cellThicknessRatio);
 
-                    startDrawHeight += layerThickness;
-
+                        startDrawHeight += layerThickness;
+                    }
                     // Draw Sediments
                     GeoCell.SedimentBuffer sedimentBuffer = cell.getSedimentBuffer();
                     Layer sedimentType = sedimentBuffer.getSedimentType();
@@ -289,7 +298,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
                     nextStratum = cell.peekTopStratum();
 
                     while (nextStratum != null) {
-                        layerThickness = nextStratum.getHeight() * cellThicknessRatio;
+                        layerThickness = nextStratum.getThickness() * cellThicknessRatio;
                         color = nextStratum.getLayer().getColor();
                         drawLayer(g2d, color, cellIndex, cellWidth,
                                 startDrawHeight, windowHeight, layerThickness, cellThicknessRatio);
@@ -343,9 +352,14 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
 
         @Override
         protected void paintComponent(Graphics graphics) {
-            Graphics2D g2d = (Graphics2D) graphics;
-            render(g2d);
-            g2d.dispose();
+            super.paintComponent(graphics);
+            try {
+                Graphics2D g2d = (Graphics2D) graphics;
+                render(g2d);
+                g2d.dispose();
+            } catch (Exception e) {
+                Logger.getLogger(SurfaceThread.class.getName()).log(Level.SEVERE, null, e);
+            }
         }
 
         private void render(Graphics2D g2d) {
@@ -366,6 +380,8 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
             sb.append("[").append(vx).append(", ").append(vy).append("]");
             
             g2d.drawString(sb.toString(), x, y);
+            
+            
         }
 
         private void renderEachImage(Graphics2D g2d) {

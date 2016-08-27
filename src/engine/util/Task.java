@@ -9,6 +9,11 @@ import engine.surface.SurfaceThread;
  */
 public abstract class Task {
 
+    /**
+     * A public, mutable, reference to the thread working on this task. If
+     * this object reference is null then this task is not part of a 
+     * TaskFactory.
+     */
     public SurfaceThread taskThread = null;
     
     /**

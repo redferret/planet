@@ -19,6 +19,7 @@ import static engine.util.Tools.*;
 import static worlds.planet.Planet.instance;
 import static worlds.planet.surface.Surface.*;
 import static worlds.planet.enums.Layer.*;
+import worlds.planet.enums.RockType;
 
 /**
  * A GeoCell is a Cell representing land Geologically. The cell contains
@@ -70,18 +71,8 @@ public class GeoCell extends Mantel {
             
             if (sedimentType == null){
                 sedimentType = type;
-            }else{
-                if (sedimentType == Layer.MAFIC){
-                    if (type == Layer.MIX || type == Layer.FELSIC){
-                        sedimentType = Layer.MIX;
-                    }
-                }else if (sedimentType == Layer.FELSIC){
-                    if (type == Layer.MIX || type == Layer.MAFIC){
-                        sedimentType = Layer.MIX;
-                    }
-                }else{
-                    sedimentType = type;
-                }
+            }else if (sedimentType != type){
+                sedimentType = Layer.MIX;
             }
             pendingSediments += amount;
         }
@@ -179,6 +170,8 @@ public class GeoCell extends Mantel {
      */
     private Deque<Stratum> strata;
 
+    private float totalStrataThickness;
+    
     /**
      * When the plates move, data needs to be transfered via buffer
      */
@@ -207,6 +200,8 @@ public class GeoCell extends Mantel {
      * Represents the amount of molten rock on the surface of this cell.
      */
     private float moltenRockSurfaceMass;
+    
+    private Layer moltenRockType;
 
     /**
      * The amount of this cell that is currently submerged in the mantel.
@@ -266,6 +261,7 @@ public class GeoCell extends Mantel {
         crustType = null;
         erosionBuffer = new SedimentBuffer();
         plateBuffer = new PlateBuffer();
+        moltenRockType = null;
 
         totalMass = 0;
         totalVolume = 0;
@@ -359,18 +355,34 @@ public class GeoCell extends Mantel {
      * this cell is effected by this addition or subtraction.
      *
      * @param mass The amount of molten rock being added, always positive.
+     * @param type
      * @return 
      */
-    public float putMoltenRockToSurface(float mass) {
+    public float putMoltenRockToSurface(float mass, Layer type) {
+        if (type.getRockType() != RockType.MOLTENROCK){
+            throw new IllegalArgumentException("Layer type must be of rock type MOLTENROCK");
+        }
         moltenRockSurfaceMass += mass;
         if (moltenRockSurfaceMass < 0){
             float temp = moltenRockSurfaceMass;
-            updateMV(moltenRockSurfaceMass, MAFICMOLTENROCK);
+            updateMV(moltenRockSurfaceMass, type);
             moltenRockSurfaceMass = 0;
+            moltenRockType = null;
             return -temp;
         }
-        updateMV(mass, MAFICMOLTENROCK);
+        
+        if (moltenRockType == null){
+            moltenRockType = type;
+        }else{
+            moltenRockType = Layer.MIXMOLTENROCK;
+        }
+        
+        updateMV(mass, type);
         return mass < 0 ? -mass : mass;
+    }
+    
+    public Layer getMoltenRockType(){
+        return moltenRockType;
     }
 
     /**
@@ -442,6 +454,60 @@ public class GeoCell extends Mantel {
         placeAmount(type, amount, toTop);
     }
 
+    /**
+     * Adds the given amount and type at the given depth starting from the
+     * top and working down the strata.
+     * @param type
+     * @param amount
+     * @param depth 
+     */
+    public void addAtDepth(Layer type, float amount, float depth){
+        float currentDepth = 0;
+        Stratum selectedStratum;
+        int cellArea = Planet.instance().getCellArea();
+        Deque<Stratum> workingStrata = new LinkedList<>();
+        
+        for (;peekTopStratum() != null;){
+            
+            selectedStratum = removeTopStratum();
+            float selectedDepth = selectedStratum.getThickness();
+            Layer selectedType = selectedStratum.getLayer();
+            
+            currentDepth += selectedDepth;
+            
+            if (currentDepth > depth){
+                if (type != selectedType){
+                    float diff = currentDepth - depth;
+                    float diffInMass = Tools.calcMass(diff, cellArea, selectedType);
+                    selectedStratum.addToMass(-diffInMass);
+                    Stratum splitLayer = new Stratum(selectedType, diffInMass);
+                    workingStrata.push(selectedStratum);
+                    Stratum insertedLayer = new Stratum(type, amount);
+                    workingStrata.push(insertedLayer);
+                    workingStrata.push(splitLayer);
+                }else{
+                    selectedStratum.addToMass(amount);
+                    workingStrata.push(selectedStratum);
+                }
+                break;
+                
+            }else{
+                workingStrata.push(selectedStratum);
+            }
+            
+            if (peekTopStratum() == null && currentDepth >= depth){
+                Stratum insertedLayer = new Stratum(type, amount);
+                workingStrata.push(insertedLayer);
+                break;
+            }
+        }
+        
+        while (!workingStrata.isEmpty()){
+            selectedStratum = workingStrata.removeFirst();
+            pushStratum(selectedStratum);
+        }
+    }
+    
     /**
      * Adds or removes from the top or bottom of the strata, a negative amount
      * will remove, a positive amount will add.
@@ -608,6 +674,9 @@ public class GeoCell extends Mantel {
      */
     private void updateMV(float mass, Layer type) {
 
+        int cellArea = Planet.instance().getCellArea();
+        totalStrataThickness += Tools.calcHeight(mass, cellArea, type);
+        
         totalMass += mass;
         totalVolume += mass / type.getDensity();
 
@@ -702,6 +771,9 @@ public class GeoCell extends Mantel {
      */
     public Stratum removeTopStratum() {
 
+        if (strata.peek()==null){
+            return null;
+        }
         Stratum removed = strata.removeFirst();
         removed.removeBottom();
         if (strata.peek() != null) {
@@ -756,11 +828,7 @@ public class GeoCell extends Mantel {
      * @return The stratum at the top of the strata.
      */
     public Stratum peekTopStratum() {
-        Stratum peeked = strata.peekFirst();
-        if (peeked == null){
-            throw new RuntimeException("Cell has no strata");
-        }
-        return peeked;
+        return strata.peekFirst();
     }
 
     /**
@@ -770,11 +838,7 @@ public class GeoCell extends Mantel {
      * @return The stratum at the bottom of the strata.
      */
     public Stratum peekBottomStratum() {
-        Stratum peeked = strata.peekLast();
-        if (peeked == null){
-            throw new RuntimeException("Cell has no strata");
-        }
-        return peeked;
+        return strata.peekLast();
     }
 
     /**
@@ -798,6 +862,16 @@ public class GeoCell extends Mantel {
         return hasOcean() ? (getHeight() - ((HydroCell) this).getOceanHeight()) : getHeight();
     }
 
+    /**
+     * Fetches the current thickness of all the strata added together. This
+     * isn't like the height of the cell where it is calculated from equilibrium
+     * and up from the mantel.
+     * @return 
+     */
+    public float getStrataThickness(){
+        return totalStrataThickness;
+    }
+    
     /**
      * The height of this cell is based on the average density of the strata
      * with the ocean depth included. If the timescale is in Geological the
@@ -823,7 +897,7 @@ public class GeoCell extends Mantel {
     /**
      * Shifts the height of this cell to it's equilibrium height. This method
      * is called while the simulation is in the Geological timescale and the
-     * <code>getHeight()</code> method is called.
+     * <code>getThickness()</code> method is called.
      */
     public void recalculateHeight() {
         float cellHeight, amountSubmerged, density = getDensity();

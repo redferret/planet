@@ -1,18 +1,21 @@
 package worlds.planet.cells.geology;
 
+import engine.util.Tools;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.Random;
 import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
+import worlds.planet.Planet;
 import worlds.planet.enums.Layer;
-import worlds.planet.enums.RockType;
+import worlds.planet.surface.Surface;
 /**
  * The Volcano sprite deposits large amounts of Igneous rock and can be found
  * at plate boundaries and hot spots.
  * 
  * @author Richard DeSilvey
  */
-public class Volcano implements PlanetObject {
+public class Volcano extends PlanetObject {
 
     private float amount;
     private int radius;
@@ -21,6 +24,9 @@ public class Volcano implements PlanetObject {
     private boolean totop;
     private ArrayList<GeoCell> deposited;
     private Layer depositType;
+    private static Surface parent;
+    private int worldSize;
+    private float surfaceDepthMul;
     
     static {
         rand = new Random();
@@ -28,14 +34,16 @@ public class Volcano implements PlanetObject {
     }
     
     public Volcano(int x, int y, int size, float amount, Layer type, 
-            boolean totop){
-        
+            boolean totop, float surfaceDepthMul){
+        super(x, y);
+        this.surfaceDepthMul = surfaceDepthMul;
         this.amount = amount;
-        
+        worldSize = Planet.instance().getSurface().getGridWidth();
         this.totop = totop;
         radius = size;
         depositType = type;
         deposited = new ArrayList<>();
+        parent = Planet.instance().getSurface();
     }
 
     public int getRadius() {
@@ -46,8 +54,8 @@ public class Volcano implements PlanetObject {
     public void update() {
         
         if (rand.nextBoolean()){
-            int vx = (int)(pos.x * Tools.scaleWidth());
-            int vy = (int)(pos.y * Tools.scaleHeight());
+            int vx = (int)(pos.getX() /** Tools.scaleWidth()*/);
+            int vy = (int)(pos.getY() /** Tools.scaleHeight()*/);
 
             int n = (int)(radius/2f);
             int range = rand.nextInt(5);
@@ -57,16 +65,15 @@ public class Volcano implements PlanetObject {
             int nx = (int) (range * Math.cos(rad)) + vx;
             int ny = (int) (range * Math.sin(rad)) + vy;
 
-            nx = checkXBounds(nx, parent.getMap());
-            ny = checkYBounds(ny, parent.getMap());
+            nx = Tools.checkBounds(nx, worldSize);
+            ny = Tools.checkBounds(ny, worldSize);
             
             setupVolcano(nx, ny, amount, totop);
 
             radius--;
 
             if (radius < 5) {
-                engine.kill(this);
-                
+                kill();
                 deposited.clear();
             }
         }
@@ -82,8 +89,8 @@ public class Volcano implements PlanetObject {
         int nx = (int) (range * Math.cos(rad)) + x;
         int ny = (int) (range * Math.sin(rad)) + y;
         
-        nx = checkXBounds(nx, parent.getMap());
-        ny = checkYBounds(ny, parent.getMap());
+        nx = Tools.checkBounds(nx, worldSize);
+        ny = Tools.checkBounds(ny, worldSize);
         
         for (int i = 0; i < n; i++){
             erupt(nx, ny, rand.nextInt(radius), amount, totop);
@@ -93,62 +100,42 @@ public class Volcano implements PlanetObject {
     private void erupt(int x, int y, int size, float amount, boolean totop){
         
         double randomRads = (float) (rand.nextInt(360) * Math.PI) / 180;
-        float offset;
         
         int nx = (int) (size * Math.cos(randomRads)) + x;
         int ny = (int) (size * Math.sin(randomRads)) + y;
 
-        nx = checkXBounds(nx, parent.getMap());
-        ny = checkYBounds(ny, parent.getMap());
+        nx = Tools.checkBounds(nx, worldSize);
+        ny = Tools.checkBounds(ny, worldSize);
         
         GeoCell cell = parent.getCellAt(nx, ny);
         Stratum temp = null;
         if (cell == null) return;
         else if (cell.peekTopStratum() == null) return;
         
-        if (deposited.contains(cell)) return;
-        
-        offset = totop ? compressTopSedimentLayer(cell) : 0;
-  
-        if (!totop){
-            if (cell.peekBottomStratum().getLayer() == METAMORPHIC){
-                temp = cell.removeBottomStratum();
+        if (deposited.contains(cell)) {
+            return;
+        }
+
+        if (!totop) {
+            float thickness = cell.getStrataThickness();
+            thickness *= surfaceDepthMul;
+            cell.addAtDepth(depositType, amount, thickness);
+        } else {
+            float offset = cell.getSedimentBuffer().removeAllSediments();
+            offset = Tools.changeMass(offset, Layer.MIX, depositType);
+            cell.add(depositType, amount + offset, totop);
+
+            if (temp != null) {
+                cell.appendStratum(temp);
             }
         }
-        
-        cell.add(depositType, amount + offset, totop);
-
-        if (temp != null){
-            cell.appendStratum(temp);
-        }
-        
         cell.recalculateHeight();
         
         deposited.add(cell);
         
     }
     
-    private float compressTopSedimentLayer(GeoCell cell){
-        float offset = 0;
-        
-        Stratum top = cell.peekTopStratum();
-        
-        // If there is a layer of sediment, then turn it into sedimentary rock
-        if (top != null){
-         
-            if (top.getLayer().getRockType() == RockType.SEDIMENT){
-                if (top.getMass() > 1000){
-                    top.setStratumType(Layer.BASALT);
-                    cell.remove((offset = (long) (top.getMass()*0.95f)), false, true);
-                }else{
-                    offset = top.getMass();
-                    cell.removeTopStratum();
-                }
-            }
-        }
-        
-        return offset;
-    }
+    
     
     @Override
     public void draw(Graphics2D device) {
@@ -157,8 +144,8 @@ public class Volcano implements PlanetObject {
             Graphics2D g2d = device;
 
             g2d.setColor(Color.RED);
-            g2d.drawArc((int)sp.getX()-(radius/2), 
-                    (int)sp.getY()-(radius/2), radius, radius, 0, 360);
+            g2d.drawArc((int)pos.getX()-(radius/2), 
+                    (int)pos.getY()-(radius/2), radius, radius, 0, 360);
         }
     }
 }

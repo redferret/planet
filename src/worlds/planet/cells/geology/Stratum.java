@@ -100,12 +100,12 @@ public class Stratum {
     }
     
     /**
-     * The height is calculated based on the volume of the stratum and the
- Planet.instance().getCellArea()_SQRD.
+     * The thickness is calculated based on the volume of the stratum and the
+     * area of a cell.
      *
-     * @return The height of this stratum.
+     * @return The thickness of this stratum.
      */
-    public float getHeight() {
+    public float getThickness() {
         return getVolume() / Planet.instance().getCellArea();
     }
     
@@ -181,5 +181,9 @@ public class Stratum {
 
     public Stratum copy() {
         return new Stratum(this);
+    }
+    
+    public String toString(){
+        return type.toString();
     }
 }

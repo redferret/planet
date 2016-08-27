@@ -8,6 +8,7 @@ import engine.util.TaskFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
+import worlds.planet.Planet;
 import worlds.planet.cells.atmosphere.AtmoCell;
 import worlds.planet.enums.GasType;
 
@@ -21,7 +22,7 @@ public abstract class Atmosphere extends Hydrosphere {
 
     public Atmosphere(int worldSize, int surfaceDelay, int threadsDelay, int threadCount) {
         super(worldSize, surfaceDelay, threadsDelay, threadCount);
-        produceTasks(new SimpleClimateFactory());
+//        produceTasks(new SimpleClimateFactory());
         gases = new ArrayList<>();
         setupGases();
     }

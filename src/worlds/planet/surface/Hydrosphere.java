@@ -5,6 +5,7 @@ import worlds.planet.cells.HydroCell.ErosionBuffer;
 import engine.util.Task;
 import engine.util.TaskAdapter;
 import engine.util.TaskFactory;
+import worlds.planet.Planet;
 
 /**
  * The hydrosphere is everything that deals with rivers, lakes, seas, and
@@ -55,8 +56,8 @@ public abstract class Hydrosphere extends Geosphere {
                 HydroCell toUpdate = getCellAt(x, y);
                 ErosionBuffer erosionBuffer = toUpdate.getErosionBuffer();
 
-                erosionBuffer.update();
-            }
+                    erosionBuffer.update();
+                }
 
             @Override
             public void after() {

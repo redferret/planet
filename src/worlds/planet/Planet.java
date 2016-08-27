@@ -4,6 +4,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import engine.surface.SurfaceMap;
 import engine.surface.SurfaceThread;
+import java.util.concurrent.atomic.AtomicInteger;
 import worlds.planet.surface.PlanetSurface;
 import worlds.planet.surface.Surface;
 
@@ -14,8 +15,8 @@ import worlds.planet.surface.Surface;
  */
 public abstract class Planet {
 
-    private int cellLength;
-    private int area;
+    private AtomicInteger cellLength;
+    private AtomicInteger area;
     protected TimeScale timescale;
     private static Planet current;
     private Surface planetSurface;
@@ -47,8 +48,8 @@ public abstract class Planet {
     public Planet(int gridWidth, int cellLength, int ageStepDelay, int surfaceThreadsDelay, int threadCount) {
         Logger.getLogger(SurfaceMap.class.getName()).log(Level.INFO, "New Planet");
         checkForExistingInstance();
-        area = cellLength * cellLength;
-        this.cellLength = cellLength;
+        area = new AtomicInteger(cellLength * cellLength);
+        this.cellLength = new AtomicInteger(cellLength);
         timescale = TimeScale.None;
         planetSurface = new PlanetSurface(gridWidth, ageStepDelay, surfaceThreadsDelay, threadCount);
     }
@@ -107,7 +108,7 @@ public abstract class Planet {
      * @return length of a cell in meters.
      */
     public int getCellLength() {
-        return cellLength;
+        return cellLength.get();
     }
 
     /**
@@ -116,7 +117,7 @@ public abstract class Planet {
      * @return The area of a cell in square meters.
      */
     public int getCellArea() {
-        return area;
+        return area.get();
     }
 
 }

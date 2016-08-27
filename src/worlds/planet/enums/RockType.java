@@ -25,7 +25,9 @@ public enum RockType {
     /**
      * Lava, water, rain, ice.
      */
-    FLUID            ("Fluid");
+    FLUID            ("Fluid"),
+    
+    MOLTENROCK      ("Molten Rock");
     
     static {
         RockType types[] = RockType.values();

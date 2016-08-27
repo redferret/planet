@@ -144,13 +144,13 @@ public enum Layer {
      * rock.
      */
     MAFICMOLTENROCK("Molten rock that forms igneous deposits", 
-            Color.RED.darker(), FLUID, Poor, 0.0f, 2750f),
+            Color.RED.darker(), MOLTENROCK, Poor, 0.0f, 2750f),
     
-    MOLTENROCK("Molten rock that forms igneous deposits", 
-            Color.RED, FLUID, Mix, 0.0f, 2750f),
+    MIXMOLTENROCK("Molten rock that forms igneous deposits", 
+            Color.RED, MOLTENROCK, Mix, 0.0f, 2750f),
     
     FELSICMOLTENROCK("Molten rock that forms igneous deposits", 
-            Color.RED.brighter(), FLUID, Rich, 0.0f, 2750f),
+            Color.RED.brighter(), MOLTENROCK, Rich, 0.0f, 2750f),
     /**
      * Ice is represented by this layer and has a density of 0.9 cc. Ice erodes
      * rock and deposits gravel instead of sand. The gravel is one layer below

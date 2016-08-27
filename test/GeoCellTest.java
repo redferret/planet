@@ -1,4 +1,5 @@
 
+import engine.util.Tools;
 import org.junit.Test;
 import worlds.planet.cells.geology.GeoCell;
 import worlds.planet.enums.Layer;
@@ -211,21 +212,21 @@ public class GeoCellTest {
         return testNumber >= minimum && testNumber <= maximum;
     }
 
-    /**
-     * Performs simple add and remove of molten lava to a test cell.
-     */
     @Test
-    public void moltenLavaTest(){
-        GeoCell testCell = testWorld.getSurface().getCellAt(20, 10);
+    public void insertMassTest(){
+        Layer strata[] = {Layer.BASALT, Layer.RHYOLITE, Layer.MAFIC_SANDSTONE, Layer.SHALE};
+        GeoCell testCell = testWorld.getSurface().getCellAt(20, 20);
+        float mass;
+        for (Layer layer : strata){
+            mass = Tools.calcMass(200, 100, layer);
+            testCell.add(layer, mass, true);
+        }
+        mass = Tools.calcMass(50, 100, Layer.LIMESTONE);
+        testCell.addAtDepth(Layer.LIMESTONE, mass, 800);
         
-        testCell.putMoltenRockToSurface(1000);
-        Float moltenMass = testCell.getMoltenRockFromSurface();
-        Float expected = 1000f;
-        assertEquals("Mass incorrect", expected, moltenMass);
-        
-        testCell.removeAllMoltenRock();
-        
-        assertTrue("No lava should exist", testCell.getMoltenRockFromSurface() == 0);
+        Float thickness = testCell.getStrataThickness();
+        Float expected = 850f;
+        assertEquals("", expected, thickness);
     }
    
     /**

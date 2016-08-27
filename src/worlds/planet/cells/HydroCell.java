@@ -12,6 +12,7 @@ import static engine.util.Tools.calcMass;
 import static engine.util.Tools.clamp;
 import static engine.util.Tools.constructGradient;
 import static engine.util.Tools.getLowestCellFrom;
+import worlds.planet.Planet;
 import static worlds.planet.enums.Layer.OCEAN;
 import static worlds.planet.Planet.instance;
 import static worlds.planet.enums.SilicateContent.*;
@@ -91,34 +92,36 @@ public class HydroCell extends GeoCell {
                 toUpdateWaterBuffer.transferWater(-displacedMass);
                 lowestHydroBuffer.transferWater(displacedMass);
                 
-                double theta = Math.atan(differenceHeight / instance().getCellLength());
-                float angle = (float) Math.sin(theta);
-                float pressure = (float) Math.min(minAngle, angle);
-                
-                // Move suspended sediments based on angle to lowest cell.
-                float movedSeds = toUpdateSSediments.getSediments() * angle;
-                Layer sedimentType = toUpdateSSediments.sedimentType;
-                lowestSSediments.transferSediment(sedimentType, movedSeds);
-                toUpdateSSediments.transferSediment(sedimentType, -movedSeds);
-                
-                float erosion = (displacedMass * pressure);
-                sedimentType = sb.getSedimentType();
+                if (!Planet.instance().isTimeScale(Planet.TimeScale.Geological)){
+                    double theta = Math.atan(differenceHeight / instance().getCellLength());
+                    float angle = (float) Math.sin(theta);
+                    float pressure = (float) Math.min(minAngle, angle);
 
-                if (sedimentType != null) {
-                    if (sb.getSediments() < 1000) {
+                    // Move suspended sediments based on angle to lowest cell.
+                    float movedSeds = toUpdateSSediments.getSediments() * angle;
+                    Layer sedimentType = toUpdateSSediments.sedimentType;
+                    lowestSSediments.transferSediment(sedimentType, movedSeds);
+                    toUpdateSSediments.transferSediment(sedimentType, -movedSeds);
 
-                        Layer rockType = peekTopStratum().getLayer();
-                        
-                        if (rockType.getSilicates() == Rich) {
-                            sedimentType = Layer.FELSIC;
-                        } else if (rockType.getSilicates() == Mix) {
-                            sedimentType = Layer.MIX;
-                        } else {
-                            sedimentType = Layer.MAFIC;
+                    float erosion = (displacedMass * pressure);
+                    sedimentType = sb.getSedimentType();
+
+                    if (sedimentType != null) {
+                        if (sb.getSediments() < 1000) {
+
+                            Layer rockType = peekTopStratum().getLayer();
+
+                            if (rockType.getSilicates() == Rich) {
+                                sedimentType = Layer.FELSIC;
+                            } else if (rockType.getSilicates() == Mix) {
+                                sedimentType = Layer.MIX;
+                            } else {
+                                sedimentType = Layer.MAFIC;
+                            }
+
+                            float erodedSeds = erode(erosion);
+                            toUpdateSSediments.transferSediment(sedimentType, erodedSeds);
                         }
-
-                        float erodedSeds = erode(erosion);
-                        toUpdateSSediments.transferSediment(sedimentType, erodedSeds);
                     }
                 }
             }
@@ -166,18 +169,8 @@ public class HydroCell extends GeoCell {
             }
             if (sedimentType == null){
                 sedimentType = type;
-            }else{
-                if (sedimentType == Layer.MAFIC){
-                    if (type == Layer.MIX || type == Layer.FELSIC){
-                        sedimentType = Layer.MIX;
-                    }
-                }else if (sedimentType == Layer.FELSIC){
-                    if (type == Layer.MIX || type == Layer.MAFIC){
-                        sedimentType = Layer.MIX;
-                    }
-                }else{
-                    sedimentType = type;
-                }
+            }else if (sedimentType != type){
+                sedimentType = Layer.MIX;
             }
             sediments += amount;
         }
