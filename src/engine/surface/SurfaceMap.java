@@ -306,7 +306,11 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
         for (int y = 0; y < threadDivision; y++) {
             for (int x = 0; x < threadDivision; x++, c++) {
                 name = "SubThread: " + c;
-                bounds = new Boundaries(w * x, w * (x + 1), w * y, w * (y + 1));
+                int lowerX = w * x;
+                int upperX = w * (x + 1);
+                int lowerY = w * y;
+                int upperY = w * (y + 1);
+                bounds = new Boundaries(lowerX, upperX, lowerY, upperY);
                 SurfaceThread thread = new SurfaceThread(delay, bounds, name, waitingGate);
                 threads.add(thread);
             }
