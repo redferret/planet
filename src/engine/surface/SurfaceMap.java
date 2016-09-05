@@ -10,10 +10,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import engine.gui.RenderInterface;
-import engine.util.Boundaries;
+import engine.util.task.Boundaries;
 import engine.util.MThread;
-import engine.util.Task;
-import engine.util.TaskFactory;
+import engine.util.task.Task;
+import engine.util.task.TaskFactory;
 import engine.cells.Cell;
 /**
  * The SurfaceMap is a generic map for all the systems on the planet. The map
@@ -265,6 +265,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
         int flagUpdate = totalCells / 2;
         int generated = 0;
         // Initialize the map
+        map.clear();
         Logger.getLogger(SurfaceMap.class.getName()).log(Level.INFO, "Setting up map");
         for (int x = 0; x < cellCountWidth; x++) {
             for (int y = 0; y < cellCountWidth; y++) {

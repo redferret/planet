@@ -17,12 +17,12 @@ import worlds.planet.enums.SilicateContent;
 import worlds.planet.cells.geology.VolcanoDeposit;
 
 import engine.util.Delay;
-import engine.util.Task;
-import engine.util.TaskFactory;
+import engine.util.task.Task;
+import engine.util.task.TaskFactory;
 import engine.util.Tools;
-import engine.util.BasicTask;
-import engine.util.Boundaries;
-import engine.util.TaskManager;
+import engine.util.task.BasicTask;
+import engine.util.task.Boundaries;
+import engine.util.task.TaskManager;
 
 import static engine.util.Tools.calcDepth;
 import static engine.util.Tools.calcHeight;
@@ -194,7 +194,7 @@ public abstract class Geosphere extends Surface {
                 private Delay meltDelay;
 
                 public MeltSubTask() {
-                    meltDelay = new Delay(250);
+                    meltDelay = new Delay(200);
                 }
 
                 @Override
@@ -225,10 +225,14 @@ public abstract class Geosphere extends Surface {
                     height = cell.getHeight();
 
                     if (height > maxHeight) {
-                        cell.remove(MASS_TO_MELT, false, false);
+                        float diff = height - maxHeight;
+                        cell.remove(getMassToMelt(diff), false, false);
                     }
                 }
-
+                
+                private float getMassToMelt(float heightDiff){
+                    return (20329 + (15000 * heightDiff * heightDiff)) / 10f;
+                }
             }
 
             private class MetaRockSubTask extends Task {
@@ -351,7 +355,7 @@ public abstract class Geosphere extends Surface {
 
     public static float windErosionConstant;
     static {
-        windErosionConstant = 50;
+        windErosionConstant = 10;
     }
     
     private class AeolianFactory implements TaskFactory {
@@ -366,7 +370,7 @@ public abstract class Geosphere extends Surface {
             private Delay delay;
             
             public AeolianTask() {
-                delay = new Delay(20);
+                delay = new Delay(150);
             }
 
             @Override
@@ -438,7 +442,7 @@ public abstract class Geosphere extends Surface {
             private Delay delay;
 
             public SpreadSedimentTask() {
-                delay = new Delay(1);
+                delay = new Delay(5);
             }
 
             @Override
@@ -636,29 +640,30 @@ public abstract class Geosphere extends Surface {
                 PlanetCell cell = getCellAt(x, y);
                 cell.addHeat(thermalInc);
 
-                if (cell.checkExtrusive()) {
-
-                    if (VolcanoDeposit.extrusiveCount < 3) {
-//                        Layer layers[] = {Layer.ANDESITE, Layer.BASALT, Layer.RHYOLITE};
-//                        Layer rLayer = layers[rand.nextInt(layers.length)];
+//                if (cell.checkExtrusive()) {
+//
+//                    if (VolcanoDeposit.extrusiveCount < 1) {
+////                        Layer layers[] = {Layer.ANDESITE, Layer.BASALT, Layer.RHYOLITE};
+////                        Layer rLayer = layers[rand.nextInt(layers.length)];
+//                        
+//                        new VolcanoDeposit(cell.getX(), cell.getY(), 5000000, 0.05f,
+//                                true, 1000, 6, Layer.BASALT, taskThread);
+//                        
+//                    }
+//                    cell.cool(volcanicHeatLoss);
+////                    cell.addMoisture(150000);
+//                }
+                if (cell.checkIntrusive()) {
+                    if (VolcanoDeposit.intrusiveCount < 8) {
+                        int size = ThreadLocalRandom.current().nextInt(10, 21);
+                        Layer layers[] = {Layer.GRANITE};
+                        Layer rLayer = layers[rand.nextInt(layers.length)];
                         
-                        new VolcanoDeposit(cell.getX(), cell.getY(), 10000000, 0.05f,
-                                true, 1000, 6, Layer.BASALT, taskThread);
+                        new VolcanoDeposit(cell.getX(), cell.getY(), 25000000, 0.05f,
+                                false, 100, size, rLayer, taskThread);
                         
                     }
                     cell.cool(volcanicHeatLoss);
-//                    cell.addMoisture(150000);
-                }
-                if (cell.checkIntrusive()) {
-                    if (VolcanoDeposit.intrusiveCount < 7) {
-                        int size = ThreadLocalRandom.current().nextInt(4, 16);
-                        Layer layers[] = {Layer.DIORITE, Layer.GABBRO, Layer.GRANITE};
-                        Layer rLayer = layers[rand.nextInt(layers.length)];
-                        
-                        new VolcanoDeposit(cell.getX(), cell.getY(), 10000000, 0.05f,
-                                false, 3000, size, rLayer, taskThread);
-                        
-                    }
                 }
             }
 

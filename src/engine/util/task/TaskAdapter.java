@@ -1,6 +1,6 @@
 
 
-package engine.util;
+package engine.util.task;
 
 /**
  * TaskAdapter will have the check() method always return true. The check()

@@ -3,9 +3,9 @@
 package worlds.planet.cells.biology;
 
 import engine.surface.SurfaceMap;
-import engine.util.Boundaries;
-import engine.util.Task;
-import engine.util.TaskManager;
+import engine.util.task.Boundaries;
+import engine.util.task.Task;
+import engine.util.task.TaskManager;
 import engine.util.Tools;
 import java.util.ArrayList;
 import java.util.Hashtable;

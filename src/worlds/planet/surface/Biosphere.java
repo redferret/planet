@@ -3,8 +3,8 @@
 package worlds.planet.surface;
 
 import engine.util.Delay;
-import engine.util.Task;
-import engine.util.TaskFactory;
+import engine.util.task.Task;
+import engine.util.task.TaskFactory;
 
 /**
  *

@@ -2,9 +2,9 @@ package worlds.planet.surface;
 
 import worlds.planet.cells.HydroCell;
 import worlds.planet.cells.HydroCell.ErosionBuffer;
-import engine.util.Task;
-import engine.util.TaskAdapter;
-import engine.util.TaskFactory;
+import engine.util.task.Task;
+import engine.util.task.TaskAdapter;
+import engine.util.task.TaskFactory;
 import worlds.planet.Planet;
 
 /**

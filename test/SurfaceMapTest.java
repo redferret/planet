@@ -7,7 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import engine.cells.Cell;
 import engine.surface.SurfaceMap;
-import engine.util.TaskAdapter;
+import engine.util.task.TaskAdapter;
 import static org.junit.Assert.*;
 
 /**

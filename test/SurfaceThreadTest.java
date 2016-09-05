@@ -3,10 +3,10 @@ import java.util.concurrent.CyclicBarrier;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import engine.util.Boundaries;
+import engine.util.task.Boundaries;
 import engine.surface.SurfaceThread;
 import engine.surface.SurfaceThreadException;
-import engine.util.TaskAdapter;
+import engine.util.task.TaskAdapter;
 import static org.junit.Assert.*;
 /**
  *

@@ -13,20 +13,14 @@ import worlds.planet.enums.Layer;
 import engine.gui.DisplayAdapter;
 import engine.surface.SurfaceMap;
 import engine.surface.SurfaceThread;
-import engine.util.BasicTask;
-import engine.util.Delay;
-import engine.util.Task;
 import engine.util.Tools;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -67,9 +61,9 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
     private void prepareWorld() {
         PlanetSurface surface = (PlanetSurface) testWorld.getSurface();
         for (int i = 0; i < 30; i++){
-            surface.addToSurface(Layer.BASALT, 10000);
+            surface.addToSurface(Layer.BASALT, 2000);
         }
-        surface.addWaterToAllCells(12000);
+        surface.addWaterToAllCells(9000);
         testWorld.setTimescale(Planet.TimeScale.Geological);
         Geosphere.heatDistributionCount = 100;
 
@@ -80,7 +74,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
         addWindowListener(new JAdapter());
         addKeyListener(new KeyController());
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setSize(SIZE*2, SIZE);
+        setSize(2*SIZE, SIZE);
         setLocationRelativeTo(null);
         setVisible(true);
         

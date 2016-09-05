@@ -1,17 +1,17 @@
 package engine.surface;
 
-import engine.util.BasicTask;
+import engine.util.task.BasicTask;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import engine.util.Boundaries;
+import engine.util.task.Boundaries;
 import engine.util.Delay;
 import engine.util.MThread;
-import engine.util.Task;
-import engine.util.TaskManager;
+import engine.util.task.Task;
+import engine.util.task.TaskManager;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import worlds.planet.cells.geology.PlanetObject;

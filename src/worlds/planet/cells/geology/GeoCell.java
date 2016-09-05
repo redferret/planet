@@ -467,7 +467,7 @@ public class GeoCell extends Mantel {
         int cellArea = Planet.instance().getCellArea();
         Deque<Stratum> workingStrata = new LinkedList<>();
         
-        for (;peekTopStratum() != null;){
+        for (;peekTopStratum() != null && peekTopStratum() != null;){
             
             selectedStratum = removeTopStratum();
             float selectedDepth = selectedStratum.getThickness();
