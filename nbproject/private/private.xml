@@ -13,7 +13,7 @@
             <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/src/engine/surface/SurfaceThread.java</file>
             <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/src/worlds/planet/surface/Surface.java</file>
             <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/src/engine/surface/SurfaceMap.java</file>
-            <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/src/engine/util/TaskManager.java</file>
+            <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/src/engine/util/task/TaskManager.java</file>
             <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/test/SurfaceMapTest.java</file>
             <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/src/worlds/planet/Planet.java</file>
         </group>

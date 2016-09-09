@@ -90,7 +90,7 @@ public abstract class MThread extends Thread {
                     waiter.await();
                 }
             } catch (InterruptedException | BrokenBarrierException e) {
-            }
+            } 
         }
     }
     

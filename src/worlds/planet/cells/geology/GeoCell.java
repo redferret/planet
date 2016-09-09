@@ -170,6 +170,9 @@ public class GeoCell extends Mantel {
      */
     private Deque<Stratum> strata;
 
+    /**
+     * Tracks the total thickness of the strata.
+     */
     private float totalStrataThickness;
     
     /**
