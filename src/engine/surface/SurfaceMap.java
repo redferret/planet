@@ -61,7 +61,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
      */
     protected List<SurfaceThread> threads;
 
-    private List<Integer[]> settings;
+    private List<Integer[]> data;
 
     private int prevSubThreadAvg;
 
@@ -84,7 +84,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
         super(delay, threadName, true);
         gridWidth = new AtomicInteger(mapWidth);
         threads = new ArrayList<>();
-        settings = new ArrayList<>();
+        data = new ArrayList<>();
         prevSubThreadAvg = 0;
         displaySetting = 0;
         waitingGate = new CyclicBarrier(threadCount);
@@ -402,9 +402,9 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
     @Override
     public List<Integer[]> getCellData(int x, int y) {
 
-        settings.clear();
+        data.clear();
         CellType cell = getCellAt(x, y);
 
-        return cell.render(settings);
+        return cell.render(data);
     }
 }
