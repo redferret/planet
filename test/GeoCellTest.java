@@ -228,6 +228,21 @@ public class GeoCellTest {
         Float expected = 850f;
         assertEquals("", expected, thickness);
     }
+    
+    /**
+     * Tests the functionality of adding similar layer types to the strata.
+     */
+    @Test
+    public void addingToLayersTest(){
+        
+        GeoCell testCell = testWorld.getSurface().getCellAt(10, 23);
+        testCell.add(Layer.BASALT, 5000, true);
+        testCell.add(Layer.FELSIC_SANDSTONE, 1500, true);
+        testCell.add(Layer.FELSIC_SANDSTONE, 250, true);
+        Integer expectedLayerCount = 2;
+        Integer actualLayerCount = testCell.getStrata().size();
+        assertEquals("Layer Count Incorrect", expectedLayerCount, actualLayerCount);
+    }
    
     /**
      * Tests the hasOcean method.
