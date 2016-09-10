@@ -34,6 +34,7 @@ import static engine.util.Tools.clamp;
 import static worlds.planet.Planet.TimeScale.Geological;
 import static worlds.planet.Planet.TimeScale.None;
 import static worlds.planet.Planet.instance;
+import worlds.planet.cells.geology.GeoCell.MoltenRockLayer;
 
 import static worlds.planet.enums.SilicateContent.Mix;
 import static worlds.planet.enums.SilicateContent.Rich;
@@ -109,7 +110,7 @@ public abstract class Geosphere extends Surface {
     public void addLavaToSurface(float amount) {
         int cellCount = getTotalNumberOfCells();
         for (int i = 0; i < cellCount; i++) {
-            getCellAt(i).putMoltenRockToSurface(amount, Layer.MAFICMOLTENROCK);
+            getCellAt(i).getMoltenRockLayer().putMoltenRockToSurface(amount, Layer.MAFICMOLTENROCK);
         }
     }
 
@@ -399,7 +400,7 @@ public abstract class Geosphere extends Surface {
                 SedimentBuffer eb = spreadFrom.getSedimentBuffer();
                 // Wind erosion
                 if (eb.getSediments() == 0 && !spreadFrom.hasOcean()
-                        && spreadFrom.getMoltenRockFromSurface() < 1000) {
+                        && spreadFrom.getMoltenRockLayer().getMoltenRockFromSurface() < 1000) {
 
                     Layer sedimentType;
                     if (rockType.getSilicates() == Rich) {
@@ -759,9 +760,9 @@ public abstract class Geosphere extends Surface {
              * @param y Cell's y
              */
             public void updateBasaltFlows(int x, int y) {
-
                 GeoCell toUpdate = getCellAt(x, y);
-                Layer moltenType = toUpdate.getMoltenRockType(), layerType;
+                MoltenRockLayer moltenLayer = toUpdate.getMoltenRockLayer();
+                Layer moltenType = moltenLayer.getMoltenRockType(), layerType;
                 
                 if (moltenType != null) {
                     if (moltenType.getSilicates() == SilicateContent.Rich) {
@@ -772,7 +773,7 @@ public abstract class Geosphere extends Surface {
                         layerType = Layer.ANDESITE;
                     }
 
-                    if (toUpdate.getMoltenRockFromSurface() > 8000) {
+                    if (moltenLayer.getMoltenRockFromSurface() > 8000) {
                         int maxCellCount = 8;
                         ArrayList<GeoCell> lowestList = new ArrayList<>(maxCellCount);
                         getLowestCells(toUpdate, lowestList, maxCellCount);
@@ -792,13 +793,13 @@ public abstract class Geosphere extends Surface {
                                 diff = clamp(diff, -lowestHeight, currentCellHeight);
 
                                 float mass = calcMass(diff, instance().getCellArea(), moltenType);
-                                mass = toUpdate.putMoltenRockToSurface(-mass, moltenType) / 2f;
+                                mass = moltenLayer.putMoltenRockToSurface(-mass, moltenType) / 2f;
                                 if (angle >= 0.71f) {
                                     mass = changeMass(mass * angle * 200f, moltenType, layerType);
                                 } else {
                                     float rate = toUpdate.hasOcean() ? 0.15f : 0.05f;
-                                    float massToSolidify = toUpdate.getMoltenRockFromSurface() * rate;
-                                    toUpdate.putMoltenRockToSurface(-massToSolidify, moltenType);
+                                    float massToSolidify = moltenLayer.getMoltenRockFromSurface() * rate;
+                                    moltenLayer.putMoltenRockToSurface(-massToSolidify, moltenType);
                                     massToSolidify = changeMass(massToSolidify, moltenType, layerType);
                                     toUpdate.add(layerType, massToSolidify, true);
                                     toUpdate.recalculateHeight();
@@ -807,11 +808,11 @@ public abstract class Geosphere extends Surface {
                                 float sediments = lowest.getSedimentBuffer().removeAllSediments();
                                 float totalMoved = carvedOutMass + sediments + mass;
 
-                                lowest.putMoltenRockToSurface(totalMoved, moltenType);
+                                lowest.getMoltenRockLayer().putMoltenRockToSurface(totalMoved, moltenType);
                             }
                         }
                     } else {
-                        float massToSolidify = toUpdate.removeAllMoltenRock();
+                        float massToSolidify = moltenLayer.removeAllMoltenRock();
                         massToSolidify = changeMass(massToSolidify, moltenType, layerType);
                         toUpdate.add(layerType, massToSolidify, true);
                         toUpdate.recalculateHeight();

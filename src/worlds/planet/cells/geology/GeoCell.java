@@ -137,6 +137,83 @@ public class GeoCell extends Mantel {
 
     }
 
+    public final class MoltenRockLayer extends TBuffer {
+
+        /**
+         * Represents the amount of molten rock on the surface of this cell.
+         */
+        private float moltenRockSurfaceMass;
+
+        private Layer moltenRockType;
+        
+        @Override
+        protected void init() {
+            moltenRockType = null;
+            moltenRockSurfaceMass = 0;
+        }
+
+        @Override
+        public void applyBuffer() {
+
+        }
+        
+        /**
+         * Adds or removes molten rock from this cell. The total mass and volume
+         * of this cell is effected by this addition or subtraction.
+         *
+         * @param mass The amount of molten rock being added, always positive.
+         * @param type
+         * @return
+         */
+        public float putMoltenRockToSurface(float mass, Layer type) {
+            if (type.getRockType() != RockType.MOLTENROCK) {
+                throw new IllegalArgumentException("Layer type must be of rock type MOLTENROCK");
+            }
+            moltenRockSurfaceMass += mass;
+            if (moltenRockSurfaceMass < 0) {
+                float temp = moltenRockSurfaceMass;
+                updateMV(moltenRockSurfaceMass, type);
+                moltenRockSurfaceMass = 0;
+                moltenRockType = null;
+                return -temp;
+            }
+
+            if (moltenRockType == null) {
+                moltenRockType = type;
+            } else {
+                moltenRockType = Layer.MIXMOLTENROCK;
+            }
+
+            updateMV(mass, type);
+            return mass < 0 ? -mass : mass;
+        }
+
+        public Layer getMoltenRockType() {
+            return moltenRockType;
+        }
+
+        /**
+         * @return The amount of molten rock from this cell in Kilograms.
+         */
+        public float getMoltenRockFromSurface() {
+            return moltenRockSurfaceMass;
+        }
+
+        /**
+         * Removes all molten rock from this cell.
+         *
+         * @return The total amount of molten rock that was at this cell.
+         */
+        public float removeAllMoltenRock() {
+            float temp = moltenRockSurfaceMass;
+            updateMV(-moltenRockSurfaceMass, MAFICMOLTENROCK);
+            moltenRockSurfaceMass = 0;
+            return temp;
+        }
+
+        
+    }
+    
     /**
      * A single class buffer part of a transfer map
      */
@@ -185,6 +262,8 @@ public class GeoCell extends Mantel {
      */
     private SedimentBuffer erosionBuffer;
 
+    private MoltenRockLayer moltenRockLayer;
+    
     /**
      * The total height makes adding up each stratum faster. Each time a stratum
      * is removed or it's thickness is altered the totalMass is updated. The
@@ -198,13 +277,6 @@ public class GeoCell extends Mantel {
      * cubic meters.
      */
     private float totalVolume;
-
-    /**
-     * Represents the amount of molten rock on the surface of this cell.
-     */
-    private float moltenRockSurfaceMass;
-    
-    private Layer moltenRockType;
 
     /**
      * The amount of this cell that is currently submerged in the mantel.
@@ -264,11 +336,10 @@ public class GeoCell extends Mantel {
         crustType = null;
         erosionBuffer = new SedimentBuffer();
         plateBuffer = new PlateBuffer();
-        moltenRockType = null;
+        moltenRockLayer = new MoltenRockLayer();
 
         totalMass = 0;
         totalVolume = 0;
-        moltenRockSurfaceMass = 0;
         curAmountSubmerged = 0;
         depositAgeTimeStamp = 0;
 
@@ -352,61 +423,6 @@ public class GeoCell extends Mantel {
         return totalVolume;
     }
 
-    /* %% Marked as another abstraction %%*/
-    /**
-     * Adds or removes molten rock from this cell. The total mass and volume of
-     * this cell is effected by this addition or subtraction.
-     *
-     * @param mass The amount of molten rock being added, always positive.
-     * @param type
-     * @return 
-     */
-    public float putMoltenRockToSurface(float mass, Layer type) {
-        if (type.getRockType() != RockType.MOLTENROCK){
-            throw new IllegalArgumentException("Layer type must be of rock type MOLTENROCK");
-        }
-        moltenRockSurfaceMass += mass;
-        if (moltenRockSurfaceMass < 0){
-            float temp = moltenRockSurfaceMass;
-            updateMV(moltenRockSurfaceMass, type);
-            moltenRockSurfaceMass = 0;
-            moltenRockType = null;
-            return -temp;
-        }
-        
-        if (moltenRockType == null){
-            moltenRockType = type;
-        }else{
-            moltenRockType = Layer.MIXMOLTENROCK;
-        }
-        
-        updateMV(mass, type);
-        return mass < 0 ? -mass : mass;
-    }
-    
-    public Layer getMoltenRockType(){
-        return moltenRockType;
-    }
-
-    /**
-     * @return The amount of molten rock from this cell in Kilograms.
-     */
-    public float getMoltenRockFromSurface() {
-        return moltenRockSurfaceMass;
-    }
-
-    /**
-     * Removes all molten rock from this cell.
-     * @return The total amount of molten rock that was at this cell.
-     */
-    public float removeAllMoltenRock() {
-        float temp = moltenRockSurfaceMass;
-        updateMV(-moltenRockSurfaceMass, MAFICMOLTENROCK);
-        moltenRockSurfaceMass = 0;
-        return temp;
-    }
-
-    /* !! Marked as another abstraction !!*/
     /**
      * Gets the sediment buffer for this GeoCell.
      *
@@ -414,6 +430,10 @@ public class GeoCell extends Mantel {
      */
     public SedimentBuffer getSedimentBuffer() {
         return erosionBuffer;
+    }
+    
+    public MoltenRockLayer getMoltenRockLayer(){
+        return moltenRockLayer;
     }
 
     /**
@@ -955,7 +975,7 @@ public class GeoCell extends Mantel {
                 return super.render(settings);
 
             case STRATAMAP:
-                if (moltenRockSurfaceMass < 100) {
+                if (moltenRockLayer.getMoltenRockFromSurface() < 100) {
 
                     Stratum topStratum = peekTopStratum();
 
