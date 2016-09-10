@@ -86,10 +86,10 @@ public abstract class Geosphere extends Surface {
         super(worldSize, surfaceDelay, threadsDelay, threadCount);
         ageStamp = 0;
         produceTasks(new GeologicalUpdateFactory());
-        produceTasks(new AeolianFactory());
+//        produceTasks(new AeolianFactory());
         produceTasks(new SedimentationFactory());
-        produceTasks(new MetamorphicAndMeltingFactory());
-        produceTasks(new SedimentSpreadFactory());
+//        produceTasks(new MetamorphicAndMeltingFactory());
+//        produceTasks(new SedimentSpreadFactory());
         produceTasks(new HeatMantelFactory());
     }
 
@@ -641,31 +641,6 @@ public abstract class Geosphere extends Surface {
                 PlanetCell cell = getCellAt(x, y);
                 cell.addHeat(thermalInc);
 
-//                if (cell.checkExtrusive()) {
-//
-//                    if (VolcanoDeposit.extrusiveCount < 1) {
-////                        Layer layers[] = {Layer.ANDESITE, Layer.BASALT, Layer.RHYOLITE};
-////                        Layer rLayer = layers[rand.nextInt(layers.length)];
-//                        
-//                        new VolcanoDeposit(cell.getX(), cell.getY(), 5000000, 0.05f,
-//                                true, 1000, 6, Layer.BASALT, taskThread);
-//                        
-//                    }
-//                    cell.cool(volcanicHeatLoss);
-////                    cell.addMoisture(150000);
-//                }
-                if (cell.checkIntrusive()) {
-                    if (VolcanoDeposit.intrusiveCount < 8) {
-                        int size = ThreadLocalRandom.current().nextInt(10, 21);
-                        Layer layers[] = {Layer.GRANITE};
-                        Layer rLayer = layers[rand.nextInt(layers.length)];
-                        
-                        new VolcanoDeposit(cell.getX(), cell.getY(), 25000000, 0.05f,
-                                false, 100, size, rLayer, taskThread);
-                        
-                    }
-                    cell.cool(volcanicHeatLoss);
-                }
             }
 
             @Override

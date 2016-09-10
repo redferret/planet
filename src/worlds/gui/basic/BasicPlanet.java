@@ -13,7 +13,10 @@ import worlds.planet.enums.Layer;
 import engine.gui.DisplayAdapter;
 import engine.surface.SurfaceMap;
 import engine.surface.SurfaceThread;
+import engine.util.Delay;
 import engine.util.Tools;
+import engine.util.task.BasicTask;
+import engine.util.task.Task;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -25,6 +28,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
+import worlds.planet.Planet.TimeScale;
 import worlds.planet.cells.PlanetCell;
 import worlds.planet.cells.geology.GeoCell;
 import worlds.planet.cells.geology.Stratum;
@@ -60,10 +64,31 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
 
     private void prepareWorld() {
         PlanetSurface surface = (PlanetSurface) testWorld.getSurface();
+        testWorld.setTimescale(TimeScale.None);
         for (int i = 0; i < 30; i++){
             surface.addToSurface(Layer.BASALT, 2000);
         }
-        surface.addWaterToAllCells(9000);
+        for (int i = 0; i < 50; i++){
+            surface.getCellAt(i, 0).add(Layer.BASALT, 250000, true);
+            surface.getCellAt(i, 2).add(Layer.BASALT, 250000, true);
+        }
+        surface.getCellAt(0, 1).add(Layer.BASALT, 250000, true);
+        for (int i = 0; i < 10; i++){
+            surface.getCellAt(i, 1).add(Layer.BASALT, 200000, true);
+        }
+        for (int i = 10; i < 20; i++){
+            surface.getCellAt(i, 1).add(Layer.BASALT, 150000, true);
+        }
+        for (int i = 20; i < 30; i++){
+            surface.getCellAt(i, 1).add(Layer.BASALT, 100000, true);
+        }
+        for (int i = 30; i < 40; i++){
+            surface.getCellAt(i, 1).add(Layer.BASALT, 50000, true);
+        }
+        
+        surface.addTask(new AddWaterTask());
+        
+//        surface.addWaterToAllCells(9000);
         testWorld.setTimescale(Planet.TimeScale.Geological);
         Geosphere.heatDistributionCount = 100;
 
@@ -87,7 +112,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
     }
 
     private void constructWorld() {
-        testWorld = new TestWorld();
+        testWorld = new TestWorld(50, 1);
         testWorld.getSurface().setDisplay(this);
         renderFrame = new Frame(SIZE, SIZE);
         renderFrame.registerMap(testWorld.getSurface());
@@ -117,6 +142,30 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
         }
     }
 
+    private class AddWaterTask extends BasicTask {
+
+        private Delay delay;
+        
+        @Override
+        public void before() {
+            if (delay == null){
+                delay = new Delay(2);
+            }
+        }
+
+        @Override
+        public void after() {
+        }
+
+        @Override
+        public void perform() {
+            if (delay.check()){
+                PlanetCell cell = testWorld.getSurface().getCellAt(1, 1);
+                cell.addOceanMass(1);
+            }
+        }
+        
+    }
 
     /* **************************** Keyboard ******************************/
     private class KeyController extends KeyAdapter {

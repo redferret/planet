@@ -92,38 +92,36 @@ public class HydroCell extends GeoCell {
                 toUpdateWaterBuffer.transferWater(-displacedMass);
                 lowestHydroBuffer.transferWater(displacedMass);
                 
-                if (!Planet.instance().isTimeScale(Planet.TimeScale.Geological)){
-                    double theta = Math.atan(differenceHeight / instance().getCellLength());
-                    float angle = (float) Math.sin(theta);
-                    float pressure = (float) Math.min(minAngle, angle);
+                double theta = Math.atan(differenceHeight / instance().getCellLength());
+                float angle = (float) Math.sin(theta);
+                float pressure = (float) Math.min(minAngle, angle);
 
-                    // Move suspended sediments based on angle to lowest cell.
-                    float movedSeds = toUpdateSSediments.getSediments() * angle;
-                    Layer sedimentType = toUpdateSSediments.sedimentType;
-                    lowestSSediments.transferSediment(sedimentType, movedSeds);
-                    toUpdateSSediments.transferSediment(sedimentType, -movedSeds);
+                // Move suspended sediments based on angle to lowest cell.
+                float movedSeds = toUpdateSSediments.getSediments() * angle;
+                Layer sedimentType = toUpdateSSediments.sedimentType;
+                lowestSSediments.transferSediment(sedimentType, movedSeds);
+                toUpdateSSediments.transferSediment(sedimentType, -movedSeds);
 
-                    float erosion = (displacedMass * pressure);
-                    sedimentType = sb.getSedimentType();
+                float erosion = (displacedMass * pressure);
+                sedimentType = sb.getSedimentType();
 
-                    if (sedimentType != null) {
-                        if (sb.getSediments() < 1000) {
+                if (sedimentType != null) {
 
-                            Layer rockType = peekTopStratum().getLayer();
+                    Layer rockType = peekTopStratum().getLayer();
 
-                            if (rockType.getSilicates() == Rich) {
-                                sedimentType = Layer.FELSIC;
-                            } else if (rockType.getSilicates() == Mix) {
-                                sedimentType = Layer.MIX;
-                            } else {
-                                sedimentType = Layer.MAFIC;
-                            }
-
-                            float erodedSeds = erode(erosion);
-                            toUpdateSSediments.transferSediment(sedimentType, erodedSeds);
-                        }
+                    if (rockType.getSilicates() == Rich) {
+                        sedimentType = Layer.FELSIC;
+                    } else if (rockType.getSilicates() == Mix) {
+                        sedimentType = Layer.MIX;
+                    } else {
+                        sedimentType = Layer.MAFIC;
                     }
+
+                    float erodedSeds = erode(erosion);
+                    toUpdateSSediments.transferSediment(sedimentType, erodedSeds);
+                    
                 }
+                
             }
         }
 
