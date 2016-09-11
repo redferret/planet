@@ -15,11 +15,12 @@ import worlds.planet.enums.Layer;
 import worlds.planet.surface.Surface;
 import worlds.planet.surface.Geosphere;
 import worlds.planet.surface.PlanetSurface;
+import worlds.planet.enums.RockType;
 import static engine.util.Tools.*;
+import engine.util.concurrent.AtomicFloat;
 import static worlds.planet.Planet.instance;
 import static worlds.planet.surface.Surface.*;
 import static worlds.planet.enums.Layer.*;
-import worlds.planet.enums.RockType;
 
 /**
  * A GeoCell is a Cell representing land Geologically. The cell contains
@@ -250,7 +251,7 @@ public class GeoCell extends Mantel {
     /**
      * Tracks the total thickness of the strata.
      */
-    private float totalStrataThickness;
+    private AtomicFloat totalStrataThickness;
     
     /**
      * When the plates move, data needs to be transfered via buffer
@@ -269,19 +270,19 @@ public class GeoCell extends Mantel {
      * is removed or it's thickness is altered the totalMass is updated. The
      * units are in kilograms.
      */
-    private float totalMass;
+    private AtomicFloat totalMass;
 
     /**
      * The total volume is calculated each time stratum is added or removed or
      * updated and is used to determine the average density of this cell in
      * cubic meters.
      */
-    private float totalVolume;
+    private AtomicFloat totalVolume;
 
     /**
      * The amount of this cell that is currently submerged in the mantel.
      */
-    private float curAmountSubmerged;
+    private AtomicFloat curAmountSubmerged;
 
     /**
      * The type of crust this cell is.
@@ -338,9 +339,10 @@ public class GeoCell extends Mantel {
         plateBuffer = new PlateBuffer();
         moltenRockLayer = new MoltenRockLayer();
 
-        totalMass = 0;
-        totalVolume = 0;
-        curAmountSubmerged = 0;
+        totalStrataThickness = new AtomicFloat(0);
+        totalMass = new AtomicFloat(0);
+        totalVolume = new AtomicFloat(0);
+        curAmountSubmerged = new AtomicFloat(0);
         depositAgeTimeStamp = 0;
 
         recalculateHeight();
@@ -391,8 +393,8 @@ public class GeoCell extends Mantel {
         float oceanMass = ((HydroCell) this).getOceanMass();
         float oceanVolume = oceanMass / OCEAN.getDensity();
 
-        float totalMassWithOceans = (totalMass + oceanMass);
-        float totalVolumeWithOceans = (totalVolume + oceanVolume);
+        float totalMassWithOceans = (getTotalMass() + oceanMass);
+        float totalVolumeWithOceans = (getTotalVolume() + oceanVolume);
 
         if (totalVolumeWithOceans == 0) {
             return 0;
@@ -407,20 +409,16 @@ public class GeoCell extends Mantel {
      * @return The density of this cell's rock without ocean density considered
      */
     public float getGeoDensity() {
-
-        if (totalVolume == 0) {
-            return 0;
-        }
-
-        return totalMass / totalVolume;
+        float tv = getTotalVolume();
+        return (tv == 0)? 0 : getTotalMass() / tv;
     }
 
     public float getTotalMass() {
-        return totalMass;
+        return totalMass.get();
     }
 
     public float getTotalVolume() {
-        return totalVolume;
+        return totalVolume.get();
     }
 
     /**
@@ -698,10 +696,14 @@ public class GeoCell extends Mantel {
     private void updateMV(float mass, Layer type) {
 
         int cellArea = Planet.instance().getCellArea();
-        totalStrataThickness += Tools.calcHeight(mass, cellArea, type);
         
-        totalMass += mass;
-        totalVolume += mass / type.getDensity();
+        float f = totalStrataThickness.get();
+        totalStrataThickness.set(f + Tools.calcHeight(mass, cellArea, type));
+        
+        f = totalMass.get();
+        totalMass.set(f + mass);
+        f = totalVolume.get();
+        totalVolume.set(f + (mass / type.getDensity()));
 
     }
 
@@ -892,7 +894,7 @@ public class GeoCell extends Mantel {
      * @return 
      */
     public float getStrataThickness(){
-        return totalStrataThickness;
+        return totalStrataThickness.get();
     }
     
     /**
@@ -907,13 +909,13 @@ public class GeoCell extends Mantel {
         float cellHeight;
         float oceanVolume = ((HydroCell) this).getOceanVolume();
 
-        cellHeight = (oceanVolume + totalVolume) / instance().getCellArea();
+        cellHeight = (oceanVolume + getTotalVolume()) / instance().getCellArea();
 
         if (instance().getTimeScale() == Planet.TimeScale.Geological) {
             recalculateHeight();
         }
 
-        return cellHeight - curAmountSubmerged;
+        return cellHeight - curAmountSubmerged.get();
 
     }
 
@@ -926,10 +928,10 @@ public class GeoCell extends Mantel {
         float cellHeight, amountSubmerged, density = getDensity();
         float oceanVolume = ((HydroCell) this).getOceanVolume();
 
-        cellHeight = (oceanVolume + totalVolume) / instance().getCellArea();
+        cellHeight = (oceanVolume + getTotalVolume()) / instance().getCellArea();
         amountSubmerged = cellHeight * (density / mantel_density);
 
-        curAmountSubmerged = amountSubmerged;
+        curAmountSubmerged.set(amountSubmerged);
     }
 
     /**
@@ -940,7 +942,7 @@ public class GeoCell extends Mantel {
         float cellHeight, amountSubmerged, density = getDensity();
         float oceanVolume = ((HydroCell) this).getOceanVolume();
 
-        cellHeight = (oceanVolume + totalVolume) / instance().getCellArea();
+        cellHeight = (oceanVolume + getTotalVolume()) / instance().getCellArea();
         amountSubmerged = cellHeight * (density / mantel_density);
 
         shiftHeight(amountSubmerged);
@@ -948,13 +950,14 @@ public class GeoCell extends Mantel {
     }
 
     private void shiftHeight(float amountSubmerged) {
-        float diff = Math.abs(amountSubmerged - curAmountSubmerged);
+        float cas = curAmountSubmerged.get();
+        float diff = Math.abs(amountSubmerged - cas);
         float change = diff / 2f;
         change = (change < 0.01f) ? 0.01f : change;
-        if (amountSubmerged > curAmountSubmerged) {
-            curAmountSubmerged += change;
-        } else if (amountSubmerged < curAmountSubmerged) {
-            curAmountSubmerged -= change;
+        if (amountSubmerged > cas) {
+            curAmountSubmerged.set(cas + change);
+        } else if (amountSubmerged < cas) {
+            curAmountSubmerged.set(cas - change);
         }
     }
 
