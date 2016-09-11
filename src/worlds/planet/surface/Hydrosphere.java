@@ -55,8 +55,8 @@ public abstract class Hydrosphere extends Geosphere {
             public void perform(int x, int y) {
                 HydroCell toUpdate = getCellAt(x, y);
                 ErosionBuffer erosionBuffer = toUpdate.getErosionBuffer();
-
-                erosionBuffer.update();
+                erosionBuffer.updateFlow();
+                erosionBuffer.updateVelocityField();
             }
 
             @Override
