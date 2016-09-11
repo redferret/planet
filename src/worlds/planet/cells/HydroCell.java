@@ -12,6 +12,7 @@ import static engine.util.Tools.calcMass;
 import static engine.util.Tools.clamp;
 import static engine.util.Tools.constructGradient;
 import static engine.util.Tools.getLowestCellFrom;
+import engine.util.concurrent.AtomicFloat;
 import worlds.planet.Planet;
 import static worlds.planet.enums.Layer.OCEAN;
 import static worlds.planet.Planet.instance;
@@ -219,12 +220,12 @@ public class HydroCell extends GeoCell {
     
     private ErosionBuffer erosionBuffer;
     private SuspendedSediments suspendedSediments;
-    private float oceanMass;
+    private AtomicFloat oceanMass;
     
     public HydroCell(int x, int y) {
         super(x, y);
         
-        oceanMass = 0;
+        oceanMass = new AtomicFloat(0);
         erosionBuffer = new ErosionBuffer();
         suspendedSediments = new SuspendedSediments();
     }
@@ -244,26 +245,26 @@ public class HydroCell extends GeoCell {
      * @return The amount that was removed or added.
      */
     public float addOceanMass(float amount){
-        if (oceanMass + amount < 0) {
-            float temp = oceanMass;
-            oceanMass = 0;
-            return -temp;
+        float omass = getOceanMass();
+        if (omass + amount < 0) {
+            oceanMass.set(0);
+            return -omass;
         }else {
-            oceanMass += amount;
+            oceanMass.set(omass + amount);
             return amount;
         }
     }
     
     public void setOceanMass(float m){
-        oceanMass = m;
+        oceanMass.set(m);
     }
     
     public float getOceanMass() {
-        return oceanMass;
+        return oceanMass.get();
     }
     
     public float getOceanVolume(){
-        return oceanMass / OCEAN.getDensity();
+        return getOceanMass() / OCEAN.getDensity();
     }
     
     public float getOceanHeight() {
