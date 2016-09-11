@@ -9,10 +9,6 @@ public class AtomicFloat extends Number {
 
     private AtomicInteger bits;
 
-    public AtomicFloat() {
-        this(0f);
-    }
-
     public AtomicFloat(float initialValue) {
         bits = new AtomicInteger(floatToIntBits(initialValue));
     }
@@ -43,8 +39,16 @@ public class AtomicFloat extends Number {
                                       floatToIntBits(update));
     }
 
-    public double doubleValue() { return (double) floatValue(); }
-    public int intValue()       { return (int) get();           }
-    public long longValue()     { return (long) get();          }
+    public double doubleValue() {
+        return (double) floatValue();
+    }
+
+    public int intValue() {
+        return (int) get();
+    }
+
+    public long longValue() {
+        return (long) get();
+    }
 
 }
