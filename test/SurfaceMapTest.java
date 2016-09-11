@@ -20,7 +20,7 @@ import static org.junit.Assert.*;
  */
 public class SurfaceMapTest {
 
-    private static final int MAP_SIZE = 5, DELAY = 1, THREAD_COUNT = 1,
+    private static final int MAP_SIZE = 5, SURFACE_DELAY = 1, THREAD_COUNT = 1,
             CELL_COUNT = MAP_SIZE * MAP_SIZE;
     private CountDownLatch latch;
 
@@ -29,7 +29,7 @@ public class SurfaceMapTest {
     @Before
     public void setUp() {
         latch = new CountDownLatch(CELL_COUNT);
-        testSurface = new TestSurface(MAP_SIZE, DELAY, THREAD_COUNT, latch);
+        testSurface = new TestSurface(MAP_SIZE, SURFACE_DELAY, THREAD_COUNT, latch);
         testSurface.reset();
     }
 
@@ -132,10 +132,11 @@ class TestSurface extends SurfaceMap<TestCell> {
 
     private CountDownLatch latch;
     
-    public TestSurface(int planetWidth, int delay, int threadCount, CountDownLatch latch) {
-        super(planetWidth, delay, "Test Surface", threadCount);
+    public TestSurface(int planetWidth, int surfaceThreadDelay, int threadCount, 
+            CountDownLatch latch) {
+        super(planetWidth, surfaceThreadDelay, "Test Surface", threadCount);
         this.latch = latch;
-        setupThreads(threadCount, delay);
+        setupThreads(threadCount, surfaceThreadDelay);
         setupDefaultMap(planetWidth, threadCount);
         addTaskToThreads(this.new SurfaceTask());
     }
@@ -171,6 +172,11 @@ class TestSurface extends SurfaceMap<TestCell> {
 class TestCell extends Cell {
 
     private CountDownLatch latch;
+    
+    /**
+     * Boolean flag to be used to check if this cell was called by a thread
+     * within the SurfaceMap.
+     */
     private boolean updated;
 
     public TestCell(int x, int y, CountDownLatch latch) {
