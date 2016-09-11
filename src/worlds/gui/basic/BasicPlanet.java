@@ -167,6 +167,23 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
         
     }
 
+    private class RenderCellData extends BasicTask {
+
+        @Override
+        public void perform() {
+            renderFrame.setRasterOfEachImage();
+        }
+
+        @Override
+        public void before() {
+        }
+
+        @Override
+        public void after() {
+        }
+        
+    }
+    
     /* **************************** Keyboard ******************************/
     private class KeyController extends KeyAdapter {
 
@@ -410,21 +427,6 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
                 setRasterOfEachImage();
                 renderEachImage(g2d);
             }
-            g2d.setColor(Color.BLACK);
-            int vx = crossSection.viewX;
-            int vy = crossSection.viewY;
-            
-            int x = (int)(vx * (512f/(128f)));
-            int y = (int)(vy * (512f/(128f)));
-            g2d.drawLine(x, y, x+35, y);
-            g2d.drawLine(x, y+1, x+35, y+1);
-            
-            StringBuilder sb = new StringBuilder();
-            sb.append("[").append(vx).append(", ").append(vy).append("]");
-            
-            g2d.drawString(sb.toString(), x, y);
-            
-            
         }
 
         private void renderEachImage(Graphics2D g2d) {
@@ -437,24 +439,24 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
          * Accesses the given surface map for each cell's render data and sets
          * each individual image's raster to that data.
          */
-        private void setRasterOfEachImage() {
+        public void setRasterOfEachImage() {
 
             WritableRaster raster = null;
-            List<Integer[]> settings;
+            List<Integer[]> dataSets;
 
             int bounds = Planet.instance().getSurface().getGridWidth();
 
             for (int x = 0; x < bounds; x++) {
                 for (int y = 0; y < bounds; y++) {
 
-                    settings = map.getCellData(x, y);
+                    dataSets = map.getCellData(x, y);
 
-                    firstTimeInit(settings, bounds);
+                    firstTimeInit(dataSets, bounds);
 
-                    for (int i = 0; i < settings.size(); i++) {
+                    for (int dataSetIndex = 0; dataSetIndex < dataSets.size(); dataSetIndex++) {
 
-                        BufferedImage image = images.get(i);
-                        Integer[] color = settings.get(i);
+                        BufferedImage image = images.get(dataSetIndex);
+                        Integer[] color = dataSets.get(dataSetIndex);
 
                         int rgba[] = {color[0], color[1], color[2], color[3]};
 
@@ -466,10 +468,10 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
             }
         }
 
-        private void firstTimeInit(List<Integer[]> settings, int bounds) {
-            if (images.size() < settings.size()) {
+        private void firstTimeInit(List<Integer[]> dataSets, int bounds) {
+            if (images.size() < dataSets.size()) {
                 images.clear();
-                settings.forEach(setting -> {
+                dataSets.forEach(dataSet -> {
                     BufferedImage image = new BufferedImage(bounds, bounds, BufferedImage.TYPE_INT_ARGB);
                     images.add(image);
                 });
