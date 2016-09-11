@@ -49,6 +49,15 @@ public class HydroCell extends GeoCell {
             super();
         }
         
+        public void updateFlow(){
+            
+        }
+        
+        public void updateVelocityField(){
+            
+        }
+        
+        
         public void update(){
 
             HydroCell lowestCell;
