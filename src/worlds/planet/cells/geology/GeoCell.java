@@ -18,6 +18,8 @@ import worlds.planet.surface.PlanetSurface;
 import worlds.planet.enums.RockType;
 import static engine.util.Tools.*;
 import engine.util.concurrent.AtomicFloat;
+import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import static worlds.planet.Planet.instance;
 import static worlds.planet.surface.Surface.*;
 import static worlds.planet.enums.Layer.*;
@@ -333,7 +335,7 @@ public class GeoCell extends Mantel {
 
     private void setup() {
 
-        strata = new LinkedList<>();
+        strata = new ConcurrentLinkedDeque<>();
         crustType = null;
         erosionBuffer = new SedimentBuffer();
         plateBuffer = new PlateBuffer();
@@ -347,13 +349,17 @@ public class GeoCell extends Mantel {
 
     }
 
+    /**
+     * Creates a deep copy of this GeoCell and it's strata.
+     * @return The copy of this GeoCell.
+     */
     public GeoCell copy() {
 
         GeoCell copy = new GeoCell(getX(), getY());
-        Deque<Stratum> copyStrata = new LinkedList<>();
+        Deque<Stratum> copyStrata = new ConcurrentLinkedDeque<>();
         
         strata.forEach(stratum -> {
-            copyStrata.push(stratum.copy());
+            copyStrata.add(stratum.copy());
         });
         copy.strata = copyStrata;
         
@@ -696,13 +702,11 @@ public class GeoCell extends Mantel {
 
         int cellArea = Planet.instance().getCellArea();
         
-        float f = totalStrataThickness.get();
-        totalStrataThickness.set(f + Tools.calcHeight(mass, cellArea, type));
+        float temp = totalStrataThickness.get();
+        totalStrataThickness.set(temp + Tools.calcHeight(mass, cellArea, type));
         
-        f = totalMass.get();
-        totalMass.set(f + mass);
-        f = totalVolume.get();
-        totalVolume.set(f + (mass / type.getDensity()));
+        totalMass.set(totalMass.get() + mass);
+        totalVolume.set(totalVolume.get() + (mass / type.getDensity()));
 
     }
 

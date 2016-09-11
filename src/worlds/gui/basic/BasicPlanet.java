@@ -64,7 +64,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
 
     private void prepareWorld() {
         PlanetSurface surface = (PlanetSurface) testWorld.getSurface();
-        testWorld.setTimescale(TimeScale.None);
+        
         for (int i = 0; i < 30; i++){
             surface.addToSurface(Layer.BASALT, 2000);
         }
@@ -86,7 +86,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
             surface.getCellAt(i, 1).add(Layer.BASALT, 50000, true);
         }
         
-        surface.addTask(new AddWaterTask());
+//        surface.addTask(new AddWaterTask());
         
 //        surface.addWaterToAllCells(9000);
         testWorld.setTimescale(Planet.TimeScale.Geological);

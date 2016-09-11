@@ -30,6 +30,7 @@ import static engine.util.Tools.calcMass;
 import static engine.util.Tools.changeMass;
 import static engine.util.Tools.checkBounds;
 import static engine.util.Tools.clamp;
+import engine.util.task.CompoundTask;
 
 import static worlds.planet.Planet.TimeScale.Geological;
 import static worlds.planet.Planet.TimeScale.None;
@@ -90,7 +91,7 @@ public abstract class Geosphere extends Surface {
         produceTasks(new SedimentationFactory());
 //        produceTasks(new MetamorphicAndMeltingFactory());
 //        produceTasks(new SedimentSpreadFactory());
-        produceTasks(new HeatMantelFactory());
+//        produceTasks(new HeatMantelFactory());
     }
 
     /**
@@ -164,32 +165,16 @@ public abstract class Geosphere extends Surface {
 
         @Override
         public Task buildTask() {
-            return new MeltAndMetaTasks();
+            return new ChangeRockSubTasks();
         }
 
-        private class MeltAndMetaTasks extends BasicTask {
+        private class ChangeRockSubTasks extends CompoundTask {
 
-            private TaskManager manager = null;
-
-            @Override
-            public void before() {
-                if (manager == null) {
-                    Boundaries taskBounds = taskThread.getManager().getBounds();
-                    manager = new TaskManager(taskBounds);
-//                    manager.addTask(new MetaRockSubTask());
-                    manager.addTask(new MeltSubTask());
-                }
+            public ChangeRockSubTasks() {
+                addSubTask(new MeltSubTask());
+                addSubTask(new MetaRockSubTask());
             }
-
-            @Override
-            public void perform() {
-                manager.performTasks();
-            }
-
-            @Override
-            public void after() {
-            }
-
+            
             private class MeltSubTask extends Task {
 
                 private Delay meltDelay;
@@ -235,7 +220,6 @@ public abstract class Geosphere extends Surface {
                     return (20329 + (15000 * heightDiff * heightDiff)) / 10f;
                 }
             }
-
             private class MetaRockSubTask extends Task {
 
                 private Delay metaDelay;
@@ -349,9 +333,7 @@ public abstract class Geosphere extends Surface {
                     return massToChange;
                 }
             }
-
         }
-
     }
 
     public static float windErosionConstant;
