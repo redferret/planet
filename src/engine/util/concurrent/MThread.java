@@ -1,5 +1,5 @@
 
-package engine.util;
+package engine.util.concurrent;
 
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;

@@ -345,7 +345,6 @@ public class GeoCell extends Mantel {
         curAmountSubmerged = new AtomicFloat(0);
         depositAgeTimeStamp = 0;
 
-        recalculateHeight();
     }
 
     public GeoCell copy() {

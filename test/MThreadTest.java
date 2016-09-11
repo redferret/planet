@@ -5,7 +5,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import engine.util.MThread;
+import engine.util.concurrent.MThread;
 
 /**
  * Tests the MThread class for certain expected behavior.

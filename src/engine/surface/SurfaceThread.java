@@ -9,7 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import engine.util.task.Boundaries;
 import engine.util.Delay;
-import engine.util.MThread;
+import engine.util.concurrent.MThread;
 import engine.util.task.Task;
 import engine.util.task.TaskManager;
 import java.util.Iterator;
