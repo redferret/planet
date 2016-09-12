@@ -57,17 +57,11 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
      * The map containing the references to each data point on the surface.
      */
     private Map<Integer, CellType> map;
-
     protected List<SurfaceThread> threadReferences;
-
     private List<Integer[]> data;
-
     private int prevSubThreadAvg;
-
     private AtomicInteger gridWidth;
-
     private ExecutorService threadPool;
-
     private final CyclicBarrier waitingGate;
 
     /**
