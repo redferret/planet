@@ -2,15 +2,19 @@
 
 package worlds.planet.cells.biology;
 
+import engine.cells.AtomicData;
 import engine.surface.SurfaceMap;
 import engine.util.task.Boundaries;
 import engine.util.task.Task;
 import engine.util.task.TaskManager;
 import engine.util.Tools;
+
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+
+import worlds.planet.cells.PlanetCell;
 import worlds.planet.surface.PlanetSurface;
 import static worlds.planet.Planet.instance;
 
@@ -39,7 +43,7 @@ public class BioSurface extends SurfaceMap<BioNode> {
         manager = new TaskManager(new Boundaries(0, BIO_CELL_COUNT));
         manager.addTask(new BioTask());
         
-        Map<Integer, BioNode> map = new Hashtable<>();
+        Map<Integer, AtomicData<BioNode>> map = new Hashtable<>();
         setMap(map);
     }
 
@@ -94,12 +98,14 @@ public class BioSurface extends SurfaceMap<BioNode> {
                 BioNode[] neighbors = countNeighbors(node);
                 node.update(neighbors);
             }
+            
+            release(node);
         }
         
         private BioNode[] countNeighbors(BioNode node){
             int parentX = parentCell.getX(), neighborCellX = parentX;
             int parentY = parentCell.getY(), neighborCellY = parentY;
-            BioCell neighborCell;
+            PlanetCell neighborCell;
             
             PlanetSurface surface = (PlanetSurface) instance().getSurface();
             final int WIDTH = surface.getGridWidth();
@@ -140,8 +146,10 @@ public class BioSurface extends SurfaceMap<BioNode> {
                     
                     neighborCell = surface.getCellAt(neighborCellX, neighborCellY);
                     
+                    BioSurface bioSurfaceRef = null;
                     if (neighborCell != parentCell){
-                        neighborNode = neighborCell.getBioSurface().getCellAt(neighborX, neighborY);
+                    	bioSurfaceRef = neighborCell.getBioSurface();
+                        neighborNode = bioSurfaceRef.getCellAt(neighborX, neighborY);
                     }else{
                         neighborNode = getCellAt(neighborX, neighborY);
                     }
@@ -149,6 +157,13 @@ public class BioSurface extends SurfaceMap<BioNode> {
                     if ((neighborNode != node) && neighborNode.hasLife()) {
                         neighbors.add(neighborNode);
                     }
+                    
+                    if (bioSurfaceRef != null){
+                    	bioSurfaceRef.release(neighborNode);
+                    }else{
+                    	release(neighborNode);
+                    }
+                    surface.release(neighborCell);
                 }
             }
             

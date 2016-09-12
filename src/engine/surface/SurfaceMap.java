@@ -8,12 +8,15 @@ import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import engine.gui.RenderInterface;
 import engine.util.task.Boundaries;
 import engine.util.concurrent.TaskRunner;
 import engine.util.task.Task;
 import engine.util.task.TaskFactory;
+import engine.cells.AtomicData;
 import engine.cells.Cell;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -56,7 +59,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
     /**
      * The map containing the references to each data point on the surface.
      */
-    private Map<Integer, CellType> map;
+    private Map<Integer, AtomicData<CellType>> map;
     protected List<SurfaceThread> threadReferences;
     private List<Integer[]> data;
     private int prevSubThreadAvg;
@@ -93,11 +96,11 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
     protected void setupDefaultMap(int planetWidth, int threadCount) {
         final float loadFactor = 1.0f;
         final int capacity = planetWidth * planetWidth;
-        Map<Integer, CellType> defaultMap = new ConcurrentHashMap<>(capacity, loadFactor, threadCount);
+        Map<Integer, AtomicData<CellType>> defaultMap = new ConcurrentHashMap<>(capacity, loadFactor, threadCount);
         setMap(defaultMap);
     }
 
-    public void setMap(Map<Integer, CellType> map) {
+    public void setMap(Map<Integer, AtomicData<CellType>> map) {
         this.map = map;
     }
 
@@ -300,7 +303,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
 
         int w = gridWidth.get() / threadDivision;
         Boundaries bounds;
-        threadPool = Executors.newFixedThreadPool(threadDivision + 1);
+        threadPool = Executors.newFixedThreadPool((threadDivision * threadDivision) + 1);
         for (int y = 0; y < threadDivision; y++) {
             for (int x = 0; x < threadDivision; x++) {
                 int lowerX = w * x;
@@ -342,9 +345,25 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
      * @return The cell that maps to the given index.
      */
     public CellType getCellAt(int index) {
-        return map.get(index);
+    	AtomicData<CellType> lock = map.get(index);
+    	return (lock == null)? 
+    			null : lock.getCellAndLock();
     }
-
+    
+    /**
+     * When a thread gets data from this Map the data is locked until it is released by
+     * the same thread working on the cell returned by this Map. 
+     * @param cell The cell to be released to other threads waiting to access it.
+     */
+    public void release(CellType cell) {
+    	int x = cell.getX(), y = cell.getY();
+        int index = calcIndex(x, y, gridWidth.get());
+        AtomicData<CellType> lock = map.get(index);
+        if (lock != null){
+        	lock.unlock();
+        }
+    }
+    
     /**
      * This method is reserved for internal use only by the SurfaceMap during
      * initialization.
@@ -354,7 +373,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
     private void setCell(CellType cell) {
         int x = cell.getX(), y = cell.getY();
         int index = calcIndex(x, y, gridWidth.get());
-        map.put(index, cell);
+        map.put(index, new AtomicData<>(cell));
     }
 
     /**

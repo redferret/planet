@@ -71,7 +71,6 @@ public class SurfaceThread extends TaskRunner {
         } catch (RuntimeException e) {
             logException(e);
         } catch (InterruptedException | BrokenBarrierException ex) {
-            Logger.getLogger(SurfaceThread.class.getName()).log(Level.SEVERE, null, ex);
         }
         curFrame++;
     }

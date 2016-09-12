@@ -2,6 +2,8 @@ package engine.cells;
 
 import java.util.List;
 
+import engine.util.Point;
+
 /**
  * The cell is a base class for each cell contained in a SurfaceMap.
  * For example the Geosphere contains GeoCells which contain geological strata.
@@ -10,8 +12,8 @@ import java.util.List;
  *
  * @author Richard DeSilvey
  */
-public abstract class Cell {
-
+public abstract class Cell {	
+    
     // The x coordinate
     private final int x;
     
@@ -29,6 +31,10 @@ public abstract class Cell {
 
     public int getY() {
         return y;
+    }
+    
+    public Point generatePoint(){
+    	return new Point(x, y);
     }
     
     public abstract List<Integer[]> render(List<Integer[]> settings);

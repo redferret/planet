@@ -58,8 +58,8 @@ public abstract class Atmosphere extends Hydrosphere {
             
             @Override
             public void perform(int x, int y) {
+            	PlanetCell cell = getCellAt(x, y);
                 if (evaporate){
-                    PlanetCell cell = getCellAt(x, y);
                     float amount = 32;
                     Stream<AtmoCell.AirLayer> layers = cell.getAirLayersStream();
                     layers.forEach(layer -> {
@@ -71,11 +71,10 @@ public abstract class Atmosphere extends Hydrosphere {
                         totalEvaportatedMass += returnValue;
                     }
                 }else{
-                    PlanetCell cell = getCellAt(x, y);
                     float rate = totalEvaportatedMass / getTotalNumberOfCells();
                     cell.addOceanMass(rate);
                 }
-                
+                release(cell);
             }
 
             /*

@@ -2,11 +2,17 @@
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import com.sun.istack.internal.logging.Logger;
+
 import engine.cells.Cell;
 import engine.surface.SurfaceMap;
+import engine.util.task.BasicTask;
 import engine.util.task.TaskAdapter;
 import static org.junit.Assert.*;
 
@@ -20,7 +26,7 @@ import static org.junit.Assert.*;
  */
 public class SurfaceMapTest {
 
-    private static final int MAP_SIZE = 5, SURFACE_DELAY = 1, THREAD_COUNT = 1,
+    private static final int MAP_SIZE = 4, SURFACE_DELAY = 1, THREAD_COUNT = 2,
             CELL_COUNT = MAP_SIZE * MAP_SIZE;
     private CountDownLatch latch;
 
@@ -42,29 +48,34 @@ public class SurfaceMapTest {
     @Test
     public void surfaceMapRunningTest() throws InterruptedException {
 
+    	testSurface.addTaskToThreads(testSurface.new SurfaceTask());
+    	
         testSurface.startSurfaceThreads();
         testSurface.playSurfaceThreads();
 
-        boolean signaled = latch.await(5, TimeUnit.SECONDS);
+        boolean signaled = latch.await(10, TimeUnit.SECONDS);
         assertTrue("Latch was never signaled", signaled);
 
-        String failedMsg = "A cell was never updated";
+        String failedMsg = "A cell was never updated: ";
         for (int i = 0; i < CELL_COUNT; i++) {
             TestCell cell = testSurface.getCellAt(i);
             boolean cellUpdated = cell.isUpdated();
-            assertTrue(failedMsg, cellUpdated);
+            testSurface.release(cell);
+            assertTrue(failedMsg + cell, cellUpdated);
         }
     }
 
     @Test
-    public void getCellMethodTest() {
-        TestCell cell = testSurface.getCellAt(5);
-        int expectedX = 0, expectedY = 1;
-
-        assertTrue(expectedX == cell.getX());
-        assertTrue(expectedY == cell.getY());
+    public void starvationTest() throws InterruptedException {
+    	testSurface.addTaskToThreads(testSurface.new StarvationTask());
+    	
+    	testSurface.startSurfaceThreads();
+        testSurface.playSurfaceThreads();
+        
+        boolean signaled = latch.await(10, TimeUnit.SECONDS);
+        assertTrue("Latch was never signaled", signaled);
     }
-
+    
     @Test
     public void calculateIndexTest() {
         
@@ -75,26 +86,6 @@ public class SurfaceMapTest {
                 }
             }
         }
-    }
-
-    private void testCaseForIndexTesting(int testX, int testY, int testWidth) {
-        int expectedIndex = testX + (testY * testWidth);
-        testIndex(testX, testY, testWidth, expectedIndex);
-    }
-
-    /**
-     * Performs an assertion with the given expectedIndex based on the three
-     * parameters testX, testY, and the WIDTH. The assertion will fail if the
-     * expected index isn't equal to the SurfaceMap#calcIndex return value.
-     *
-     * @param testX The test X coordinate
-     * @param testY The test y coordinate
-     * @param WIDTH The width of the map
-     * @param expectedIndex The expected calculated index
-     */
-    private void testIndex(int testX, int testY, final int WIDTH, Integer expectedIndex) {
-        Integer index = TestSurface.calcIndex(testX, testY, WIDTH);
-        assertEquals(expectedIndex, index);
     }
 
     @Test
@@ -111,19 +102,39 @@ public class SurfaceMapTest {
         
         testXY(testIndex, testWidth, expectedX, expectedY);
     }
-
+    
+    private void testCaseForIndexTesting(int testX, int testY, int testWidth) {
+        int expectedIndex = testX + (testY * testWidth);
+        testIndex(testX, testY, testWidth, expectedIndex);
+    }
+    
+    @After
+    public void tearDown() {
+        testSurface.killAllThreads();
+        testSurface.kill();
+    }
+    
+    /**
+     * Performs an assertion with the given expectedIndex based on the three
+     * parameters testX, testY, and the WIDTH. The assertion will fail if the
+     * expected index isn't equal to the SurfaceMap#calcIndex return value.
+     *
+     * @param testX The test X coordinate
+     * @param testY The test y coordinate
+     * @param WIDTH The width of the map
+     * @param expectedIndex The expected calculated index
+     */
+    private void testIndex(int testX, int testY, final int WIDTH, Integer expectedIndex) {
+        Integer index = TestSurface.calcIndex(testX, testY, WIDTH);
+        assertEquals(expectedIndex, index);
+    }
+    
     private void testXY(int testIndex, int testWidth, Integer expectedX, Integer expectedY) {
         Integer testX = TestSurface.calcX(testIndex, testWidth);
         Integer testY = TestSurface.calcY(testIndex, testWidth);
         
         assertEquals(expectedX, testX);
         assertEquals(expectedY, testY);
-    }
-
-    @After
-    public void tearDown() {
-        testSurface.killAllThreads();
-        testSurface.kill();
     }
 
 }
@@ -138,7 +149,6 @@ class TestSurface extends SurfaceMap<TestCell> {
         this.latch = latch;
         setupThreads(threadCount, surfaceThreadDelay);
         setupDefaultMap(planetWidth, threadCount);
-        addTaskToThreads(this.new SurfaceTask());
     }
 
     @Override
@@ -151,7 +161,26 @@ class TestSurface extends SurfaceMap<TestCell> {
         return new TestCell(x, y, latch);
     }
 
-    class SurfaceTask extends TaskAdapter {
+    public class StarvationTask extends BasicTask {
+
+		@Override
+		public void before() {
+		}
+
+		@Override
+		public void perform() {
+			TestCell cell = getCellAt(0, 0);
+			cell.update();
+			release(cell);
+		}
+
+		@Override
+		public void after() {
+		}
+    	
+    }
+    
+    public class SurfaceTask extends TaskAdapter {
 
         @Override
         public void before() {
@@ -159,7 +188,9 @@ class TestSurface extends SurfaceMap<TestCell> {
 
         @Override
         public void perform(int x, int y) {
-            getCellAt(x, y).update();
+            TestCell cell = getCellAt(x, y);
+            cell.update();
+            release(cell);
         }
 
         @Override
@@ -172,6 +203,7 @@ class TestSurface extends SurfaceMap<TestCell> {
 class TestCell extends Cell {
 
     private CountDownLatch latch;
+    private CountDownLatch wait;
     
     /**
      * Boolean flag to be used to check if this cell was called by a thread
@@ -192,6 +224,14 @@ class TestCell extends Cell {
     public void update() {
         latch.countDown();
         updated = true;
+        try {
+        	wait = new CountDownLatch(1);
+			wait.await(125, TimeUnit.MILLISECONDS);
+		} catch (InterruptedException e) {
+			Logger.getLogger(Thread.currentThread().getClass())
+			.log(Level.SEVERE, "Thread was rudely interrupted " + 
+					Thread.currentThread().getName());
+		}
     }
 
     @Override

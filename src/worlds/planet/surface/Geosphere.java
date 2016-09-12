@@ -15,26 +15,23 @@ import worlds.planet.cells.geology.Stratum;
 import worlds.planet.enums.RockType;
 import worlds.planet.enums.SilicateContent;
 import worlds.planet.cells.geology.GeoCell.MoltenRockLayer;
-
 import engine.util.Delay;
+import engine.util.Point;
 import engine.util.task.Task;
 import engine.util.task.TaskFactory;
 import engine.util.Tools;
 import engine.util.task.BasicTask;
 import engine.util.task.Boundaries;
 import engine.util.task.CompoundTask;
-
 import static engine.util.Tools.calcDepth;
 import static engine.util.Tools.calcHeight;
 import static engine.util.Tools.calcMass;
 import static engine.util.Tools.changeMass;
 import static engine.util.Tools.checkBounds;
 import static engine.util.Tools.clamp;
-
 import static worlds.planet.Planet.TimeScale.Geological;
 import static worlds.planet.Planet.TimeScale.None;
 import static worlds.planet.Planet.instance;
-
 import static worlds.planet.enums.SilicateContent.Mix;
 import static worlds.planet.enums.SilicateContent.Rich;
 import static worlds.planet.surface.Surface.planetAge;
@@ -102,23 +99,27 @@ public abstract class Geosphere extends Surface {
     public void addToSurface(Layer type, float amount) {
         int cellCount = getTotalNumberOfCells();
         for (int i = 0; i < cellCount; i++) {
-            getCellAt(i).pushStratum(new Stratum(type, amount));
+        	PlanetCell cell = getCellAt(i);
+            cell.pushStratum(new Stratum(type, amount));
+            release(cell);
         }
     }
 
     public void addLavaToSurface(float amount) {
         int cellCount = getTotalNumberOfCells();
         for (int i = 0; i < cellCount; i++) {
-            getCellAt(i).getMoltenRockLayer().putMoltenRockToSurface(amount, Layer.MAFICMOLTENROCK);
+        	PlanetCell cell = getCellAt(i);
+            cell.getMoltenRockLayer().putMoltenRockToSurface(amount, Layer.MAFICMOLTENROCK);
+            release(cell);
         }
     }
 
-    public void getLowestCells(GeoCell from, List<GeoCell> lowestList, int max) {
+    public void getLowestCells(GeoCell from, List<Point> lowestList, int max) {
 
         int tx, ty, mx, my;
         int x = from.getX(), y = from.getY();
         int xl = DIR_X_INDEX.length;
-        GeoCell selectedCell;
+        PlanetCell selectedCell;
 
         for (int s = 0; s < xl; s++) {
 
@@ -133,11 +134,12 @@ public abstract class Geosphere extends Surface {
 
             if (selectedCell.getHeightWithoutOceans() < from.getHeightWithoutOceans()) {
                 if (lowestList.size() < max) {
-                    lowestList.add(selectedCell);
+                    lowestList.add(selectedCell.generatePoint());
                 } else {
                     break;
                 }
             }
+            release(selectedCell);
         }
     }
 
@@ -194,6 +196,7 @@ public abstract class Geosphere extends Surface {
                 public void perform(int x, int y) {
                     PlanetCell cell = getCellAt(x, y);
                     melt(cell, calcDepth(cell.getDensity(), 9.8f, MELTING_PRESSURE));
+                    release(cell);
                 }
 
                 @Override
@@ -273,6 +276,7 @@ public abstract class Geosphere extends Surface {
                         float mass = toAdd.getMass();
                         cell.add(type, mass, false);
                     }
+                    release(cell);
                 }
 
                 @Override
@@ -360,7 +364,9 @@ public abstract class Geosphere extends Surface {
             
             @Override
             public void perform(int x, int y) {
-                aeolianErosion(getCellAt(x, y));
+            	PlanetCell cell = getCellAt(x, y);
+                aeolianErosion(cell);
+                release(cell);
             }
 
             public void aeolianErosion(GeoCell spreadFrom) {
@@ -432,7 +438,9 @@ public abstract class Geosphere extends Surface {
 
             @Override
             public void perform(int x, int y) {
-                spreadToLowest(getCellAt(x, y));
+            	PlanetCell cell = getCellAt(x, y);
+                spreadToLowest(cell);
+                release(cell);
             }
 
             public void spreadToLowest(GeoCell spreadFrom) {
@@ -442,7 +450,7 @@ public abstract class Geosphere extends Surface {
                 }else{
                     maxCellCount = 3;
                 }
-                ArrayList<GeoCell> lowestList = new ArrayList<>(maxCellCount);
+                ArrayList<Point> lowestList = new ArrayList<>(maxCellCount);
                 getLowestCells(spreadFrom, lowestList, maxCellCount);
                 spread(lowestList, spreadFrom);
             }
@@ -454,9 +462,9 @@ public abstract class Geosphere extends Surface {
              * @param lowestList The list of lowest cells from the central cell
              * @param spreadFrom The central cell
              */
-            public void spread(ArrayList<GeoCell> lowestList, GeoCell spreadFrom) {
+            public void spread(ArrayList<Point> lowestList, GeoCell spreadFrom) {
 
-                GeoCell lowestGeoCell;
+                PlanetCell lowestGeoCell;
                 SedimentBuffer spreadFromEB = spreadFrom.getSedimentBuffer();
                 Layer spreadFromSedType = spreadFromEB.getSedimentType();
 
@@ -469,7 +477,8 @@ public abstract class Geosphere extends Surface {
 
                 if (lowestList.size() > 0) {
 
-                    lowestGeoCell = lowestList.get(random.nextInt(lowestList.size()));
+                	Point p = lowestList.get(random.nextInt(lowestList.size()));
+                	lowestGeoCell = getCellAt(p.getX(), p.getY());
                     spreadFromHeight = spreadFrom.getHeightWithoutOceans() / 2f;
                     lowestHeight = lowestGeoCell.getHeightWithoutOceans() / 2f;
                     diff = (spreadFromHeight - lowestHeight) / 2f;
@@ -488,6 +497,7 @@ public abstract class Geosphere extends Surface {
                         lowestBuffer = lowestGeoCell.getSedimentBuffer();
                         lowestBuffer.transferSediment(spreadFromSedType, mass);
                     }
+                    release(lowestGeoCell);
                 }
             }
 
@@ -541,7 +551,7 @@ public abstract class Geosphere extends Surface {
              */
             public void updateGeology(int x, int y) {
 
-                GeoCell cell = getCellAt(x, y);
+                PlanetCell cell = getCellAt(x, y);
 
                 // Update the geosphere
                 if (instance().isTimeScale(Geological)) {
@@ -555,6 +565,7 @@ public abstract class Geosphere extends Surface {
                 } else {
                     cell.updateHeight();
                 }
+                release(cell);
             }
 
             private void timeStamp() {
@@ -620,7 +631,7 @@ public abstract class Geosphere extends Surface {
 
                 PlanetCell cell = getCellAt(x, y);
                 cell.addHeat(thermalInc);
-
+                release(cell);
             }
 
             @Override
@@ -664,6 +675,7 @@ public abstract class Geosphere extends Surface {
             public void depositSediment(int x, int y) {
                 PlanetCell cell = getCellAt(x, y);
                 formSedimentaryRock(cell);
+                release(cell);
             }
 
             public void formSedimentaryRock(PlanetCell cell) {
@@ -715,7 +727,7 @@ public abstract class Geosphere extends Surface {
              * @param y Cell's y
              */
             public void updateBasaltFlows(int x, int y) {
-                GeoCell toUpdate = getCellAt(x, y);
+                PlanetCell toUpdate = getCellAt(x, y);
                 MoltenRockLayer moltenLayer = toUpdate.getMoltenRockLayer();
                 Layer moltenType = moltenLayer.getMoltenRockType(), layerType;
                 
@@ -730,12 +742,13 @@ public abstract class Geosphere extends Surface {
 
                     if (moltenLayer.getMoltenRockFromSurface() > 8000) {
                         int maxCellCount = 8;
-                        ArrayList<GeoCell> lowestList = new ArrayList<>(maxCellCount);
+                        ArrayList<Point> lowestList = new ArrayList<>(maxCellCount);
                         getLowestCells(toUpdate, lowestList, maxCellCount);
 
                         if (!lowestList.isEmpty()) {
                             int rIndex = rand.nextInt(lowestList.size());
-                            GeoCell lowest = lowestList.get(rIndex);
+                            Point p = lowestList.get(rIndex);
+                            PlanetCell lowest = getCellAt(p.getX(), p.getY());
 
                             if (lowest != null && lowest != toUpdate) {
                                 float currentCellHeight = toUpdate.getHeightWithoutOceans() / 2f;
@@ -765,6 +778,7 @@ public abstract class Geosphere extends Surface {
 
                                 lowest.getMoltenRockLayer().putMoltenRockToSurface(totalMoved, moltenType);
                             }
+                            release(lowest);
                         }
                     } else {
                         float massToSolidify = moltenLayer.removeAllMoltenRock();
@@ -773,7 +787,7 @@ public abstract class Geosphere extends Surface {
                         toUpdate.recalculateHeight();
                     }
                 }
-
+                release(toUpdate);
             }
 
             @Override
