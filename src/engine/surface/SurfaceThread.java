@@ -63,20 +63,6 @@ public class SurfaceThread extends TaskRunner {
         return objects.iterator();
     }
     
-    private void updateObjects() {
-        
-        Iterator<PlanetObject> iter = objects.iterator();
-        
-        while(iter.hasNext()){
-            PlanetObject object = iter.next();
-            if (object.isDead()) {
-                iter.remove();
-            } else {
-                object.update();
-            }
-        }
-        
-    }
     public final void update() {
 
         try {
@@ -131,8 +117,16 @@ public class SurfaceThread extends TaskRunner {
         public void after() {
         }
         
-
-        
+        private void updateObjects() {
+            Iterator<PlanetObject> iter = objects.iterator();
+            while (iter.hasNext()) {
+                PlanetObject object = iter.next();
+                if (object.isDead()) {
+                    iter.remove();
+                } else {
+                    object.update();
+                }
+            }
+        }
     }
-    
 }
