@@ -8,7 +8,6 @@ import engine.util.task.TaskFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
-import worlds.planet.Planet;
 import worlds.planet.cells.atmosphere.AtmoCell;
 import worlds.planet.enums.GasType;
 
@@ -58,7 +57,7 @@ public abstract class Atmosphere extends Hydrosphere {
             
             @Override
             public void perform(int x, int y) {
-            	PlanetCell cell = getCellAt(x, y);
+            	PlanetCell cell = waitForCellAt(x, y);
                 if (evaporate){
                     float amount = 32;
                     Stream<AtmoCell.AirLayer> layers = cell.getAirLayersStream();

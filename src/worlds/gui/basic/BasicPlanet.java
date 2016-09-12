@@ -16,7 +16,6 @@ import engine.surface.SurfaceThread;
 import engine.util.Delay;
 import engine.util.Tools;
 import engine.util.task.BasicTask;
-import engine.util.task.Task;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -28,7 +27,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
-import worlds.planet.Planet.TimeScale;
 import worlds.planet.cells.PlanetCell;
 import worlds.planet.cells.geology.GeoCell;
 import worlds.planet.cells.geology.Stratum;
@@ -38,7 +36,7 @@ import worlds.planet.surface.PlanetSurface;
 
 /**
  * The BasicPlanet is to allow a user to see what is happening to the planet
- using Java API JFrame and Java graphics.
+ * using Java API JFrame and Java graphics.
  *
  * @author Richard DeSilvey
  */
@@ -49,7 +47,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
     private Deque<Integer> averages;
     private int totalAvg;
     private StrataFrame crossSection;
-    
+
     private static final int SIZE = 512;
 
     public BasicPlanet() {
@@ -65,57 +63,57 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
     private void prepareWorld() {
         PlanetSurface surface = testWorld.getSurface();
         PlanetCell cell;
-        for (int i = 0; i < 30; i++){
+        for (int i = 0; i < 30; i++) {
             surface.addToSurface(Layer.BASALT, 2000);
         }
-        for (int i = 0; i < 50; i++){
-        	cell = surface.getCellAt(i, 0);
+        for (int i = 0; i < 50; i++) {
+            cell = surface.waitForCellAt(i, 0);
             cell.add(Layer.BASALT, 250000, true);
             surface.release(cell);
-            
-            cell = surface.getCellAt(i, 2);
+
+            cell = surface.waitForCellAt(i, 2);
             cell.add(Layer.BASALT, 250000, true);
             surface.release(cell);
         }
-        surface.getCellAt(0, 1).add(Layer.BASALT, 250000, true);
-        for (int i = 0; i < 10; i++){
-        	cell = surface.getCellAt(i, 1);
+        cell = surface.waitForCellAt(0, 1);
+        cell.add(Layer.BASALT, 250000, true);
+        surface.release(cell);
+        for (int i = 0; i < 10; i++) {
+            cell = surface.waitForCellAt(i, 1);
             cell.add(Layer.BASALT, 200000, true);
             surface.release(cell);
         }
-        for (int i = 10; i < 20; i++){
-        	cell = surface.getCellAt(i, 1);
+        for (int i = 10; i < 20; i++) {
+            cell = surface.waitForCellAt(i, 1);
             cell.add(Layer.BASALT, 150000, true);
             surface.release(cell);
         }
-        for (int i = 20; i < 30; i++){
-        	cell = surface.getCellAt(i, 1);
+        for (int i = 20; i < 30; i++) {
+            cell = surface.waitForCellAt(i, 1);
             cell.add(Layer.BASALT, 100000, true);
             surface.release(cell);
         }
-        for (int i = 30; i < 40; i++){
-        	cell = surface.getCellAt(i, 1);
+        for (int i = 30; i < 40; i++) {
+            cell = surface.waitForCellAt(i, 1);
             cell.add(Layer.BASALT, 50000, true);
             surface.release(cell);
         }
-        
+
 //        surface.addTask(new AddWaterTask());
-        
 //        surface.addWaterToAllCells(9000);
         testWorld.setTimescale(Planet.TimeScale.Geological);
         Geosphere.heatDistributionCount = 100;
 
-        testWorld.play();
     }
 
     private void setupJFrame() {
         addWindowListener(new JAdapter());
         addKeyListener(new KeyController());
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setSize(2*SIZE, SIZE);
+        setSize(2 * SIZE, SIZE);
         setLocationRelativeTo(null);
         setVisible(true);
-        
+
         GridLayout layout = new GridLayout(1, 2);
         setLayout(layout);
         crossSection = new StrataFrame();
@@ -128,13 +126,11 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
         testWorld = new TestWorld(50, 1);
         testWorld.getSurface().setDisplay(this);
         renderFrame = new Frame(SIZE, SIZE);
-        renderFrame.registerMap(testWorld.getSurface());
     }
 
     @Override
     public void update() {
-        renderFrame.repaint();
-        crossSection.repaint();
+        repaint();
         calculateAverage();
 
         long age = testWorld.getSurface().getPlanetAge();
@@ -158,10 +154,10 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
     private class AddWaterTask extends BasicTask {
 
         private Delay delay;
-        
+
         @Override
         public void before() {
-            if (delay == null){
+            if (delay == null) {
                 delay = new Delay(2);
             }
         }
@@ -172,74 +168,59 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
 
         @Override
         public void perform() {
-            if (delay.check()){
-                PlanetCell cell = testWorld.getSurface().getCellAt(1, 1);
+            if (delay.check()) {
+                PlanetCell cell = testWorld.getSurface().waitForCellAt(1, 1);
                 cell.addOceanMass(1);
                 testWorld.getSurface().release(cell);
             }
         }
-        
+
     }
 
-    private class RenderCellData extends BasicTask {
-
-        @Override
-        public void perform() {
-            renderFrame.setRasterOfEachImage();
-        }
-
-        @Override
-        public void before() {
-        }
-
-        @Override
-        public void after() {
-        }
-        
-    }
-    
     /* **************************** Keyboard ******************************/
     private class KeyController extends KeyAdapter {
-
 
         @Override
         public void keyPressed(KeyEvent e) {
             checkKeys(e);
         }
-        
-        private void checkKeys(KeyEvent e){
+
+        private void checkKeys(KeyEvent e) {
             switch (e.getKeyCode()) {
+                case KeyEvent.VK_SPACE:
+                    testWorld.play();
+                    break;
                 case KeyEvent.VK_UP:
                     int curY = crossSection.viewY;
-                    if (--curY < 0){
+                    if (--curY < 0) {
                         curY = testWorld.getSurface().getGridWidth() - 1;
                     }
                     crossSection.viewY = curY;
                     break;
                 case KeyEvent.VK_DOWN:
                     curY = crossSection.viewY;
-                    if (++curY >= testWorld.getSurface().getGridWidth()){
+                    if (++curY >= testWorld.getSurface().getGridWidth()) {
                         curY = 0;
                     }
                     crossSection.viewY = curY;
                     break;
                 case KeyEvent.VK_LEFT:
                     int curX = crossSection.viewX;
-                    if (--curX < 0){
+                    if (--curX < 0) {
                         curX = testWorld.getSurface().getGridWidth() - 1;
                     }
                     crossSection.viewX = curX;
                     break;
                 case KeyEvent.VK_RIGHT:
                     curX = crossSection.viewX;
-                    if (++curX < 0){
+                    if (++curX < 0) {
                         curX = testWorld.getSurface().getGridWidth() - 1;
                     }
                     crossSection.viewX = curX;
                     break;
             }
         }
-        
+
         @Override
         public void keyReleased(KeyEvent e) {
             Planet p = Planet.instance();
@@ -278,7 +259,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
                     break;
                 case KeyEvent.VK_NUMPAD7:
                     crossSection.LAYER_THICKNESS--;
-                    if (crossSection.LAYER_THICKNESS < 1){
+                    if (crossSection.LAYER_THICKNESS < 1) {
                         crossSection.LAYER_THICKNESS = 1;
                     }
                     break;
@@ -295,7 +276,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
 
         public int viewX = 0, viewY = 0;
         public int LAYER_THICKNESS = 8;
-        
+
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
@@ -306,7 +287,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
                 Logger.getLogger(SurfaceThread.class.getName()).log(Level.SEVERE, null, e);
             }
         }
-        
+
         public void draw(Graphics2D g2d) {
 
             if (Planet.instance() == null) {
@@ -349,7 +330,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
                     startDrawHeight *= cellThicknessRatio;
 
                     // Draw Ocean
-                    if (cell.hasOcean()){
+                    if (cell.hasOcean()) {
                         layerThickness = cell.getOceanHeight() * cellThicknessRatio;
 
                         drawLayer(g2d, Color.BLUE, cellIndex, cellWidth,
@@ -360,7 +341,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
                     // Draw Sediments
                     GeoCell.SedimentBuffer sedimentBuffer = cell.getSedimentBuffer();
                     Layer sedimentType = sedimentBuffer.getSedimentType();
-                    if (sedimentType != null){
+                    if (sedimentType != null) {
                         float sedDepth = Tools.calcHeight(sedimentBuffer.getSediments(), Planet.instance().getCellArea(), sedimentType.getDensity());
                         layerThickness = sedDepth * cellThicknessRatio;
                         drawLayer(g2d, sedimentType.getColor(), cellIndex, cellWidth,
@@ -368,7 +349,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
 
                         startDrawHeight += layerThickness;
                     }
-                    
+
                     nextStratum = cell.peekTopStratum();
 
                     while (nextStratum != null) {
@@ -409,9 +390,9 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
             g2d.fillRect(x, y, cellWidth, height);
         }
     }
+
     private class Frame extends JPanel {
 
-        private SurfaceMap<PlanetCell> map;
         private List<BufferedImage> images;
 
         public Frame(int w, int h) {
@@ -421,26 +402,16 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
             images = new ArrayList<>();
         }
 
-        public void registerMap(SurfaceMap<PlanetCell> map) {
-            this.map = map;
-        }
-
         @Override
         protected void paintComponent(Graphics graphics) {
             super.paintComponent(graphics);
             try {
                 Graphics2D g2d = (Graphics2D) graphics;
-                render(g2d);
+                setRasterOfEachImage();
+                renderEachImage(g2d);
                 g2d.dispose();
             } catch (Exception e) {
                 Logger.getLogger(SurfaceThread.class.getName()).log(Level.SEVERE, null, e);
-            }
-        }
-
-        private void render(Graphics2D g2d) {
-            if (map != null) {
-                setRasterOfEachImage();
-                renderEachImage(g2d);
             }
         }
 
@@ -459,12 +430,13 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
             WritableRaster raster = null;
             List<Integer[]> dataSets;
 
-            int bounds = Planet.instance().getSurface().getGridWidth();
+            PlanetSurface surface = testWorld.getSurface();
+            int bounds = surface.getGridWidth();
 
             for (int x = 0; x < bounds; x++) {
                 for (int y = 0; y < bounds; y++) {
 
-                    dataSets = map.getCellData(x, y);
+                    dataSets = surface.getCellData(x, y);
 
                     firstTimeInit(dataSets, bounds);
 
@@ -495,11 +467,10 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
 
     }
 
-    
     /* **************************** Main ******************************/
     public static void main(String[] args) {
         new BasicPlanet();
-        
+
     }
 
 }

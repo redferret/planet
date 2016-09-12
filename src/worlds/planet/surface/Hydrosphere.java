@@ -1,10 +1,11 @@
 package worlds.planet.surface;
 
-import worlds.planet.cells.HydroCell;
+
 import worlds.planet.cells.HydroCell.ErosionBuffer;
 import engine.util.task.Task;
 import engine.util.task.TaskAdapter;
 import engine.util.task.TaskFactory;
+import worlds.planet.cells.PlanetCell;
 
 /**
  * The hydrosphere is everything that deals with rivers, lakes, seas, and
@@ -33,7 +34,7 @@ public abstract class Hydrosphere extends Geosphere {
     public void addWaterToAllCells(float amount) {
         int count = getTotalNumberOfCells();
         for (int i = 0; i < count; i++) {
-            getCellAt(i).addOceanMass(amount);
+            waitForCellAt(i).addOceanMass(amount);
         }
     }
 
@@ -52,10 +53,11 @@ public abstract class Hydrosphere extends Geosphere {
             
             @Override
             public void perform(int x, int y) {
-                HydroCell toUpdate = getCellAt(x, y);
+                PlanetCell toUpdate = waitForCellAt(x, y);
                 ErosionBuffer erosionBuffer = toUpdate.getErosionBuffer();
                 erosionBuffer.updateFlow();
                 erosionBuffer.updateVelocityField();
+                release(toUpdate);
             }
 
             @Override

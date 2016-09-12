@@ -2,7 +2,7 @@
 
 package worlds.planet.cells.biology;
 
-import engine.cells.Cell;
+import engine.surface.Cell;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;

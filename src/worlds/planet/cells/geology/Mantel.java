@@ -5,7 +5,7 @@ package worlds.planet.cells.geology;
 import java.awt.Color;
 import java.util.List;
 import java.util.Random;
-import engine.cells.Cell;
+import engine.surface.Cell;
 import engine.util.Tools;
 
 /**

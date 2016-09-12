@@ -5,6 +5,7 @@ package worlds.planet.surface;
 import engine.util.Delay;
 import engine.util.task.Task;
 import engine.util.task.TaskFactory;
+import worlds.planet.cells.PlanetCell;
 
 /**
  *
@@ -34,7 +35,9 @@ public abstract class Biosphere extends Hydrosphere {
             
             @Override
             public void perform(int x, int y) {
-                getCellAt(x, y).updateBiology();
+                PlanetCell cell = waitForCellAt(x, y);
+                cell.updateBiology();
+                release(cell);
             }
 
             @Override

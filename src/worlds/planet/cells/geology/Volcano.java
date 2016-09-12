@@ -107,7 +107,7 @@ public class Volcano extends PlanetObject {
         nx = Tools.checkBounds(nx, worldSize);
         ny = Tools.checkBounds(ny, worldSize);
         
-        GeoCell cell = parent.getCellAt(nx, ny);
+        GeoCell cell = parent.waitForCellAt(nx, ny);
         Stratum temp = null;
         if (cell == null) return;
         else if (cell.peekTopStratum() == null) return;

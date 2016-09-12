@@ -30,7 +30,7 @@ public class GeoCellTest {
     @Test
     public void zeroGeoDensityTest(){
 
-        GeoCell testCell = testWorld.getSurface().getCellAt(0, 0);
+        GeoCell testCell = testWorld.getSurface().waitForCellAt(0, 0);
         
         Float actualDensity = testCell.getGeoDensity();
         Float expectedDensity = 0f;
@@ -45,7 +45,7 @@ public class GeoCellTest {
     @Test
     public void zeroDensityTest(){
         
-        GeoCell testCell = testWorld.getSurface().getCellAt(0, 0);
+        GeoCell testCell = testWorld.getSurface().waitForCellAt(0, 0);
         
         Float actualDensity = testCell.getDensity();
         Float expectedDensity = 0f;
@@ -60,7 +60,7 @@ public class GeoCellTest {
     @Test
     public void calculateDensityTest(){
         
-        GeoCell testCell = testWorld.getSurface().getCellAt(10, 10);
+        GeoCell testCell = testWorld.getSurface().waitForCellAt(10, 10);
         
         Layer type = Layer.BASALT;
         float totalMass = 1000;
@@ -90,7 +90,7 @@ public class GeoCellTest {
         float heightRangeDiff = 0.000005f;
         long cellBase = testWorld.getCellArea();
 
-        GeoCell testCell = testWorld.getSurface().getCellAt(50, 50);
+        GeoCell testCell = testWorld.getSurface().waitForCellAt(50, 50);
 
         testCell.add(Layer.RHYOLITE, 10000, true);
         testCell.add(Layer.BASALT, 500, true);
@@ -133,7 +133,7 @@ public class GeoCellTest {
         String incorrectAmtsMsg = "The amount removed is incorrect";
         String incorrectLayerMsg = "The top layer is incorrect";
         
-        GeoCell testCell = testWorld.getSurface().getCellAt(25, 25);
+        GeoCell testCell = testWorld.getSurface().waitForCellAt(25, 25);
 
         testCell.add(Layer.RHYOLITE, 10000, true);
         testCell.add(Layer.BASALT, 500, true);
@@ -175,7 +175,7 @@ public class GeoCellTest {
         
         Layer strata[] = {Layer.BASALT, Layer.RHYOLITE, Layer.MAFIC_SANDSTONE, Layer.SHALE,
                           Layer.BASALT, Layer.RHYOLITE, Layer.MAFIC_SANDSTONE, Layer.SHALE};
-        GeoCell testCell = testWorld.getSurface().getCellAt(30, 30);
+        GeoCell testCell = testWorld.getSurface().waitForCellAt(30, 30);
         
         for (Layer layer : strata){
             testCell.add(layer, 1000, true);
@@ -215,7 +215,7 @@ public class GeoCellTest {
     @Test
     public void insertMassTest(){
         Layer strata[] = {Layer.BASALT, Layer.RHYOLITE, Layer.MAFIC_SANDSTONE, Layer.SHALE};
-        GeoCell testCell = testWorld.getSurface().getCellAt(20, 20);
+        GeoCell testCell = testWorld.getSurface().waitForCellAt(20, 20);
         float mass;
         for (Layer layer : strata){
             mass = Tools.calcMass(200, 100, layer);
@@ -235,7 +235,7 @@ public class GeoCellTest {
     @Test
     public void addingToLayersTest(){
         
-        GeoCell testCell = testWorld.getSurface().getCellAt(10, 23);
+        GeoCell testCell = testWorld.getSurface().waitForCellAt(10, 23);
         testCell.add(Layer.BASALT, 5000, true);
         testCell.add(Layer.FELSIC_SANDSTONE, 1500, true);
         testCell.add(Layer.FELSIC_SANDSTONE, 250, true);
@@ -249,7 +249,7 @@ public class GeoCellTest {
      */
     @Test
     public void oceanTest(){
-        GeoCell testCell = testWorld.getSurface().getCellAt(0, 10);
+        GeoCell testCell = testWorld.getSurface().waitForCellAt(0, 10);
         assertFalse(testCell.hasOcean());
         
         HydroCell hydro = (HydroCell)testCell;
@@ -264,7 +264,7 @@ public class GeoCellTest {
     @Test
     public void buyoancyTest(){
         float heightRangeDiff = 0.05f;
-        GeoCell testCell = testWorld.getSurface().getCellAt(15, 20);
+        GeoCell testCell = testWorld.getSurface().waitForCellAt(15, 20);
         
         testCell.add(Layer.BASALT, 1000000, true);
         

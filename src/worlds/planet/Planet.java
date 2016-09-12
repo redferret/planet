@@ -6,7 +6,6 @@ import engine.surface.SurfaceMap;
 import engine.surface.SurfaceThread;
 import java.util.concurrent.atomic.AtomicInteger;
 import worlds.planet.surface.PlanetSurface;
-import worlds.planet.surface.Surface;
 
 /**
  * The class that encapsulates a surface and keeps track of the timescale.

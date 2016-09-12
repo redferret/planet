@@ -2,7 +2,7 @@
 
 package worlds.planet.cells.biology;
 
-import engine.cells.AtomicData;
+import engine.util.concurrent.AtomicData;
 import engine.surface.SurfaceMap;
 import engine.util.task.Boundaries;
 import engine.util.task.Task;
@@ -92,7 +92,7 @@ public class BioSurface extends SurfaceMap<BioNode> {
         @Override
         public void perform(int x, int y) {
             
-            BioNode node = getCellAt(x, y);
+            BioNode node = waitForCellAt(x, y);
             
             if (node.hasLife()) {
                 BioNode[] neighbors = countNeighbors(node);
@@ -144,14 +144,14 @@ public class BioSurface extends SurfaceMap<BioNode> {
                         neighborY = y;
                     }
                     
-                    neighborCell = surface.getCellAt(neighborCellX, neighborCellY);
+                    neighborCell = surface.waitForCellAt(neighborCellX, neighborCellY);
                     
                     BioSurface bioSurfaceRef = null;
                     if (neighborCell != parentCell){
                     	bioSurfaceRef = neighborCell.getBioSurface();
-                        neighborNode = bioSurfaceRef.getCellAt(neighborX, neighborY);
+                        neighborNode = bioSurfaceRef.waitForCellAt(neighborX, neighborY);
                     }else{
-                        neighborNode = getCellAt(neighborX, neighborY);
+                        neighborNode = waitForCellAt(neighborX, neighborY);
                     }
                     
                     if ((neighborNode != node) && neighborNode.hasLife()) {

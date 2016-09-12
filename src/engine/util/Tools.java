@@ -220,7 +220,7 @@ public class Tools {
             mx = checkBounds(tx, Planet.instance().getSurface().getGridWidth());
             my = checkBounds(ty, Planet.instance().getSurface().getGridWidth());
 
-            cell = surface.getCellAt(mx, my);
+            cell = surface.waitForCellAt(mx, my);
 
             if (cell.getHeight() < lowest.getHeight()) {
                 lowest = cell;

@@ -1,4 +1,4 @@
-package engine.cells;
+package engine.surface;
 
 import java.util.List;
 
@@ -33,7 +33,7 @@ public abstract class Cell {
         return y;
     }
     
-    public Point generatePoint(){
+    public Point getPosition(){
     	return new Point(x, y);
     }
     

@@ -234,7 +234,7 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
             }
 
             private void updateMinMaxHeight(int x, int y) {
-            	PlanetCell cell = getCellAt(x, y);
+            	PlanetCell cell = waitForCellAt(x, y);
                 float cellHeight = cell.getHeightWithoutOceans();
                 release(cell);
                 if (cellHeight < absLowestHeight) {

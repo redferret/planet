@@ -218,12 +218,12 @@ public class HydroCell extends GeoCell {
     
     private ErosionBuffer erosionBuffer;
     private SuspendedSediments suspendedSediments;
-    private AtomicFloat oceanMass;
+    private float oceanMass;
     
     public HydroCell(int x, int y) {
         super(x, y);
         
-        oceanMass = new AtomicFloat(0);
+        oceanMass = 0f;
         erosionBuffer = new ErosionBuffer();
         suspendedSediments = new SuspendedSediments();
     }
@@ -243,22 +243,22 @@ public class HydroCell extends GeoCell {
      * @return The amount that was removed or added.
      */
     public float addOceanMass(float amount){
-        float omass = getOceanMass();
-        if (omass + amount < 0) {
-            oceanMass.set(0);
-            return -omass;
+        if (oceanMass + amount < 0) {
+            float temp = oceanMass;
+            oceanMass = 0;
+            return -temp;
         }else {
-            oceanMass.set(omass + amount);
+            oceanMass += amount;
             return amount;
         }
     }
     
     public void setOceanMass(float m){
-        oceanMass.set(m);
+        oceanMass = m;
     }
     
     public float getOceanMass() {
-        return oceanMass.get();
+        return oceanMass;
     }
     
     public float getOceanVolume(){

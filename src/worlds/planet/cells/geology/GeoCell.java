@@ -272,19 +272,19 @@ public class GeoCell extends Mantel {
      * is removed or it's thickness is altered the totalMass is updated. The
      * units are in kilograms.
      */
-    private AtomicFloat totalMass;
+    private float totalMass;
 
     /**
      * The total volume is calculated each time stratum is added or removed or
      * updated and is used to determine the average density of this cell in
      * cubic meters.
      */
-    private AtomicFloat totalVolume;
+    private float totalVolume;
 
     /**
      * The amount of this cell that is currently submerged in the mantel.
      */
-    private AtomicFloat curAmountSubmerged;
+    private float curAmountSubmerged;
 
     /**
      * The type of crust this cell is.
@@ -342,9 +342,9 @@ public class GeoCell extends Mantel {
         moltenRockLayer = new MoltenRockLayer();
 
         totalStrataThickness = new AtomicFloat(0);
-        totalMass = new AtomicFloat(0);
-        totalVolume = new AtomicFloat(0);
-        curAmountSubmerged = new AtomicFloat(0);
+        totalMass = 0f;
+        totalVolume = 0f;
+        curAmountSubmerged = 0f;
         depositAgeTimeStamp = 0;
 
     }
@@ -419,11 +419,11 @@ public class GeoCell extends Mantel {
     }
 
     public float getTotalMass() {
-        return totalMass.get();
+        return totalMass;
     }
 
     public float getTotalVolume() {
-        return totalVolume.get();
+        return totalVolume;
     }
 
     /**
@@ -705,9 +705,8 @@ public class GeoCell extends Mantel {
         float temp = totalStrataThickness.get();
         totalStrataThickness.set(temp + Tools.calcHeight(mass, cellArea, type));
         
-        totalMass.set(totalMass.get() + mass);
-        totalVolume.set(totalVolume.get() + (mass / type.getDensity()));
-
+        totalMass += mass;
+        totalVolume += mass / type.getDensity();
     }
 
     /**
@@ -918,7 +917,7 @@ public class GeoCell extends Mantel {
             recalculateHeight();
         }
 
-        return cellHeight - curAmountSubmerged.get();
+        return cellHeight - curAmountSubmerged;
 
     }
 
@@ -934,7 +933,7 @@ public class GeoCell extends Mantel {
         cellHeight = (oceanVolume + getTotalVolume()) / instance().getCellArea();
         amountSubmerged = cellHeight * (density / mantel_density);
 
-        curAmountSubmerged.set(amountSubmerged);
+        curAmountSubmerged = amountSubmerged;
     }
 
     /**
@@ -953,14 +952,14 @@ public class GeoCell extends Mantel {
     }
 
     private void shiftHeight(float amountSubmerged) {
-        float cas = curAmountSubmerged.get();
+        float cas = curAmountSubmerged;
         float diff = Math.abs(amountSubmerged - cas);
         float change = diff / 2f;
         change = (change < 0.01f) ? 0.01f : change;
         if (amountSubmerged > cas) {
-            curAmountSubmerged.set(cas + change);
+            curAmountSubmerged += change;
         } else if (amountSubmerged < cas) {
-            curAmountSubmerged.set(cas - change);
+            curAmountSubmerged -= change;
         }
     }
 
