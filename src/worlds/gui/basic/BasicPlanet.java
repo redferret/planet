@@ -64,26 +64,39 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
 
     private void prepareWorld() {
         PlanetSurface surface = testWorld.getSurface();
-        
+        PlanetCell cell;
         for (int i = 0; i < 30; i++){
             surface.addToSurface(Layer.BASALT, 2000);
         }
         for (int i = 0; i < 50; i++){
-            surface.getCellAt(i, 0).add(Layer.BASALT, 250000, true);
-            surface.getCellAt(i, 2).add(Layer.BASALT, 250000, true);
+        	cell = surface.getCellAt(i, 0);
+            cell.add(Layer.BASALT, 250000, true);
+            surface.release(cell);
+            
+            cell = surface.getCellAt(i, 2);
+            cell.add(Layer.BASALT, 250000, true);
+            surface.release(cell);
         }
         surface.getCellAt(0, 1).add(Layer.BASALT, 250000, true);
         for (int i = 0; i < 10; i++){
-            surface.getCellAt(i, 1).add(Layer.BASALT, 200000, true);
+        	cell = surface.getCellAt(i, 1);
+            cell.add(Layer.BASALT, 200000, true);
+            surface.release(cell);
         }
         for (int i = 10; i < 20; i++){
-            surface.getCellAt(i, 1).add(Layer.BASALT, 150000, true);
+        	cell = surface.getCellAt(i, 1);
+            cell.add(Layer.BASALT, 150000, true);
+            surface.release(cell);
         }
         for (int i = 20; i < 30; i++){
-            surface.getCellAt(i, 1).add(Layer.BASALT, 100000, true);
+        	cell = surface.getCellAt(i, 1);
+            cell.add(Layer.BASALT, 100000, true);
+            surface.release(cell);
         }
         for (int i = 30; i < 40; i++){
-            surface.getCellAt(i, 1).add(Layer.BASALT, 50000, true);
+        	cell = surface.getCellAt(i, 1);
+            cell.add(Layer.BASALT, 50000, true);
+            surface.release(cell);
         }
         
 //        surface.addTask(new AddWaterTask());
@@ -162,6 +175,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
             if (delay.check()){
                 PlanetCell cell = testWorld.getSurface().getCellAt(1, 1);
                 cell.addOceanMass(1);
+                testWorld.getSurface().release(cell);
             }
         }
         
@@ -299,7 +313,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
                 return;
             }
 
-            PlanetSurface surface = (PlanetSurface) Planet.instance().getSurface();
+            PlanetSurface surface = testWorld.getSurface();
 
             if (surface == null) {
                 return;
@@ -366,6 +380,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
                         nextStratum = nextStratum.next();
                     }
                 }
+                surface.release(cell);
             }
         }
 
@@ -396,7 +411,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
     }
     private class Frame extends JPanel {
 
-        private SurfaceMap map;
+        private SurfaceMap<PlanetCell> map;
         private List<BufferedImage> images;
 
         public Frame(int w, int h) {
@@ -406,7 +421,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
             images = new ArrayList<>();
         }
 
-        public void registerMap(SurfaceMap map) {
+        public void registerMap(SurfaceMap<PlanetCell> map) {
             this.map = map;
         }
 
