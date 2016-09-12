@@ -103,7 +103,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
 //        surface.addWaterToAllCells(9000);
         testWorld.setTimescale(Planet.TimeScale.Geological);
         Geosphere.heatDistributionCount = 100;
-
+        testWorld.play();
     }
 
     private void setupJFrame() {
@@ -187,9 +187,6 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
 
         private void checkKeys(KeyEvent e) {
             switch (e.getKeyCode()) {
-                case KeyEvent.VK_SPACE:
-                    testWorld.play();
-                    break;
                 case KeyEvent.VK_UP:
                     int curY = crossSection.viewY;
                     if (--curY < 0) {
