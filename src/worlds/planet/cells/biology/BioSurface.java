@@ -24,7 +24,6 @@ public class BioSurface extends SurfaceMap<BioNode> {
 
     private static final int BIO_CELL_COUNT = 3, THREAD_COUNT = 1,
             BIO_TOTAL_COUNT = BIO_CELL_COUNT * BIO_CELL_COUNT, NO_DELAY = 0;
-    private static final String THREAD_NAME = "Bio Surface";
     
     /**
      * The number of cells that are currently active. If the count is zero then
@@ -35,7 +34,7 @@ public class BioSurface extends SurfaceMap<BioNode> {
     private TaskManager manager;
     
     public BioSurface(BioCell parentCell) {
-        super(BIO_CELL_COUNT, NO_DELAY, THREAD_NAME, THREAD_COUNT);
+        super(BIO_CELL_COUNT, NO_DELAY, THREAD_COUNT);
         this.parentCell = parentCell;
         manager = new TaskManager(new Boundaries(0, BIO_CELL_COUNT));
         manager.addTask(new BioTask());

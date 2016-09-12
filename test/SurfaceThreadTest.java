@@ -21,7 +21,7 @@ public class SurfaceThreadTest {
     @Before
     public void setUp() {
         waitingGate = new CyclicBarrier(1);
-        testThread = new SurfaceThread(1, BOUNDS, "Test Thread", waitingGate);
+        testThread = new SurfaceThread(1, BOUNDS, waitingGate);
         testThread.addTask(new ExecptionTask());
     }
     

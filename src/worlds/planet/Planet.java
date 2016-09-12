@@ -19,7 +19,7 @@ public abstract class Planet {
     private AtomicInteger area;
     protected TimeScale timescale;
     private static Planet current;
-    private Surface planetSurface;
+    private PlanetSurface planetSurface;
     
     private static final int EXISTING_INSTANCE_ERR_MSG_CODE = 5000;
     private static final String EXISTING_INSTANCE_ERR_MSG = 
@@ -43,7 +43,7 @@ public abstract class Planet {
      * @param ageStepDelay The amount of time to delay between each update to
      * the planet's age.
      * @param surfaceThreadsDelay How fast does the planet thread(s) update
-     * @param threadCount The number of threads that work on the map
+     * @param threadCount The number of threadRefs that work on the map
      */
     public Planet(int gridWidth, int cellLength, int ageStepDelay, int surfaceThreadsDelay, int threadCount) {
         Logger.getLogger(SurfaceMap.class.getName()).log(Level.INFO, "New Planet");
@@ -64,7 +64,6 @@ public abstract class Planet {
 
     protected final void startThreads() {
         planetSurface.startSurfaceThreads();
-        planetSurface.start();
     }
 
     public final void play() {
@@ -77,7 +76,7 @@ public abstract class Planet {
         planetSurface.pause();
     }
     
-    public Surface getSurface() {
+    public PlanetSurface getSurface() {
         return planetSurface;
     }
 

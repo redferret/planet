@@ -26,8 +26,8 @@ public class TaskFactoryTest {
     public void setUp() {
         factory = new MyFactory();
         waitingGate = new CyclicBarrier(1);
-        testThread = new SurfaceThread(1, BOUNDS, "Test Thread 1", waitingGate);
-        secondTestThread = new SurfaceThread(1, BOUNDS, "Test Thread 2", waitingGate);
+        testThread = new SurfaceThread(1, BOUNDS, waitingGate);
+        secondTestThread = new SurfaceThread(1, BOUNDS, waitingGate);
     }
     
     /**

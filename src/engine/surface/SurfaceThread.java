@@ -39,11 +39,10 @@ public class SurfaceThread extends MThread {
      *
      * @param delay The amount of time to delay each frame in milliseconds
      * @param bounds The surface boundaries
-     * @param name The name of this thread
      * @param waitingGate The CyclicBarrier to synchronize with other threads
      */
-    public SurfaceThread(int delay, Boundaries bounds, String name, CyclicBarrier waitingGate) {
-        super(delay, name, CONTINUOUS);
+    public SurfaceThread(int delay, Boundaries bounds, CyclicBarrier waitingGate) {
+        super(delay, CONTINUOUS);
         this.waitingGate = waitingGate;
         manager = new TaskManager(bounds);
         curFrame = 0;
@@ -92,7 +91,7 @@ public class SurfaceThread extends MThread {
     }
 
     private void logException(final java.lang.Exception e) throws SurfaceThreadException {
-        String msg = "An exception occured when updating the surface:" + getName();
+        String msg = "An exception occured when updating the surface";
         if (throwExecption){
             throw new SurfaceThreadException(e);
         }else{

@@ -6,6 +6,8 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import engine.util.concurrent.MThread;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Tests the MThread class for certain expected behavior.
@@ -15,17 +17,19 @@ public class MThreadTest {
 
     public static CountDownLatch latch;
     private TestThread testThread;
+    private Thread thread;
 
     @Before
     public void setup(){
         testThread = new TestThread();
-        testThread.start();
+        thread = new Thread(testThread);
     }
     
     @Test
     public void playAndPauseTest() throws InterruptedException {
         latch = new CountDownLatch(1);
         
+        thread.start();
         testThread.play();
         boolean signaled = latch.await(600, TimeUnit.MILLISECONDS);
         assertTrue(signaled);
@@ -76,7 +80,7 @@ public class MThreadTest {
     public void continuousExecutionTest() throws InterruptedException{
         testThread.setContinuous(true);
         latch = new CountDownLatch(5);
-        
+        thread.start();
         testThread.play();
         boolean signaled = latch.await(100, TimeUnit.MILLISECONDS);
         
@@ -93,11 +97,10 @@ public class MThreadTest {
 class TestThread extends MThread {
 
     private static final int NO_DELAY = 0;
-    private static final String THREAD_NAME = "Test Thread";
     private static final boolean CONTINUOUS = false;
     
     public TestThread() {
-        super(NO_DELAY, THREAD_NAME, CONTINUOUS);
+        super(NO_DELAY, CONTINUOUS);
     }
 
     @Override

@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * thread has a delay time on each update.
  * @author Richard DeSilvey
  */
-public abstract class MThread extends Thread {
+public abstract class MThread implements Runnable {
 
     /**
      * The delay speed in milliseconds.
@@ -33,14 +33,13 @@ public abstract class MThread extends Thread {
     private AtomicInteger timeLapse;
     private CyclicBarrier waiter;
     
-    public MThread(int delay, String name, boolean continuous){
+    public MThread(int delay, boolean continuous){
         miliSeconds = delay;
         this.continuous = continuous;
         running = false;
         executing = true;
         timeLapse = new AtomicInteger(0);
         waiter = new CyclicBarrier(2);
-        setName(name);
     }
     
     public int timeLapse(){
@@ -84,7 +83,7 @@ public abstract class MThread extends Thread {
                     timeLapse.getAndSet((int) (System.currentTimeMillis() - start));
                 }
                 
-                sleep(miliSeconds);
+                Thread.sleep(miliSeconds);
                 
                 if (!running || !continuous){
                     waiter.await();

@@ -63,7 +63,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
     }
 
     private void prepareWorld() {
-        PlanetSurface surface = (PlanetSurface) testWorld.getSurface();
+        PlanetSurface surface = testWorld.getSurface();
         
         for (int i = 0; i < 30; i++){
             surface.addToSurface(Layer.BASALT, 2000);

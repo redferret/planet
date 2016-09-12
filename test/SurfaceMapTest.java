@@ -134,7 +134,7 @@ class TestSurface extends SurfaceMap<TestCell> {
     
     public TestSurface(int planetWidth, int surfaceThreadDelay, int threadCount, 
             CountDownLatch latch) {
-        super(planetWidth, surfaceThreadDelay, "Test Surface", threadCount);
+        super(planetWidth, surfaceThreadDelay, threadCount);
         this.latch = latch;
         setupThreads(threadCount, surfaceThreadDelay);
         setupDefaultMap(planetWidth, threadCount);
