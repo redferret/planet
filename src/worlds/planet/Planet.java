@@ -43,7 +43,7 @@ public abstract class Planet {
      * @param ageStepDelay The amount of time to delay between each update to
      * the planet's age.
      * @param surfaceThreadsDelay How fast does the planet thread(s) update
-     * @param threadCount The number of threadRefs that work on the map
+     * @param threadCount The number of threadReferences that work on the map
      */
     public Planet(int gridWidth, int cellLength, int ageStepDelay, int surfaceThreadsDelay, int threadCount) {
         Logger.getLogger(SurfaceMap.class.getName()).log(Level.INFO, "New Planet");

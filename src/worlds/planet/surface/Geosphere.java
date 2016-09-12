@@ -14,7 +14,7 @@ import worlds.planet.cells.geology.GeoCell.SedimentBuffer;
 import worlds.planet.cells.geology.Stratum;
 import worlds.planet.enums.RockType;
 import worlds.planet.enums.SilicateContent;
-import worlds.planet.cells.geology.VolcanoDeposit;
+import worlds.planet.cells.geology.GeoCell.MoltenRockLayer;
 
 import engine.util.Delay;
 import engine.util.task.Task;
@@ -22,7 +22,7 @@ import engine.util.task.TaskFactory;
 import engine.util.Tools;
 import engine.util.task.BasicTask;
 import engine.util.task.Boundaries;
-import engine.util.task.TaskManager;
+import engine.util.task.CompoundTask;
 
 import static engine.util.Tools.calcDepth;
 import static engine.util.Tools.calcHeight;
@@ -30,12 +30,10 @@ import static engine.util.Tools.calcMass;
 import static engine.util.Tools.changeMass;
 import static engine.util.Tools.checkBounds;
 import static engine.util.Tools.clamp;
-import engine.util.task.CompoundTask;
 
 import static worlds.planet.Planet.TimeScale.Geological;
 import static worlds.planet.Planet.TimeScale.None;
 import static worlds.planet.Planet.instance;
-import worlds.planet.cells.geology.GeoCell.MoltenRockLayer;
 
 import static worlds.planet.enums.SilicateContent.Mix;
 import static worlds.planet.enums.SilicateContent.Rich;

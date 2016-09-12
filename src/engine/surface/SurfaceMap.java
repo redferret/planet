@@ -1,6 +1,5 @@
 package engine.surface;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -59,10 +58,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
      */
     private Map<Integer, CellType> map;
 
-    /**
-     * Helper threadRefs that would work on the map.
-     */
-    protected List<SurfaceThread> threadRefs;
+    protected List<SurfaceThread> threadReferences;
 
     private List<Integer[]> data;
 
@@ -80,14 +76,14 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
      *
      * @param mapWidth The number of cells = mapWidth * mapWidth
      * @param delay The number of frames to delay updating
-     * @param threadCount The number of threadRefs that will work on the map,
-     * this will not setup the threadRefs, this only tells this map how many
-     * threadRefs will work on the ConcurrentHashMap.
+     * @param threadCount The number of threads that will work on the map, this
+     * will not setup the threads, this only tells this map how many threads
+     * will work on the ConcurrentHashMap.
      */
     public SurfaceMap(int mapWidth, int delay, int threadCount) {
         super(delay, true);
         gridWidth = new AtomicInteger(mapWidth);
-        threadRefs = new ArrayList<>();
+        threadReferences = new ArrayList<>();
         data = new ArrayList<>();
         prevSubThreadAvg = 0;
         displaySetting = 0;
@@ -98,7 +94,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
      * Using a ConcurrentHashMap as the Map data structure.
      *
      * @param planetWidth The width of the map.
-     * @param threadCount The number of threadRefs being used.
+     * @param threadCount The number of threads being used.
      */
     protected void setupDefaultMap(int planetWidth, int threadCount) {
         final float loadFactor = 1.0f;
@@ -112,7 +108,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
     }
 
     /**
-     * Starts all the threadRefs and "Initiates an orderly shutdown in which
+     * Starts all the threads and "Initiates an orderly shutdown in which
      * previously submitted tasks are executed, but no new tasks will be
      * accepted. Invocation has no additional effect if already shut down."
      */
@@ -121,31 +117,31 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
     }
 
     /**
-     * Pauses all the threadRefs
+     * Pauses all the threads
      */
     public final void pauseSurfaceThreads() {
-        threadRefs.forEach(thread -> {
+        threadReferences.forEach(thread -> {
             thread.pause();
         });
     }
 
     /**
-     * Plays all the threadRefs
+     * Plays all the threads
      */
     public final void playSurfaceThreads() {
-        threadRefs.forEach(thread -> {
+        threadReferences.forEach(thread -> {
             thread.play();
         });
     }
 
     /**
-     * Sets all the threadRefs to this delay.
+     * Sets all the threads to this delay.
      *
-     * @param delay The amount of time to set all threadRefs to delay each frame
-     * in milliseconds.
+     * @param delay The amount of time to set all threads to delay each frame in
+     * milliseconds.
      */
     public final void setThreadsDelay(int delay) {
-        threadRefs.forEach(thread -> {
+        threadReferences.forEach(thread -> {
             thread.setDelay(delay);
         });
     }
@@ -181,7 +177,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
      * @param task The task being added to each thread.
      */
     public void addTaskToThreads(Task task) {
-        threadRefs.forEach(thread -> {
+        threadReferences.forEach(thread -> {
             thread.addTask(task);
         });
     }
@@ -193,7 +189,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
      * @param factory The factory that will produce a Task for each thread.
      */
     public void produceTasks(TaskFactory factory) {
-        threadRefs.forEach(thread -> {
+        threadReferences.forEach(thread -> {
             Task producedTask = factory.buildTask();
             producedTask.taskThread = thread;
             thread.addTask(producedTask);
@@ -202,10 +198,10 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
 
     private void checkSubThreads() {
         int avg = 0;
-        for (SurfaceThread thread : threadRefs) {
+        for (SurfaceThread thread : threadReferences) {
             avg = thread.timeLapse();
         }
-        prevSubThreadAvg = avg / threadRefs.size();
+        prevSubThreadAvg = avg / threadReferences.size();
     }
 
     public final int getGridWidth() {
@@ -218,20 +214,20 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
     }
 
     /**
-     * If all the threadRefs are not continuous then this method will check if
-     * all threadRefs have finished their iteration. If all threadRefs have
-     * finished their iteration then this method will signal all threadRefs to
-     * run and return true, otherwise this method will return false.
+     * If all the threads are not continuous then this method will check if all
+     * threads have finished their iteration. If all threads have finished their
+     * iteration then this method will signal all threads to run and return
+     * true, otherwise this method will return false.
      *
-     * @return True if all the threadRefs were signaled to run.
+     * @return True if all the threadReferences were signaled to run.
      */
     public boolean synchronizeThreads() {
         int sleeping = 0;
-        int expected = threadRefs.size();
+        int expected = threadReferences.size();
 
         if (expected > 0) {
             for (int i = 0; i < expected; i++) {
-                boolean paused = threadRefs.get(i).paused();
+                boolean paused = threadReferences.get(i).paused();
                 if (paused) {
                     sleeping++;
                 }
@@ -244,20 +240,20 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
         return false;
     }
 
-    public ExecutorService getThreadPool(){
+    public ExecutorService getThreadPool() {
         return threadPool;
     }
-    
+
     public void setThreadsAsContinuous(boolean c) {
-        threadRefs.forEach(thread -> {
+        threadReferences.forEach(thread -> {
             thread.setContinuous(c);
         });
     }
 
     /**
-     * Gets the average runtime between all threadRefs loaded in the simulation.
+     * Gets the average runtime between all threads loaded in the simulation.
      *
-     * @return The average runtime between all threadRefs.
+     * @return The average runtime between all threads.
      */
     public int getAverageThreadTime() {
         return prevSubThreadAvg;
@@ -294,23 +290,23 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
 
     /**
      * Sets up each individual thread for this surface. If you are using this
-     * surface with multiple threadRefs working on the same Map it is
-     * recommended to setup the Map by calling the
+     * surface with multiple threads working on the same Map it is recommended
+     * to setup the Map by calling the
      * <code>setupDefaultMap()</code> method. This will setup the Map as a
      * ConcurrentHashMap. Otherwise the Map data structure needs to be able to
-     * handle multiple threadRefs accessing it's contents at the same time
-     * similar to how the ConcurrentHashMap functions.
+     * handle multiple threads accessing it's contents at the same time similar
+     * to how the ConcurrentHashMap functions.
      *
-     * @param threadDivision The value given is the dimensions of the
-     * threadRefs. A value n would yield an nxn grid of threadRefs. Each
-     * controlling a section of the surface map. Each thread is a SurfaceThread.
+     * @param threadDivision The value given is the dimensions of the threads. A
+     * value n would yield an nxn grid of threads. Each controlling a section of
+     * the surface map. Each thread is a SurfaceThread.
      * @param delay The thread delay for each frame in miliseconds.
      */
     public final void setupThreads(int threadDivision, int delay) {
 
         int w = gridWidth.get() / threadDivision;
         Boundaries bounds;
-        threadPool = Executors.newFixedThreadPool(threadDivision);
+        threadPool = Executors.newFixedThreadPool(threadDivision + 1);
         for (int y = 0; y < threadDivision; y++) {
             for (int x = 0; x < threadDivision; x++) {
                 int lowerX = w * x;
@@ -319,11 +315,11 @@ public abstract class SurfaceMap<CellType extends Cell> extends MThread implemen
                 int upperY = w * (y + 1);
                 bounds = new Boundaries(lowerX, upperX, lowerY, upperY);
                 SurfaceThread thread = new SurfaceThread(delay, bounds, waitingGate);
-                threadPool.execute(thread);
-                threadRefs.add(thread);
+                threadPool.submit(thread);
+                threadReferences.add(thread);
             }
         }
-        threadPool.execute(this);
+        threadPool.submit(this);
     }
 
     /**

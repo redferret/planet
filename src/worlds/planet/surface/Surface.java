@@ -14,10 +14,8 @@ import engine.util.Delay;
 import engine.util.task.Task;
 import engine.util.task.TaskFactory;
 import engine.util.task.TaskManager;
-import java.util.Deque;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import worlds.planet.cells.geology.PlanetObject;
 import static worlds.planet.surface.Surface.GEOUPDATE;
 import static worlds.planet.surface.Surface.planetAge;
 
@@ -67,8 +65,6 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
     private static final int DEFAULT_THREAD_DELAY = 1;
     
     private MinMaxHeightFactory mhFactory;
-    
-    private Deque<PlanetObject> objects;
     
     /**
      * Internal cached Random object for surfaces.
