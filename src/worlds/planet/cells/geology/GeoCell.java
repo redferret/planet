@@ -253,7 +253,7 @@ public class GeoCell extends Mantel {
     /**
      * Tracks the total thickness of the strata.
      */
-    private AtomicFloat totalStrataThickness;
+    private float totalStrataThickness;
     
     /**
      * When the plates move, data needs to be transfered via buffer
@@ -341,7 +341,7 @@ public class GeoCell extends Mantel {
         plateBuffer = new PlateBuffer();
         moltenRockLayer = new MoltenRockLayer();
 
-        totalStrataThickness = new AtomicFloat(0);
+        totalStrataThickness = 0f;
         totalMass = 0f;
         totalVolume = 0f;
         curAmountSubmerged = 0f;
@@ -702,9 +702,7 @@ public class GeoCell extends Mantel {
 
         int cellArea = Planet.instance().getCellArea();
         
-        float temp = totalStrataThickness.get();
-        totalStrataThickness.set(temp + Tools.calcHeight(mass, cellArea, type));
-        
+        totalStrataThickness += Tools.calcHeight(mass, cellArea, type);
         totalMass += mass;
         totalVolume += mass / type.getDensity();
     }
@@ -896,7 +894,7 @@ public class GeoCell extends Mantel {
      * @return 
      */
     public float getStrataThickness(){
-        return totalStrataThickness.get();
+        return totalStrataThickness;
     }
     
     /**
