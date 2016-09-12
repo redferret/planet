@@ -9,7 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import engine.util.task.Boundaries;
 import engine.util.Delay;
-import engine.util.concurrent.MThread;
+import engine.util.concurrent.TaskRunner;
 import engine.util.task.Task;
 import engine.util.task.TaskManager;
 import java.util.Iterator;
@@ -22,7 +22,7 @@ import worlds.planet.cells.geology.PlanetObject;
  *
  * @author Richard DeSilvey
  */
-public class SurfaceThread extends MThread {
+public class SurfaceThread extends TaskRunner {
 
     /**
      * Lower bounds are inclusive, upper bounds are exclusive

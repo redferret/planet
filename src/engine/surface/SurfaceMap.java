@@ -10,7 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import engine.gui.RenderInterface;
 import engine.util.task.Boundaries;
-import engine.util.concurrent.MThread;
+import engine.util.concurrent.TaskRunner;
 import engine.util.task.Task;
 import engine.util.task.TaskFactory;
 import engine.cells.Cell;
@@ -29,7 +29,7 @@ import java.util.concurrent.Executors;
  * @author Richard DeSilvey
  * @param <CellType> The highest level abstraction of the cell i.e. PlanetCell
  */
-public abstract class SurfaceMap<CellType extends Cell> extends MThread implements RenderInterface {
+public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner implements RenderInterface {
 
     /**
      * The direction look up list for X values

@@ -7,11 +7,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 
 /**
- * Modified thread that can be continuous or be signaled to run. Each
- * thread has a delay time on each update.
+ * Modified Runnable class.
  * @author Richard DeSilvey
  */
-public abstract class MThread implements Runnable {
+public abstract class TaskRunner implements Runnable {
 
     /**
      * The delay speed in milliseconds.
@@ -33,7 +32,7 @@ public abstract class MThread implements Runnable {
     private AtomicInteger timeLapse;
     private CyclicBarrier waiter;
     
-    public MThread(int delay, boolean continuous){
+    public TaskRunner(int delay, boolean continuous){
         miliSeconds = delay;
         this.continuous = continuous;
         running = false;

@@ -5,12 +5,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import engine.util.concurrent.MThread;
+import engine.util.concurrent.TaskRunner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * Tests the MThread class for certain expected behavior.
+ * Tests the TaskRunner class for certain expected behavior.
  * @author Richard DeSilvey
  */
 public class MThreadTest {
@@ -41,7 +41,7 @@ public class MThreadTest {
     }
     
     /**
-     * Tests the MThread for startup execution. By default when threads are
+     * Tests the TaskRunner for startup execution. By default when threads are
      * started they shouldn't execute any code until signaled to be played.
      * @throws InterruptedException 
      */
@@ -54,7 +54,7 @@ public class MThreadTest {
     }
     
     /**
-     * Tests the MThread functionality for non-continuous behavior. Threads
+     * Tests the TaskRunner functionality for non-continuous behavior. Threads
      * can be signaled to execute one frame at a time.
      * @throws InterruptedException 
      */
@@ -94,7 +94,7 @@ public class MThreadTest {
 
 }
 
-class TestThread extends MThread {
+class TestThread extends TaskRunner {
 
     private static final int NO_DELAY = 0;
     private static final boolean CONTINUOUS = false;
