@@ -13,13 +13,13 @@ public abstract class BasicTask extends Task {
     @Override
     public final void perform(int x, int y) {
     }
-    
+
     /**
-     * Implement this method to perform this task. before() and after() are called
- to their respective order for perform(x, y).
+     * Implement this method to perform this task. before() and after() are
+     * called to their respective order for perform(x, y).
      */
     public abstract void perform();
-    
+
     @Override
     public final boolean check() {
         before();
