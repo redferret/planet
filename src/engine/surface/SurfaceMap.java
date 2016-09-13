@@ -348,7 +348,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
     public CellType getCellAt(int index) {
         AtomicData<CellType> lock = map.get(index);
         return (lock == null)
-                ? null : lock.getCell();
+                ? null : lock.getData();
     }
     
     /**
@@ -376,7 +376,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
     public CellType waitForCellAt(int index) {
         AtomicData<CellType> lock = map.get(index);
         return (lock == null)
-                ? null : lock.waitForCell();
+                ? null : lock.waitForData();
     }
 
     /**

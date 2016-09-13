@@ -1,6 +1,5 @@
 package engine.util.concurrent;
 
-import engine.surface.Cell;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -11,9 +10,9 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * lies dormant until the lock has been acquired".
  *
  * @author Richard DeSilvey
- * @param <CellType> The data type, must extend from Cell
+ * @param <CellType> The data type
  */
-public class AtomicData<CellType extends Cell> {
+public class AtomicData<CellType> {
 
     private CellType data;
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock(true);
@@ -29,7 +28,7 @@ public class AtomicData<CellType extends Cell> {
      *
      * @return
      */
-    public CellType waitForCell() {
+    public CellType waitForData() {
         cellLock.lock();
         return data;
     }
@@ -40,7 +39,7 @@ public class AtomicData<CellType extends Cell> {
      * thread this method will return null.
      * @return The data or null if locked.
      */
-    public CellType getCell(){
+    public CellType getData(){
         return (cellLock.tryLock()? data : null);
     }
 

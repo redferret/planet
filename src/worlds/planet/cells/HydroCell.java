@@ -7,7 +7,6 @@ import java.util.List;
 import worlds.planet.enums.Layer;
 import worlds.planet.surface.Hydrosphere;
 import engine.util.TBuffer;
-import engine.util.concurrent.AtomicFloat;
 import static engine.util.Tools.calcMass;
 import static engine.util.Tools.clamp;
 import static engine.util.Tools.constructGradient;
@@ -57,14 +56,14 @@ public class HydroCell extends GeoCell {
         }
         
         
-        public void update(){
+        private void update(){
 
             HydroCell lowestCell;
 
             float lowestHeight, curCellHeight, displacedMass, differenceHeight;
             int area;
 
-            lowestCell = (HydroCell) getLowestCellFrom(HydroCell.this);
+            lowestCell = (HydroCell) getLowestCellFrom((PlanetCell) HydroCell.this);
 
             if (lowestCell == null) {
                 return;

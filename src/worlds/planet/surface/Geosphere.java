@@ -29,6 +29,7 @@ import static engine.util.Tools.calcMass;
 import static engine.util.Tools.changeMass;
 import static engine.util.Tools.checkBounds;
 import static engine.util.Tools.clamp;
+import engine.util.concurrent.AtomicData;
 import static worlds.planet.Planet.TimeScale.Geological;
 import static worlds.planet.Planet.TimeScale.None;
 import static worlds.planet.Planet.instance;
@@ -81,11 +82,11 @@ public abstract class Geosphere extends Surface {
     public Geosphere(int worldSize, int surfaceDelay, int threadsDelay, int threadCount) {
         super(worldSize, surfaceDelay, threadsDelay, threadCount);
         ageStamp = 0;
-        produceTasks(new GeologicalUpdateFactory());
+//        produceTasks(new GeologicalUpdateFactory());
         produceTasks(new AeolianFactory());
         produceTasks(new SedimentationFactory());
 //        produceTasks(new MetamorphicAndMeltingFactory());
-        produceTasks(new SedimentSpreadFactory());
+//        produceTasks(new SedimentSpreadFactory());
 //        produceTasks(new HeatMantelFactory());
     }
 
@@ -105,19 +106,13 @@ public abstract class Geosphere extends Surface {
         }
     }
 
-    public void addLavaToSurface(float amount) {
-        int cellCount = getTotalNumberOfCells();
-        for (int i = 0; i < cellCount; i++) {
-            PlanetCell cell = waitForCellAt(i);
-            cell.getMoltenRockLayer().putMoltenRockToSurface(amount, Layer.MAFICMOLTENROCK);
-            release(cell);
-        }
-    }
 
-    public void getLowestCells(GeoCell from, List<Point> lowestList, int max) {
+    public void getLowestCells(PlanetCell from, List<Point> lowestList, int max) {
 
         int tx, ty, mx, my;
         int x = from.getX(), y = from.getY();
+        float heightWithoutOceans = from.getHeightWithoutOceans();
+        release(from);
         int xl = DIR_X_INDEX.length;
         PlanetCell selectedCell;
 
@@ -131,15 +126,17 @@ public abstract class Geosphere extends Surface {
             my = checkBounds(ty, getGridWidth());
 
             selectedCell = waitForCellAt(mx, my);
-
-            if (selectedCell.getHeightWithoutOceans() < from.getHeightWithoutOceans()) {
+            
+            if (selectedCell != null && 
+                    (selectedCell.getHeightWithoutOceans() < heightWithoutOceans)) {
+                Point p = selectedCell.getPosition();
+                release(selectedCell);
                 if (lowestList.size() < max) {
-                    lowestList.add(selectedCell.getPosition());
+                    lowestList.add(p);
                 } else {
                     break;
                 }
             }
-            release(selectedCell);
         }
     }
 
@@ -387,7 +384,7 @@ public abstract class Geosphere extends Surface {
                 }
 
                 Layer rockType = spreadFrom.peekTopStratum().getLayer();
-
+                
                 SedimentBuffer eb = spreadFrom.getSedimentBuffer();
                 // Wind erosion
                 if (eb.getSediments() == 0 && !spreadFrom.hasOcean()
@@ -445,10 +442,9 @@ public abstract class Geosphere extends Surface {
             public void perform(int x, int y) {
                 PlanetCell cell = waitForCellAt(x, y);
                 spreadToLowest(cell);
-                release(cell);
             }
 
-            public void spreadToLowest(GeoCell spreadFrom) {
+            public void spreadToLowest(PlanetCell spreadFrom) {
                 int maxCellCount;
                 if (!spreadFrom.hasOcean()) {
                     maxCellCount = 8;
@@ -456,6 +452,7 @@ public abstract class Geosphere extends Surface {
                     maxCellCount = 3;
                 }
                 ArrayList<Point> lowestList = new ArrayList<>(maxCellCount);
+                boolean hasOceans = spreadFrom.hasOcean();
                 getLowestCells(spreadFrom, lowestList, maxCellCount);
                 spread(lowestList, spreadFrom);
             }
@@ -467,7 +464,7 @@ public abstract class Geosphere extends Surface {
              * @param lowestList The list of lowest cells from the central cell
              * @param spreadFrom The central cell
              */
-            public void spread(ArrayList<Point> lowestList, GeoCell spreadFrom) {
+            public void spread(ArrayList<Point> lowestList, PlanetCell spreadFrom) {
 
                 PlanetCell lowestGeoCell;
                 SedimentBuffer spreadFromEB = spreadFrom.getSedimentBuffer();
@@ -498,7 +495,7 @@ public abstract class Geosphere extends Surface {
                         mass = calcFlow(mass);
 
                         spreadFromEB.transferSediment(spreadFromSedType, -mass);
-
+                        
                         lowestBuffer = lowestGeoCell.getSedimentBuffer();
                         lowestBuffer.transferSediment(spreadFromSedType, mass);
                     }
@@ -672,9 +669,9 @@ public abstract class Geosphere extends Surface {
             public void perform(int x, int y) {
                 depositSediment(x, y);
 
-                if (!Planet.instance().isTimeScale(Geological)) {
-                    updateBasaltFlows(x, y);
-                }
+//                if (!Planet.instance().isTimeScale(Geological)) {
+//                    updateBasaltFlows(x, y);
+//                }
             }
 
             public void depositSediment(int x, int y) {
@@ -724,76 +721,76 @@ public abstract class Geosphere extends Surface {
                 }
             }
 
-            /**
-             * Updates surface lava.
-             *
-             * @see planet.surface.Geosphere#updateGeology(int, int)
-             * @param x Cell's x
-             * @param y Cell's y
-             */
-            public void updateBasaltFlows(int x, int y) {
-                PlanetCell toUpdate = waitForCellAt(x, y);
-                MoltenRockLayer moltenLayer = toUpdate.getMoltenRockLayer();
-                Layer moltenType = moltenLayer.getMoltenRockType(), layerType;
-
-                if (moltenType != null) {
-                    if (moltenType.getSilicates() == SilicateContent.Rich) {
-                        layerType = Layer.RHYOLITE;
-                    } else if (moltenType.getSilicates() == SilicateContent.Poor) {
-                        layerType = Layer.BASALT;
-                    } else {
-                        layerType = Layer.ANDESITE;
-                    }
-
-                    if (moltenLayer.getMoltenRockFromSurface() > 8000) {
-                        int maxCellCount = 8;
-                        ArrayList<Point> lowestList = new ArrayList<>(maxCellCount);
-                        getLowestCells(toUpdate, lowestList, maxCellCount);
-
-                        if (!lowestList.isEmpty()) {
-                            int rIndex = rand.nextInt(lowestList.size());
-                            Point p = lowestList.get(rIndex);
-                            PlanetCell lowest = waitForCellAt(p.getX(), p.getY());
-
-                            if (lowest != null && lowest != toUpdate) {
-                                float currentCellHeight = toUpdate.getHeightWithoutOceans() / 2f;
-                                float lowestHeight = lowest.getHeightWithoutOceans() / 2f;
-                                float diff = (currentCellHeight - lowestHeight) / 2f;
-
-                                double theta = Math.atan((currentCellHeight - lowestHeight) / instance().getCellLength());
-                                float angle = (float) Math.sin(theta);
-
-                                diff = clamp(diff, -lowestHeight, currentCellHeight);
-
-                                float mass = calcMass(diff, instance().getCellArea(), moltenType);
-                                mass = moltenLayer.putMoltenRockToSurface(-mass, moltenType) / 2f;
-                                if (angle >= 0.71f) {
-                                    mass = changeMass(mass * angle * 200f, moltenType, layerType);
-                                } else {
-                                    float rate = toUpdate.hasOcean() ? 0.15f : 0.05f;
-                                    float massToSolidify = moltenLayer.getMoltenRockFromSurface() * rate;
-                                    moltenLayer.putMoltenRockToSurface(-massToSolidify, moltenType);
-                                    massToSolidify = changeMass(massToSolidify, moltenType, layerType);
-                                    toUpdate.add(layerType, massToSolidify, true);
-                                    toUpdate.recalculateHeight();
-                                }
-                                float carvedOutMass = toUpdate.remove(mass, true, true);
-                                float sediments = lowest.getSedimentBuffer().removeAllSediments();
-                                float totalMoved = carvedOutMass + sediments + mass;
-
-                                lowest.getMoltenRockLayer().putMoltenRockToSurface(totalMoved, moltenType);
-                            }
-                            release(lowest);
-                        }
-                    } else {
-                        float massToSolidify = moltenLayer.removeAllMoltenRock();
-                        massToSolidify = changeMass(massToSolidify, moltenType, layerType);
-                        toUpdate.add(layerType, massToSolidify, true);
-                        toUpdate.recalculateHeight();
-                    }
-                }
-                release(toUpdate);
-            }
+//            /**
+//             * Updates surface lava.
+//             *
+//             * @see planet.surface.Geosphere#updateGeology(int, int)
+//             * @param x Cell's x
+//             * @param y Cell's y
+//             */
+//            public void updateBasaltFlows(int x, int y) {
+//                PlanetCell toUpdate = waitForCellAt(x, y);
+//                MoltenRockLayer moltenLayer = toUpdate.getMoltenRockLayer();
+//                Layer moltenType = moltenLayer.getMoltenRockType(), layerType;
+//
+//                if (moltenType != null) {
+//                    if (moltenType.getSilicates() == SilicateContent.Rich) {
+//                        layerType = Layer.RHYOLITE;
+//                    } else if (moltenType.getSilicates() == SilicateContent.Poor) {
+//                        layerType = Layer.BASALT;
+//                    } else {
+//                        layerType = Layer.ANDESITE;
+//                    }
+//
+//                    if (moltenLayer.getMoltenRockFromSurface() > 8000) {
+//                        int maxCellCount = 8;
+//                        ArrayList<Point> lowestList = new ArrayList<>(maxCellCount);
+//                        getLowestCells(toUpdate, lowestList, maxCellCount);
+//
+//                        if (!lowestList.isEmpty()) {
+//                            int rIndex = rand.nextInt(lowestList.size());
+//                            Point p = lowestList.get(rIndex);
+//                            PlanetCell lowest = waitForCellAt(p.getX(), p.getY());
+//
+//                            if (lowest != null && lowest != toUpdate) {
+//                                float currentCellHeight = toUpdate.getHeightWithoutOceans() / 2f;
+//                                float lowestHeight = lowest.getHeightWithoutOceans() / 2f;
+//                                float diff = (currentCellHeight - lowestHeight) / 2f;
+//
+//                                double theta = Math.atan((currentCellHeight - lowestHeight) / instance().getCellLength());
+//                                float angle = (float) Math.sin(theta);
+//
+//                                diff = clamp(diff, -lowestHeight, currentCellHeight);
+//
+//                                float mass = calcMass(diff, instance().getCellArea(), moltenType);
+//                                mass = moltenLayer.putMoltenRockToSurface(-mass, moltenType) / 2f;
+//                                if (angle >= 0.71f) {
+//                                    mass = changeMass(mass * angle * 200f, moltenType, layerType);
+//                                } else {
+//                                    float rate = toUpdate.hasOcean() ? 0.15f : 0.05f;
+//                                    float massToSolidify = moltenLayer.getMoltenRockFromSurface() * rate;
+//                                    moltenLayer.putMoltenRockToSurface(-massToSolidify, moltenType);
+//                                    massToSolidify = changeMass(massToSolidify, moltenType, layerType);
+//                                    toUpdate.add(layerType, massToSolidify, true);
+//                                    toUpdate.recalculateHeight();
+//                                }
+//                                float carvedOutMass = toUpdate.remove(mass, true, true);
+//                                float sediments = lowest.getSedimentBuffer().removeAllSediments();
+//                                float totalMoved = carvedOutMass + sediments + mass;
+//
+//                                lowest.getMoltenRockLayer().putMoltenRockToSurface(totalMoved, moltenType);
+//                            }
+//                            release(lowest);
+//                        }
+//                    } else {
+//                        float massToSolidify = moltenLayer.removeAllMoltenRock();
+//                        massToSolidify = changeMass(massToSolidify, moltenType, layerType);
+//                        toUpdate.add(layerType, massToSolidify, true);
+//                        toUpdate.recalculateHeight();
+//                    }
+//                }
+//                release(toUpdate);
+//            }
 
             @Override
             public boolean check() {

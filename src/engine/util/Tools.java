@@ -7,6 +7,7 @@ import java.awt.LinearGradientPaint;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import worlds.planet.Planet;
+import worlds.planet.cells.PlanetCell;
 import worlds.planet.enums.Layer;
 import worlds.planet.cells.geology.GeoCell;
 import worlds.planet.surface.PlanetSurface;
@@ -195,7 +196,7 @@ public class Tools {
         return of > lessThan ? of : then;
     }
 
-    public static GeoCell getLowestCellFrom(GeoCell central) {
+    public static PlanetCell getLowestCellFrom(PlanetCell central) {
 
         if (central == null) {
             return null;
@@ -210,7 +211,7 @@ public class Tools {
         int x = central.getX(), y = central.getY();
         int xl = DIR_X_INDEX.length;
 
-        GeoCell lowest = central, cell;
+        PlanetCell lowest = central, cell;
 
         for (int s = 0; s < xl; s++) {
             tx = x + DIR_X_INDEX[s];
@@ -225,6 +226,7 @@ public class Tools {
             if (cell.getHeight() < lowest.getHeight()) {
                 lowest = cell;
             }
+            surface.release(cell);
         }
 
         return lowest;

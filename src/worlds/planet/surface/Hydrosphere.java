@@ -34,7 +34,9 @@ public abstract class Hydrosphere extends Geosphere {
     public void addWaterToAllCells(float amount) {
         int count = getTotalNumberOfCells();
         for (int i = 0; i < count; i++) {
-            waitForCellAt(i).addOceanMass(amount);
+            PlanetCell cell = waitForCellAt(i);
+            cell.addOceanMass(amount);
+            release(cell);
         }
     }
 

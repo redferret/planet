@@ -12,6 +12,7 @@ import engine.surface.Cell;
 import engine.surface.SurfaceMap;
 import engine.util.task.BasicTask;
 import engine.util.task.TaskAdapter;
+import java.util.logging.Logger;
 import static org.junit.Assert.*;
 
 /**
@@ -64,14 +65,14 @@ public class SurfaceMapTest {
     }
 
     @Test
-    public void starvationTest() throws InterruptedException {
-        testSurface.addTaskToThreads(testSurface.new StarvationTask());
+    public void noStarvationTest() throws InterruptedException {
+        testSurface.addTaskToThreads(testSurface.new NoStarvationTask());
 
         testSurface.startSurfaceThreads();
         testSurface.playSurfaceThreads();
 
-        boolean signaled = latch.await(10, TimeUnit.SECONDS);
-        assertTrue("Latch was never signaled", signaled);
+        boolean signaled = latch.await(6, TimeUnit.SECONDS);
+        assertTrue("Resource was never released causing starvation", signaled);
         
         String failedMsg = "Cell count incorrect: ";
         TestCell cell = testSurface.waitForCellAt(0);
@@ -80,6 +81,23 @@ public class SurfaceMapTest {
         assertEquals(failedMsg + cell, new Integer(4), counter);
     }
 
+    @Test
+    public void starvationTest() throws InterruptedException {
+        testSurface.addTaskToThreads(testSurface.new StarvationTask());
+
+        testSurface.startSurfaceThreads();
+        testSurface.playSurfaceThreads();
+
+        boolean signaled = latch.await(1250, TimeUnit.MILLISECONDS);
+        assertTrue("Starvation never occured", !signaled);
+        
+    }
+    
+    @Test
+    public void doubledReferenceStarvationTest(){
+        
+    }
+    
     @Test
     public void calculateIndexTest() {
 
@@ -165,7 +183,31 @@ class TestSurface extends SurfaceMap<TestCell> {
         return new TestCell(x, y, latch);
     }
 
+    /**
+     * Deliberately starve threads by not releasing the resource. 
+     */
     public class StarvationTask extends BasicTask {
+
+        @Override
+        public void perform() {
+            TestCell cell = waitForCellAt(0);
+            cell.count();
+        }
+
+        @Override
+        public void before() {
+        }
+
+        @Override
+        public void after() {
+        }
+        
+    }
+    
+    /**
+     * Used to test if releasing the resource doesn't cause starvation.
+     */
+    public class NoStarvationTask extends BasicTask {
 
         @Override
         public void before() {
@@ -230,10 +272,12 @@ class TestCell extends Cell {
         counter++;
         latch.countDown();
         try {
-            Thread.sleep(750);
+            Logger.getLogger("Test").log(Level.INFO, "Counted by {0} to value {1}"
+                    , new Object[]{Thread.currentThread().getName(), counter});
+            Thread.sleep(250);
         } catch (InterruptedException e) {
-            System.err.println("Thread was rudely interrupted "
-                    + Thread.currentThread().getName());
+            Logger.getLogger("Test").log(Level.INFO, "Shutting down "
+                    , Thread.currentThread().getName());
         }
     }
     
@@ -245,7 +289,7 @@ class TestCell extends Cell {
         latch.countDown();
         updated = true;
         try {
-            Thread.sleep(125);
+            Thread.sleep(250);
         } catch (InterruptedException e) {
             System.err.println("Thread was rudely interrupted "
                     + Thread.currentThread().getName());

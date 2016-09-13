@@ -26,7 +26,7 @@ import static worlds.planet.Planet.instance;
  */
 public class BioSurface extends SurfaceMap<BioNode> {
 
-    private static final int BIO_CELL_COUNT = 3, THREAD_COUNT = 1,
+    private static final int BIO_CELL_COUNT = 3,
             BIO_TOTAL_COUNT = BIO_CELL_COUNT * BIO_CELL_COUNT, NO_DELAY = 0;
     
     /**

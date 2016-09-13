@@ -15,6 +15,7 @@ import engine.surface.SurfaceMap;
 import engine.surface.SurfaceThread;
 import engine.util.Delay;
 import engine.util.Tools;
+import engine.util.concurrent.AtomicData;
 import engine.util.task.BasicTask;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -123,7 +124,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
     }
 
     private void constructWorld() {
-        testWorld = new TestWorld(50, 2);
+        testWorld = new TestWorld(25, 2);
         testWorld.getSurface().setDisplay(this);
         renderFrame = new Frame(SIZE, SIZE);
     }
@@ -222,7 +223,9 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
         public void keyReleased(KeyEvent e) {
             Planet p = Planet.instance();
             switch (e.getKeyCode()) {
-
+                case KeyEvent.VK_SPACE:
+                    
+                    break;
                 case KeyEvent.VK_INSERT:
                     Hydrosphere.drawOcean = !Hydrosphere.drawOcean;
                     break;
@@ -318,7 +321,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
                 cx = Tools.checkBounds(cellIndex + viewX, surface.getGridWidth());
                 cy = Tools.checkBounds(viewY, surface.getGridWidth());
 
-                cell = surface.getCellAt(cx, cy);
+                cell = surface.waitForCellAt(cx, cy);
 
                 if (cell != null) {
 
