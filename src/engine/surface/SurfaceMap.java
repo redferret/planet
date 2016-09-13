@@ -351,6 +351,11 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
                 ? null : lock.getData();
     }
     
+    public CellType waitForCell(CellType cell){
+        int x = cell.getX(), y = cell.getY();
+        return waitForCellAt(x, y);
+    }
+    
     /**
      * Gets a cell using the provided coordinates, if the cell is being worked
      * on by another thread then the caller to this method will wait until
@@ -392,7 +397,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
             int index = calcIndex(x, y, gridWidth.get());
             AtomicData<CellType> lock = map.get(index);
             if (lock != null) {
-                lock.unlock();
+                lock.unlock(cell);
             }
         }
     }
