@@ -212,7 +212,7 @@ public class Tools {
         int xl = DIR_X_INDEX.length;
 
         PlanetCell lowest = central, cell;
-
+        surface.release(central);
         for (int s = 0; s < xl; s++) {
             tx = x + DIR_X_INDEX[s];
             ty = y + DIR_Y_INDEX[s];
@@ -228,7 +228,7 @@ public class Tools {
             }
             surface.release(cell);
         }
-
+        surface.waitForCell(central);
         return lowest;
     }
 
