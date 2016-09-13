@@ -19,7 +19,7 @@ public class AtomicData<CellType> {
 
     private CellType data;
     private Thread currentOwner;
-    private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock(true);
+    private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
     private final Lock cellLock = readWriteLock.writeLock();
 
     public AtomicData(CellType data) {
@@ -37,23 +37,30 @@ public class AtomicData<CellType> {
      */
     public CellType waitForData() throws RuntimeException {
         try {
-            boolean acquired = cellLock.tryLock(3000, TimeUnit.MILLISECONDS);
-            if (!acquired){
-                String threadName = Thread.currentThread().getName();
+            String threadName = Thread.currentThread().getName();
+            String exMsg = "Starvation on thread " + threadName
+                + " for resource " + data;
+            
+            boolean acquired = cellLock.tryLock(10000, TimeUnit.MILLISECONDS);
+            
+            if (!acquired && currentOwner != null){
+                String ownerName = currentOwner.getName();
                 Logger.getLogger("Starvation").log(Level.SEVERE, "Starvation"
-                        + " occured on thread {0} for resource {1}", 
-                        new Object[]{threadName, data.toString()});
-                throw new RuntimeException("Starvation on thread " + threadName
-                + " for resource " + data);
+                        + " occured on thread {0} for resource {1},\n current"
+                        + " owner of resource is {2}", 
+                        new Object[]{threadName, data.toString(), ownerName});
+                
+                throw new RuntimeException(exMsg);
+            }else if (acquired){
+                currentOwner = Thread.currentThread();
+                return data;
             }
         } catch (InterruptedException interruptedException) {
             Logger.getLogger("Thread Interruption").log(Level.SEVERE, "Thread "
                     + "{0} was interrupted while waiting on resource", 
                     Thread.currentThread().getName());
-            return null;
         }
-        currentOwner = Thread.currentThread();
-        return data;
+        return null;
     }
     
     /**
@@ -63,7 +70,16 @@ public class AtomicData<CellType> {
      * @return The data or null if locked.
      */
     public CellType getData(){
-        return (cellLock.tryLock()? data : null);
+        
+        boolean acquired = cellLock.tryLock();
+        
+        if (acquired){
+            currentOwner = Thread.currentThread();
+            return data;
+        }else{
+            return null;
+        }
+        
     }
 
     /**
@@ -72,18 +88,11 @@ public class AtomicData<CellType> {
      * @param data The new updated version of the data.
      */
     public void unlock(CellType data){
-        if (Thread.currentThread() == currentOwner){
+        if (Thread.currentThread().equals(currentOwner)){
             this.data = data;
-            unlock();
+            currentOwner = null;
+            cellLock.unlock();
         }
     }
     
-    /**
-     * Unlocks the data for the next thread, only the thread holding the 
-     * resource can unlock it.
-     */
-    public void unlock() {
-        cellLock.unlock();
-    }
-
 }
