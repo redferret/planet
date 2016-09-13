@@ -86,7 +86,7 @@ public abstract class Geosphere extends Surface {
         produceTasks(new AeolianFactory());
         produceTasks(new SedimentationFactory());
 //        produceTasks(new MetamorphicAndMeltingFactory());
-//        produceTasks(new SedimentSpreadFactory());
+        produceTasks(new SedimentSpreadFactory());
 //        produceTasks(new HeatMantelFactory());
     }
 
@@ -112,10 +112,10 @@ public abstract class Geosphere extends Surface {
         int tx, ty, mx, my;
         int x = from.getX(), y = from.getY();
         float heightWithoutOceans = from.getHeightWithoutOceans();
-        release(from);
         int xl = DIR_X_INDEX.length;
         PlanetCell selectedCell;
 
+        release(from);
         for (int s = 0; s < xl; s++) {
 
             tx = x + DIR_X_INDEX[s];
@@ -127,17 +127,18 @@ public abstract class Geosphere extends Surface {
 
             selectedCell = waitForCellAt(mx, my);
             
-            if (selectedCell != null && 
-                    (selectedCell.getHeightWithoutOceans() < heightWithoutOceans)) {
+            if (selectedCell.getHeightWithoutOceans() < heightWithoutOceans) {
                 Point p = selectedCell.getPosition();
-                release(selectedCell);
                 if (lowestList.size() < max) {
                     lowestList.add(p);
                 } else {
+                    release(selectedCell);
                     break;
                 }
             }
+            release(selectedCell);
         }
+        waitForCellAt(x, y);
     }
 
     public static int MELTING_PRESSURE;
@@ -452,7 +453,6 @@ public abstract class Geosphere extends Surface {
                     maxCellCount = 3;
                 }
                 ArrayList<Point> lowestList = new ArrayList<>(maxCellCount);
-                boolean hasOceans = spreadFrom.hasOcean();
                 getLowestCells(spreadFrom, lowestList, maxCellCount);
                 spread(lowestList, spreadFrom);
             }
@@ -467,25 +467,32 @@ public abstract class Geosphere extends Surface {
             public void spread(ArrayList<Point> lowestList, PlanetCell spreadFrom) {
 
                 PlanetCell lowestGeoCell;
-                SedimentBuffer spreadFromEB = spreadFrom.getSedimentBuffer();
-                Layer spreadFromSedType = spreadFromEB.getSedimentType();
-
-                if (spreadFromSedType == null) {
-                    return;
-                }
 
                 SedimentBuffer lowestBuffer;
-                float spreadFromHeight, lowestHeight, diff, mass;
-
+                float spreadFromHeight = spreadFrom.getHeightWithoutOceans()/2f, 
+                        lowestHeight, diff, mass;
+                release(spreadFrom);
+                
                 if (lowestList.size() > 0) {
 
                     Point p = lowestList.get(random.nextInt(lowestList.size()));
+                    
                     lowestGeoCell = waitForCellAt(p.getX(), p.getY());
-                    spreadFromHeight = spreadFrom.getHeightWithoutOceans() / 2f;
+                    
                     lowestHeight = lowestGeoCell.getHeightWithoutOceans() / 2f;
+                    release(lowestGeoCell);
+                    
                     diff = (spreadFromHeight - lowestHeight) / 2f;
-
                     diff = clamp(diff, -lowestHeight, spreadFromHeight);
+
+                    waitForCell(spreadFrom);
+                    SedimentBuffer spreadFromEB = spreadFrom.getSedimentBuffer();
+                    Layer spreadFromSedType = spreadFromEB.getSedimentType();
+
+                    if (spreadFromSedType == null) {
+                        release(spreadFrom);
+                        return;
+                    }
 
                     if (spreadFromEB.getSediments() > 0) {
                         if (spreadFrom.hasOcean()) {
@@ -495,11 +502,17 @@ public abstract class Geosphere extends Surface {
                         mass = calcFlow(mass);
 
                         spreadFromEB.transferSediment(spreadFromSedType, -mass);
+                        release(spreadFrom);
                         
+                        waitForCell(lowestGeoCell);
                         lowestBuffer = lowestGeoCell.getSedimentBuffer();
                         lowestBuffer.transferSediment(spreadFromSedType, mass);
+                        release(lowestGeoCell);
+                        
+                    }else{
+                        release(spreadFrom);
                     }
-                    release(lowestGeoCell);
+                    
                 }
             }
 
