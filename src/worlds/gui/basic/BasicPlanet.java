@@ -4,30 +4,31 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Deque;
-import java.util.LinkedList;
-import javax.swing.JFrame;
-import worlds.planet.Planet;
-import worlds.planet.TestWorld;
-import worlds.planet.enums.Layer;
-import engine.gui.DisplayAdapter;
-import engine.surface.SurfaceMap;
-import engine.surface.SurfaceThread;
-import engine.util.Delay;
-import engine.util.Tools;
-import engine.util.concurrent.AtomicData;
-import engine.util.task.BasicTask;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
+
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
+import javax.swing.JFrame;
+
+import engine.gui.DisplayAdapter;
+import engine.surface.SurfaceThread;
+import engine.util.Delay;
+import engine.util.Tools;
+import engine.util.task.BasicTask;
+
+import worlds.planet.Planet;
+import worlds.planet.TestWorld;
+import worlds.planet.enums.Layer;
 import worlds.planet.cells.PlanetCell;
 import worlds.planet.cells.geology.GeoCell;
 import worlds.planet.cells.geology.Stratum;
@@ -57,8 +58,8 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
         averages = new LinkedList<>();
         totalAvg = 0;
         constructWorld();
-        setupJFrame();
         prepareWorld();
+        setupJFrame();
     }
 
     private void prepareWorld() {
