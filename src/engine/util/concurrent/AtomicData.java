@@ -15,11 +15,13 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class AtomicData<CellType> {
 
     private CellType data;
+    private Thread currentOwner;
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock(true);
     private final Lock cellLock = readWriteLock.writeLock();
 
     public AtomicData(CellType data) {
         this.data = data;
+        currentOwner = null;
     }
 
     /**
@@ -30,6 +32,7 @@ public class AtomicData<CellType> {
      */
     public CellType waitForData() {
         cellLock.lock();
+        currentOwner = Thread.currentThread();
         return data;
     }
     
@@ -44,7 +47,20 @@ public class AtomicData<CellType> {
     }
 
     /**
-     * Unlocks the data for the next thread.
+     * Sets the data and unlocks it if the calling thread is the current owner
+     * of this resource, otherwise nothing happens.
+     * @param data The new updated version of the data.
+     */
+    public void unlock(CellType data){
+        if (Thread.currentThread() == currentOwner){
+            this.data = data;
+            unlock();
+        }
+    }
+    
+    /**
+     * Unlocks the data for the next thread, only the thread holding the 
+     * resource can unlock it.
      */
     public void unlock() {
         cellLock.unlock();
