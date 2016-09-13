@@ -1,8 +1,11 @@
 package engine.util.concurrent;
 
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Places a lock on the data stored in this object. If other threads attempt to
@@ -31,7 +34,16 @@ public class AtomicData<CellType> {
      * @return
      */
     public CellType waitForData() {
-        cellLock.lock();
+        try {
+            boolean acquired = cellLock.tryLock(1, TimeUnit.SECONDS);
+            if (!acquired){
+                Logger.getLogger("Starvation").log(Level.SEVERE, "Starvation"
+                        + " occured on thread {0}", Thread.currentThread().getName());
+                throw new RuntimeException("Starvation occured on thread");
+            }
+        } catch (InterruptedException interruptedException) {
+            return null;
+        }
         currentOwner = Thread.currentThread();
         return data;
     }
