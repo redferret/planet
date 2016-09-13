@@ -123,7 +123,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
     }
 
     private void constructWorld() {
-        testWorld = new TestWorld(50, 1);
+        testWorld = new TestWorld(50, 2);
         testWorld.getSurface().setDisplay(this);
         renderFrame = new Frame(SIZE, SIZE);
     }

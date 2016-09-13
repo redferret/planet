@@ -149,7 +149,7 @@ class TestSurface extends SurfaceMap<TestCell> {
 
     public TestSurface(int planetWidth, int surfaceThreadDelay, int threadCount,
             CountDownLatch latch) {
-        super(planetWidth, surfaceThreadDelay, threadCount);
+        super(planetWidth, surfaceThreadDelay);
         this.latch = latch;
         setupThreads(threadCount, surfaceThreadDelay);
         setupDefaultMap(planetWidth, threadCount);
@@ -229,6 +229,12 @@ class TestCell extends Cell {
     public void count(){
         counter++;
         latch.countDown();
+        try {
+            Thread.sleep(750);
+        } catch (InterruptedException e) {
+            System.err.println("Thread was rudely interrupted "
+                    + Thread.currentThread().getName());
+        }
     }
     
     public int getCounter() {

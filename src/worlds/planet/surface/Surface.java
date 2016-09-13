@@ -87,7 +87,7 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
      * @param threadCount The number of threads that will work on the map
      */
     public Surface(int planetWidth, int ageStepDelay, int threadsDelay, int threadCount) {
-        super(planetWidth, DEFAULT_THREAD_DELAY, threadCount);
+        super(planetWidth, DEFAULT_THREAD_DELAY);
         ageUpdateDelay = new Delay(ageStepDelay);
         setupThreads(threadCount, threadsDelay);
         setupDefaultMap(planetWidth, threadCount);

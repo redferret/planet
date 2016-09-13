@@ -64,7 +64,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
     private int prevSubThreadAvg;
     private AtomicInteger gridWidth;
     private ExecutorService threadPool;
-    private final CyclicBarrier waitingGate;
+    private CyclicBarrier waitingGate;
 
     /**
      * Create a new SurfaceMap. SurfaceThreads and Map need to be initialized
@@ -76,14 +76,13 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
      * will not setup the threads, this only tells this map how many threads
      * will work on the ConcurrentHashMap.
      */
-    public SurfaceMap(int mapWidth, int delay, int threadCount) {
+    public SurfaceMap(int mapWidth, int delay) {
         super(delay, true);
         gridWidth = new AtomicInteger(mapWidth);
         threadReferences = new ArrayList<>();
         data = new ArrayList<>();
         prevSubThreadAvg = 0;
         displaySetting = 0;
-        waitingGate = new CyclicBarrier(threadCount);
     }
 
     /**
@@ -294,10 +293,12 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
      * @param delay The thread delay for each frame in miliseconds.
      */
     public final void setupThreads(int threadDivision, int delay) {
-
+        
+        int threadCount = threadDivision * threadDivision;
+        waitingGate = new CyclicBarrier(threadCount);
         int w = gridWidth.get() / threadDivision;
         Boundaries bounds;
-        threadPool = Executors.newFixedThreadPool((threadDivision * threadDivision) + 1);
+        threadPool = Executors.newFixedThreadPool(threadCount + 1);
         for (int y = 0; y < threadDivision; y++) {
             for (int x = 0; x < threadDivision; x++) {
                 int lowerX = w * x;

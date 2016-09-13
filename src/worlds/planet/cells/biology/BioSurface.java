@@ -38,7 +38,7 @@ public class BioSurface extends SurfaceMap<BioNode> {
     private TaskManager manager;
     
     public BioSurface(BioCell parentCell) {
-        super(BIO_CELL_COUNT, NO_DELAY, THREAD_COUNT);
+        super(BIO_CELL_COUNT, NO_DELAY);
         this.parentCell = parentCell;
         manager = new TaskManager(new Boundaries(0, BIO_CELL_COUNT));
         manager.addTask(new BioTask());
