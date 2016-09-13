@@ -128,8 +128,8 @@ public abstract class Geosphere extends Surface {
             selectedCell = waitForCellAt(mx, my);
             
             if (selectedCell.getHeightWithoutOceans() < heightWithoutOceans) {
-                Point p = selectedCell.getPosition();
                 if (lowestList.size() < max) {
+                    Point p = selectedCell.getPosition();
                     lowestList.add(p);
                 } else {
                     release(selectedCell);
@@ -138,7 +138,7 @@ public abstract class Geosphere extends Surface {
             }
             release(selectedCell);
         }
-        waitForCellAt(x, y);
+        waitForCell(from);
     }
 
     public static int MELTING_PRESSURE;
