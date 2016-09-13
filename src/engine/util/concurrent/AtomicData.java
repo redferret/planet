@@ -42,6 +42,9 @@ public class AtomicData<CellType> {
                 throw new RuntimeException("Starvation occured on thread");
             }
         } catch (InterruptedException interruptedException) {
+            Logger.getLogger("Thread Interruption").log(Level.SEVERE, "Thread "
+                    + "{0} was interrupted while waiting on resource", 
+                    Thread.currentThread().getName());
             return null;
         }
         currentOwner = Thread.currentThread();
