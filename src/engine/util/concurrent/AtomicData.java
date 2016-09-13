@@ -35,7 +35,7 @@ public class AtomicData<CellType> {
      */
     public CellType waitForData() {
         try {
-            boolean acquired = cellLock.tryLock(1, TimeUnit.SECONDS);
+            boolean acquired = cellLock.tryLock(1500, TimeUnit.MILLISECONDS);
             if (!acquired){
                 Logger.getLogger("Starvation").log(Level.SEVERE, "Starvation"
                         + " occured on thread {0}", Thread.currentThread().getName());
