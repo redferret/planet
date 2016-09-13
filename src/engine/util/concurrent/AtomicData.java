@@ -31,15 +31,20 @@ public class AtomicData<CellType> {
      * Threads needing to access this cell data will wait until the lock is
      * free following the fairness policy for concurrency.
      *
-     * @return
+     * @return The data stored in this lock, if this thread is interrupted while
+     * waiting on the lock this method will return null.
+     * @throws RuntimeException if starvation happens on the calling thread.
      */
-    public CellType waitForData() {
+    public CellType waitForData() throws RuntimeException {
         try {
-            boolean acquired = cellLock.tryLock(1500, TimeUnit.MILLISECONDS);
+            boolean acquired = cellLock.tryLock(3000, TimeUnit.MILLISECONDS);
             if (!acquired){
+                String threadName = Thread.currentThread().getName();
                 Logger.getLogger("Starvation").log(Level.SEVERE, "Starvation"
-                        + " occured on thread {0}", Thread.currentThread().getName());
-                throw new RuntimeException("Starvation occured on thread");
+                        + " occured on thread {0} for resource {1}", 
+                        new Object[]{threadName, data.toString()});
+                throw new RuntimeException("Starvation on thread " + threadName
+                + " for resource " + data);
             }
         } catch (InterruptedException interruptedException) {
             Logger.getLogger("Thread Interruption").log(Level.SEVERE, "Thread "
