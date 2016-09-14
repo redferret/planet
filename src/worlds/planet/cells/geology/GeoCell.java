@@ -20,6 +20,7 @@ import static engine.util.Tools.*;
 import engine.util.concurrent.AtomicData;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import static worlds.planet.Planet.instance;
+import worlds.planet.cells.PlanetCell;
 import static worlds.planet.surface.Surface.*;
 import static worlds.planet.enums.Layer.*;
 
@@ -663,6 +664,14 @@ public class GeoCell extends Mantel {
                 stratum.addToMass(amount);
                 type = stratum.getLayer();
                 updateMV(amount, type);
+            }else{
+                if (amount > 0){
+                    if (toTop) {
+                        pushStratum(type, amount);
+                    } else {
+                        appendStratum(type, amount);
+                    }
+                }
             }
 
         } else {
