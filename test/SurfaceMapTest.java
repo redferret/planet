@@ -64,6 +64,11 @@ public class SurfaceMapTest {
         }
     }
 
+    /**
+     * Tests that no starvation happens to any of the threads accessing the
+     * same resource to change it.
+     * @throws InterruptedException 
+     */
     @Test
     public void noStarvationTest() throws InterruptedException {
         testSurface.addTaskToThreads(testSurface.new NoStarvationTask());
@@ -81,6 +86,10 @@ public class SurfaceMapTest {
         assertEquals(failedMsg + cell, new Integer(4), counter);
     }
 
+    /**
+     * Tests that starvation happens when a resource is not released.
+     * @throws InterruptedException 
+     */
     @Test
     public void starvationTest() throws InterruptedException {
         testSurface.addTaskToThreads(testSurface.new StarvationTask());
@@ -205,7 +214,7 @@ class TestSurface extends SurfaceMap<TestCell> {
     }
     
     /**
-     * Used to test if releasing the resource doesn't cause starvation.
+     * Demonstrates proper use of accessing and releasing a resource.
      */
     public class NoStarvationTask extends BasicTask {
 
