@@ -25,6 +25,7 @@ import engine.surface.SurfaceThread;
 import engine.util.Delay;
 import engine.util.Tools;
 import engine.util.task.BasicTask;
+import java.util.concurrent.ThreadLocalRandom;
 
 import worlds.planet.Planet;
 import worlds.planet.TestWorld;
@@ -51,6 +52,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
     private StrataFrame crossSection;
 
     private static final int SIZE = 512;
+    private static final int CELL_WIDTH = 64;
 
     public BasicPlanet() {
         super("Test World");
@@ -65,41 +67,43 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
     private void prepareWorld() {
         PlanetSurface surface = testWorld.getSurface();
         PlanetCell cell;
-        for (int i = 0; i < 30; i++) {
-            surface.addToSurface(Layer.BASALT, 2000);
-        }
-        for (int i = 0; i < 50; i++) {
-            cell = surface.waitForCellAt(i, 0);
-            cell.add(Layer.BASALT, 250000, true);
-            surface.release(cell);
-
-            cell = surface.waitForCellAt(i, 2);
-            cell.add(Layer.BASALT, 250000, true);
+        for (int i = 0; i < (CELL_WIDTH*CELL_WIDTH) * 4; i++) {
+            cell = surface.waitForCellAt(i);
+            cell.add(Layer.BASALT, ThreadLocalRandom.current().nextInt(5000, 60000), true);
             surface.release(cell);
         }
-        cell = surface.waitForCellAt(0, 1);
-        cell.add(Layer.BASALT, 250000, true);
-        surface.release(cell);
-        for (int i = 0; i < 10; i++) {
-            cell = surface.waitForCellAt(i, 1);
-            cell.add(Layer.BASALT, 200000, true);
-            surface.release(cell);
-        }
-        for (int i = 10; i < 20; i++) {
-            cell = surface.waitForCellAt(i, 1);
-            cell.add(Layer.BASALT, 150000, true);
-            surface.release(cell);
-        }
-        for (int i = 20; i < 30; i++) {
-            cell = surface.waitForCellAt(i, 1);
-            cell.add(Layer.BASALT, 100000, true);
-            surface.release(cell);
-        }
-        for (int i = 30; i < 40; i++) {
-            cell = surface.waitForCellAt(i, 1);
-            cell.add(Layer.BASALT, 50000, true);
-            surface.release(cell);
-        }
+//        for (int i = 0; i < 50; i++) {
+//            cell = surface.waitForCellAt(i, 0);
+//            cell.add(Layer.BASALT, 250000, true);
+//            surface.release(cell);
+//
+//            cell = surface.waitForCellAt(i, 2);
+//            cell.add(Layer.BASALT, 250000, true);
+//            surface.release(cell);
+//        }
+//        cell = surface.waitForCellAt(0, 1);
+//        cell.add(Layer.BASALT, 250000, true);
+//        surface.release(cell);
+//        for (int i = 0; i < 10; i++) {
+//            cell = surface.waitForCellAt(i, 1);
+//            cell.add(Layer.BASALT, 200000, true);
+//            surface.release(cell);
+//        }
+//        for (int i = 10; i < 20; i++) {
+//            cell = surface.waitForCellAt(i, 1);
+//            cell.add(Layer.BASALT, 150000, true);
+//            surface.release(cell);
+//        }
+//        for (int i = 20; i < 30; i++) {
+//            cell = surface.waitForCellAt(i, 1);
+//            cell.add(Layer.BASALT, 100000, true);
+//            surface.release(cell);
+//        }
+//        for (int i = 30; i < 40; i++) {
+//            cell = surface.waitForCellAt(i, 1);
+//            cell.add(Layer.BASALT, 50000, true);
+//            surface.release(cell);
+//        }
 
 //        surface.addTask(new AddWaterTask());
 //        surface.addWaterToAllCells(9000);
@@ -125,7 +129,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
     }
 
     private void constructWorld() {
-        testWorld = new TestWorld(25, 2);
+        testWorld = new TestWorld(CELL_WIDTH, 2);
         testWorld.getSurface().setDisplay(this);
         renderFrame = new Frame(SIZE, SIZE);
     }
@@ -323,7 +327,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
                 cy = Tools.checkBounds(viewY, surface.getGridWidth());
 
                 cell = surface.waitForCellAt(cx, cy);
-
+                
                 if (cell != null) {
 
                     cellThicknessRatio = ((float) windowHeight / LAYER_THICKNESS);
