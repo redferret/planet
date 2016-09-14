@@ -110,7 +110,7 @@ public abstract class Geosphere extends Surface {
 
         int tx, ty, mx, my;
         int x = from.getX(), y = from.getY();
-        float heightWithoutOceans = from.getHeightWithoutOceans();
+        float geoHeight = from.getHeightWithoutOceans();
         int xl = DIR_X_INDEX.length;
         PlanetCell selectedCell;
 
@@ -126,7 +126,7 @@ public abstract class Geosphere extends Surface {
 
             selectedCell = waitForCellAt(mx, my);
 
-            if (selectedCell.getHeightWithoutOceans() < heightWithoutOceans) {
+            if (selectedCell.getHeightWithoutOceans() < geoHeight) {
                 if (lowestList.size() < max) {
                     Point p = selectedCell.getPosition();
                     lowestList.add(p);
