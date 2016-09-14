@@ -23,13 +23,13 @@ import engine.util.Tools;
 import engine.util.task.BasicTask;
 import engine.util.task.Boundaries;
 import engine.util.task.CompoundTask;
+import engine.util.concurrent.AtomicData;
 import static engine.util.Tools.calcDepth;
 import static engine.util.Tools.calcHeight;
 import static engine.util.Tools.calcMass;
 import static engine.util.Tools.changeMass;
 import static engine.util.Tools.checkBounds;
 import static engine.util.Tools.clamp;
-import engine.util.concurrent.AtomicData;
 import static worlds.planet.Planet.TimeScale.Geological;
 import static worlds.planet.Planet.TimeScale.None;
 import static worlds.planet.Planet.instance;
@@ -106,7 +106,6 @@ public abstract class Geosphere extends Surface {
         }
     }
 
-
     public void getLowestCells(PlanetCell from, List<Point> lowestList, int max) {
 
         int tx, ty, mx, my;
@@ -126,7 +125,7 @@ public abstract class Geosphere extends Surface {
             my = checkBounds(ty, getGridWidth());
 
             selectedCell = waitForCellAt(mx, my);
-            
+
             if (selectedCell.getHeightWithoutOceans() < heightWithoutOceans) {
                 if (lowestList.size() < max) {
                     Point p = selectedCell.getPosition();
@@ -385,7 +384,7 @@ public abstract class Geosphere extends Surface {
                 }
 
                 Layer rockType = spreadFrom.peekTopStratum().getLayer();
-                
+
                 SedimentBuffer eb = spreadFrom.getSedimentBuffer();
                 // Wind erosion
                 if (eb.getSediments() == 0 && !spreadFrom.hasOcean()
@@ -469,19 +468,19 @@ public abstract class Geosphere extends Surface {
                 PlanetCell lowestGeoCell;
 
                 SedimentBuffer lowestBuffer;
-                float spreadFromHeight = spreadFrom.getHeightWithoutOceans()/2f, 
+                float spreadFromHeight = spreadFrom.getHeightWithoutOceans() / 2f,
                         lowestHeight, diff, mass;
                 release(spreadFrom);
-                
+
                 if (lowestList.size() > 0) {
 
                     Point p = lowestList.get(random.nextInt(lowestList.size()));
-                    
+
                     lowestGeoCell = waitForCellAt(p.getX(), p.getY());
-                    
+
                     lowestHeight = lowestGeoCell.getHeightWithoutOceans() / 2f;
                     release(lowestGeoCell);
-                    
+
                     diff = (spreadFromHeight - lowestHeight) / 2f;
                     diff = clamp(diff, -lowestHeight, spreadFromHeight);
 
@@ -503,16 +502,16 @@ public abstract class Geosphere extends Surface {
 
                         spreadFromEB.transferSediment(spreadFromSedType, -mass);
                         release(spreadFrom);
-                        
+
                         waitForCell(lowestGeoCell);
                         lowestBuffer = lowestGeoCell.getSedimentBuffer();
                         lowestBuffer.transferSediment(spreadFromSedType, mass);
                         release(lowestGeoCell);
-                        
-                    }else{
+
+                    } else {
                         release(spreadFrom);
                     }
-                    
+
                 }
             }
 
@@ -804,7 +803,6 @@ public abstract class Geosphere extends Surface {
 //                }
 //                release(toUpdate);
 //            }
-
             @Override
             public boolean check() {
                 return updateDelay.check();
