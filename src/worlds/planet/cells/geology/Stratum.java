@@ -115,6 +115,9 @@ public class Stratum {
     
     public void addToMass(float value){
         this.mass += value;
+        if (this.mass < 0){
+            this.mass = 0;
+        }
         lastAdd = Planet.instance().getSurface().getPlanetAge();
     }
 
