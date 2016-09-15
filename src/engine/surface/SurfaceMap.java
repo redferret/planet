@@ -403,6 +403,10 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
         guard.release(cells);
     }
     
+    public void release(List<CellType> cells){
+        guard.release(cells.toArray(null));
+    }
+    
     /**
      * Waits for the resources given by the array of indexes.
      *
@@ -497,10 +501,10 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
     private class ResourceGuard {
 
         private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
-        private final Lock guard;
+        private final Lock writeLock;
 
         public ResourceGuard() {
-            guard = readWriteLock.writeLock();
+            writeLock = readWriteLock.writeLock();
         }
 
         public List<CellType> waitForCells(Point[] cellPositions) {
@@ -563,6 +567,9 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
         }
 
         private void release(CellType[] cells) {
+            for(CellType cell : cells){
+                release(cell);
+            }
         }
 
     }
