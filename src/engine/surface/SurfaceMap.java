@@ -392,13 +392,14 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
      * it.
      */
     public void release(CellType cell) {
-        if (cell != null) {
-            int x = cell.getX(), y = cell.getY();
-            int index = calcIndex(x, y, gridWidth.get());
-            AtomicData<CellType> lock = map.get(index);
-            if (lock != null) {
-                lock.unlock(cell);
-            }
+    	if (cell == null){
+    		throw new IllegalArgumentException("Cannot release a null reference");
+    	}
+        int x = cell.getX(), y = cell.getY();
+        int index = calcIndex(x, y, gridWidth.get());
+        AtomicData<CellType> lock = map.get(index);
+        if (lock != null) {
+            lock.unlock(cell);
         }
     }
 
@@ -451,6 +452,9 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
         return index / w;
     }
 
+    /**
+     * If the resource is currently locked the cell is skipped.
+     */
     @Override
     public List<Integer[]> getCellData(int x, int y) {
 

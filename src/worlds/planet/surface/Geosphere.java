@@ -134,7 +134,7 @@ public abstract class Geosphere extends Surface {
                     release(selectedCell);
                     break;
                 }
-            }
+            } 
             release(selectedCell);
         }
         waitForCell(from);
