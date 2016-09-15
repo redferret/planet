@@ -10,8 +10,10 @@ import org.junit.Test;
 
 import engine.surface.Cell;
 import engine.surface.SurfaceMap;
+import engine.util.Point;
 import engine.util.task.BasicTask;
 import engine.util.task.TaskAdapter;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 import static org.junit.Assert.*;
 
@@ -135,6 +137,46 @@ public class SurfaceMapTest {
         testXY(testIndex, testWidth, expectedX, expectedY);
     }
 
+    /**
+     * Tests the method that gets a list of cells that will be only available
+     * to the calling thread. 
+     */
+    @Test
+    public void getCellsWithPointsTest(){
+        Point[] cellPoints = {new Point(0,0), new Point(0,1),
+                              new Point(1,0), new Point(1,1)};
+        List<TestCell> cells = testSurface.waitForCells(cellPoints);
+        
+        assertNotNull("Nothing was returned", cells);
+        
+        TestCell[] cellArray = cells.toArray(new TestCell[cells.size()]);
+        for (int i = 0; i < cellArray.length; i++){
+            Point testPoint = cellArray[i].getPosition();
+            Point expected = cellPoints[i];
+            assertEquals("Cell Position doesn't match", expected, testPoint);
+        }
+    }
+    
+    /**
+     * Tests the method that gets a list of cells that will be only available
+     * to the calling thread. 
+     */
+    @Test
+    public void getCellsWithIndexesTest(){
+        int[] cellPoints = {0, 1, 2, 3};
+        List<TestCell> cells = testSurface.waitForCells(cellPoints);
+        
+        assertNotNull("Nothing was returned", cells);
+        
+        TestCell[] cellArray = cells.toArray(new TestCell[cells.size()]);
+        for (int i = 0; i < cellArray.length; i++){
+            Point testPoint = cellArray[i].getPosition();
+            Integer testIndex = SurfaceMap.calcIndex(testPoint.getX(), testPoint.getY(), MAP_SIZE);
+            Integer expectedIndex = cellPoints[i]; 
+            assertEquals("Cell Indexes don't match", expectedIndex, testPoint);
+        }
+    }
+    
     private void testCaseForIndexTesting(int testX, int testY, int testWidth) {
         int expectedIndex = testX + (testY * testWidth);
         testIndex(testX, testY, testWidth, expectedIndex);
