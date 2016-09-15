@@ -26,6 +26,7 @@ public class AtomicData<CellType> {
     public AtomicData(CellType data) {
         this.data = data;
         currentOwner = null;
+        isAtomic = true;
     }
 
     /**
