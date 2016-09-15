@@ -299,7 +299,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
      * @param delay The thread delay for each frame in miliseconds.
      */
     public final void setupThreads(int threadDivision, int delay) {
-        
+
         int threadCount = threadDivision * threadDivision;
         waitingGate = new CyclicBarrier(threadCount);
         int w = gridWidth.get() / threadDivision;
@@ -328,42 +328,44 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
     }
 
     /**
-     * Performs a basic get at the given locations (x and y) without waiting
-     * for the resource if it is being used by another thread and this
-     * method will return null if the data doesn't exist or if it is locked
-     * by another thread.
+     * Performs a basic get at the given locations (x and y) without waiting for
+     * the resource if it is being used by another thread and this method will
+     * return null if the data doesn't exist or if it is locked by another
+     * thread.
+     *
      * @param x The x coordinate of the cell
      * @param y The y coordinate of the cell
-     * @return Returns the cell at the specified X and Y location, null
-     * if the data doesn't exist or if the data is locked by another thread.
+     * @return Returns the cell at the specified X and Y location, null if the
+     * data doesn't exist or if the data is locked by another thread.
      */
     public CellType getCellAt(int x, int y) {
         int index = calcIndex(x, y, gridWidth.get());
         return getCellAt(index);
     }
-    
+
     /**
-     * Performs a basic get at the given locations (x and y) without waiting
-     * for the resource if it is being used by another thread and this
-     * method will return null if the data doesn't exist or if it is locked
-     * by another thread.
+     * Performs a basic get at the given locations (x and y) without waiting for
+     * the resource if it is being used by another thread and this method will
+     * return null if the data doesn't exist or if it is locked by another
+     * thread.
+     *
      * @param index The index
-     * @return Returns the cell at the specified X and Y location, null
-     * if the data doesn't exist or if the data is locked by another thread.
+     * @return Returns the cell at the specified X and Y location, null if the
+     * data doesn't exist or if the data is locked by another thread.
      */
     public CellType getCellAt(int index) {
         return guard.getCellAt(index);
     }
-    
-    public CellType waitForCell(CellType cell){
+
+    public CellType waitForCell(CellType cell) {
         int x = cell.getX(), y = cell.getY();
         return waitForCellAt(x, y);
     }
-    
+
     /**
      * Gets a cell using the provided coordinates, if the cell is being worked
-     * on by another thread then the caller to this method will wait until
-     * the resource is avaliable.
+     * on by another thread then the caller to this method will wait until the
+     * resource is avaliable.
      *
      * @param x The x coordinate of the cell
      * @param y The y coordinate of the cell
@@ -375,9 +377,9 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
     }
 
     /**
-     * Gets a cell at the given index in the map, if the cell is being worked
-     * on by another thread then the caller to this method will wait until
-     * the resource is avaliable.
+     * Gets a cell at the given index in the map, if the cell is being worked on
+     * by another thread then the caller to this method will wait until the
+     * resource is avaliable.
      *
      * @param index The index
      * @return The cell that maps to the given index.
@@ -394,27 +396,29 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
      * it.
      */
     public void release(CellType cell) {
-    	guard.release(cell);
+        guard.release(cell);
     }
-    
+
     /**
-     * Waits for the resources given by the array of indexes. 
+     * Waits for the resources given by the array of indexes.
+     *
      * @param cellIndexes Each cell's index
      * @return The list of requested resources.
      */
-    public List<CellType> waitForCells(int[] cellIndexes) {
-    	return guard.waitForCells(cellIndexes);
+    public List<CellType> waitForCells(int... cellIndexes) {
+        return guard.waitForCells(cellIndexes);
     }
-    
+
     /**
      * Waits for the resources given by the List of cell positions.
+     *
      * @param cellPositions Each cell's position
      * @return The list of requested resources.
      */
-    public List<CellType> waitForCells(List<Point> cellPositions) {
-    	return guard.waitForCells(cellPositions);
+    public List<CellType> waitForCells(Point... cellPositions) {
+        return guard.waitForCells(cellPositions);
     }
-    
+
     /**
      * This method is reserved for internal use only by the SurfaceMap during
      * initialization.
@@ -473,57 +477,58 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
         data.clear();
         CellType cell = getCellAt(x, y);
         List<Integer[]> tempData = new ArrayList<>();
-        if (cell != null){
+        if (cell != null) {
             tempData = cell.render(data);
             release(cell);
         }
         return tempData;
     }
-    
+
     /**
-     * Will allow for ranges of data to be returned as well as single data points in 
-     * the map.
+     * Will allow for ranges of data to be returned as well as single data
+     * points in the map.
+     *
      * @author Richard DeSilvey
      */
     private class ResourceGuard {
 
-    	private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
+        private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
         private final Lock guard;
-        
-        public ResourceGuard(){
-        	guard = readWriteLock.writeLock();
+
+        public ResourceGuard() {
+            guard = readWriteLock.writeLock();
         }
-        
-        public List<CellType> waitForCells(List<Point> cellPositions) {
-			// TODO Auto-generated method stub
-			return null;
-		}
 
-		public List<CellType> waitForCells(int[] cellIndexes) {
-			// TODO Auto-generated method stub
-			return null;
-		}
+        public List<CellType> waitForCells(Point[] cellPositions) {
+            // TODO Auto-generated method stub
+            return null;
+        }
 
-		/**
+        public List<CellType> waitForCells(int[] cellIndexes) {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        /**
          * Performs a basic get at the given locations (x and y) without waiting
          * for the resource if it is being used by another thread and this
          * method will return null if the data doesn't exist or if it is locked
          * by another thread.
+         *
          * @param index The index
-         * @return Returns the cell at the specified X and Y location, null
-         * if the data doesn't exist or if the data is locked by another thread.
+         * @return Returns the cell at the specified X and Y location, null if
+         * the data doesn't exist or if the data is locked by another thread.
          */
         public CellType getCellAt(int index) {
             AtomicData<CellType> lock = map.get(index);
             return (lock == null)
                     ? null : lock.getData();
         }
-        
 
         /**
-         * Gets a cell at the given index in the map, if the cell is being worked
-         * on by another thread then the caller to this method will wait until
-         * the resource is avaliable.
+         * Gets a cell at the given index in the map, if the cell is being
+         * worked on by another thread then the caller to this method will wait
+         * until the resource is avaliable.
          *
          * @param index The index
          * @return The cell that maps to the given index.
@@ -538,13 +543,13 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
          * When a thread gets data from this Map the data is locked until it is
          * released by the same thread working on the cell returned by this Map.
          *
-         * @param cell The cell to be released to other threads waiting to access
-         * it.
+         * @param cell The cell to be released to other threads waiting to
+         * access it.
          */
         public void release(CellType cell) {
-        	if (cell == null){
-        		throw new IllegalArgumentException("Cannot release a null reference");
-        	}
+            if (cell == null) {
+                throw new IllegalArgumentException("Cannot release a null reference");
+            }
             int x = cell.getX(), y = cell.getY();
             int index = calcIndex(x, y, gridWidth.get());
             AtomicData<CellType> lock = map.get(index);
@@ -552,6 +557,6 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
                 lock.unlock(cell);
             }
         }
-    	
+
     }
 }
