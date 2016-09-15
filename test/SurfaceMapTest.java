@@ -155,6 +155,7 @@ public class SurfaceMapTest {
             Point expected = cellPoints[i];
             assertEquals("Cell Position doesn't match", expected, testPoint);
         }
+        testSurface.release(cells);
     }
     
     /**
@@ -175,6 +176,7 @@ public class SurfaceMapTest {
             Integer expectedIndex = cellPoints[i]; 
             assertEquals("Cell Indexes don't match", expectedIndex, testPoint);
         }
+        testSurface.release(cells);
     }
     
     private void testCaseForIndexTesting(int testX, int testY, int testWidth) {
