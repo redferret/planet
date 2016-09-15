@@ -174,7 +174,7 @@ public class SurfaceMapTest {
             Point testPoint = cellArray[i].getPosition();
             Integer testIndex = SurfaceMap.calcIndex(testPoint.getX(), testPoint.getY(), MAP_SIZE);
             Integer expectedIndex = cellPoints[i]; 
-            assertEquals("Cell Indexes don't match", expectedIndex, testPoint);
+            assertEquals("Cell Indexes don't match", expectedIndex, testIndex);
         }
         testSurface.release(cells);
     }
