@@ -6,10 +6,14 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import engine.gui.RenderInterface;
+import engine.util.Point;
 import engine.util.task.Boundaries;
 import engine.util.concurrent.TaskRunner;
 import engine.util.task.Task;
@@ -65,6 +69,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
     private AtomicInteger gridWidth;
     private ExecutorService threadPool;
     private CyclicBarrier waitingGate;
+    private ResourceGuard guard;
 
     /**
      * Create a new SurfaceMap. SurfaceThreads and Map need to be initialized
@@ -80,6 +85,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
         super(delay, true);
         gridWidth = new AtomicInteger(mapWidth);
         threadReferences = new ArrayList<>();
+        guard = new ResourceGuard();
         data = new ArrayList<>();
         prevSubThreadAvg = 0;
         displaySetting = 0;
@@ -346,9 +352,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
      * if the data doesn't exist or if the data is locked by another thread.
      */
     public CellType getCellAt(int index) {
-        AtomicData<CellType> lock = map.get(index);
-        return (lock == null)
-                ? null : lock.getData();
+        return guard.getCellAt(index);
     }
     
     public CellType waitForCell(CellType cell){
@@ -379,9 +383,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
      * @return The cell that maps to the given index.
      */
     public CellType waitForCellAt(int index) {
-        AtomicData<CellType> lock = map.get(index);
-        return (lock == null)
-                ? null : lock.waitForData();
+        return guard.waitForCellAt(index);
     }
 
     /**
@@ -392,17 +394,27 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
      * it.
      */
     public void release(CellType cell) {
-    	if (cell == null){
-    		throw new IllegalArgumentException("Cannot release a null reference");
-    	}
-        int x = cell.getX(), y = cell.getY();
-        int index = calcIndex(x, y, gridWidth.get());
-        AtomicData<CellType> lock = map.get(index);
-        if (lock != null) {
-            lock.unlock(cell);
-        }
+    	guard.release(cell);
     }
-
+    
+    /**
+     * Waits for the resources given by the array of indexes. 
+     * @param cellIndexes Each cell's index
+     * @return The list of requested resources.
+     */
+    public List<CellType> waitForCells(int[] cellIndexes) {
+    	return guard.waitForCells(cellIndexes);
+    }
+    
+    /**
+     * Waits for the resources given by the List of cell positions.
+     * @param cellPositions Each cell's position
+     * @return The list of requested resources.
+     */
+    public List<CellType> waitForCells(List<Point> cellPositions) {
+    	return guard.waitForCells(cellPositions);
+    }
+    
     /**
      * This method is reserved for internal use only by the SurfaceMap during
      * initialization.
@@ -466,5 +478,80 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
             release(cell);
         }
         return tempData;
+    }
+    
+    /**
+     * Will allow for ranges of data to be returned as well as single data points in 
+     * the map.
+     * @author Richard DeSilvey
+     */
+    private class ResourceGuard {
+
+    	private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
+        private final Lock guard;
+        
+        public ResourceGuard(){
+        	guard = readWriteLock.writeLock();
+        }
+        
+        public List<CellType> waitForCells(List<Point> cellPositions) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		public List<CellType> waitForCells(int[] cellIndexes) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		/**
+         * Performs a basic get at the given locations (x and y) without waiting
+         * for the resource if it is being used by another thread and this
+         * method will return null if the data doesn't exist or if it is locked
+         * by another thread.
+         * @param index The index
+         * @return Returns the cell at the specified X and Y location, null
+         * if the data doesn't exist or if the data is locked by another thread.
+         */
+        public CellType getCellAt(int index) {
+            AtomicData<CellType> lock = map.get(index);
+            return (lock == null)
+                    ? null : lock.getData();
+        }
+        
+
+        /**
+         * Gets a cell at the given index in the map, if the cell is being worked
+         * on by another thread then the caller to this method will wait until
+         * the resource is avaliable.
+         *
+         * @param index The index
+         * @return The cell that maps to the given index.
+         */
+        public CellType waitForCellAt(int index) {
+            AtomicData<CellType> lock = map.get(index);
+            return (lock == null)
+                    ? null : lock.waitForData();
+        }
+
+        /**
+         * When a thread gets data from this Map the data is locked until it is
+         * released by the same thread working on the cell returned by this Map.
+         *
+         * @param cell The cell to be released to other threads waiting to access
+         * it.
+         */
+        public void release(CellType cell) {
+        	if (cell == null){
+        		throw new IllegalArgumentException("Cannot release a null reference");
+        	}
+            int x = cell.getX(), y = cell.getY();
+            int index = calcIndex(x, y, gridWidth.get());
+            AtomicData<CellType> lock = map.get(index);
+            if (lock != null) {
+                lock.unlock(cell);
+            }
+        }
+    	
     }
 }
