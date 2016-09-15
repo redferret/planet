@@ -46,7 +46,7 @@ public class AtomicData<CellType> {
             if (!acquired && currentOwner != null){
                 String ownerName = currentOwner.getName();
                 Logger.getLogger("Starvation").log(Level.SEVERE, "Starvation"
-                        + " occured on thread {0} for resource {1},\n current"
+                        + " occurred on thread {0} for resource {1},\n current"
                         + " owner of resource is {2}", 
                         new Object[]{threadName, data.toString(), ownerName});
                 
