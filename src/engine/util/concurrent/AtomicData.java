@@ -19,6 +19,7 @@ public class AtomicData<CellType> {
 
     private CellType data;
     private Thread currentOwner;
+    private boolean isAtomic;
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
     private final Lock cellLock = readWriteLock.writeLock();
 
@@ -28,6 +29,18 @@ public class AtomicData<CellType> {
     }
 
     /**
+     * In some cases it isn't completely necessary to make all the data in a map
+     * atomic to multiple threads. This will increase the speed of the simulation.
+     * Setting whether the data is atomic or not will cause the lock to be used. Race
+     * conditions or corruption of data may occur if multiple threads access 
+     * data this isn't atomic.
+     * @param atomic Whether this data will be atomic or not.
+     */
+    public void setAsAtomic(boolean atomic){
+    	isAtomic = atomic;
+    }
+    
+    /**
      * Threads needing to access this cell data will wait until the lock is
      * free following the fairness policy for concurrency.
      *
@@ -36,7 +49,16 @@ public class AtomicData<CellType> {
      * @throws RuntimeException if starvation happens on the calling thread.
      */
     public CellType waitForData() throws RuntimeException {
-        try {
+        return isAtomic? waitOnData() : getData();
+    }
+    
+    /**
+     * Performs thread synchronization on the data stored in this guard.
+     * @return The data that is now locked to the current thread.
+     * @throws RuntimeException If starvation happens on the calling thread.
+     */
+    private CellType waitOnData() throws RuntimeException {
+    	try {
             String threadName = Thread.currentThread().getName();
             String exMsg = "Starvation on thread " + threadName
                 + " for resource " + data;
@@ -62,37 +84,42 @@ public class AtomicData<CellType> {
         }
         return null;
     }
-    
     /**
-     * If the cell has already been locked the thread calling this method
-     * will not wait, instead if the data has already been locked by another
-     * thread this method will return null.
+     * If the cell has already been locked then the thread calling this method
+     * will not wait, instead if the data has already been locked this method 
+     * will return null. If the data is not atomic then this method will always
+     * return the data.
      * @return The data or null if locked.
      */
     public CellType getData(){
-        
-        boolean acquired = cellLock.tryLock();
-        
-        if (acquired){
-            currentOwner = Thread.currentThread();
-            return data;
-        }else{
-            return null;
-        }
-        
+    	if (isAtomic){
+	        boolean acquired = cellLock.tryLock();
+	        
+	        if (acquired){
+	            currentOwner = Thread.currentThread();
+	            return data;
+	        }else{
+	            return null;
+	        }
+    	}else{
+    		return data;
+    	}
     }
 
     /**
      * Sets the data and unlocks it if the calling thread is the current owner
-     * of this resource, otherwise nothing happens.
+     * of this resource. If the data is not atomic or the calling thread is not
+     * the owner of the lock then nothing happens.
      * @param data The new updated version of the data.
      */
     public void unlock(CellType data){
-        if (Thread.currentThread().equals(currentOwner)){
-            this.data = data;
-            currentOwner = null;
-            cellLock.unlock();
-        }
+    	if (isAtomic){
+	        if (Thread.currentThread().equals(currentOwner)){
+	            this.data = data;
+	            currentOwner = null;
+	            cellLock.unlock();
+	        }
+    	}
     }
     
 }
