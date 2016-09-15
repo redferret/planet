@@ -399,6 +399,10 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
         guard.release(cell);
     }
 
+    public void release(CellType[] cells){
+        guard.release(cells);
+    }
+    
     /**
      * Waits for the resources given by the array of indexes.
      *
@@ -556,6 +560,9 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
             if (lock != null) {
                 lock.unlock(cell);
             }
+        }
+
+        private void release(CellType[] cells) {
         }
 
     }
