@@ -106,6 +106,14 @@ public abstract class Geosphere extends Surface {
         }
     }
 
+    /**
+     * Gets cell lower than the given cell 'from'. This is older code that 
+     * will wait for one resource at a time, 'from' will be temporarily released
+     * and the regained after this method has finished.
+     * @param from The selected cell to pick from.
+     * @param lowestList The list of lowest cell positions
+     * @param max The maximum number of cells to add to lowestList.
+     */
     public void getLowestCells(PlanetCell from, List<Point> lowestList, int max) {
 
         int tx, ty, mx, my;
@@ -474,14 +482,14 @@ public abstract class Geosphere extends Surface {
             public void perform(int x, int y) {
                 Point[] cellPos = getCellIndexesFrom(new Point(x, y));
                 List<PlanetCell> workingCells = waitForCells(cellPos);
-                
+                int numCells = workingCells.size();
                 PlanetCell spreadFrom = workingCells.get(workingCells.size() - 1);
                 
                 List<PlanetCell> lowestList = new ArrayList<>();
                 getLowestCells(lowestList, workingCells);
                 spread(lowestList, spreadFrom);
                 
-                release(workingCells.toArray(new PlanetCell[9]));
+                release(workingCells.toArray(new PlanetCell[numCells]));
             }
 
             /**
