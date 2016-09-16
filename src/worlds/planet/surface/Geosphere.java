@@ -506,7 +506,6 @@ public abstract class Geosphere extends Surface {
                 SedimentBuffer lowestBuffer;
                 float spreadFromHeight = spreadFrom.getHeightWithoutOceans() / 2f,
                         lowestHeight, diff, mass;
-                release(spreadFrom);
 
                 if (lowestList.size() > 0) {
 
