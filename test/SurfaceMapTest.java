@@ -13,7 +13,6 @@ import engine.surface.SurfaceMap;
 import engine.util.Point;
 import engine.util.task.BasicTask;
 import engine.util.task.TaskAdapter;
-import java.util.ArrayList;
 import java.util.logging.Logger;
 import static org.junit.Assert.*;
 
@@ -105,13 +104,7 @@ public class SurfaceMapTest {
     }
     
     @Test
-    public void doubledReferenceStarvationTest(){
-        
-    }
-    
-    @Test
     public void calculateIndexTest() {
-
         for (int testX = 0; testX < 100; testX++) {
             for (int testY = 0; testY < 100; testY++) {
                 for (int testWidth = 0; testWidth < 100; testWidth++) {
@@ -155,7 +148,7 @@ public class SurfaceMapTest {
             Point expected = cellPoints[i];
             assertEquals("Cell Position doesn't match", expected, testPoint);
         }
-        testSurface.release(cells);
+        testSurface.release(cells.toArray(new TestCell[cellArray.length]));
     }
     
     /**
@@ -176,7 +169,7 @@ public class SurfaceMapTest {
             Integer expectedIndex = cellPoints[i]; 
             assertEquals("Cell Indexes don't match", expectedIndex, testIndex);
         }
-        testSurface.release(cells);
+        testSurface.release(cells.toArray(new TestCell[cellArray.length]));
     }
     
     private void testCaseForIndexTesting(int testX, int testY, int testWidth) {
