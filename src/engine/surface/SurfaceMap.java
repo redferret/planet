@@ -277,6 +277,33 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
         }
     }
 
+    /**
+     * Turns off all except the edges of each thread section as being atomic.
+     * This should be known in advanced and other threads should avoid getting
+     * resources from other sections except on the borders.
+     */
+    public void atomicEdgesOnly(){
+        int threadDivision = (int) Math.pow(threadReferences.size(), 1/2);
+        int width = gridWidth.get();
+        
+        for (int y = 0; y < threadDivision; y++) {
+            for (int x = 0; x < threadDivision; x++) {
+                int lowerX = width * x;
+                int upperX = width * (x + 1);
+                int lowerY = width * y;
+                int upperY = width * (y + 1);
+                
+                for (int lx = lowerX + 1; lx < upperX - 1; lx++){
+                    for (int ly = lowerY + 1; ly < upperY - 1; ly++){
+                        int index = calcIndex(lx, ly, width);
+                        AtomicData<CellType> lock = map.get(index);
+                        lock.setAsAtomic(false);
+                    }
+                }
+            }
+        }
+    }
+    
     private void logMapSetup(int generated, int flagUpdate, int totalCells) {
         if (generated % flagUpdate == 0) {
             double finished = (double) generated / (double) totalCells;
