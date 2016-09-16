@@ -55,7 +55,7 @@ public class AtomicData<CellType> {
      * @throws RuntimeException if starvation happens on the calling thread.
      */
     public CellType waitForData() throws RuntimeException {
-        return isAtomic ? waitOnData() : getData();
+        return isAtomic ? waitOnData() : data;
     }
 
     /**
