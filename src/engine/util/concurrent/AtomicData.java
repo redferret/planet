@@ -41,6 +41,10 @@ public class AtomicData<CellType> {
     	isAtomic = atomic;
     }
     
+    public boolean isAtomic(){
+        return isAtomic;
+    }
+    
     /**
      * Threads needing to access this cell data will wait until the lock is
      * free following the fairness policy for concurrency.
