@@ -427,10 +427,6 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
         guard.release(cells);
     }
     
-    public void release(List<CellType> cells){
-        guard.release(cells.toArray(null));
-    }
-    
     /**
      * Waits for the resources given by the array of indexes.
      *
@@ -532,13 +528,29 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
         }
 
         public List<CellType> waitForCells(Point[] cellPositions) {
-            // TODO Auto-generated method stub
-            return null;
+            
+            int[] indexes = new int[cellPositions.length];
+            int w = gridWidth.get();
+            for (int i = 0; i < indexes.length; i++){
+                Point p = cellPositions[i];
+                int index = calcIndex(p.getX(), p.getY(), w);
+                indexes[i] = index;
+            }
+            
+            return waitForCells(indexes);
         }
 
         public List<CellType> waitForCells(int[] cellIndexes) {
-            // TODO Auto-generated method stub
-            return null;
+            writeLock.lock();
+            try{
+                List<CellType> selectedCells = new ArrayList<>();
+                for (int index : cellIndexes){
+                    selectedCells.add(waitForCellAt(index));
+                }
+                return selectedCells;
+            }finally{
+                writeLock.unlock();
+            }
         }
 
         /**
@@ -595,6 +607,6 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
                 release(cell);
             }
         }
-
+        
     }
 }
