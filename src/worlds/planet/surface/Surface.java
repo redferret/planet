@@ -101,7 +101,6 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
     private void set() {
         threadAverageDelay = new Delay(500);
         display = null;
-        atomicEdgesOnly();
         reset();
     }
 
@@ -113,6 +112,7 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
         planetAge = new AtomicLong(0);
         geologicalTimeStamp = 0;
         buildMap();
+        atomicEdgesOnly();
     }
 
     public void setDisplay(DisplayAdapter display) {
