@@ -77,9 +77,6 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
      *
      * @param mapWidth The number of cells = mapWidth * mapWidth
      * @param delay The number of frames to delay updating
-     * @param threadCount The number of threads that will work on the map, this
-     * will not setup the threads, this only tells this map how many threads
-     * will work on the ConcurrentHashMap.
      */
     public SurfaceMap(int mapWidth, int delay) {
         super(delay, true);

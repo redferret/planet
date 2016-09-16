@@ -101,6 +101,7 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
     private void set() {
         threadAverageDelay = new Delay(500);
         display = null;
+        atomicEdgesOnly();
         reset();
     }
 
