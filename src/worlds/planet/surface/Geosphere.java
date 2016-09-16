@@ -158,7 +158,7 @@ public abstract class Geosphere extends Surface {
             }
         }
     }
-    
+
     public Point[] getCellIndexesFrom(Point from){
         int tx, ty, mx, my;
         int x = from.getX(), y = from.getY();
@@ -483,12 +483,12 @@ public abstract class Geosphere extends Surface {
                 Point[] cellPos = getCellIndexesFrom(new Point(x, y));
                 List<PlanetCell> workingCells = waitForCells(cellPos);
                 int numCells = workingCells.size();
-                PlanetCell spreadFrom = workingCells.get(workingCells.size() - 1);
-                
+                PlanetCell spreadFrom = workingCells.get(numCells - 1);
+
                 List<PlanetCell> lowestList = new ArrayList<>();
                 getLowestCells(lowestList, workingCells);
                 spread(lowestList, spreadFrom);
-                
+
                 release(workingCells.toArray(new PlanetCell[numCells]));
             }
 
