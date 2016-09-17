@@ -601,7 +601,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
                 lock.unlock(cell);
             }
         }
-
+        
         private void release(CellType[] cells) {
             for(CellType cell : cells){
                 release(cell);
