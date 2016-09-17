@@ -11,10 +11,12 @@ public class TaskManager {
 
     private Deque<Task> tasks;
     protected Boundaries bounds;
+    private long curFrame;
     
     public TaskManager(Boundaries bounds) {
         tasks = new LinkedList<>();
         this.bounds = bounds;
+        curFrame = 0;
     }
     
     public void addTask(Task task){
@@ -34,9 +36,22 @@ public class TaskManager {
         tasks.forEach(task -> {
             if (task.check()) {
                 task.before();
-                for (int y = lowerYBound; y < upperYBound; y++) {
-                    for (int x = lowerXBound; x < upperXBound; x++) {
-                        task.perform(x, y);
+                
+                boolean sw = (curFrame % 2) == 0;
+                int l = upperXBound, m;
+
+                int ystart = sw? lowerYBound : (upperYBound - 1);
+                int yinc = sw? 1 : -1;
+
+                for (int b = 0; b < 2; b++) {
+                    for (int y = ystart; (sw? (y < upperYBound) : (y >= 0)); y += yinc) {
+
+                        m = ((b > 0) && (y % 2 == 0))? lowerXBound + 1
+                                : ((b > 0) && (y % 2 != 0) ? lowerXBound - 1 : lowerXBound);
+
+                        for (int x = (y % 2) + m; x < upperXBound; x += 2) {
+                            task.perform(x, y);
+                        }
                     }
                 }
                 task.after();
