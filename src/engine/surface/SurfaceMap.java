@@ -5,12 +5,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CyclicBarrier;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import engine.gui.RenderInterface;
 import engine.util.Point;
@@ -19,9 +20,6 @@ import engine.util.concurrent.TaskRunner;
 import engine.util.task.Task;
 import engine.util.task.TaskFactory;
 import engine.util.concurrent.AtomicData;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * The SurfaceMap is a generic map for all the systems on the planet. The map
