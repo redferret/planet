@@ -66,7 +66,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
     protected List<SurfaceThread> threadReferences;
     private List<Integer[]> data;
     private int prevSubThreadAvg;
-    private AtomicInteger gridWidth;
+    private final int gridWidth;
     private ExecutorService threadPool;
     private CyclicBarrier waitingGate;
     private ResourceGuard guard;
@@ -80,7 +80,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
      */
     public SurfaceMap(int mapWidth, int delay) {
         super(delay, true);
-        gridWidth = new AtomicInteger(mapWidth);
+        gridWidth = mapWidth;
         threadReferences = new ArrayList<>();
         guard = new ResourceGuard();
         data = new ArrayList<>();
@@ -203,7 +203,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
     }
 
     public final int getGridWidth() {
-        return gridWidth.get();
+        return gridWidth;
     }
 
     public final int getTotalNumberOfCells() {
@@ -258,7 +258,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
      * called after the engine is created or if the map needs to be reset.
      */
     protected void buildMap() {
-        int cellCountWidth = gridWidth.get();
+        int cellCountWidth = gridWidth;
         int totalCells = (cellCountWidth * cellCountWidth);
         int flagUpdate = totalCells / 2;
         int generated = 0;
@@ -281,7 +281,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
      */
     public void atomicEdgesOnly(){
         int threadDivision = (int) Math.pow(threadReferences.size(), 1/2);
-        int width = gridWidth.get();
+        int width = gridWidth;
         
         for (int y = 0; y < threadDivision; y++) {
             for (int x = 0; x < threadDivision; x++) {
@@ -326,7 +326,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
 
         int threadCount = threadDivision * threadDivision;
         waitingGate = new CyclicBarrier(threadCount);
-        int w = gridWidth.get() / threadDivision;
+        int w = gridWidth / threadDivision;
         Boundaries bounds;
         threadPool = Executors.newFixedThreadPool(threadCount + 1);
         for (int y = 0; y < threadDivision; y++) {
@@ -363,7 +363,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
      * data doesn't exist or if the data is locked by another thread.
      */
     public CellType getCellAt(int x, int y) {
-        int index = calcIndex(x, y, gridWidth.get());
+        int index = calcIndex(x, y, gridWidth);
         return getCellAt(index);
     }
 
@@ -396,7 +396,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
      * @return Returns the cell at the specified X and Y location.
      */
     public CellType waitForCellAt(int x, int y) {
-        int index = calcIndex(x, y, gridWidth.get());
+        int index = calcIndex(x, y, gridWidth);
         return waitForCellAt(index);
     }
 
@@ -455,7 +455,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
      */
     private void setCell(CellType cell) {
         int x = cell.getX(), y = cell.getY();
-        int index = calcIndex(x, y, gridWidth.get());
+        int index = calcIndex(x, y, gridWidth);
         map.put(index, new AtomicData<>(cell));
     }
 
@@ -530,7 +530,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
         public List<CellType> waitForCells(Point[] cellPositions) {
             
             int[] indexes = new int[cellPositions.length];
-            int w = gridWidth.get();
+            int w = gridWidth;
             for (int i = 0; i < indexes.length; i++){
                 Point p = cellPositions[i];
                 int index = calcIndex(p.getX(), p.getY(), w);
@@ -595,7 +595,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
                 throw new IllegalArgumentException("Cannot release a null reference");
             }
             int x = cell.getX(), y = cell.getY();
-            int index = calcIndex(x, y, gridWidth.get());
+            int index = calcIndex(x, y, gridWidth);
             AtomicData<CellType> lock = map.get(index);
             if (lock != null) {
                 lock.unlock(cell);
