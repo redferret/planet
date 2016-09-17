@@ -487,7 +487,7 @@ public abstract class Geosphere extends Surface {
 
                 List<PlanetCell> lowestList = new ArrayList<>();
                 getLowestCells(lowestList, workingCells);
-                spread(lowestList, spreadFrom);
+                //spread(lowestList, spreadFrom);
 
                 release(workingCells.toArray(new PlanetCell[numCells]));
             }
