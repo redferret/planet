@@ -278,8 +278,8 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
      * resources from other sections except on the borders.
      */
     public void atomicEdgesOnly(){
-        int threadDivision = (int) Math.pow(threadReferences.size(), 1/2);
-        int width = gridWidth;
+        int threadDivision = (int) Math.pow(threadReferences.size(), 0.5);
+        int width = gridWidth / threadDivision;
         
         for (int y = 0; y < threadDivision; y++) {
             for (int x = 0; x < threadDivision; x++) {
