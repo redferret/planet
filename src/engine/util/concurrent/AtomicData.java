@@ -19,43 +19,12 @@ public class AtomicData<Data> {
 
     private Data data;
     private Thread currentOwner;
-    private boolean isAtomic;
     private ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
     private Lock cellLock = readWriteLock.writeLock();
 
     public AtomicData(Data data) {
         this.data = data;
         currentOwner = null;
-        isAtomic = true;
-    }
-
-    /**
-     * In some cases it isn't completely necessary to make all the data in a map
-     * atomic to multiple threads. This will increase the speed of the
-     * simulation. Setting whether the data is atomic or not will cause the lock
-     * to be used. Race conditions or corruption of data may occur if multiple
-     * threads access data this isn't atomic.
-     *
-     * @param atomic Whether this data will be atomic or not.
-     */
-    public void setAsAtomic(boolean atomic) {
-        isAtomic = atomic;
-    }
-
-    public boolean isAtomic() {
-        return isAtomic;
-    }
-
-    /**
-     * Threads needing to access this cell data will wait until the lock is free
-     * following the fairness policy for concurrency.
-     *
-     * @return The data stored in this lock, if this thread is interrupted while
-     * waiting on the lock this method will return null.
-     * @throws RuntimeException if starvation happens on the calling thread.
-     */
-    public Data waitForData() throws RuntimeException {
-        return isAtomic ? waitOnData() : data;
     }
 
     /**
@@ -64,7 +33,7 @@ public class AtomicData<Data> {
      * @return The data that is now locked to the current thread.
      * @throws RuntimeException If starvation happens on the calling thread.
      */
-    private Data waitOnData() throws RuntimeException {
+    public Data waitOnData() throws RuntimeException {
         try {
             String threadName = Thread.currentThread().getName();
             String exMsg = "Starvation on thread " + threadName
@@ -101,17 +70,13 @@ public class AtomicData<Data> {
      * @return The data or null if locked.
      */
     public Data getData() {
-        if (isAtomic) {
-            boolean acquired = cellLock.tryLock();
+        boolean acquired = cellLock.tryLock();
 
-            if (acquired) {
-                currentOwner = Thread.currentThread();
-                return data;
-            } else {
-                return null;
-            }
-        } else {
+        if (acquired) {
+            currentOwner = Thread.currentThread();
             return data;
+        } else {
+            return null;
         }
     }
 
@@ -123,12 +88,10 @@ public class AtomicData<Data> {
      * @param data The new updated version of the data.
      */
     public void unlock(Data data) {
-        if (isAtomic) {
-            if (Thread.currentThread().equals(currentOwner)) {
-                this.data = data;
-                currentOwner = null;
-                cellLock.unlock();
-            }
+        if (Thread.currentThread().equals(currentOwner)) {
+            this.data = data;
+            currentOwner = null;
+            cellLock.unlock();
         }
     }
 
