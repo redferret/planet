@@ -27,6 +27,10 @@ public class Point {
         return y;
     }
 
+    public Point copy(){
+    	return new Point(this);
+    }
+    
     @Override
     public boolean equals(Object obj) {
         if (obj == null || !(obj instanceof Point)){

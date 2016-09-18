@@ -14,33 +14,28 @@ import engine.util.Point;
  */
 public abstract class Cell {	
     
-    // The x coordinate
-    private final int x;
-    
-    // The y coordinate
-    private final int y;
+    private final Point position;
 
     public Cell(int x, int y) {
-        this.x = x;
-        this.y = y;
+        position = new Point(x, y);
     }
 
     public int getX() {
-        return x;
+        return position.getX();
     }
 
     public int getY() {
-        return y;
+        return position.getY();
     }
     
     public Point getPosition(){
-    	return new Point(x, y);
+    	return position.copy();
     }
     
     public abstract List<Integer[]> render(List<Integer[]> settings);
     
     public String toString() {
-        return "[" + x + ", " + y + "]";
+        return "[" + position.getX() + ", " + position.getY() + "]";
     }
 
 }
