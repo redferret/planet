@@ -33,7 +33,7 @@ public class AtomicData<Data> {
      * @return The data that is now locked to the current thread.
      * @throws RuntimeException If starvation happens on the calling thread.
      */
-    public Data waitOnData() throws RuntimeException {
+    public Data waitForData() throws RuntimeException {
         try {
             String threadName = Thread.currentThread().getName();
             String exMsg = "Starvation on thread " + threadName
