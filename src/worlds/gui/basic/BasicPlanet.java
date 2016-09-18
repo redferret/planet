@@ -364,7 +364,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
                 }
             }
             StringBuilder sb = new StringBuilder();
-            sb.append("[").append(cx).append(", ").append(cy).append("]");
+            sb.append("[").append(viewX).append(", ").append(viewY).append("]");
             g2d.setColor(Color.MAGENTA);
             g2d.drawString(sb.toString(), 10, 10);
         }
