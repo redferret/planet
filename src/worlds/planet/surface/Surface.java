@@ -112,7 +112,6 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
         planetAge = new AtomicLong(0);
         geologicalTimeStamp = 0;
         buildMap();
-        atomicEdgesOnly();
     }
 
     public void setDisplay(DisplayAdapter display) {
