@@ -1,5 +1,6 @@
 package engine.util.concurrent;
 
+import engine.util.exception.SurfaceThreadStarvationException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -36,8 +37,6 @@ public class AtomicData<Data> {
     public Data waitForData() throws RuntimeException {
         try {
             String threadName = Thread.currentThread().getName();
-            String exMsg = "Starvation on thread " + threadName
-                    + " for resource " + data;
 
             boolean acquired = cellLock.tryLock(10000, TimeUnit.MILLISECONDS);
 
@@ -48,7 +47,7 @@ public class AtomicData<Data> {
                         + " owner of resource is {2}",
                         new Object[]{threadName, data.toString(), ownerName});
 
-                throw new RuntimeException(exMsg);
+                throw new SurfaceThreadStarvationException(threadName, data);
             } else if (acquired) {
                 currentOwner = Thread.currentThread();
                 return data;
