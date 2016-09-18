@@ -1,6 +1,6 @@
 
 
-package engine.surface;
+package engine.util.exception;
 
 /**
  *

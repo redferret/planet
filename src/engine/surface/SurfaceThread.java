@@ -1,6 +1,7 @@
 package engine.surface;
 
 
+import engine.util.exception.SurfaceThreadException;
 import java.util.Deque;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;

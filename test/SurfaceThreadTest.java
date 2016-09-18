@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import engine.util.task.Boundaries;
 import engine.surface.SurfaceThread;
-import engine.surface.SurfaceThreadException;
+import engine.util.exception.SurfaceThreadException;
 import engine.util.task.TaskAdapter;
 import static org.junit.Assert.*;
 /**
