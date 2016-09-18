@@ -317,8 +317,8 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
 
             StringBuilder sb = new StringBuilder();
             sb.append("[").append(cx).append(", ").append(cy).append("]");
-
-            g2d.drawString(sb.toString(), cx, cy);
+            g2d.setColor(Color.MAGENTA);
+            g2d.drawString(sb.toString(), 10, 10);
 
             // Draw the cross section
             for (int cellIndex = 0; cellIndex < cutToolWidth; cellIndex++) {
