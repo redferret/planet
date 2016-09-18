@@ -315,11 +315,6 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
             PlanetCell cell;
             Stratum nextStratum;
 
-            StringBuilder sb = new StringBuilder();
-            sb.append("[").append(cx).append(", ").append(cy).append("]");
-            g2d.setColor(Color.MAGENTA);
-            g2d.drawString(sb.toString(), 10, 10);
-
             // Draw the cross section
             for (int cellIndex = 0; cellIndex < cutToolWidth; cellIndex++) {
 
@@ -368,6 +363,10 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
                     surface.release(cell);
                 }
             }
+            StringBuilder sb = new StringBuilder();
+            sb.append("[").append(cx).append(", ").append(cy).append("]");
+            g2d.setColor(Color.MAGENTA);
+            g2d.drawString(sb.toString(), 10, 10);
         }
 
         /**
