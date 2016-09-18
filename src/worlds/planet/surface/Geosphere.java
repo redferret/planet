@@ -81,7 +81,7 @@ public abstract class Geosphere extends Surface {
 
     public Geosphere(int worldSize, int surfaceDelay, int threadsDelay, int threadCount) {
         super(worldSize, surfaceDelay, threadsDelay, threadCount);
-        this.worldSize = worldSize;
+        Geosphere.worldSize = worldSize;
         ageStamp = 0;
 //        produceTasks(new GeologicalUpdateFactory());
         produceTasks(new AeolianFactory());
