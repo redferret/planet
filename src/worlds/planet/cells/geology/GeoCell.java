@@ -709,6 +709,10 @@ public class GeoCell extends Mantel {
     private void updateMV(float mass, Layer type) {
 
         int cellArea = Planet.instance().getCellArea();
+
+        if (type == null){
+            throw new IllegalArgumentException("The layer type can't be null");
+        }
         
         totalStrataThickness += Tools.calcHeight(mass, cellArea, type);
         totalMass += mass;
