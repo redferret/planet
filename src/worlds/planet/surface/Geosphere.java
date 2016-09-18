@@ -69,7 +69,7 @@ public abstract class Geosphere extends Surface {
 
     public static boolean drawSediments;
     private static Random rand;
-
+    private static int worldSize;
     static {
         heatDistributionCount = 5;
         thermalInc = 300;
@@ -81,6 +81,7 @@ public abstract class Geosphere extends Surface {
 
     public Geosphere(int worldSize, int surfaceDelay, int threadsDelay, int threadCount) {
         super(worldSize, surfaceDelay, threadsDelay, threadCount);
+        this.worldSize = worldSize;
         ageStamp = 0;
 //        produceTasks(new GeologicalUpdateFactory());
         produceTasks(new AeolianFactory());
@@ -106,49 +107,8 @@ public abstract class Geosphere extends Surface {
         }
     }
 
-    /**
-     * Gets cell lower than the given cell 'from'. This is older code that 
-     * will wait for one resource at a time, 'from' will be temporarily released
-     * and the regained after this method has finished.
-     * @param from The selected cell to pick from.
-     * @param lowestList The list of lowest cell positions
-     * @param max The maximum number of cells to add to lowestList.
-     */
-    public void getLowestCells(PlanetCell from, List<Point> lowestList, int max) {
 
-        int tx, ty, mx, my;
-        int x = from.getX(), y = from.getY();
-        float geoHeight = from.getHeightWithoutOceans();
-        int xl = DIR_X_INDEX.length;
-        PlanetCell selectedCell;
-
-        release(from);
-        for (int s = 0; s < xl; s++) {
-
-            tx = x + DIR_X_INDEX[s];
-            ty = y + DIR_Y_INDEX[s];
-
-            // Check the boundaries
-            mx = checkBounds(tx, getGridWidth());
-            my = checkBounds(ty, getGridWidth());
-
-            selectedCell = waitForCellAt(mx, my);
-
-            if (selectedCell.getHeightWithoutOceans() < geoHeight) {
-                if (lowestList.size() < max) {
-                    Point p = selectedCell.getPosition();
-                    lowestList.add(p);
-                } else {
-                    release(selectedCell);
-                    break;
-                }
-            } 
-            release(selectedCell);
-        }
-        waitForCell(from);
-    }
-
-    public void getLowestCells(List<PlanetCell> lowest, List<PlanetCell> cells){
+    public static void getLowestCells(List<PlanetCell> lowest, List<PlanetCell> cells){
         PlanetCell center = cells.get(cells.size() - 1);
         float geoHeight = center.getHeightWithoutOceans();
         for (int i = 0; i < cells.size() - 1; i++){
@@ -159,7 +119,7 @@ public abstract class Geosphere extends Surface {
         }
     }
 
-    public Point[] getCellIndexesFrom(Point from){
+    public static Point[] getCellIndexesFrom(Point from){
         int tx, ty, mx, my;
         int x = from.getX(), y = from.getY();
         int xl = DIR_X_INDEX.length;
@@ -170,8 +130,8 @@ public abstract class Geosphere extends Surface {
             ty = y + DIR_Y_INDEX[s];
 
             // Check the boundaries
-            mx = checkBounds(tx, getGridWidth());
-            my = checkBounds(ty, getGridWidth());
+            mx = checkBounds(tx, worldSize);
+            my = checkBounds(ty, worldSize);
 
             Point p = new Point(mx, my);
             points[s] = p;
@@ -487,7 +447,7 @@ public abstract class Geosphere extends Surface {
 
                 List<PlanetCell> lowestList = new ArrayList<>();
                 getLowestCells(lowestList, workingCells);
-                //spread(lowestList, spreadFrom);
+                spread(lowestList, spreadFrom);
 
                 release(workingCells.toArray(new PlanetCell[numCells]));
             }

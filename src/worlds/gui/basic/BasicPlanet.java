@@ -52,7 +52,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
     private StrataFrame crossSection;
 
     private static final int SIZE = 512;
-    private static final int CELL_WIDTH = 64, THREAD_COUNT = 2;
+    private static final int CELL_WIDTH = 6, THREAD_COUNT = 2;
 
     public BasicPlanet() {
         super("Test World");
@@ -69,7 +69,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
         PlanetCell cell;
         for (int i = 0; i < (CELL_WIDTH*CELL_WIDTH) * (THREAD_COUNT * THREAD_COUNT); i++) {
             cell = surface.waitForCellAt(i);
-            cell.add(Layer.BASALT, ThreadLocalRandom.current().nextInt(5000, 60000), true);
+            cell.add(Layer.BASALT, ThreadLocalRandom.current().nextInt(5000, 160000), true);
             surface.release(cell);
         }
 //        for (int i = 0; i < 50; i++) {
@@ -306,7 +306,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
             }
 
             int windowWidth = getWidth(),
-                    windowHeight = getHeight(), cutToolWidth = 50;
+                    windowHeight = getHeight(), cutToolWidth = CELL_WIDTH;
             int cellWidth = windowWidth / cutToolWidth, cx = viewX, cy = viewY;
 
             double layerThickness, cellThicknessRatio, startDrawHeight;
@@ -365,8 +365,8 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
                         startDrawHeight += layerThickness;
                         nextStratum = nextStratum.next();
                     }
+                    surface.release(cell);
                 }
-                surface.release(cell);
             }
         }
 

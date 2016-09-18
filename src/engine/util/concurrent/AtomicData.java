@@ -13,17 +13,17 @@ import java.util.logging.Logger;
  * lies dormant until the lock has been acquired".
  *
  * @author Richard DeSilvey
- * @param <CellType> The data type
+ * @param <Data> The data type
  */
-public class AtomicData<CellType> {
+public class AtomicData<Data> {
 
-    private CellType data;
+    private Data data;
     private Thread currentOwner;
     private boolean isAtomic;
-    private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
-    private final Lock cellLock = readWriteLock.writeLock();
+    private ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
+    private Lock cellLock = readWriteLock.writeLock();
 
-    public AtomicData(CellType data) {
+    public AtomicData(Data data) {
         this.data = data;
         currentOwner = null;
         isAtomic = true;
@@ -54,7 +54,7 @@ public class AtomicData<CellType> {
      * waiting on the lock this method will return null.
      * @throws RuntimeException if starvation happens on the calling thread.
      */
-    public CellType waitForData() throws RuntimeException {
+    public Data waitForData() throws RuntimeException {
         return isAtomic ? waitOnData() : data;
     }
 
@@ -64,7 +64,7 @@ public class AtomicData<CellType> {
      * @return The data that is now locked to the current thread.
      * @throws RuntimeException If starvation happens on the calling thread.
      */
-    private CellType waitOnData() throws RuntimeException {
+    private Data waitOnData() throws RuntimeException {
         try {
             String threadName = Thread.currentThread().getName();
             String exMsg = "Starvation on thread " + threadName
@@ -100,7 +100,7 @@ public class AtomicData<CellType> {
      *
      * @return The data or null if locked.
      */
-    public CellType getData() {
+    public Data getData() {
         if (isAtomic) {
             boolean acquired = cellLock.tryLock();
 
@@ -122,7 +122,7 @@ public class AtomicData<CellType> {
      *
      * @param data The new updated version of the data.
      */
-    public void unlock(CellType data) {
+    public void unlock(Data data) {
         if (isAtomic) {
             if (Thread.currentThread().equals(currentOwner)) {
                 this.data = data;
