@@ -73,53 +73,7 @@ public class GeoCellTest {
         
         assertEquals(expectedDensity, actualDensity);
     }
-    
-    /**
-     * Performs a test on a cell by adding two types of stratum and checks to
-     * make sure that the density, volume, and mass are correct.
-     * Volume, density, and height are tested in ranges with specified
-     * deviations.
-     */
-    @Test
-    public void strataTest() {
 
-        boolean inRange;
-
-        float volumeRangeDiff = 0.0000005f;
-        float densityRangeDiff = 0.0005f;
-        float heightRangeDiff = 0.000005f;
-        long cellBase = testWorld.getCellArea();
-
-        GeoCell testCell = testWorld.getSurface().waitForCellAt(50, 50);
-
-        testCell.add(Layer.RHYOLITE, 10000, true);
-        testCell.add(Layer.BASALT, 500, true);
-
-        Float expectedTotalMass = 10500f;
-        Float actualTotalMass = testCell.getTotalMass();
-
-        assertEquals("Total masses didn't match", expectedTotalMass, actualTotalMass);
-
-        Float actualTotalVolume = testCell.getTotalVolume();
-        Float expectedTotalVolume = 3.7514535f;
-
-        Float actualDensity = testCell.getGeoDensity();
-        Float expectedDensity = expectedTotalMass / expectedTotalVolume;
-
-        inRange = rangeTest(densityRangeDiff, actualDensity, expectedDensity);
-        assertTrue("Density is out of accepted range", inRange);
-
-        inRange = rangeTest(volumeRangeDiff, actualTotalVolume, expectedTotalVolume);
-        assertTrue("Volume is out of accepted range", inRange);
-
-        Float expectedHeight = expectedTotalMass / (cellBase * expectedDensity);
-
-        Float actualHeight = testCell.getHeight();
-
-        inRange = rangeTest(heightRangeDiff, actualHeight, expectedHeight);
-        assertTrue("Height is out of accepted range", inRange);
-        
-    }
 
     /**
      * Tests removal of the strata with the special removal case of removing
