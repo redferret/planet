@@ -52,7 +52,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
     private StrataFrame crossSection;
 
     private static final int SIZE = 512;
-    private static final int CELL_WIDTH = 6, THREAD_COUNT = 2;
+    private static final int CELL_WIDTH = 64, THREAD_COUNT = 2;
 
     public BasicPlanet() {
         super("Test World");
@@ -306,9 +306,9 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
             }
 
             int windowWidth = getWidth(),
-                    windowHeight = getHeight(), cutToolWidth = CELL_WIDTH;
+                    windowHeight = getHeight(), cutToolWidth = CELL_WIDTH / THREAD_COUNT;
             int cellWidth = windowWidth / cutToolWidth, cx = viewX, cy = viewY;
-
+            int gridWidth = surface.getGridWidth();
             double layerThickness, cellThicknessRatio, startDrawHeight;
 
             Color color;
@@ -318,8 +318,8 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
             // Draw the cross section
             for (int cellIndex = 0; cellIndex < cutToolWidth; cellIndex++) {
 
-                cx = Tools.checkBounds(cellIndex + viewX, surface.getGridWidth());
-                cy = Tools.checkBounds(viewY, surface.getGridWidth());
+                cx = Tools.checkBounds(cellIndex + viewX, gridWidth);
+                cy = Tools.checkBounds(viewY, gridWidth);
 
                 cell = surface.waitForCellAt(cx, cy);
                 
@@ -363,8 +363,10 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
                     surface.release(cell);
                 }
             }
+            cx = Tools.checkBounds(viewX, gridWidth);
+            cy = Tools.checkBounds(viewY, gridWidth);
             StringBuilder sb = new StringBuilder();
-            sb.append("[").append(viewX).append(", ").append(viewY).append("]");
+            sb.append("[").append(cx).append(", ").append(cy).append("]");
             g2d.setColor(Color.MAGENTA);
             g2d.drawString(sb.toString(), 10, 10);
         }

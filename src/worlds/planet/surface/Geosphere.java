@@ -408,7 +408,7 @@ public abstract class Geosphere extends Surface {
 
             @Override
             public boolean check() {
-                return delay.check();
+                return true;
             }
 
             @Override
@@ -789,7 +789,7 @@ public abstract class Geosphere extends Surface {
 //            }
             @Override
             public boolean check() {
-                return updateDelay.check();
+                return true;
             }
 
             @Override
