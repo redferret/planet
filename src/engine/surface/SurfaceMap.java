@@ -292,7 +292,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
                     for (int ly = lowerY + 1; ly < upperY - 1; ly++){
                         int index = calcIndex(lx, ly, width);
                         AtomicData<CellType> lock = map.get(index);
-                        lock.setAsAtomic(false);
+//                        lock.setAsAtomic(false);
                     }
                 }
             }
