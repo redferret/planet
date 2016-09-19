@@ -1,12 +1,14 @@
 
 import engine.util.Tools;
+
 import org.junit.Test;
+
 import worlds.planet.cells.geology.GeoCell;
 import worlds.planet.enums.Layer;
 import worlds.planet.TestWorld;
-
 import static org.junit.Assert.*;
 import worlds.planet.cells.HydroCell;
+import worlds.planet.cells.PlanetCell;
 import worlds.planet.cells.geology.Stratum;
 
 
@@ -36,6 +38,7 @@ public class GeoCellTest {
         Float expectedDensity = 0f;
         
         assertEquals("The density should be 0", expectedDensity, actualDensity);
+        testWorld.getSurface().release((PlanetCell) testCell);
     }
     
     /**
@@ -51,7 +54,7 @@ public class GeoCellTest {
         Float expectedDensity = 0f;
         
         assertEquals("The density should be 0", expectedDensity, actualDensity);
-        
+        testWorld.getSurface().release((PlanetCell) testCell);
     }
     
     /**
@@ -72,6 +75,7 @@ public class GeoCellTest {
         Float actualDensity = testCell.getGeoDensity();
         
         assertEquals(expectedDensity, actualDensity);
+        testWorld.getSurface().release((PlanetCell) testCell);
     }
 
 
@@ -119,6 +123,7 @@ public class GeoCellTest {
         topLayer = top.getLayer();
         
         assertEquals(incorrectLayerMsg, expectedLayer, topLayer);
+        testWorld.getSurface().release((PlanetCell) testCell);
     }
 
     /**
@@ -148,6 +153,8 @@ public class GeoCellTest {
         actualLayer = testCell.peekTopStratum().getLayer();
         
         assertEquals("Incorrect layer", expectedLayer, actualLayer);
+        
+        testWorld.getSurface().release((PlanetCell) testCell);
     }
     
     /**
@@ -181,6 +188,8 @@ public class GeoCellTest {
         Float thickness = testCell.getStrataThickness();
         Float expected = 850f;
         assertEquals("", expected, thickness);
+        
+        testWorld.getSurface().release((PlanetCell) testCell);
     }
     
     /**
@@ -196,6 +205,8 @@ public class GeoCellTest {
         Integer expectedLayerCount = 2;
         Integer actualLayerCount = testCell.getStrata().size();
         assertEquals("Layer Count Incorrect", expectedLayerCount, actualLayerCount);
+        
+        testWorld.getSurface().release((PlanetCell) testCell);
     }
    
     /**
@@ -210,6 +221,8 @@ public class GeoCellTest {
         hydro.addOceanMass(10000);
         
         assertTrue(testCell.hasOcean());
+        
+        testWorld.getSurface().release((PlanetCell) testCell);
     }
     
     /**
@@ -232,6 +245,8 @@ public class GeoCellTest {
         
         boolean inRange = rangeTest(heightRangeDiff, postHeight, recalculatedHeight);
         assertTrue("The updated height is not in expected range", inRange);
+        
+        testWorld.getSurface().release((PlanetCell) testCell);
     }
     
 }
