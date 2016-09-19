@@ -19,7 +19,12 @@ public class TaskManager {
         curFrame = 0;
     }
     
+    /**
+     * Adding a task to a manager will invoke the Task's 'construct' method.
+     * @param task The task being added to this manager.
+     */
     public void addTask(Task task){
+    	task.construct();
         tasks.add(task);
     }
     
