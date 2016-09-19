@@ -29,7 +29,7 @@ public abstract class Biosphere extends Hydrosphere {
 
             private Delay delay;
             
-            public BioCellTask() {
+            public void construct() {
                 delay = new Delay(5);
             }
             

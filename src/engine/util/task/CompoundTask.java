@@ -9,11 +9,20 @@ package engine.util.task;
  * tasks. Compound tasks need to be created via TaskFactory to work properly.
  * @author Richard DeSilvey
  */
-public class CompoundTask extends BasicTask {
+public abstract class CompoundTask extends BasicTask {
 
     private TaskManager subTaskManager;
     
-    public void addSubTask(Task task){
+    public void construct(){
+    	if (subTaskManager == null) {
+            Boundaries taskBounds = taskThread.getManager().getBounds();
+            subTaskManager = new TaskManager(taskBounds);
+        }
+    }
+    
+    public abstract void setup();
+    
+    public void addSubTask(Task task) {
         subTaskManager.addTask(task);
     }
     
@@ -24,10 +33,6 @@ public class CompoundTask extends BasicTask {
 
     @Override
     public void before() {
-        if (subTaskManager == null) {
-            Boundaries taskBounds = taskThread.getManager().getBounds();
-            subTaskManager = new TaskManager(taskBounds);
-        }
     }
 
     @Override

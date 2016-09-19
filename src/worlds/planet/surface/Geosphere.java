@@ -86,7 +86,7 @@ public abstract class Geosphere extends Surface {
 //        produceTasks(new GeologicalUpdateFactory());
         produceTasks(new AeolianFactory());
         produceTasks(new SedimentationFactory());
-//        produceTasks(new MetamorphicAndMeltingFactory());
+        produceTasks(new MetamorphicAndMeltingFactory());
         produceTasks(new SedimentSpreadFactory());
 //        produceTasks(new HeatMantelFactory());
     }
@@ -167,7 +167,7 @@ public abstract class Geosphere extends Surface {
 
         private class ChangeRockSubTasks extends CompoundTask {
 
-            public ChangeRockSubTasks() {
+            public void setup() {
                 addSubTask(new MeltSubTask());
                 addSubTask(new MetaRockSubTask());
             }
@@ -176,7 +176,7 @@ public abstract class Geosphere extends Surface {
 
                 private Delay meltDelay;
 
-                public MeltSubTask() {
+                public void construct() {
                     meltDelay = new Delay(200);
                 }
 
@@ -224,7 +224,7 @@ public abstract class Geosphere extends Surface {
                 private Delay metaDelay;
                 private Stratum metaStratum;
 
-                public MetaRockSubTask() {
+                public void construct() {
                     metaDelay = new Delay(10);
                 }
 
@@ -356,7 +356,7 @@ public abstract class Geosphere extends Surface {
 
             private Delay delay;
 
-            public AeolianTask() {
+            public void construct() {
                 delay = new Delay(150);
             }
 
@@ -430,7 +430,7 @@ public abstract class Geosphere extends Surface {
 
             private Delay delay;
 
-            public SpreadSedimentTask() {
+            public void construct() {
                 delay = new Delay(5);
             }
 
@@ -529,7 +529,7 @@ public abstract class Geosphere extends Surface {
 
             private Delay geologicDelay;
 
-            public GeologicalUpdate() {
+            public void construct() {
                 geologicDelay = new Delay(250);
             }
 
@@ -603,7 +603,7 @@ public abstract class Geosphere extends Surface {
 
             private Delay mantelHeatingDelay;
 
-            public HeatMantel() {
+            public void construct() {
                 mantelHeatingDelay = new Delay(5);
             }
 
@@ -653,7 +653,7 @@ public abstract class Geosphere extends Surface {
 
             private Delay updateDelay;
 
-            public RockFormation() {
+            public void construct() {
                 updateDelay = new Delay(5);
             }
 

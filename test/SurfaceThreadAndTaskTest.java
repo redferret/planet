@@ -63,6 +63,8 @@ class TestTask extends Task {
         this.checkPass = checkPass;
     }
     
+    public void construct(){};
+    
     @Override
     public void perform(int x, int y) {
         System.out.println("Test Task Running");

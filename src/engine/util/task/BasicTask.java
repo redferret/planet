@@ -10,6 +10,8 @@ package engine.util.task;
  */
 public abstract class BasicTask extends Task {
 
+	public void construct(){};
+	
     @Override
     public final void perform(int x, int y) {
     }

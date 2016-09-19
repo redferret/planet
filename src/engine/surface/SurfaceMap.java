@@ -187,7 +187,8 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
     public void produceTasks(TaskFactory factory) {
         threadReferences.forEach(thread -> {
             Task producedTask = factory.buildTask();
-            producedTask.taskThread = thread;
+            producedTask.setThread(thread);
+            producedTask.construct();
             thread.addTask(producedTask);
         });
     }

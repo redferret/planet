@@ -45,7 +45,7 @@ public abstract class Atmosphere extends Hydrosphere {
             private boolean evaporate;
             private float totalEvaportatedMass;
             
-            public SimpleClimateTask() {
+            public void construct() {
                 delay = new Delay(10);
                 totalEvaportatedMass = 0;
                 evaporate = true;

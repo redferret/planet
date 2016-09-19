@@ -84,7 +84,7 @@ class MyFactory implements TaskFactory {
 
         private Integer counter;
         
-        public MyTask() {
+        public void construct() {
             counter = 0;
         }
         

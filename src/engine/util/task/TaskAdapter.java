@@ -8,6 +8,7 @@ package engine.util.task;
  * @author Richard DeSilvey
  */
 public abstract class TaskAdapter extends Task {
+	public final void construct(){};
     @Override
     public final boolean check() {
         return true;

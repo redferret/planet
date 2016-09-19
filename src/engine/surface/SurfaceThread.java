@@ -2,20 +2,14 @@ package engine.surface;
 
 
 import engine.util.exception.SurfaceThreadException;
-import java.util.Deque;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.Iterator;
-import java.util.concurrent.ConcurrentLinkedDeque;
 import engine.util.task.Boundaries;
-import engine.util.Delay;
 import engine.util.concurrent.TaskRunner;
 import engine.util.task.Task;
 import engine.util.task.TaskManager;
-import engine.util.task.BasicTask;
-import worlds.planet.cells.geology.PlanetObject;
 
 /**
  * A surface can be broken up into sections where a SurfaceThread can modify and
@@ -30,7 +24,6 @@ public class SurfaceThread extends TaskRunner {
      */
     private int curFrame;
     private TaskManager manager;
-    private Deque<PlanetObject> objects;
     private static final boolean CONTINUOUS = true;
     private boolean throwExecption;
     
@@ -48,20 +41,10 @@ public class SurfaceThread extends TaskRunner {
         manager = new TaskManager(bounds);
         curFrame = 0;
         throwExecption = false;
-        objects = new ConcurrentLinkedDeque<>();
-        addTask(new UpdateObjectsTask());
     }
     
-    public void addObject(PlanetObject o) {
-        objects.add(o);
-    }
-
     public void throwExecption(boolean b) {
         throwExecption = b;
-    }
-    
-    public Iterator<PlanetObject> getObjectIterator(){
-        return objects.iterator();
     }
     
     public final void update() {
@@ -92,41 +75,5 @@ public class SurfaceThread extends TaskRunner {
 
     public TaskManager getManager() {
         return manager;
-    }
-    
-    private class UpdateObjectsTask extends BasicTask {
-
-        private Delay updateDelay;
-        
-        public UpdateObjectsTask() {
-            updateDelay = new Delay(1);
-        }
-
-        @Override
-        public void perform() {
-            if (updateDelay.check()){
-                updateObjects();
-            }
-        }
-
-        @Override
-        public void before() {
-        }
-
-        @Override
-        public void after() {
-        }
-        
-        private void updateObjects() {
-            Iterator<PlanetObject> iter = objects.iterator();
-            while (iter.hasNext()) {
-                PlanetObject object = iter.next();
-                if (object.isDead()) {
-                    iter.remove();
-                } else {
-                    object.update();
-                }
-            }
-        }
     }
 }

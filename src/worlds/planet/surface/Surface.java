@@ -219,7 +219,7 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
             private AtomicInteger highestHeightIntPart;
             private AtomicInteger highestHeightDecPart;
 
-            public MinMaxHeightTask() {
+            public void construct() {
                 lowestHeightIntPart = new AtomicInteger(0);
                 lowestHeightDecPart = new AtomicInteger(0);
                 

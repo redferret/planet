@@ -14,7 +14,11 @@ public abstract class Task {
      * this object reference is null then this task is not part of a 
      * TaskFactory.
      */
-    public SurfaceThread taskThread = null;
+    protected SurfaceThread taskThread = null;
+    
+    public void setThread(SurfaceThread thread){
+    	taskThread = thread;
+    }
     
     /**
      * This method is called before updating each cell on the surface. If this
@@ -47,4 +51,5 @@ public abstract class Task {
      */
     public abstract void after();
 
+    public abstract void construct();
 }

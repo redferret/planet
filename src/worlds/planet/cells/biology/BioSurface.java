@@ -180,8 +180,12 @@ public class BioSurface extends SurfaceMap<BioNode> {
         }
 
         @Override
-        public void after() {
-        }
+        public void after(){
+        };
+
+		@Override
+		public void construct() {
+		}
         
     }
     

@@ -69,7 +69,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
         PlanetCell cell;
         for (int i = 0; i < (CELL_WIDTH*CELL_WIDTH) * (THREAD_COUNT * THREAD_COUNT); i++) {
             cell = surface.waitForCellAt(i);
-            cell.add(Layer.BASALT, ThreadLocalRandom.current().nextInt(5000, 160000), true);
+            cell.add(Layer.BASALT, ThreadLocalRandom.current().nextInt(90000, 160000), true);
             surface.release(cell);
         }
 //        for (int i = 0; i < 50; i++) {
@@ -262,13 +262,13 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
                         p.pause();
                     }
                     break;
-                case KeyEvent.VK_NUMPAD7:
+                case KeyEvent.VK_9:
                     crossSection.LAYER_THICKNESS--;
                     if (crossSection.LAYER_THICKNESS < 1) {
                         crossSection.LAYER_THICKNESS = 1;
                     }
                     break;
-                case KeyEvent.VK_NUMPAD4:
+                case KeyEvent.VK_0:
                     crossSection.LAYER_THICKNESS++;
                     break;
             }
