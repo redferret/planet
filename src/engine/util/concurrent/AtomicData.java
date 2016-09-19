@@ -32,9 +32,9 @@ public class AtomicData<Data> {
      * Performs thread synchronization on the data stored in this guard.
      *
      * @return The data that is now locked to the current thread.
-     * @throws RuntimeException If starvation happens on the calling thread.
+     * @throws SurfaceThreadStarvationException If starvation happens on the calling thread.
      */
-    public Data waitForData() throws RuntimeException {
+    public Data waitForData() throws SurfaceThreadStarvationException {
         try {
             String threadName = Thread.currentThread().getName();
 
