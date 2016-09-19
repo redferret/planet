@@ -52,7 +52,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
     private StrataFrame crossSection;
 
     private static final int SIZE = 512;
-    private static final int CELL_WIDTH = 64, THREAD_COUNT = 2;
+    private static final int CELL_WIDTH = 64, THREAD_COUNT = 3;
 
     public BasicPlanet() {
         super("Test World");

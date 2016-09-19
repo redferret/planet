@@ -421,6 +421,10 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
         guard.release(cell);
     }
 
+    public void release(List<CellType> cells){
+        guard.release(cells);
+    }
+    
     public void release(CellType[] cells){
         guard.release(cells);
     }
@@ -598,6 +602,12 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
             if (lock != null) {
                 lock.unlock(cell);
             }
+        }
+        
+        private void release(List<CellType> cells){
+            cells.forEach(cell -> {
+                release(cell);
+            });
         }
         
         private void release(CellType[] cells) {

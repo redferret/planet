@@ -449,7 +449,7 @@ public abstract class Geosphere extends Surface {
                 getLowestCells(lowestList, workingCells);
                 spread(lowestList, spreadFrom);
 
-                release(workingCells.toArray(new PlanetCell[numCells]));
+                release(workingCells);
             }
 
             /**

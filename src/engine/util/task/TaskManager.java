@@ -32,7 +32,7 @@ public class TaskManager {
         int upperYBound = bounds.getUpperYBound();
         int lowerXBound = bounds.getLowerXBound();
         int upperXBound = bounds.getUpperXBound();
-        
+
         tasks.forEach(task -> {
             if (task.check()) {
                 task.before();
