@@ -168,12 +168,14 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
     }
 
     /**
-     * Adds the Task instance to each thread.
+     * Adds the Task instance to each thread. The thread will be assigned to the 
+     * task allowing access to the parent thread via the task.
      *
      * @param task The task being added to each thread.
      */
     public void addTaskToThreads(Task task) {
         threadReferences.forEach(thread -> {
+        	task.setThread(thread);
             thread.addTask(task);
         });
     }
