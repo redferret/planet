@@ -93,7 +93,7 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
         setupDefaultMap(planetWidth, threadCount);
         mhFactory = new MinMaxHeightFactory();
         produceTasks(mhFactory);
-        Boundaries bounds = new Boundaries(0, planetWidth, 0, planetWidth);
+        Boundaries bounds = new Boundaries(0, planetWidth);
         generalTasks = new TaskManager(bounds);
         set();
     }

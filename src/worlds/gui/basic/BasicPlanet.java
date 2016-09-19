@@ -53,6 +53,8 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
 
     private static final int SIZE = 512;
     private static final int CELL_WIDTH = 64, THREAD_COUNT = 3;
+    private static final int CELL_COUNT = CELL_WIDTH * CELL_WIDTH;
+    private static final int THREAD_TOTAL = THREAD_COUNT * THREAD_COUNT;
 
     public BasicPlanet() {
         super("Test World");
@@ -67,9 +69,9 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
     private void prepareWorld() {
         PlanetSurface surface = testWorld.getSurface();
         PlanetCell cell;
-        for (int i = 0; i < (CELL_WIDTH*CELL_WIDTH) * (THREAD_COUNT * THREAD_COUNT); i++) {
+        for (int i = 0; i <  CELL_COUNT * THREAD_TOTAL; i++) {
             cell = surface.waitForCellAt(i);
-            cell.add(Layer.BASALT, ThreadLocalRandom.current().nextInt(90000, 160000), true);
+            cell.add(Layer.BASALT, ThreadLocalRandom.current().nextInt(500000, 1000000), true);
             surface.release(cell);
         }
 //        for (int i = 0; i < 50; i++) {

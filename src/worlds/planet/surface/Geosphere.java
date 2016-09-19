@@ -149,12 +149,12 @@ public abstract class Geosphere extends Surface {
     public static float MASS_TO_MELT;
 
     static {
-        MELTING_PRESSURE = 8500;
-        SEDIMENTARY_TO_METAMORPHIC = 7500;
-        IGNEOUS_TO_METAMORPHIC = 8200;
-        SLATE_TO_PHYLITE = 7800;
-        PHYLITE_TO_SCHIST = 8000;
-        SCHIST_TO_GNEISS = 8200;
+        MELTING_PRESSURE = 850;
+        SEDIMENTARY_TO_METAMORPHIC = 750;
+        IGNEOUS_TO_METAMORPHIC = 820;
+        SLATE_TO_PHYLITE = 780;
+        PHYLITE_TO_SCHIST = 800;
+        SCHIST_TO_GNEISS = 820;
         MASS_TO_MELT = 2500;
     }
 
