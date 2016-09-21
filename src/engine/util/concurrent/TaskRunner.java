@@ -23,15 +23,32 @@ public abstract class TaskRunner implements Runnable {
     protected boolean running;
     
     /**
-     * Determines if this thread is finished running
+     * Flag to determine if this thread is finished executing
      */
     private boolean executing;
     
-    
+    /**
+     * Flag that determines if this thread will loop continuously 
+     * without being invoked by another thread to run an iteration.
+     */
     private boolean continuous;
+    
+    /**
+     * The amount of time that lapsed to process a frame
+     */
     private AtomicInteger timeLapse;
+    
+    /**
+     * Barrier for this thread to wait to be signaled by another thread.
+     */
     private CyclicBarrier waiter;
     
+    /**
+     * Creates a new TaskRunner with the given delay and whether this TaskRunner
+     * is continuous.
+     * @param delay The time in milliseconds to delay for each frame or iteration.
+     * @param continuous If this Runnable is continuous.
+     */
     public TaskRunner(int delay, boolean continuous){
         miliSeconds = delay;
         this.continuous = continuous;
@@ -41,33 +58,62 @@ public abstract class TaskRunner implements Runnable {
         waiter = new CyclicBarrier(2);
     }
     
+    /**
+     * The most recent time that has lapsed.
+     * @return
+     */
     public int timeLapse(){
         return timeLapse.get();
     }
     
+    /**
+     * Reset the amount of time to delay each frame
+     * @param delay The time to delay each frame in milliseconds.
+     */
     public void setDelay(int delay){
         miliSeconds = delay;
     }
     
+    /**
+     * Pauses this runner
+     */
     public void pause(){
         running = false;
     }
+    
+    /**
+     * Flags the runner to start running again.
+     */
     public void play(){
         running = true;
         waiter.reset();
     }
     
+    /**
+     * Kills the process forever.
+     */
     public void kill(){
         executing = false;
         waiter.reset();
     }
     
+    /**
+     * Whether this runner is paused or not.
+     * @return True if this runner is currently paused.
+     */
     public boolean paused(){
         return !running;
     }
     
+    /**
+     * This method will be called by this class on each frame
+     */
     public abstract void update();
     
+    /**
+     * Reset this runner as being continuous or not
+     * @param continuous
+     */
     public void setContinuous(boolean continuous) {
         this.continuous = continuous;
     }
