@@ -84,10 +84,8 @@ public abstract class Geosphere extends Surface {
         Geosphere.worldSize = worldSize;
         ageStamp = 0;
 //        produceTasks(new GeologicalUpdateFactory());
-        produceTasks(new AeolianFactory());
-        produceTasks(new SedimentationFactory());
-        produceTasks(new MetamorphicAndMeltingFactory());
-        produceTasks(new SedimentSpreadFactory());
+//        produceTasks(new SedimentationFactory());
+//        produceTasks(new MetamorphicAndMeltingFactory());
 //        produceTasks(new HeatMantelFactory());
     }
 
