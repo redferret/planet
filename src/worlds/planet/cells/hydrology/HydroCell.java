@@ -1,9 +1,12 @@
  
-package worlds.planet.cells;
+package worlds.planet.cells.hydrology;
 
+import worlds.planet.cells.PlanetCell;
 import worlds.planet.cells.geology.GeoCell;
+
 import java.awt.Color;
 import java.util.List;
+
 import worlds.planet.enums.Layer;
 import worlds.planet.surface.Hydrosphere;
 import engine.util.TBuffer;

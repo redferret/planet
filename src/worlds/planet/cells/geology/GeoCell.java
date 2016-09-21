@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 import engine.util.TBuffer;
 import engine.util.Tools;
 import worlds.planet.Planet;
-import worlds.planet.cells.HydroCell;
+import worlds.planet.cells.hydrology.HydroCell;
 import worlds.planet.enums.CrustType;
 import worlds.planet.enums.Layer;
 import worlds.planet.surface.Surface;
