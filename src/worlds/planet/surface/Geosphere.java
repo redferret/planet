@@ -6,15 +6,15 @@ import java.util.List;
 import java.util.LinkedList;
 import java.util.concurrent.ThreadLocalRandom;
 
-import worlds.planet.Planet;
 import worlds.planet.cells.geology.GeoCell;
 import worlds.planet.cells.PlanetCell;
 import worlds.planet.enums.Layer;
 import worlds.planet.cells.geology.GeoCell.SedimentBuffer;
 import worlds.planet.cells.geology.Stratum;
 import worlds.planet.enums.RockType;
-import worlds.planet.enums.SilicateContent;
-import worlds.planet.cells.geology.GeoCell.MoltenRockLayer;
+import worlds.planet.cells.geology.GeologicalUpdateTask;
+import worlds.planet.cells.geology.RockFormationTask;
+
 import engine.util.Delay;
 import engine.util.Point;
 import engine.util.task.Task;
@@ -23,19 +23,12 @@ import engine.util.Tools;
 import engine.util.task.BasicTask;
 import engine.util.task.Boundaries;
 import engine.util.task.CompoundTask;
-import engine.util.concurrent.AtomicData;
+
 import static engine.util.Tools.calcDepth;
-import static engine.util.Tools.calcHeight;
 import static engine.util.Tools.calcMass;
-import static engine.util.Tools.changeMass;
 import static engine.util.Tools.checkBounds;
 import static engine.util.Tools.clamp;
-import static worlds.planet.Planet.TimeScale.Geological;
-import static worlds.planet.Planet.TimeScale.None;
 import static worlds.planet.Planet.instance;
-import static worlds.planet.enums.SilicateContent.Mix;
-import static worlds.planet.enums.SilicateContent.Rich;
-import static worlds.planet.surface.Surface.planetAge;
 import static worlds.planet.surface.Surface.random;
 
 /**
@@ -83,12 +76,20 @@ public abstract class Geosphere extends Surface {
         super(worldSize, surfaceDelay, threadsDelay, threadCount);
         Geosphere.worldSize = worldSize;
         ageStamp = 0;
-//        produceTasks(new GeologicalUpdateFactory());
-//        produceTasks(new SedimentationFactory());
+        produceTasks(new GeologicalUpdateFactory());
+        produceTasks(new SedimentationFactory());
 //        produceTasks(new MetamorphicAndMeltingFactory());
 //        produceTasks(new HeatMantelFactory());
     }
 
+    public long getAgeStamp() {
+        return ageStamp;
+    }
+
+    public void setAgeStamp(long ageStamp) {
+        this.ageStamp = ageStamp;
+    }
+    
     /**
      * Add a uniformed layer on the whole surface. Adds a new layer even if the
      * layer type is the same.
@@ -343,80 +344,6 @@ public abstract class Geosphere extends Surface {
         windErosionConstant = 10;
     }
 
-    private class AeolianFactory implements TaskFactory {
-
-        @Override
-        public Task buildTask() {
-            return new AeolianTask();
-        }
-
-        private class AeolianTask extends Task {
-
-            private Delay delay;
-
-            public void construct() {
-                delay = new Delay(150);
-            }
-
-            @Override
-            public void before() {
-            }
-
-            @Override
-            public void perform(int x, int y) {
-                PlanetCell cell = waitForCellAt(x, y);
-                aeolianErosion(cell);
-                release(cell);
-            }
-
-            public void aeolianErosion(GeoCell spreadFrom) {
-                convertTopLayer(spreadFrom);
-            }
-
-            public void convertTopLayer(GeoCell spreadFrom) {
-
-                float rockMass, sandMass;
-
-                if (spreadFrom.peekTopStratum() == null) {
-                    return;
-                }
-
-                Layer rockType = spreadFrom.peekTopStratum().getLayer();
-
-                SedimentBuffer eb = spreadFrom.getSedimentBuffer();
-                // Wind erosion
-                if (eb.getSediments() == 0 && !spreadFrom.hasOcean()
-                        && spreadFrom.getMoltenRockLayer().getMoltenRockFromSurface() < 1000) {
-
-                    Layer sedimentType;
-                    if (rockType.getSilicates() == Rich) {
-                        sedimentType = Layer.FELSIC;
-                    } else if (rockType.getSilicates() == Mix) {
-                        sedimentType = Layer.MIX;
-                    } else {
-                        sedimentType = Layer.MAFIC;
-                    }
-
-                    rockMass = spreadFrom.erode(windErosionConstant);
-                    sandMass = changeMass(rockMass, rockType, sedimentType);
-
-                    eb.transferSediment(sedimentType, sandMass);
-                }
-            }
-
-            @Override
-            public boolean check() {
-                return true;
-            }
-
-            @Override
-            public void after() {
-            }
-
-        }
-
-    }
-
     private class SedimentSpreadFactory implements TaskFactory {
 
         @Override
@@ -516,16 +443,23 @@ public abstract class Geosphere extends Surface {
 
     }
 
+    /**
+     * Connects the GeosphereUpdateTask to this surface extension.
+     */
     private class GeologicalUpdateFactory implements TaskFactory {
 
         @Override
         public Task buildTask() {
-            return new GeologicalUpdate();
+            return new GeologicalUpdate(Geosphere.this);
         }
 
-        private class GeologicalUpdate extends Task {
+        private class GeologicalUpdate extends GeologicalUpdateTask {
 
             private Delay geologicDelay;
+
+            public GeologicalUpdate(Geosphere geosphere) {
+                super(geosphere);
+            }
 
             public void construct() {
                 geologicDelay = new Delay(250);
@@ -533,46 +467,9 @@ public abstract class Geosphere extends Surface {
 
             @Override
             public void perform(int x, int y) {
-                updateGeology(x, y);
-            }
-
-            /**
-             * Updating the surface results in updating lava flows and
-             * depositing sediments.
-             *
-             * @see planet.surface.Geosphere#updateLavaFlows(int, int)
-             * @see planet.surface.Geosphere#depositSediment(int, int)
-             * @param x The x coordinate of the cell
-             * @param y The y coordinate of the cell
-             */
-            public void updateGeology(int x, int y) {
-
                 PlanetCell cell = waitForCellAt(x, y);
-
-                // Update the geosphere
-                if (instance().isTimeScale(Geological)) {
-                    cell.cool(1);
-                } else if (!instance().isTimeScale(None)) {
-                    if (checkForGeologicalUpdate()) {
-                        cell.cool(1);
-                        cell.updateHeight();
-                        timeStamp();
-                    }
-                } else {
-                    cell.updateHeight();
-                }
+                updateGeology(cell);
                 release(cell);
-            }
-
-            private void timeStamp() {
-                long curPlanetAge = planetAge.get();
-                ageStamp = curPlanetAge;
-            }
-
-            public boolean checkForGeologicalUpdate() {
-                long curPlanetAge = planetAge.get();
-                long diff = (curPlanetAge - ageStamp);
-                return diff > GEOUPDATE;
             }
 
             @Override
@@ -640,6 +537,9 @@ public abstract class Geosphere extends Surface {
         }
     }
 
+    /**
+     * Forms sedimentary rock due to compression of sediments.
+     */
     private class SedimentationFactory implements TaskFactory {
 
         @Override
@@ -647,7 +547,7 @@ public abstract class Geosphere extends Surface {
             return new RockFormation();
         }
 
-        private class RockFormation extends Task {
+        private class RockFormation extends RockFormationTask {
 
             private Delay updateDelay;
 
@@ -661,130 +561,11 @@ public abstract class Geosphere extends Surface {
 
             @Override
             public void perform(int x, int y) {
-                depositSediment(x, y);
-
-//                if (!Planet.instance().isTimeScale(Geological)) {
-//                    updateBasaltFlows(x, y);
-//                }
-            }
-
-            public void depositSediment(int x, int y) {
                 PlanetCell cell = waitForCellAt(x, y);
                 formSedimentaryRock(cell);
                 release(cell);
             }
 
-            public void formSedimentaryRock(PlanetCell cell) {
-
-                float height, diff, massBeingDeposited;
-                SedimentBuffer eb = cell.getSedimentBuffer();
-
-                Layer sedimentType = eb.getSedimentType();
-                Layer depositType;
-
-                if (sedimentType == null) {
-                    return;
-                }
-                eb.applyBuffer();
-                height = calcHeight(eb.getSediments(), instance().getCellArea(), sedimentType);
-                float maxHeight = calcDepth(sedimentType, 9.8f, 200);
-
-                if (height > maxHeight) {
-
-                    diff = (height - maxHeight);
-
-                    massBeingDeposited = calcMass(diff, instance().getCellArea(), sedimentType);
-
-                    if (sedimentType.getSilicates() == SilicateContent.Rich) {
-                        depositType = Layer.FELSIC_SANDSTONE;
-                    } else if (sedimentType.getSilicates() == SilicateContent.Mix) {
-                        if (cell.getOceanMass() >= 4000) {
-                            depositType = Layer.SHALE;
-                        } else {
-                            depositType = Layer.MIX_SANDSTONE;
-                        }
-                    } else {
-                        depositType = Layer.MAFIC_SANDSTONE;
-                    }
-
-                    eb.updateSurfaceSedimentMass(-massBeingDeposited);
-
-                    massBeingDeposited = changeMass(massBeingDeposited, sedimentType, depositType);
-                    cell.add(depositType, massBeingDeposited, true);
-
-                }
-            }
-
-//            /**
-//             * Updates surface lava.
-//             *
-//             * @see planet.surface.Geosphere#updateGeology(int, int)
-//             * @param x Cell's x
-//             * @param y Cell's y
-//             */
-//            public void updateBasaltFlows(int x, int y) {
-//                PlanetCell toUpdate = waitForCellAt(x, y);
-//                MoltenRockLayer moltenLayer = toUpdate.getMoltenRockLayer();
-//                Layer moltenType = moltenLayer.getMoltenRockType(), layerType;
-//
-//                if (moltenType != null) {
-//                    if (moltenType.getSilicates() == SilicateContent.Rich) {
-//                        layerType = Layer.RHYOLITE;
-//                    } else if (moltenType.getSilicates() == SilicateContent.Poor) {
-//                        layerType = Layer.BASALT;
-//                    } else {
-//                        layerType = Layer.ANDESITE;
-//                    }
-//
-//                    if (moltenLayer.getMoltenRockFromSurface() > 8000) {
-//                        int maxCellCount = 8;
-//                        ArrayList<Point> lowestList = new ArrayList<>(maxCellCount);
-//                        getLowestCells(toUpdate, lowestList, maxCellCount);
-//
-//                        if (!lowestList.isEmpty()) {
-//                            int rIndex = rand.nextInt(lowestList.size());
-//                            Point p = lowestList.get(rIndex);
-//                            PlanetCell lowest = waitForCellAt(p.getX(), p.getY());
-//
-//                            if (lowest != null && lowest != toUpdate) {
-//                                float currentCellHeight = toUpdate.getHeightWithoutOceans() / 2f;
-//                                float lowestHeight = lowest.getHeightWithoutOceans() / 2f;
-//                                float diff = (currentCellHeight - lowestHeight) / 2f;
-//
-//                                double theta = Math.atan((currentCellHeight - lowestHeight) / instance().getCellLength());
-//                                float angle = (float) Math.sin(theta);
-//
-//                                diff = clamp(diff, -lowestHeight, currentCellHeight);
-//
-//                                float mass = calcMass(diff, instance().getCellArea(), moltenType);
-//                                mass = moltenLayer.putMoltenRockToSurface(-mass, moltenType) / 2f;
-//                                if (angle >= 0.71f) {
-//                                    mass = changeMass(mass * angle * 200f, moltenType, layerType);
-//                                } else {
-//                                    float rate = toUpdate.hasOcean() ? 0.15f : 0.05f;
-//                                    float massToSolidify = moltenLayer.getMoltenRockFromSurface() * rate;
-//                                    moltenLayer.putMoltenRockToSurface(-massToSolidify, moltenType);
-//                                    massToSolidify = changeMass(massToSolidify, moltenType, layerType);
-//                                    toUpdate.add(layerType, massToSolidify, true);
-//                                    toUpdate.recalculateHeight();
-//                                }
-//                                float carvedOutMass = toUpdate.remove(mass, true, true);
-//                                float sediments = lowest.getSedimentBuffer().removeAllSediments();
-//                                float totalMoved = carvedOutMass + sediments + mass;
-//
-//                                lowest.getMoltenRockLayer().putMoltenRockToSurface(totalMoved, moltenType);
-//                            }
-//                            release(lowest);
-//                        }
-//                    } else {
-//                        float massToSolidify = moltenLayer.removeAllMoltenRock();
-//                        massToSolidify = changeMass(massToSolidify, moltenType, layerType);
-//                        toUpdate.add(layerType, massToSolidify, true);
-//                        toUpdate.recalculateHeight();
-//                    }
-//                }
-//                release(toUpdate);
-//            }
             @Override
             public boolean check() {
                 return true;
