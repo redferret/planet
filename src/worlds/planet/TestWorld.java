@@ -11,10 +11,10 @@ public class TestWorld extends Planet {
             SURFACE_THREAD_DELAY, DEFAULT_THREAD_COUNT, PLANET_SURFACE_DELAY;
 
     static {
-        CELL_SIZE = 10;
+        CELL_SIZE = 50;
         DEFAULT_THREAD_COUNT = 1;
         SURFACE_THREAD_DELAY = 1;
-        PLANET_SURFACE_DELAY = 250;
+        PLANET_SURFACE_DELAY = 1125;
         DEFAULT_SIZE = 128;
     }
 
