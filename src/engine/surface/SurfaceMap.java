@@ -32,9 +32,9 @@ import engine.util.concurrent.AtomicData;
  * called after this super class is created.
  *
  * @author Richard DeSilvey
- * @param <CellType> The highest level abstraction of the cell i.e. PlanetCell
+ * @param <C> The highest level abstraction of the cell i.e. PlanetCell
  */
-public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner implements RenderInterface {
+public abstract class SurfaceMap<C extends Cell> extends TaskRunner implements RenderInterface {
 
     /**
      * The direction look up list for X values
@@ -61,7 +61,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
     /**
      * The map containing the references to each data point on the surface.
      */
-    private Map<Integer, AtomicData<CellType>> map;
+    private Map<Integer, AtomicData<C>> map;
     protected List<SurfaceThread> threadReferences;
     private List<Integer[]> data;
     private int prevSubThreadAvg;
@@ -96,11 +96,11 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
     protected void setupDefaultMap(int planetWidth, int threadCount) {
         final float loadFactor = 1.0f;
         final int capacity = planetWidth * planetWidth;
-        Map<Integer, AtomicData<CellType>> defaultMap = new ConcurrentHashMap<>(capacity, loadFactor, threadCount);
+        Map<Integer, AtomicData<C>> defaultMap = new ConcurrentHashMap<>(capacity, loadFactor, threadCount);
         setMap(defaultMap);
     }
 
-    public void setMap(Map<Integer, AtomicData<CellType>> map) {
+    public void setMap(Map<Integer, AtomicData<C>> map) {
         this.map = map;
     }
 
@@ -158,7 +158,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
      * @param y The y coordinate of the cell
      * @return The newly created cell for the SurfaceMap.
      */
-    public abstract CellType generateCell(int x, int y);
+    public abstract C generateCell(int x, int y);
 
     /**
      * Override this method and call the <code>super.update()</code> to make
@@ -294,7 +294,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
                 for (int lx = lowerX + 1; lx < upperX - 1; lx++){
                     for (int ly = lowerY + 1; ly < upperY - 1; ly++){
                         int index = calcIndex(lx, ly, width);
-                        AtomicData<CellType> lock = map.get(index);
+                        AtomicData<C> lock = map.get(index);
 //                        lock.setAsAtomic(false);
                     }
                 }
@@ -363,7 +363,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
      * @return Returns the cell at the specified X and Y location, null if the
      * data doesn't exist or if the data is locked by another thread.
      */
-    public CellType getCellAt(int x, int y) {
+    public C getCellAt(int x, int y) {
         int index = calcIndex(x, y, gridWidth);
         return getCellAt(index);
     }
@@ -378,7 +378,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
      * @return Returns the cell at the specified X and Y location, null if the
      * data doesn't exist or if the data is locked by another thread.
      */
-    public CellType getCellAt(int index) {
+    public C getCellAt(int index) {
         return guard.getCellAt(index);
     }
 
@@ -387,7 +387,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
      * @param cell The cell to wait for.
      * @return The cell
      */
-    public CellType waitForCell(CellType cell) {
+    public C waitForCell(C cell) {
         int x = cell.getX(), y = cell.getY();
         return waitForCellAt(x, y);
     }
@@ -401,7 +401,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
      * @param y The y coordinate of the cell
      * @return Returns the cell at the specified X and Y location.
      */
-    public CellType waitForCellAt(int x, int y) {
+    public C waitForCellAt(int x, int y) {
         int index = calcIndex(x, y, gridWidth);
         return waitForCellAt(index);
     }
@@ -414,7 +414,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
      * @param index The index
      * @return The cell that maps to the given index.
      */
-    public CellType waitForCellAt(int index) {
+    public C waitForCellAt(int index) {
         return guard.waitForCellAt(index);
     }
 
@@ -424,7 +424,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
      *
      * @param cell The cell to be released or unlocked.
      */
-    public void release(CellType cell) {
+    public void release(C cell) {
         guard.release(cell);
     }
 
@@ -434,7 +434,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
      *
      * @param cells The cells to be released or unlocked.
      */
-    public void release(List<CellType> cells){
+    public void release(List<C> cells){
         guard.release(cells);
     }
     
@@ -444,7 +444,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
      *
      * @param cells The cells to be released or unlocked.
      */
-    public void release(CellType[] cells){
+    public void release(C[] cells){
         guard.release(cells);
     }
     
@@ -454,7 +454,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
      * @param cellIndexes Each cell's index
      * @return The list of requested resources.
      */
-    public List<CellType> waitForCells(int... cellIndexes) {
+    public List<C> waitForCells(int... cellIndexes) {
         return guard.waitForCells(cellIndexes);
     }
 
@@ -464,7 +464,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
      * @param cellPositions Each cell's position
      * @return The list of requested resources.
      */
-    public List<CellType> waitForCells(Point... cellPositions) {
+    public List<C> waitForCells(Point... cellPositions) {
         return guard.waitForCells(cellPositions);
     }
 
@@ -474,7 +474,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
      *
      * @param cell The cell that is being added to the map
      */
-    private void setCell(CellType cell) {
+    private void setCell(C cell) {
         int x = cell.getX(), y = cell.getY();
         int index = calcIndex(x, y, gridWidth);
         map.put(index, new AtomicData<>(cell));
@@ -524,7 +524,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
     public List<Integer[]> getCellData(int x, int y) {
 
         data.clear();
-        CellType cell = getCellAt(x, y);
+        C cell = getCellAt(x, y);
         List<Integer[]> tempData = new ArrayList<>();
         if (cell != null) {
             tempData = cell.render(data);
@@ -548,7 +548,7 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
             writeLock = readWriteLock.writeLock();
         }
 
-        public List<CellType> waitForCells(Point[] cellPositions) {
+        public List<C> waitForCells(Point[] cellPositions) {
             
             int[] indexes = new int[cellPositions.length];
             int w = gridWidth;
@@ -561,10 +561,10 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
             return waitForCells(indexes);
         }
 
-        public List<CellType> waitForCells(int[] cellIndexes) {
+        public List<C> waitForCells(int[] cellIndexes) {
             writeLock.lock();
             try{
-                List<CellType> selectedCells = new ArrayList<>();
+                List<C> selectedCells = new ArrayList<>();
                 for (int index : cellIndexes){
                     selectedCells.add(waitForCellAt(index));
                 }
@@ -584,8 +584,8 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
          * @return Returns the cell at the specified X and Y location, null if
          * the data doesn't exist or if the data is locked by another thread.
          */
-        public CellType getCellAt(int index) {
-            AtomicData<CellType> lock = map.get(index);
+        public C getCellAt(int index) {
+            AtomicData<C> lock = map.get(index);
             return (lock == null)
                     ? null : lock.getData();
         }
@@ -598,8 +598,8 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
          * @param index The index
          * @return The cell that maps to the given index.
          */
-        public CellType waitForCellAt(int index) {
-            AtomicData<CellType> lock = map.get(index);
+        public C waitForCellAt(int index) {
+            AtomicData<C> lock = map.get(index);
             return (lock == null)
                     ? null : lock.waitForData();
         }
@@ -611,26 +611,26 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
          * @param cell The cell to be released to other threads waiting to
          * access it.
          */
-        public void release(CellType cell) {
+        public void release(C cell) {
             if (cell == null) {
                 throw new IllegalArgumentException("Cannot release a null reference");
             }
             int x = cell.getX(), y = cell.getY();
             int index = calcIndex(x, y, gridWidth);
-            AtomicData<CellType> lock = map.get(index);
+            AtomicData<C> lock = map.get(index);
             if (lock != null) {
                 lock.unlock(cell);
             }
         }
         
-        public void release(List<CellType> cells){
+        public void release(List<C> cells){
             cells.forEach(cell -> {
                 release(cell);
             });
         }
         
-        public void release(CellType[] cells) {
-            for(CellType cell : cells){
+        public void release(C[] cells) {
+            for(C cell : cells){
                 release(cell);
             }
         }
