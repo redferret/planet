@@ -547,7 +547,7 @@ public abstract class Geosphere extends Surface {
             private Delay updateDelay;
 
             public void construct() {
-                updateDelay = new Delay(5);
+                updateDelay = new Delay(1);
             }
 
             @Override
@@ -563,7 +563,7 @@ public abstract class Geosphere extends Surface {
 
             @Override
             public boolean check() {
-                return true;
+                return updateDelay.check();
             }
 
             @Override

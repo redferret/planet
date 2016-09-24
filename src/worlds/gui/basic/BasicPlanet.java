@@ -21,7 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.JFrame;
 
 import engine.gui.DisplayAdapter;
-import engine.surface.SurfaceThread;
+import engine.util.concurrent.SurfaceThread;
 import engine.util.Delay;
 import engine.util.Tools;
 import engine.util.task.BasicTask;

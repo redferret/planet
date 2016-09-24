@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import worlds.planet.PlanetCell;
 import engine.gui.DisplayAdapter;
 import engine.surface.SurfaceMap;
-import engine.surface.SurfaceThread;
+import engine.util.concurrent.SurfaceThread;
 import engine.util.concurrent.AtomicFloat;
 import engine.util.task.Boundaries;
 import engine.util.Delay;

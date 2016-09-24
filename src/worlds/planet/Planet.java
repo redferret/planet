@@ -3,7 +3,7 @@ package worlds.planet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import engine.surface.SurfaceMap;
-import engine.surface.SurfaceThread;
+import engine.util.concurrent.SurfaceThread;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**

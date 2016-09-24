@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import engine.util.task.Boundaries;
-import engine.surface.SurfaceThread;
+import engine.util.concurrent.SurfaceThread;
 import engine.util.task.Task;
 import engine.util.task.TaskFactory;
 

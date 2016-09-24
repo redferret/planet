@@ -1,6 +1,6 @@
 package engine.util.task;
 
-import engine.surface.SurfaceThread;
+import engine.util.concurrent.SurfaceThread;
 
 /**
  * A Task is something the simulation will perform given a condition.

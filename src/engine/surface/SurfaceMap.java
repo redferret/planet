@@ -1,5 +1,6 @@
 package engine.surface;
 
+import engine.util.concurrent.SurfaceThread;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
