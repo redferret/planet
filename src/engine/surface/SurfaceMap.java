@@ -382,6 +382,11 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
         return guard.getCellAt(index);
     }
 
+    /**
+     * Waits for the given cell to be accessed again.
+     * @param cell The cell to wait for.
+     * @return The cell
+     */
     public CellType waitForCell(CellType cell) {
         int x = cell.getX(), y = cell.getY();
         return waitForCellAt(x, y);
@@ -415,19 +420,30 @@ public abstract class SurfaceMap<CellType extends Cell> extends TaskRunner imple
 
     /**
      * When a thread gets data from this Map the data is locked until it is
-     * released by the same thread working on the cell returned by this Map.
+     * released. Calling this method will release the resource.
      *
-     * @param cell The cell to be released to other threads waiting to access
-     * it.
+     * @param cell The cell to be released or unlocked.
      */
     public void release(CellType cell) {
         guard.release(cell);
     }
 
+    /**
+     * When a thread gets data from this Map the data is locked until it is
+     * released. Calling this method will release the list of resources.
+     *
+     * @param cells The cells to be released or unlocked.
+     */
     public void release(List<CellType> cells){
         guard.release(cells);
     }
     
+    /**
+     * When a thread gets data from this Map the data is locked until it is
+     * released. Calling this method will release the list of resources.
+     *
+     * @param cells The cells to be released or unlocked.
+     */
     public void release(CellType[] cells){
         guard.release(cells);
     }
