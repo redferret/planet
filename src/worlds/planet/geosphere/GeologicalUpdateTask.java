@@ -1,16 +1,16 @@
 
 
-package worlds.planet.cells.geology;
+package worlds.planet.geosphere;
 
 import engine.util.task.Task;
-import worlds.planet.cells.PlanetCell;
-import worlds.planet.surface.Geosphere;
+import worlds.planet.PlanetCell;
+import worlds.planet.geosphere.Geosphere;
 
 import static worlds.planet.Planet.TimeScale.Geological;
 import static worlds.planet.Planet.TimeScale.None;
 import static worlds.planet.Planet.instance;
-import static worlds.planet.surface.Surface.GEOUPDATE;
-import static worlds.planet.surface.Surface.planetAge;
+import static worlds.planet.Surface.GEOUPDATE;
+import static worlds.planet.Surface.planetAge;
 
 /**
  * Updates the basic geological elements such as the heat of the mantel

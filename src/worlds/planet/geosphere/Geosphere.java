@@ -1,4 +1,4 @@
-package worlds.planet.surface;
+package worlds.planet.geosphere;
 
 import java.util.Random;
 import java.util.ArrayList;
@@ -6,14 +6,10 @@ import java.util.List;
 import java.util.LinkedList;
 import java.util.concurrent.ThreadLocalRandom;
 
-import worlds.planet.cells.geology.GeoCell;
-import worlds.planet.cells.PlanetCell;
+import worlds.planet.PlanetCell;
 import worlds.planet.enums.Layer;
-import worlds.planet.cells.geology.GeoCell.SedimentBuffer;
-import worlds.planet.cells.geology.Stratum;
+import worlds.planet.geosphere.GeoCell.SedimentBuffer;
 import worlds.planet.enums.RockType;
-import worlds.planet.cells.geology.GeologicalUpdateTask;
-import worlds.planet.cells.geology.RockFormationTask;
 
 import engine.util.Delay;
 import engine.util.Point;
@@ -23,13 +19,14 @@ import engine.util.Tools;
 import engine.util.task.BasicTask;
 import engine.util.task.Boundaries;
 import engine.util.task.CompoundTask;
+import worlds.planet.PlanetSurface;
+import worlds.planet.Surface;
 
 import static engine.util.Tools.calcDepth;
 import static engine.util.Tools.calcMass;
 import static engine.util.Tools.checkBounds;
 import static engine.util.Tools.clamp;
 import static worlds.planet.Planet.instance;
-import static worlds.planet.surface.Surface.random;
 
 /**
  * Contains all logic that works on the geology of the planet.
@@ -157,14 +154,14 @@ public abstract class Geosphere extends Surface {
         MASS_TO_MELT = 2500;
     }
 
-    private class MetamorphicAndMeltingFactory implements TaskFactory {
+    private class ChangeRockFactory implements TaskFactory {
 
         @Override
         public Task buildTask() {
-            return new ChangeRockSubTasks();
+            return new ChangeRock();
         }
 
-        private class ChangeRockSubTasks extends CompoundTask {
+        private class ChangeRock extends CompoundTask {
 
             public void setup() {
                 addSubTask(new MeltSubTask());
@@ -191,7 +188,8 @@ public abstract class Geosphere extends Surface {
                 @Override
                 public void perform(int x, int y) {
                     PlanetCell cell = waitForCellAt(x, y);
-                    melt(cell, calcDepth(cell.getDensity(), 9.8f, MELTING_PRESSURE));
+                    float maxDepth = calcDepth(cell.getDensity(), 9.8f, MELTING_PRESSURE);
+                    melt(cell, maxDepth);
                     release(cell);
                 }
 
@@ -199,7 +197,7 @@ public abstract class Geosphere extends Surface {
                 public void after() {
                 }
 
-                private void melt(GeoCell cell, float maxHeight) {
+                private void melt(GeoCell cell, float maxDepth) {
 
                     float height;
                     if (cell.peekBottomStratum() == null) {
@@ -207,14 +205,11 @@ public abstract class Geosphere extends Surface {
                     }
                     height = cell.getHeight();
 
-                    if (height > maxHeight) {
-                        float diff = height - maxHeight;
-                        cell.remove(getMassToMelt(diff), false, false);
+                    if (height > maxDepth) {
+                        float diff = Tools.calcMass(height - maxDepth, 
+                                instance().getCellArea(), cell.getDensity());
+                        cell.remove(diff, false, false);
                     }
-                }
-
-                private float getMassToMelt(float heightDiff) {
-                    return (20329 + (15000 * heightDiff * heightDiff)) / 10f;
                 }
             }
 

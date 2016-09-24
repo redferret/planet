@@ -30,12 +30,12 @@ import java.util.concurrent.ThreadLocalRandom;
 import worlds.planet.Planet;
 import worlds.planet.TestWorld;
 import worlds.planet.enums.Layer;
-import worlds.planet.cells.PlanetCell;
-import worlds.planet.cells.geology.GeoCell;
-import worlds.planet.cells.geology.Stratum;
-import worlds.planet.surface.Geosphere;
-import worlds.planet.surface.Hydrosphere;
-import worlds.planet.surface.PlanetSurface;
+import worlds.planet.PlanetCell;
+import worlds.planet.geosphere.GeoCell;
+import worlds.planet.geosphere.Stratum;
+import worlds.planet.geosphere.Geosphere;
+import worlds.planet.hydrosphere.Hydrosphere;
+import worlds.planet.PlanetSurface;
 
 /**
  * The BasicPlanet is to allow a user to see what is happening to the planet

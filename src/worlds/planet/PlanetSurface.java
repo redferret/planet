@@ -1,6 +1,8 @@
 
 
-package worlds.planet.surface;
+package worlds.planet;
+
+import worlds.planet.atmosphere.Atmosphere;
 
 
 /**

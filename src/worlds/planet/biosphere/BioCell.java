@@ -1,9 +1,9 @@
 
 
-package worlds.planet.cells.biology;
+package worlds.planet.biosphere;
 
 import java.util.List;
-import worlds.planet.cells.hydrology.HydroCell;
+import worlds.planet.hydrosphere.HydroCell;
 
 /**
  * The Biosphere is represented by this cell. The biosphere includes all life

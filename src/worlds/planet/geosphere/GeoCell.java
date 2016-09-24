@@ -1,4 +1,4 @@
-package worlds.planet.cells.geology;
+package worlds.planet.geosphere;
 
 import java.awt.Color;
 import java.util.Deque;
@@ -9,19 +9,19 @@ import java.util.logging.Logger;
 import engine.util.TBuffer;
 import engine.util.Tools;
 import worlds.planet.Planet;
-import worlds.planet.cells.hydrology.HydroCell;
+import worlds.planet.hydrosphere.HydroCell;
 import worlds.planet.enums.CrustType;
 import worlds.planet.enums.Layer;
-import worlds.planet.surface.Surface;
-import worlds.planet.surface.Geosphere;
-import worlds.planet.surface.PlanetSurface;
+import worlds.planet.Surface;
+import worlds.planet.geosphere.Geosphere;
+import worlds.planet.PlanetSurface;
 import worlds.planet.enums.RockType;
 import static engine.util.Tools.*;
 import engine.util.concurrent.AtomicData;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import static worlds.planet.Planet.instance;
-import worlds.planet.cells.PlanetCell;
-import static worlds.planet.surface.Surface.*;
+import worlds.planet.PlanetCell;
+import static worlds.planet.Surface.*;
 import static worlds.planet.enums.Layer.*;
 
 /**

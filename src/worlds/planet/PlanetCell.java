@@ -1,8 +1,8 @@
 
 
-package worlds.planet.cells;
+package worlds.planet;
 
-import worlds.planet.cells.atmosphere.AtmoCell;
+import worlds.planet.atmosphere.AtmoCell;
 import java.util.List;
 
 /**

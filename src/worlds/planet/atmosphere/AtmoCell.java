@@ -1,8 +1,8 @@
 
 
-package worlds.planet.cells.atmosphere;
+package worlds.planet.atmosphere;
 
-import worlds.planet.cells.biology.BioCell;
+import worlds.planet.biosphere.BioCell;
 import java.util.List;
 import engine.util.TBuffer;
 import java.util.ArrayList;

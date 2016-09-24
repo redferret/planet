@@ -1,6 +1,6 @@
 
 
-package worlds.planet.cells.biology;
+package worlds.planet.biosphere;
 
 /**
  *

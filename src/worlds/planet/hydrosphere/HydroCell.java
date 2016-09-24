@@ -1,14 +1,13 @@
  
-package worlds.planet.cells.hydrology;
+package worlds.planet.hydrosphere;
 
-import worlds.planet.cells.PlanetCell;
-import worlds.planet.cells.geology.GeoCell;
+import worlds.planet.PlanetCell;
+import worlds.planet.geosphere.GeoCell;
 
 import java.awt.Color;
 import java.util.List;
 
 import worlds.planet.enums.Layer;
-import worlds.planet.surface.Hydrosphere;
 import engine.util.TBuffer;
 import static engine.util.Tools.calcMass;
 import static engine.util.Tools.clamp;

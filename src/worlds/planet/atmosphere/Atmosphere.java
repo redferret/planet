@@ -1,7 +1,7 @@
-package worlds.planet.surface;
+package worlds.planet.atmosphere;
 
-import worlds.planet.cells.atmosphere.Gas;
-import worlds.planet.cells.PlanetCell;
+import worlds.planet.atmosphere.Gas;
+import worlds.planet.PlanetCell;
 import engine.util.Delay;
 import static engine.util.Tools.changeMass;
 import engine.util.task.Task;
@@ -9,13 +9,15 @@ import engine.util.task.TaskFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
-import worlds.planet.cells.atmosphere.AtmoCell;
-import worlds.planet.cells.geology.GeoCell;
+import worlds.planet.atmosphere.AtmoCell;
+import worlds.planet.geosphere.GeoCell;
 import worlds.planet.enums.GasType;
 import worlds.planet.enums.Layer;
+import worlds.planet.hydrosphere.Hydrosphere;
+import worlds.planet.PlanetSurface;
 import static worlds.planet.enums.SilicateContent.Mix;
 import static worlds.planet.enums.SilicateContent.Rich;
-import static worlds.planet.surface.Geosphere.windErosionConstant;
+import static worlds.planet.geosphere.Geosphere.windErosionConstant;
 
 /**
  *

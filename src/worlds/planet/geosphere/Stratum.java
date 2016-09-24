@@ -1,5 +1,5 @@
 
-package worlds.planet.cells.geology;
+package worlds.planet.geosphere;
 
 import worlds.planet.enums.Layer;
 import worlds.planet.Planet;

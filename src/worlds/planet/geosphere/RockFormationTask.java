@@ -1,6 +1,6 @@
-package worlds.planet.cells.geology;
+package worlds.planet.geosphere;
 
-import worlds.planet.cells.PlanetCell;
+import worlds.planet.PlanetCell;
 import worlds.planet.enums.Layer;
 import worlds.planet.enums.SilicateContent;
 import engine.util.task.Task;

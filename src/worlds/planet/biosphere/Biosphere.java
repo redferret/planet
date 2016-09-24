@@ -1,11 +1,12 @@
 
 
-package worlds.planet.surface;
+package worlds.planet.biosphere;
 
+import worlds.planet.hydrosphere.Hydrosphere;
 import engine.util.Delay;
 import engine.util.task.Task;
 import engine.util.task.TaskFactory;
-import worlds.planet.cells.PlanetCell;
+import worlds.planet.PlanetCell;
 
 /**
  *

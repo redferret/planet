@@ -1,6 +1,6 @@
 
 
-package worlds.planet.cells.biology;
+package worlds.planet.biosphere;
 
 import engine.util.concurrent.AtomicData;
 import engine.surface.SurfaceMap;
@@ -14,8 +14,8 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
-import worlds.planet.cells.PlanetCell;
-import worlds.planet.surface.PlanetSurface;
+import worlds.planet.PlanetCell;
+import worlds.planet.PlanetSurface;
 import static worlds.planet.Planet.instance;
 
 /**

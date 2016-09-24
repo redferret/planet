@@ -3,13 +3,13 @@ import engine.util.Tools;
 
 import org.junit.Test;
 
-import worlds.planet.cells.geology.GeoCell;
+import worlds.planet.geosphere.GeoCell;
 import worlds.planet.enums.Layer;
 import worlds.planet.TestWorld;
 import static org.junit.Assert.*;
-import worlds.planet.cells.hydrology.HydroCell;
-import worlds.planet.cells.PlanetCell;
-import worlds.planet.cells.geology.Stratum;
+import worlds.planet.hydrosphere.HydroCell;
+import worlds.planet.PlanetCell;
+import worlds.planet.geosphere.Stratum;
 
 
 /**
