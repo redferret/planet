@@ -3,6 +3,7 @@
 package worlds.planet.geosphere;
 
 import engine.util.task.Task;
+import worlds.planet.PlanetCell;
 
 /**
  *
@@ -10,4 +11,7 @@ import engine.util.task.Task;
  */
 public abstract class PlateTectonicsTask extends Task {
 
+    public void updatePlates(PlanetCell cell){
+        
+    }
 }
