@@ -13,7 +13,7 @@ import worlds.planet.PlanetCell;
  */
 public abstract class PlateTectonicsTask extends BasicTask {
 
-    private List<List<PlanetCell>> plates;
+    private List<List<Point>> plates;
     
     /**
      * Updates all the plates.
