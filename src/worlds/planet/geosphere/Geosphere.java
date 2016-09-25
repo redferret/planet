@@ -75,6 +75,7 @@ public abstract class Geosphere extends Surface {
         ageStamp = 0;
         produceTasks(new GeologicalUpdateFactory());
         produceTasks(new SedimentationFactory());
+        produceTasks(new PlateTectonicsFactory());
 //        produceTasks(new MetamorphicAndMeltingFactory());
 //        produceTasks(new HeatMantelFactory());
     }
@@ -439,6 +440,9 @@ public abstract class Geosphere extends Surface {
 
     }
 
+    /**
+     * Performs plate tectonic updates.
+     */
     private class PlateTectonicsFactory implements TaskFactory {
 
         @Override
@@ -463,14 +467,14 @@ public abstract class Geosphere extends Surface {
 
             @Override
             public void perform(int x, int y) {
+                PlanetCell cell = waitForCellAt(x, y);
+                updatePlates(cell);
+                release(cell);
             }
 
             @Override
             public void after() {
             }
-
-            
-            
         }
     }
     
