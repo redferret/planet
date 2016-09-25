@@ -11,8 +11,9 @@ package engine.util.task;
 public interface TaskFactory {
     
     /**
-     * This method should return a new instance of a task.
+     * A Task is a Resource for a SurfaceThread to use to make updates to 
+     * the data in a SurfaceMap. These resources are of type Task.
      * @return A new instance of a task.
      */
-    Task buildTask();
+    Task buildResource();
 }
