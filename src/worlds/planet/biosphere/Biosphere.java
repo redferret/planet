@@ -22,7 +22,7 @@ public abstract class Biosphere extends Hydrosphere {
     private class BioCellTaskFactory implements TaskFactory {
 
         @Override
-        public Task buildTask() {
+        public Task buildResource() {
             return new BioCellTask();
         }
     

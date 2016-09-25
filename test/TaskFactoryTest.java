@@ -37,8 +37,8 @@ public class TaskFactoryTest {
      */
     @Test
     public void sharedResourcesTest(){
-        MyFactory.MyTask testTask1 = (MyFactory.MyTask) factory.buildTask();
-        MyFactory.MyTask testTask2 = (MyFactory.MyTask) factory.buildTask();
+        MyFactory.MyTask testTask1 = (MyFactory.MyTask) factory.buildResource();
+        MyFactory.MyTask testTask2 = (MyFactory.MyTask) factory.buildResource();
         testThread.addTask(testTask1);
         secondTestThread.addTask(testTask2);
         
@@ -56,7 +56,7 @@ public class TaskFactoryTest {
      */
     @Test
     public void singleTaskOnTwoThreadsTest(){
-        MyFactory.MyTask testTask = (MyFactory.MyTask) factory.buildTask();
+        MyFactory.MyTask testTask = (MyFactory.MyTask) factory.buildResource();
         testThread.addTask(testTask);
         secondTestThread.addTask(testTask);
         
@@ -76,7 +76,7 @@ public class TaskFactoryTest {
 class MyFactory implements TaskFactory {
 
     @Override
-    public Task buildTask() {
+    public Task buildResource() {
         return new MyTask();
     }
     

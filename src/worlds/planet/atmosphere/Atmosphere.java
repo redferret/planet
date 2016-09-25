@@ -43,7 +43,7 @@ public abstract class Atmosphere extends Hydrosphere {
     private class AeolianFactory implements TaskFactory {
 
         @Override
-        public Task buildTask() {
+        public Task buildResource() {
             return new AeolianTask();
         }
 
@@ -117,7 +117,7 @@ public abstract class Atmosphere extends Hydrosphere {
     private class SimpleClimateFactory implements TaskFactory {
         
         @Override
-        public Task buildTask() {
+        public Task buildResource() {
             return new SimpleClimateTask();
         }
 
