@@ -157,7 +157,7 @@ public abstract class Geosphere extends Surface {
     private class ChangeRockFactory implements TaskFactory {
 
         @Override
-        public Task buildTask() {
+        public Task buildResource() {
             return new ChangeRock();
         }
 
@@ -339,10 +339,11 @@ public abstract class Geosphere extends Surface {
         windErosionConstant = 10;
     }
 
+    @Deprecated
     private class SedimentSpreadFactory implements TaskFactory {
 
         @Override
-        public Task buildTask() {
+        public Task buildResource() {
             return new SpreadSedimentTask();
         }
 
@@ -444,15 +445,15 @@ public abstract class Geosphere extends Surface {
     private class GeologicalUpdateFactory implements TaskFactory {
 
         @Override
-        public Task buildTask() {
-            return new GeologicalUpdate(Geosphere.this);
+        public Task buildResource() {
+            return new GeologicalUpdateResource(Geosphere.this);
         }
 
-        private class GeologicalUpdate extends GeologicalUpdateTask {
+        private class GeologicalUpdateResource extends GeologicalUpdateTask {
 
             private Delay geologicDelay;
 
-            public GeologicalUpdate(Geosphere geosphere) {
+            public GeologicalUpdateResource(Geosphere geosphere) {
                 super(geosphere);
             }
 
@@ -482,10 +483,11 @@ public abstract class Geosphere extends Surface {
         }
     }
 
+    @Deprecated
     private class HeatMantelFactory implements TaskFactory {
 
         @Override
-        public Task buildTask() {
+        public Task buildResource() {
             return new HeatMantel();
         }
 
@@ -538,11 +540,11 @@ public abstract class Geosphere extends Surface {
     private class SedimentationFactory implements TaskFactory {
 
         @Override
-        public Task buildTask() {
-            return new RockFormation();
+        public Task buildResource() {
+            return new RockFormationResource();
         }
 
-        private class RockFormation extends RockFormationTask {
+        private class RockFormationResource extends RockFormationTask {
 
             private Delay updateDelay;
 
