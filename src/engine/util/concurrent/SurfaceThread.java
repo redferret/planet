@@ -70,6 +70,7 @@ public class SurfaceThread extends TaskRunner {
     }
 
     public final void addTask(Task task){
+    	task.setThread(this);
         manager.addTask(task);
     }
 
