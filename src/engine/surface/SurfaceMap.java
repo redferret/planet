@@ -189,7 +189,7 @@ public abstract class SurfaceMap<C extends Cell> extends TaskRunner implements R
      */
     public void produceTasks(TaskFactory factory) {
         threadReferences.forEach(thread -> {
-            Task producedTask = factory.buildTask();
+            Task producedTask = factory.buildResource();
             producedTask.setThread(thread);
             thread.addTask(producedTask);
         });
