@@ -206,7 +206,7 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
         }
 
         @Override
-        public Task buildTask() {
+        public Task buildResource() {
             MinMaxHeightTask task = new MinMaxHeightTask();
             taskReferences.add(task);
             return task;
