@@ -455,21 +455,14 @@ public abstract class Geosphere extends Surface {
             @Override
             public void construct() {
             }
-            
-            @Override
-            public boolean check() {
-                return false;
-            }
 
             @Override
             public void before() {
             }
 
             @Override
-            public void perform(int x, int y) {
-                PlanetCell cell = waitForCellAt(x, y);
-                updatePlates(cell);
-                release(cell);
+            public void perform() {
+                updatePlates();
             }
 
             @Override
