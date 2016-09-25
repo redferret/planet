@@ -439,6 +439,41 @@ public abstract class Geosphere extends Surface {
 
     }
 
+    private class PlateTectonicsFactory implements TaskFactory {
+
+        @Override
+        public Task buildResource() {
+            return new PlateTectonicsResource();
+        }
+        
+        private class PlateTectonicsResource extends PlateTectonicsTask {
+
+            @Override
+            public void construct() {
+            }
+            
+            @Override
+            public boolean check() {
+                return false;
+            }
+
+            @Override
+            public void before() {
+            }
+
+            @Override
+            public void perform(int x, int y) {
+            }
+
+            @Override
+            public void after() {
+            }
+
+            
+            
+        }
+    }
+    
     /**
      * Connects the GeosphereUpdateTask to this surface extension.
      */

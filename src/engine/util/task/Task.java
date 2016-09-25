@@ -21,6 +21,14 @@ public abstract class Task {
     }
     
     /**
+     * This method is called when a task is added to a TaskManager. This
+     * method is used because in some instances the rest of the framework
+     * hasn't been initialized yet. CompoundTasks that add subtasks would
+     * use this method instead of a constructor.
+     */
+    public abstract void construct();
+    
+    /**
      * This method is called before updating each cell on the surface. If this
      * method returns false then perform on the current frame won't be called.
      *
@@ -51,11 +59,4 @@ public abstract class Task {
      */
     public abstract void after();
 
-    /**
-     * This method is called when a task is added to a TaskManager. This
-     * method is used because in some instances the rest of the framework
-     * hasn't been initialized yet. CompoundTasks that add subtasks would
-     * use this method instead of a constructor.
-     */
-    public abstract void construct();
 }
