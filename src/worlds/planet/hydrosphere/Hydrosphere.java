@@ -11,7 +11,7 @@ import worlds.planet.PlanetCell;
 /**
  * The hydrosphere is everything that deals with rivers, lakes, seas, and
  * oceans.
- *
+ * bicarbonate - the form of carbon dissolved in the oceans 
  * @author Richard DeSilvey
  */
 public abstract class Hydrosphere extends Geosphere {
@@ -44,7 +44,7 @@ public abstract class Hydrosphere extends Geosphere {
     private class UpdateOceansFactory implements TaskFactory {
 
         @Override
-        public Task buildTask() {
+        public Task buildResource() {
             return new UpdateOceansTask();
         }
         
