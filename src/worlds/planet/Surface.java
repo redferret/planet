@@ -225,6 +225,17 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
             }
 
             @Override
+            public void before() {
+                absLowestHeight = absLowestHeight < 0 ? 0 : absLowestHeight;
+                absLowest.set(absLowestHeight);
+                
+                absHighest.set(absHighestHeight);
+
+                absLowestHeight = Integer.MAX_VALUE;
+                absHighestHeight = Integer.MIN_VALUE;
+            }
+            
+            @Override
             public void perform(int x, int y) {
                 updateMinMaxHeight(x, y);
             }
@@ -255,20 +266,6 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
                 return delayTask.check();
             }
             
-            @Override
-            public void before() {
-                absLowestHeight = absLowestHeight < 0 ? 0 : absLowestHeight;
-                absLowest.set(absLowestHeight);
-                
-                absHighest.set(absHighestHeight);
-
-                absLowestHeight = Integer.MAX_VALUE;
-                absHighestHeight = Integer.MIN_VALUE;
-            }
-
-            @Override
-            public void after() {
-            }
         }
     }
 }
