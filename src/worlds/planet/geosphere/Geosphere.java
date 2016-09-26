@@ -178,12 +178,18 @@ public abstract class Geosphere extends Surface {
                 }
 
                 @Override
+                public void before(){}
+                
+                @Override
                 public void perform(int x, int y) {
                     PlanetCell cell = waitForCellAt(x, y);
                     float maxDepth = calcDepth(cell.getDensity(), 9.8f, MELTING_PRESSURE);
                     melt(cell, maxDepth);
                     release(cell);
                 }
+                
+                @Override
+                public void after(){}
 
                 private void melt(GeoCell cell, float maxDepth) {
 
@@ -344,6 +350,9 @@ public abstract class Geosphere extends Surface {
             }
 
             @Override
+            public void before(){}
+            
+            @Override
             public void perform(int x, int y) {
                 Point[] cellPos = getCellIndexesFrom(new Point(x, y));
                 List<PlanetCell> workingCells = waitForCells(cellPos);
@@ -356,6 +365,9 @@ public abstract class Geosphere extends Surface {
 
                 release(workingCells);
             }
+            
+            @Override
+            public void after(){}
 
             /**
              * Selects a random cell from the given list and spreads the
@@ -436,9 +448,15 @@ public abstract class Geosphere extends Surface {
             }
 
             @Override
+            public void before(){}
+            
+            @Override
             public void perform() {
                 updatePlates();
             }
+            
+            @Override
+            public void after(){}
         }
     }
     
@@ -465,11 +483,17 @@ public abstract class Geosphere extends Surface {
             }
 
             @Override
+            public void before(){}
+            
+            @Override
             public void perform(int x, int y) {
                 PlanetCell cell = waitForCellAt(x, y);
                 updateGeology(cell);
                 release(cell);
             }
+            
+            @Override
+            public void after(){}
 
             @Override
             public boolean check() {
@@ -495,6 +519,9 @@ public abstract class Geosphere extends Surface {
             }
 
             @Override
+            public void before(){}
+            
+            @Override
             public void perform() {
                 if (mantelHeatingDelay.check()) {
                     if (!PlanetSurface.suppressMantelHeating) {
@@ -502,6 +529,9 @@ public abstract class Geosphere extends Surface {
                     }
                 }
             }
+            
+            @Override
+            public void after(){}
 
             public void heatMantel() {
                 Boundaries bounds = taskThread.getManager().getBounds();
@@ -540,11 +570,17 @@ public abstract class Geosphere extends Surface {
             }
             
             @Override
+            public void before(){}
+            
+            @Override
             public void perform(int x, int y) {
                 PlanetCell cell = waitForCellAt(x, y);
                 formSedimentaryRock(cell);
                 release(cell);
             }
+            
+            @Override
+            public void after(){}
 
             @Override
             public boolean check() {

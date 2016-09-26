@@ -40,29 +40,24 @@ public class TaskManager {
 
         tasks.forEach(task -> {
             if (task.check()) {
-            	try{
-            		task.before();
-            	} finally {
-	                boolean sw = (curFrame % 2) == 0;
-	
-	                int ystart = sw? lowerYBound : (upperYBound - 1);
-	                int yinc = sw? 1 : -1;
-	
-	                for (int b = 0; b < 2; b++) {
-	                    for (int y = ystart; (sw? (y < upperYBound) : (y >= 0)); y += yinc) {
-	
-	                        int m = ((b > 0) && (y % 2 == 0))? lowerXBound + 1
-	                                : ((b > 0) && (y % 2 != 0) ? lowerXBound - 1 : lowerXBound);
-	
-	                        for (int x = (y % 2) + m; x < upperXBound; x += 2) {
-	                            task.perform(x, y);
-	                        }
-	                    }
-	                }
-            	}
-            	try{
-            		task.after();
-            	}finally {}
+        		task.before();
+                boolean sw = (curFrame % 2) == 0;
+
+                int ystart = sw? lowerYBound : (upperYBound - 1);
+                int yinc = sw? 1 : -1;
+
+                for (int b = 0; b < 2; b++) {
+                    for (int y = ystart; (sw? (y < upperYBound) : (y >= 0)); y += yinc) {
+
+                        int m = ((b > 0) && (y % 2 == 0))? lowerXBound + 1
+                                : ((b > 0) && (y % 2 != 0) ? lowerXBound - 1 : lowerXBound);
+
+                        for (int x = (y % 2) + m; x < upperXBound; x += 2) {
+                            task.perform(x, y);
+                        }
+                    }
+                }
+        		task.after();
             }
         });
     }

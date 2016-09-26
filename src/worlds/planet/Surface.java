@@ -240,6 +240,10 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
                 updateMinMaxHeight(x, y);
             }
 
+            @Override
+            public void after(){
+            }
+            
             private void updateMinMaxHeight(int x, int y) {
             	PlanetCell cell = waitForCellAt(x, y);
                 float cellHeight = cell.getHeightWithoutOceans();

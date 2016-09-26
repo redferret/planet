@@ -41,7 +41,7 @@ public abstract class Task {
      * An optional before-processing method called before perform(x, y) or perform()
      * starts.
      */
-    public native void before();
+    public abstract void before();
 
     /**
      * This method will be called for each cell on the surface. This method will
@@ -57,6 +57,6 @@ public abstract class Task {
      * An optional after-processing method called after perform(x, y) or perform()
      * finishes.
      */
-    public native void after();
+    public abstract void after();
 
 }
