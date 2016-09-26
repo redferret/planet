@@ -1,9 +1,10 @@
 
 
-package worlds.planet.geosphere;
+package worlds.planet.geosphere.tasks;
 
 import engine.util.task.Task;
 import worlds.planet.PlanetCell;
+import worlds.planet.geosphere.Geosphere;
 import worlds.planet.geosphere.Geosphere;
 
 import static worlds.planet.Planet.TimeScale.Geological;

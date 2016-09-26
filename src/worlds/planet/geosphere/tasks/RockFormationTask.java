@@ -1,9 +1,10 @@
-package worlds.planet.geosphere;
+package worlds.planet.geosphere.tasks;
 
 import worlds.planet.PlanetCell;
 import worlds.planet.enums.Layer;
 import worlds.planet.enums.SilicateContent;
 import engine.util.task.Task;
+import worlds.planet.geosphere.GeoCell;
 
 import static engine.util.Tools.calcDepth;
 import static engine.util.Tools.calcHeight;

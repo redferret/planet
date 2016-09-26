@@ -1,11 +1,10 @@
 
 
-package worlds.planet.geosphere;
+package worlds.planet.geosphere.tasks;
 
 import engine.util.Point;
 import engine.util.task.BasicTask;
 import java.util.List;
-import worlds.planet.PlanetCell;
 
 /**
  *

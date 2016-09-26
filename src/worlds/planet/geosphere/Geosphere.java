@@ -1,5 +1,8 @@
 package worlds.planet.geosphere;
 
+import worlds.planet.geosphere.tasks.RockFormationTask;
+import worlds.planet.geosphere.tasks.PlateTectonicsTask;
+import worlds.planet.geosphere.tasks.GeologicalUpdateTask;
 import java.util.Random;
 import java.util.ArrayList;
 import java.util.List;
