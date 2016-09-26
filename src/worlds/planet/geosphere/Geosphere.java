@@ -1,18 +1,20 @@
 package worlds.planet.geosphere;
 
-import worlds.planet.geosphere.tasks.RockFormationTask;
-import worlds.planet.geosphere.tasks.PlateTectonicsTask;
-import worlds.planet.geosphere.tasks.GeologicalUpdateTask;
 import java.util.Random;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.concurrent.ThreadLocalRandom;
 
+import worlds.planet.PlanetSurface;
+import worlds.planet.Surface;
 import worlds.planet.PlanetCell;
 import worlds.planet.enums.Layer;
 import worlds.planet.geosphere.GeoCell.SedimentBuffer;
 import worlds.planet.enums.RockType;
+import worlds.planet.geosphere.tasks.RockFormationTask;
+import worlds.planet.geosphere.tasks.PlateTectonicsTask;
+import worlds.planet.geosphere.tasks.GeologicalUpdateTask;
 
 import engine.util.Delay;
 import engine.util.Point;
@@ -22,8 +24,6 @@ import engine.util.Tools;
 import engine.util.task.BasicTask;
 import engine.util.task.Boundaries;
 import engine.util.task.CompoundTask;
-import worlds.planet.PlanetSurface;
-import worlds.planet.Surface;
 
 import static engine.util.Tools.calcDepth;
 import static engine.util.Tools.calcMass;
@@ -92,8 +92,8 @@ public abstract class Geosphere extends Surface {
     }
     
     /**
-     * Add a uniformed layer on the whole surface. Adds a new layer even if the
-     * layer type is the same.
+     * Adds a uniformed layer on the whole surface. Adds a new layer even if the
+     * layer type is the same (doesn't combine layer types that are the same).
      *
      * @param type The layer being added
      * @param amount The amount being added
@@ -108,6 +108,14 @@ public abstract class Geosphere extends Surface {
     }
 
 
+    /**
+     * Adds to the 'lowest' list passed into this method from the list of cells
+     * the lowest cells from the cell that is at the end of the cells list.
+     * @param lowest The list that will hold the lowest cells from the last cell or
+     * element in the 'cells' list.
+     * @param cells The list of cells to find the lowest cell from the last element in
+     * this list.
+     */
     public static void getLowestCells(List<PlanetCell> lowest, List<PlanetCell> cells){
         PlanetCell center = cells.get(cells.size() - 1);
         float geoHeight = center.getHeightWithoutOceans();
@@ -119,6 +127,13 @@ public abstract class Geosphere extends Surface {
         }
     }
 
+    /**
+     * Selects all the positions that are around the position 'from'. This method
+     * does not select resources or cells from the map but builds a list
+     * of positions to use to select resources.
+     * @param from The center position
+     * @return The calculated positions around the center point 'from'
+     */
     public static Point[] getCellIndexesFrom(Point from){
         int tx, ty, mx, my;
         int x = from.getX(), y = from.getY();
