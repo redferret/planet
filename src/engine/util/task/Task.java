@@ -38,10 +38,10 @@ public abstract class Task {
     public abstract boolean check();
 
     /**
-     * A before-processing method called before perform(x, y) or perform()
+     * An optional before-processing method called before perform(x, y) or perform()
      * starts.
      */
-    public abstract void before();
+    public native void before();
 
     /**
      * This method will be called for each cell on the surface. This method will
@@ -54,9 +54,9 @@ public abstract class Task {
     public abstract void perform(int x, int y);
 
     /**
-     * A after-processing method called after perform(x, y) or perform()
+     * An optional after-processing method called after perform(x, y) or perform()
      * finishes.
      */
-    public abstract void after();
+    public native void after();
 
 }

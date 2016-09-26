@@ -178,19 +178,11 @@ public abstract class Geosphere extends Surface {
                 }
 
                 @Override
-                public void before() {
-                }
-
-                @Override
                 public void perform(int x, int y) {
                     PlanetCell cell = waitForCellAt(x, y);
                     float maxDepth = calcDepth(cell.getDensity(), 9.8f, MELTING_PRESSURE);
                     melt(cell, maxDepth);
                     release(cell);
-                }
-
-                @Override
-                public void after() {
                 }
 
                 private void melt(GeoCell cell, float maxDepth) {
@@ -352,10 +344,6 @@ public abstract class Geosphere extends Surface {
             }
 
             @Override
-            public void before() {
-            }
-
-            @Override
             public void perform(int x, int y) {
                 Point[] cellPos = getCellIndexesFrom(new Point(x, y));
                 List<PlanetCell> workingCells = waitForCells(cellPos);
@@ -424,10 +412,6 @@ public abstract class Geosphere extends Surface {
             }
 
             @Override
-            public void after() {
-            }
-
-            @Override
             public boolean check() {
                 return delay.check();
             }
@@ -452,16 +436,8 @@ public abstract class Geosphere extends Surface {
             }
 
             @Override
-            public void before() {
-            }
-
-            @Override
             public void perform() {
                 updatePlates();
-            }
-
-            @Override
-            public void after() {
             }
         }
     }
@@ -498,14 +474,6 @@ public abstract class Geosphere extends Surface {
             @Override
             public boolean check() {
                 return geologicDelay.check();
-            }
-
-            @Override
-            public void before() {
-            }
-
-            @Override
-            public void after() {
             }
         }
     }
@@ -550,17 +518,9 @@ public abstract class Geosphere extends Surface {
 //                cell.addHeat(thermalInc);
                 release(cell);
             }
-
-            @Override
-            public void before() {
-            }
-
-            @Override
-            public void after() {
-            }
         }
     }
-
+    
     /**
      * Forms sedimentary rock due to compression of sediments.
      */
@@ -578,11 +538,7 @@ public abstract class Geosphere extends Surface {
             public void construct() {
                 updateDelay = new Delay(1);
             }
-
-            @Override
-            public void before() {
-            }
-
+            
             @Override
             public void perform(int x, int y) {
                 PlanetCell cell = waitForCellAt(x, y);
@@ -593,10 +549,6 @@ public abstract class Geosphere extends Surface {
             @Override
             public boolean check() {
                 return updateDelay.check();
-            }
-
-            @Override
-            public void after() {
             }
         }
     }
