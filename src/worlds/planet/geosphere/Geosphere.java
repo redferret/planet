@@ -38,25 +38,6 @@ import static worlds.planet.Planet.instance;
  */
 public abstract class Geosphere extends Surface {
 
-    /**
-     * The maximum number of cells that receive heating.
-     */
-    public static int heatDistributionCount;
-
-    /**
-     * The amount of heat added to a cell.
-     */
-    public static int thermalInc;
-
-    /**
-     * The amount of volcanic rock added to the surface when a volcano erupts.
-     */
-    public static float averageVolcanicMass;
-
-    /**
-     * The amount of heat lost after a volcanic eruption.
-     */
-    public static float volcanicHeatLoss;
 
     private long ageStamp;
 
@@ -64,10 +45,6 @@ public abstract class Geosphere extends Surface {
     private static Random rand;
     private static int worldSize;
     static {
-        heatDistributionCount = 5;
-        thermalInc = 300;
-        volcanicHeatLoss = 50;
-        averageVolcanicMass = 250;
         rand = new Random();
         drawSediments = true;
     }
@@ -570,7 +547,7 @@ public abstract class Geosphere extends Surface {
                 int y = ThreadLocalRandom.current().nextInt(min, max);
 
                 PlanetCell cell = waitForCellAt(x, y);
-                cell.addHeat(thermalInc);
+//                cell.addHeat(thermalInc);
                 release(cell);
             }
 
