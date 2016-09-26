@@ -110,7 +110,6 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
 //        surface.addTask(new AddWaterTask());
 //        surface.addWaterToAllCells(9000);
         testWorld.setTimescale(Planet.TimeScale.Geological);
-        Geosphere.heatDistributionCount = 100;
         testWorld.play();
     }
 
