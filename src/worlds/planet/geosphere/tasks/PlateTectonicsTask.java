@@ -18,7 +18,7 @@ public abstract class PlateTectonicsTask extends BasicTask {
      * Updates all the plates.
      */
     public void updatePlates(){
-        
+
     }
     
     /**
