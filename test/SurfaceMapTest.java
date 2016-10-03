@@ -180,6 +180,7 @@ public class SurfaceMapTest {
     @After
     public void tearDown() {
         testSurface.killAllThreads();
+        testSurface.kill();
     }
 
     /**
