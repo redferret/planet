@@ -1,6 +1,8 @@
 
 import engine.util.Tools;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import worlds.planet.geosphere.GeoCell;
@@ -19,10 +21,18 @@ import worlds.planet.geosphere.Stratum;
 public class GeoCellTest {
     
     private static final int WORLD_SIZE = 100;
-    private static TestWorld testWorld;
+    private TestWorld testWorld;
     
-    static {
-        testWorld = new TestWorld(1, WORLD_SIZE);
+    
+    @Before
+    public void setUp(){
+    	testWorld = new TestWorld(1, WORLD_SIZE);
+    }
+    
+    @After
+    public void tearDown(){
+    	testWorld.getSurface().killAllThreads();
+    	testWorld.getSurface().kill();
     }
     
     /**
