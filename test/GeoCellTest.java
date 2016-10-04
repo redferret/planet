@@ -8,11 +8,11 @@ import org.junit.Test;
 import worlds.planet.geosphere.GeoCell;
 import worlds.planet.enums.Layer;
 import worlds.planet.TestWorld;
-import static org.junit.Assert.*;
 import worlds.planet.hydrosphere.HydroCell;
 import worlds.planet.PlanetCell;
 import worlds.planet.geosphere.Stratum;
 
+import static org.junit.Assert.*;
 
 /**
  * Does basic unit testing on the GeoCell class.
@@ -21,52 +21,13 @@ import worlds.planet.geosphere.Stratum;
 public class GeoCellTest {
     
     private static final int WORLD_SIZE = 100;
-    private TestWorld testWorld;
+    private static TestWorld testWorld;
     
     
-    @Before
-    public void setUp(){
-    	testWorld = new TestWorld(1, WORLD_SIZE);
+    static {
+        testWorld = new TestWorld(1, WORLD_SIZE);
     }
-    
-    @After
-    public void tearDown(){
-    	testWorld.getSurface().killAllThreads();
-    	testWorld.getSurface().kill();
-    }
-    
-    /**
-     * Tests the make sure the cell has a 0 density, assumes there is no
-     * strata. This is mainly a divide by 0 test.
-     */
-    @Test
-    public void zeroGeoDensityTest(){
 
-        GeoCell testCell = testWorld.getSurface().waitForCellAt(0, 0);
-        
-        Float actualDensity = testCell.getGeoDensity();
-        Float expectedDensity = 0f;
-        
-        assertEquals("The density should be 0", expectedDensity, actualDensity);
-        testWorld.getSurface().release((PlanetCell) testCell);
-    }
-    
-    /**
-     * Tests the make sure the cell has a 0 density, assumes there is no
-     * strata or ocean. This is mainly a divide by 0 test.
-     */
-    @Test
-    public void zeroDensityTest(){
-        
-        GeoCell testCell = testWorld.getSurface().waitForCellAt(0, 0);
-        
-        Float actualDensity = testCell.getDensity();
-        Float expectedDensity = 0f;
-        
-        assertEquals("The density should be 0", expectedDensity, actualDensity);
-        testWorld.getSurface().release((PlanetCell) testCell);
-    }
-    
     /**
      * Tests for correct density calculation without oceans.
      */
