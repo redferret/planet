@@ -27,7 +27,7 @@ public abstract class PlateTectonicsTask extends BasicTask {
      * @param centralCell The center of the plate
      * @return The list of positions of each cell for the new plate.
      */
-    public List<Point> buildPlate(Point centralCell){
+    public List<Point> buildPlate(Point centralCell, int radius){
         return null;
     }
 }
