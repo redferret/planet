@@ -1,24 +1,34 @@
-import static org.junit.Assert.*;
+
+
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-/**
- * 
- */
+import engine.util.Point;
+import worlds.planet.geosphere.tasks.PlateTectonicsTask;
+
+import static org.junit.Assert.*;
 
 /**
- * @author rdesilvey
+ * @author Richard DeSilvey
  *
  */
 public class PlateTectonicsTaskTest {
 
+	private PlateTectonicsTask testTask;
+	
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@Before
 	public void setUp() throws Exception {
+		testTask = new PlateTectonicsTask() {
+			public void perform() {}
+			public void before() {}
+			public void after() {}
+		};
 	}
 
 	/**
@@ -29,8 +39,18 @@ public class PlateTectonicsTaskTest {
 	}
 
 	@Test
-	public void test() {
-		fail("Not yet implemented");
+	public void buildPlateTest() {
+		
+		listNotNullTest();
+		
 	}
 
+	private void listNotNullTest(){
+		Point centralCell = new Point(0,0);
+		int radius = 1;
+		List<Point> plate = testTask.buildPlate(centralCell, radius);
+		
+		assertNotNull("The returned list is null", plate);
+	}
+	
 }
