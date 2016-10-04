@@ -41,11 +41,14 @@ public class PlateTectonicsTaskTest {
 	@Test
 	public void buildPlateTest() {
 		
-		listNotNullTest();
+		buildPlateListNotNullTest();
 		
 	}
 
-	private void listNotNullTest(){
+	/**
+	 * Tests to make sure the list returned by the method is not null.
+	 */
+	private void buildPlateListNotNullTest(){
 		Point centralCell = new Point(0,0);
 		int radius = 1;
 		List<Point> plate = testTask.buildPlate(centralCell, radius);
