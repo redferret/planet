@@ -149,11 +149,12 @@ public class GeoCellTest {
         Layer strata[] = {Layer.BASALT, Layer.RHYOLITE, Layer.MAFIC_SANDSTONE, Layer.SHALE};
         GeoCell testCell = testWorld.getSurface().waitForCellAt(20, 20);
         float mass;
+        final int BASE = 200;
         for (Layer layer : strata){
-            mass = Tools.calcMass(200, 100, layer);
+            mass = Tools.calcMass(200, BASE, layer);
             testCell.add(layer, mass, true);
         }
-        mass = Tools.calcMass(50, 100, Layer.LIMESTONE);
+        mass = Tools.calcMass(50, BASE, Layer.LIMESTONE);
         testCell.addAtDepth(Layer.LIMESTONE, mass, 800);
         
         Float thickness = testCell.getStrataThickness();
