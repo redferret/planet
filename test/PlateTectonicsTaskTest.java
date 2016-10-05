@@ -1,5 +1,4 @@
 
-
 import java.util.List;
 
 import org.junit.After;
@@ -17,46 +16,50 @@ import static org.junit.Assert.*;
  */
 public class PlateTectonicsTaskTest {
 
-	private PlateTectonicsTask testTask;
-	
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@Before
-	public void setUp() throws Exception {
-		testTask = new PlateTectonicsTask() {
-			public void perform() {}
-			public void before() {}
-			public void after() {}
-		};
-	}
+    private PlateTectonicsTask testTask;
 
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@After
-	public void tearDown() throws Exception {
-	}
+    /**
+     * @throws java.lang.Exception
+     */
+    @Before
+    public void setUp() throws Exception {
+        testTask = new PlateTectonicsTask() {
+            public void perform() {
+            }
 
-	@Test
-	public void buildPlateTest() {
-		
-		List<Point> plate = buildPlateWithNullTest();
-		
-		
-	}
+            public void before() {
+            }
 
-	/**
-	 * Tests to make sure the list returned by the method is not null.
-	 */
-	private List<Point> buildPlateWithNullTest(){
-		Point centralCell = new Point(0,0);
-		int radius = 1;
-		List<Point> plate = testTask.buildPlate(centralCell, radius);
-		
-		assertNotNull("The returned list is null", plate);
-		
-		return plate;
-	}
-	
+            public void after() {
+            }
+        };
+    }
+
+    /**
+     * @throws java.lang.Exception
+     */
+    @After
+    public void tearDown() throws Exception {
+    }
+
+    @Test
+    public void buildPlateTest() {
+
+        List<Point> plate = buildPlateWithNullTest();
+
+    }
+
+    /**
+     * Tests to make sure the list returned by the method is not null.
+     */
+    private List<Point> buildPlateWithNullTest() {
+        Point centralCell = new Point(0, 0);
+        int radius = 1;
+        List<Point> plate = testTask.buildPlate(centralCell, radius);
+
+        assertNotNull("The returned list is null", plate);
+
+        return plate;
+    }
+
 }
