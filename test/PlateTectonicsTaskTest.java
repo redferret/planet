@@ -43,7 +43,7 @@ public class PlateTectonicsTaskTest {
     }
 
     @Test
-    public void buildPlateTest() {
+    public void addPlateTest() {
     	Point center = new Point(30, 30);
         List<Point> plate = buildPlateWithNullTest(center, 10);
         testTask.addPlate(plate);
@@ -52,7 +52,7 @@ public class PlateTectonicsTaskTest {
     }
 
     @Test
-    public void addPlateTest(){
+    public void buildPlateTest(){
     	Point center = new Point(0, 0);
     	List<Point> plate = buildPlateWithNullTest(center, 1);
     	
