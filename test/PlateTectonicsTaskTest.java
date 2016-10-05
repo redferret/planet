@@ -44,8 +44,8 @@ public class PlateTectonicsTaskTest {
 
     @Test
     public void addPlateTest() {
-    	Point center = new Point(30, 30);
-        List<Point> plate = buildPlateWithNullTest(center, 10);
+    	Point center = new Point(0, 0);
+        List<Point> plate = buildPlateWithNullTest(center, 5);
         testTask.addPlate(plate);
         
         assertEquals("No plate was added", 1, testTask.getNumberOfPlates());
@@ -53,10 +53,19 @@ public class PlateTectonicsTaskTest {
 
     @Test
     public void buildPlateTest(){
-    	Point center = new Point(0, 0);
-    	List<Point> plate = buildPlateWithNullTest(center, 1);
+    	Point center = new Point(30, 30);
+    	List<Point> plate = buildPlateWithNullTest(center, 10);
     	
-    	// do something to test plate
+    	Point expectedPoint = new Point(22, 20);
+    	
+    	boolean containsTestPoint = false;
+    	for (Point point : plate) {
+    		if (point.equals(expectedPoint)){
+    			containsTestPoint = true;
+    			break;
+    		}
+    	}
+    	assertTrue("Test point not contained in list", containsTestPoint);
     }
     
     /**
