@@ -6,6 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import engine.util.Point;
 import engine.util.TBuffer;
 import engine.util.Tools;
 import worlds.planet.Planet;
@@ -18,7 +20,9 @@ import worlds.planet.PlanetSurface;
 import worlds.planet.enums.RockType;
 import static engine.util.Tools.*;
 import engine.util.concurrent.AtomicData;
+
 import java.util.concurrent.ConcurrentLinkedDeque;
+
 import static worlds.planet.Planet.instance;
 import worlds.planet.PlanetCell;
 import static worlds.planet.Surface.*;
@@ -286,6 +290,8 @@ public class GeoCell extends Mantel {
      */
     private float curAmountSubmerged;
 
+    private Point velocity;
+    
     /**
      * The type of crust this cell is.
      */
@@ -340,6 +346,7 @@ public class GeoCell extends Mantel {
         erosionBuffer = new SedimentBuffer();
         plateBuffer = new PlateBuffer();
         moltenRockLayer = new MoltenRockLayer();
+        velocity = new Point(0, 0);
 
         totalStrataThickness = 0f;
         totalMass = 0f;
@@ -349,6 +356,14 @@ public class GeoCell extends Mantel {
 
     }
 
+    public void setVelocity(Point vel){
+    	velocity = new Point(vel);
+    }
+    
+    public Point getVelocity(){
+    	return velocity;
+    }
+    
     /**
      * Creates a deep copy of this GeoCell and it's strata.
      * @return The copy of this GeoCell.
