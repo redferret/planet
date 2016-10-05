@@ -3,7 +3,6 @@ package worlds.planet.geosphere;
 import java.util.Random;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.LinkedList;
 import java.util.concurrent.ThreadLocalRandom;
 
 import worlds.planet.PlanetSurface;
@@ -11,7 +10,6 @@ import worlds.planet.Surface;
 import worlds.planet.PlanetCell;
 import worlds.planet.enums.Layer;
 import worlds.planet.geosphere.GeoCell.SedimentBuffer;
-import worlds.planet.enums.RockType;
 import worlds.planet.geosphere.tasks.RockFormationTask;
 import worlds.planet.geosphere.tasks.PlateTectonicsTask;
 import worlds.planet.geosphere.tasks.GeologicalUpdateTask;
@@ -20,10 +18,9 @@ import engine.util.Delay;
 import engine.util.Point;
 import engine.util.task.Task;
 import engine.util.task.TaskFactory;
-import engine.util.Tools;
 import engine.util.task.BasicTask;
 import engine.util.task.Boundaries;
-import engine.util.task.CompoundTask;
+
 import static engine.util.Tools.calcDepth;
 import static engine.util.Tools.calcMass;
 import static engine.util.Tools.checkBounds;
