@@ -24,14 +24,9 @@ public class PlateTectonicsTaskTest {
     @Before
     public void setUp() throws Exception {
         testTask = new PlateTectonicsTask() {
-            public void perform() {
-            }
-
-            public void before() {
-            }
-
-            public void after() {
-            }
+            public void perform() {}
+            public void before() {}
+            public void after() {}
         };
     }
 
@@ -63,14 +58,14 @@ public class PlateTectonicsTaskTest {
     	Point center = new Point(30, 30);
     	List<Point> plate = buildPlateWithNullTest(center, 10);
     	
-    	Point expectedPoint = new Point(22, 20);
+    	Point expectedPoint = new Point(36, 33);
     	
     	boolean containsTestPoint = false;
     	for (Point point : plate) {
-    		if (point.equals(expectedPoint)){
-    			containsTestPoint = true;
-    			break;
-    		}
+            if (point.equals(expectedPoint)){
+                    containsTestPoint = true;
+                    break;
+            }
     	}
     	assertTrue("Test point not contained in list", containsTestPoint);
     }
