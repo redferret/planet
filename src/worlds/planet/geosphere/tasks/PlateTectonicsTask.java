@@ -31,4 +31,16 @@ public abstract class PlateTectonicsTask extends BasicTask {
     public List<Point> buildPlate(Point centralCell, int radius){
         return null;
     }
+    
+    public void addPlate(List<Point> plate){
+    	
+    }
+    
+    /**
+     * A non negative number of how many plates there are.
+     * @return The number of plates
+     */
+    public int getNumberOfPlates(){
+    	return -1;
+    }
 }

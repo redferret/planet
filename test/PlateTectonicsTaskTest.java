@@ -44,18 +44,26 @@ public class PlateTectonicsTaskTest {
 
     @Test
     public void buildPlateTest() {
-
-        List<Point> plate = buildPlateWithNullTest();
-
+    	Point center = new Point(30, 30);
+        List<Point> plate = buildPlateWithNullTest(center, 10);
+        testTask.addPlate(plate);
+        
+        assertEquals("No plate was added", 1, testTask.getNumberOfPlates());
     }
 
+    @Test
+    public void addPlateTest(){
+    	Point center = new Point(0, 0);
+    	List<Point> plate = buildPlateWithNullTest(center, 1);
+    	
+    	// do something to test plate
+    }
+    
     /**
      * Tests to make sure the list returned by the method is not null.
      */
-    private List<Point> buildPlateWithNullTest() {
-        Point centralCell = new Point(0, 0);
-        int radius = 1;
-        List<Point> plate = testTask.buildPlate(centralCell, radius);
+    private List<Point> buildPlateWithNullTest(Point center, int radius) {
+        List<Point> plate = testTask.buildPlate(center, radius);
 
         assertNotNull("The returned list is null", plate);
 
