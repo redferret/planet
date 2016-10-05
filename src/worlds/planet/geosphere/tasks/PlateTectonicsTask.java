@@ -22,11 +22,11 @@ public abstract class PlateTectonicsTask extends BasicTask {
     }
     
     /**
-     * Used to build a new plate using the given cell position as the center of
-     * the plate.
+     * Builds a list of points that define a new plate. The list
+     * is always a non-null list.
      * @param centralCell The center of the plate
      * @param radius The radius of the plate
-     * @return The list of positions of each cell for the new plate.
+     * @return The list of positions defining the plate.
      */
     public List<Point> buildPlate(Point centralCell, int radius){
         return null;
