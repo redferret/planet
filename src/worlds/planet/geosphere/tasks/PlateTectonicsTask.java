@@ -4,6 +4,7 @@ package worlds.planet.geosphere.tasks;
 
 import engine.util.Point;
 import engine.util.task.BasicTask;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,7 +13,7 @@ import java.util.List;
  */
 public abstract class PlateTectonicsTask extends BasicTask {
 
-    private List<List<Point>> plates;
+    private List<List<Point>> plates = new ArrayList<>();
     
     /**
      * Updates all the plates.
@@ -33,7 +34,7 @@ public abstract class PlateTectonicsTask extends BasicTask {
     }
     
     public void addPlate(List<Point> plate){
-    	
+    	plates.add(plate);
     }
     
     /**
@@ -41,6 +42,6 @@ public abstract class PlateTectonicsTask extends BasicTask {
      * @return The number of plates
      */
     public int getNumberOfPlates(){
-    	return -1;
+    	return plates.size();
     }
 }
