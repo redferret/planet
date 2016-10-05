@@ -42,6 +42,9 @@ public class PlateTectonicsTaskTest {
     public void tearDown() throws Exception {
     }
 
+    /**
+     * Adds a plate and tests to see if it was added.
+     */
     @Test
     public void addPlateTest() {
     	Point center = new Point(0, 0);
@@ -51,6 +54,10 @@ public class PlateTectonicsTaskTest {
         assertEquals("No plate was added", 1, testTask.getNumberOfPlates());
     }
 
+    /**
+     * Builds a plate and tests to make sure a point exists in the list of
+     * points returned by the method.
+     */
     @Test
     public void buildPlateTest(){
     	Point center = new Point(30, 30);
@@ -73,9 +80,7 @@ public class PlateTectonicsTaskTest {
      */
     private List<Point> buildPlateWithNullTest(Point center, int radius) {
         List<Point> plate = testTask.buildPlate(center, radius);
-
         assertNotNull("The returned list is null", plate);
-
         return plate;
     }
 
