@@ -30,7 +30,7 @@ public abstract class PlateTectonicsTask extends BasicTask {
      * @return The list of positions defining the plate.
      */
     public List<Point> buildPlate(Point centralCell, int radius){
-        return null;
+        return new ArrayList<>();
     }
     
     public void addPlate(List<Point> plate){
