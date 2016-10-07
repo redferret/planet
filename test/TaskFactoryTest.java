@@ -17,9 +17,24 @@ import engine.util.task.TaskFactory;
  */
 public class TaskFactoryTest {
     
-    private static final Boundaries BOUNDS = new Boundaries(0, 1, 0, 1);
+	/**
+	 * Simple boundaries for threads
+	 */
+    private static final Boundaries BOUNDS = new Boundaries(0, 1);
+    
+    /**
+     * The waiting gate for the threads
+     */
     private CyclicBarrier waitingGate;
+    
+    /**
+     * Test threads
+     */
     private SurfaceThread testThread, secondTestThread;
+    
+    /**
+     * Test factory for the threads
+     */
     private MyFactory factory;
     
     @Before
@@ -56,14 +71,14 @@ public class TaskFactoryTest {
      */
     @Test
     public void singleTaskOnTwoThreadsTest(){
-        MyFactory.MyTask testTask = (MyFactory.MyTask) factory.buildResource();
-        testThread.addTask(testTask);
-        secondTestThread.addTask(testTask);
+        MyFactory.MyTask taskResource = (MyFactory.MyTask) factory.buildResource();
+        testThread.addTask(taskResource);
+        secondTestThread.addTask(taskResource);
         
         testThread.update();
         secondTestThread.update();
         
-        assertTrue(testTask.getCounter() > 1);
+        assertTrue(taskResource.getCounter() > 1);
     }
     
     @After
@@ -82,6 +97,9 @@ class MyFactory implements TaskFactory {
     
     public class MyTask extends Task {
 
+    	/**
+    	 * The resource to test
+    	 */
         private Integer counter;
         
         public void construct() {
