@@ -24,7 +24,7 @@ import static org.junit.Assert.*;
  *
  * @author Richard
  */
-public class SurfaceMapTest {
+public class SurfaceMapAndTaskTest {
 
     private static final int MAP_SIZE = 2, SURFACE_DELAY = 1, THREAD_COUNT = 2,
             CELL_COUNT = MAP_SIZE * MAP_SIZE;
