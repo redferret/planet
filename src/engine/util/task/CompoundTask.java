@@ -15,7 +15,7 @@ public abstract class CompoundTask extends BasicTask {
     
     public final void construct(){
     	if (subTaskManager == null) {
-            Boundaries taskBounds = taskThread.getManager().getBounds();
+            Boundaries taskBounds = getTaskThread().getManager().getBounds();
             subTaskManager = new TaskManager(taskBounds);
         }
     	setup();
