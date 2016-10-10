@@ -29,17 +29,33 @@ public class SurfaceMapAndTaskTest {
 
     private static final int MAP_SIZE = 2, SURFACE_DELAY = 1, THREAD_COUNT = 2,
             CELL_COUNT = MAP_SIZE * MAP_SIZE;
-    private CountDownLatch latch;
+    
+    /**
+     * The synchronization latch for the test threads.
+     */
+    private static CountDownLatch latch;
 
+    /**
+     * The test surface for this test file.
+     */
     private TestSurface testSurface;
 
+    static {
+    	latch = new CountDownLatch(CELL_COUNT);
+    }
+    
     @Before
     public void setUp() {
-        latch = new CountDownLatch(CELL_COUNT);
         testSurface = new TestSurface(MAP_SIZE, SURFACE_DELAY, THREAD_COUNT, latch);
         testSurface.reset();
     }
 
+    @After
+    public void tearDown() {
+        testSurface.killAllThreads();
+        testSurface.kill();
+    }
+    
     /**
      * Performs a single pass over the map that contains TestCells, each cell
      * will be flagged as being updated.
@@ -51,8 +67,7 @@ public class SurfaceMapAndTaskTest {
 
         testSurface.addTaskToThreads(testSurface.new SurfaceTask());
 
-        testSurface.startSurfaceThreads();
-        testSurface.playSurfaceThreads();
+        startAndRunTestSurface();
 
         boolean signaled = latch.await(10, TimeUnit.SECONDS);
         assertTrue("Latch was never signaled", signaled);
@@ -75,8 +90,7 @@ public class SurfaceMapAndTaskTest {
     public void noStarvationTest() throws InterruptedException {
         testSurface.addTaskToThreads(testSurface.new NoStarvationTask());
 
-        testSurface.startSurfaceThreads();
-        testSurface.playSurfaceThreads();
+        startAndRunTestSurface();
 
         boolean signaled = latch.await(6, TimeUnit.SECONDS);
         assertTrue("Resource was never released causing starvation", signaled);
@@ -96,8 +110,7 @@ public class SurfaceMapAndTaskTest {
     public void starvationTest() throws InterruptedException {
         testSurface.addTaskToThreads(testSurface.new StarvationTask());
 
-        testSurface.startSurfaceThreads();
-        testSurface.playSurfaceThreads();
+        startAndRunTestSurface();
 
         boolean signaled = latch.await(1250, TimeUnit.MILLISECONDS);
         assertTrue("Starvation never occured", !signaled);
@@ -173,15 +186,14 @@ public class SurfaceMapAndTaskTest {
         testSurface.release(cells.toArray(new TestCell[cellArray.length]));
     }
     
+    private void startAndRunTestSurface(){
+    	testSurface.startSurfaceThreads();
+        testSurface.playSurfaceThreads();
+    }
+    
     private void testCaseForIndexTesting(int testX, int testY, int testWidth) {
         int expectedIndex = testX + (testY * testWidth);
         testIndex(testX, testY, testWidth, expectedIndex);
-    }
-
-    @After
-    public void tearDown() {
-        testSurface.killAllThreads();
-        testSurface.kill();
     }
 
     /**
