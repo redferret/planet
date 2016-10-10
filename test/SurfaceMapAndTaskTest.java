@@ -65,6 +65,24 @@ public class SurfaceMapAndTaskTest {
     	assertTrue("Number of cells don't match", MAP_SIZE == mapWidth);
     }
     
+    @Test
+    public void generateCellTest(){
+    	int x = 45;
+    	int y = 12;
+    	
+    	Cell testCell = testSurface.generateCell(x, y);
+    	
+    	assertNotNull("The generated cell is null", testCell);
+    	
+    	assertTrue("The cell generated is not a proper instance", testCell instanceof TestCell);
+    	
+    	int testX = testCell.getX();
+    	int testY = testCell.getY();
+    	
+    	assertTrue("x position is incorrect", testX == x);
+    	assertTrue("y position is incorrect", testY == y);
+    }
+    
     /**
      * Performs a single pass over the map that contains TestCells, each cell
      * will be flagged as being updated.
