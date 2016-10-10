@@ -266,9 +266,12 @@ public abstract class SurfaceMap<C extends Cell> extends TaskRunner implements R
         Logger.getLogger(SurfaceMap.class.getName()).log(Level.INFO, "Setting up map");
         for (int x = 0; x < cellCountWidth; x++) {
             for (int y = 0; y < cellCountWidth; y++) {
-                setCell(generateCell(x, y));
-                generated++;
-                logMapSetup(generated, flagUpdate, totalCells);
+            	C generatedCell = generateCell(x, y);
+            	if (generatedCell != null){
+	                setCell(generatedCell);
+	                generated++;
+	                logMapSetup(generated, flagUpdate, totalCells);
+            	}
             }
         }
     }
