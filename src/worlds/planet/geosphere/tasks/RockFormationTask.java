@@ -39,18 +39,18 @@ public abstract class RockFormationTask extends Task {
 
             massBeingDeposited = calcMass(diff, instance().getCellArea(), sedimentType);
 
-            if (sedimentType.getSilicates() == SilicateContent.Rich) {
-                depositType = Layer.FELSIC_SANDSTONE;
-            } else if (sedimentType.getSilicates() == SilicateContent.Mix) {
-                if (cell.getOceanMass() >= 4000) {
-                    depositType = Layer.SHALE;
-                } else {
-                    depositType = Layer.MIX_SANDSTONE;
-                }
-            } else {
-                depositType = Layer.MAFIC_SANDSTONE;
+            if (cell.getOceanMass() >= 4000) {
+                depositType = Layer.SHALE;
+            }else{
+	            if (sedimentType.getSilicates() == SilicateContent.Rich) {
+	                depositType = Layer.FELSIC_SANDSTONE;
+	            } else if (sedimentType.getSilicates() == SilicateContent.Mix) {
+	            	depositType = Layer.MIX_SANDSTONE;
+	            } else {
+	                depositType = Layer.MAFIC_SANDSTONE;
+	            }
             }
-
+            
             eb.updateSurfaceSedimentMass(-massBeingDeposited);
 
             massBeingDeposited = changeMass(massBeingDeposited, sedimentType, depositType);
