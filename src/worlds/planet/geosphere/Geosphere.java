@@ -1,6 +1,5 @@
 package worlds.planet.geosphere;
 
-import java.util.Random;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -38,10 +37,8 @@ public abstract class Geosphere extends Surface {
     private long ageStamp;
 
     public static boolean drawSediments;
-    private static Random rand;
     private static int worldSize;
     static {
-        rand = new Random();
         drawSediments = true;
     }
 
