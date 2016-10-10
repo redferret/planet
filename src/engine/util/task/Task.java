@@ -14,10 +14,14 @@ public abstract class Task {
      * this object reference is null then this task is not part of a 
      * TaskFactory.
      */
-    protected SurfaceThread taskThread = null;
+    private SurfaceThread taskThread = null;
     
     public void setThread(SurfaceThread thread){
     	taskThread = thread;
+    }
+    
+    public SurfaceThread getTaskThread(){
+    	return taskThread;
     }
     
     /**
