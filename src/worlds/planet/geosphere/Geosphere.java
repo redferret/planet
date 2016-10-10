@@ -446,7 +446,7 @@ public abstract class Geosphere extends Surface {
             @Override
             public void perform(int x, int y) {
                 PlanetCell cell = waitForCellAt(x, y);
-                formSedimentaryRock(cell);
+                formSedimentaryRock(cell, 200);
                 release(cell);
             }
             

@@ -18,7 +18,7 @@ import static worlds.planet.Planet.instance;
  */
 public abstract class RockFormationTask extends Task {
 
-    public void formSedimentaryRock(PlanetCell cell) {
+    public void formSedimentaryRock(PlanetCell cell, float pressure) {
 
         float height, diff, massBeingDeposited;
         GeoCell.SedimentBuffer eb = cell.getSedimentBuffer();
@@ -31,7 +31,7 @@ public abstract class RockFormationTask extends Task {
         }
         eb.applyBuffer();
         height = calcHeight(eb.getSediments(), instance().getCellArea(), sedimentType);
-        float maxHeight = calcDepth(sedimentType, 9.8f, 200);
+        float maxHeight = calcDepth(sedimentType, 9.8f, pressure);
 
         if (height > maxHeight) {
 
