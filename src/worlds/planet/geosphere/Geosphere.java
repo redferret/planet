@@ -319,10 +319,6 @@ public abstract class Geosphere extends Surface {
         private class PlateTectonicsResource extends PlateTectonicsTask {
 
             @Override
-            public void construct() {
-            }
-
-            @Override
             public void before(){}
             
             @Override
@@ -377,7 +373,7 @@ public abstract class Geosphere extends Surface {
         }
     }
 
-    @Deprecated
+    @Deprecated // For now
     private class HeatMantelFactory implements TaskFactory {
 
         @Override
@@ -409,7 +405,7 @@ public abstract class Geosphere extends Surface {
             public void after(){}
 
             public void heatMantel() {
-                Boundaries bounds = taskThread.getManager().getBounds();
+                Boundaries bounds = getTaskThread().getManager().getBounds();
 
                 int min = bounds.getLowerXBound();
                 int max = bounds.getUpperXBound();

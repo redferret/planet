@@ -20,6 +20,7 @@ import worlds.planet.PlanetSurface;
 import worlds.planet.enums.RockType;
 import static engine.util.Tools.*;
 import engine.util.concurrent.AtomicData;
+import engine.util.concurrent.SurfaceThread;
 
 import java.util.concurrent.ConcurrentLinkedDeque;
 
@@ -290,9 +291,26 @@ public class GeoCell extends Mantel {
      */
     private float curAmountSubmerged;
 
+    /**
+     * A Point that is represented as the velocity for Plate Tectonics.
+     * When a plate collides with a sibling (Cell owned by the same plate)
+     * the collision is inelastic and will reduce it's velocity as well as
+     * transfering a little bit of it's energy through the system.
+     */
     private Point velocity;
     
     /**
+     * The parent that updates this cell for Plate Tectonics. This allows
+     * for plate updates to add/remove plate-point locations. When a new
+     * plate is defined the cell locations are added and each cell is given
+     * a velocity and a reference to the parent thread. If the cell is already
+     * owned by a thread then it will change. The previous owner will
+     * then update it's plate-point list by removing the point from
+     * that list.
+     */
+    private SurfaceThread plateControlParent;
+    
+	/**
      * The type of crust this cell is.
      */
     private CrustType crustType;
@@ -356,6 +374,14 @@ public class GeoCell extends Mantel {
 
     }
 
+    public SurfaceThread getPlateControlThread() {
+		return plateControlParent;
+	}
+
+	public void setPlateControlThread(SurfaceThread plateControlParent) {
+		this.plateControlParent = plateControlParent;
+	}
+    
     public void setVelocity(Point vel){
     	velocity = new Point(vel);
     }
