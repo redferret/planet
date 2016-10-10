@@ -42,6 +42,7 @@ public class PlateTectonicsTaskTest {
      */
     @After
     public void tearDown() throws Exception {
+    	testThread.kill();
     }
 
     /**
