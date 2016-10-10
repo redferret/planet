@@ -4,6 +4,7 @@ A simulation that simulates geological processes as well as hydrological, biolog
 To view some images of what the engine has produced visit this site: http://cianferret.deviantart.com/
 
 ### Please Read the Wiki
+The simulation's framework is mostly built now. It's not too complicated and it's still small. Please read the wiki and ask questions if you wish to work on the simulation.
 
 ## Building
 Simply run Ant on the root directory where the build XML file is located. Newer versions of the project will eventually move to Maven
