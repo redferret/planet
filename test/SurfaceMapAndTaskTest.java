@@ -33,19 +33,16 @@ public class SurfaceMapAndTaskTest {
     /**
      * The synchronization latch for the test threads.
      */
-    private static CountDownLatch latch;
+    private CountDownLatch latch;
 
     /**
      * The test surface for this test file.
      */
     private TestSurface testSurface;
 
-    static {
-    	latch = new CountDownLatch(CELL_COUNT);
-    }
-    
     @Before
     public void setUp() {
+    	latch = new CountDownLatch(CELL_COUNT);
         testSurface = new TestSurface(MAP_SIZE, SURFACE_DELAY, THREAD_COUNT, latch);
         testSurface.reset();
     }
@@ -54,6 +51,18 @@ public class SurfaceMapAndTaskTest {
     public void tearDown() {
         testSurface.killAllThreads();
         testSurface.kill();
+    }
+    
+    @Test
+    public void totalCellCountTest(){
+    	int numberOfCells = testSurface.getTotalNumberOfCells();
+    	assertTrue("Number of cells don't match", CELL_COUNT == numberOfCells);
+    }
+    
+    @Test
+    public void mapSizeTest(){
+    	int mapWidth = testSurface.getGridWidth();
+    	assertTrue("Number of cells don't match", MAP_SIZE == mapWidth);
     }
     
     /**
