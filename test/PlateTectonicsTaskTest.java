@@ -85,8 +85,8 @@ public class PlateTectonicsTaskTest {
     	boolean containsTestPoint = false;
     	for (Point point : plate) {
             if (point.equals(expectedPoint)){
-                    containsTestPoint = true;
-                    break;
+                containsTestPoint = true;
+                break;
             }
     	}
     	assertTrue("Test point not contained in list", containsTestPoint);

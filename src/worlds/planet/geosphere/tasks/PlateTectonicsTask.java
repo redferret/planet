@@ -20,7 +20,7 @@ import worlds.planet.PlanetCell;
  */
 public abstract class PlateTectonicsTask extends BasicTask {
 
-    private List<List<Point>> plates;
+    private List<List<Point>> plates = new ArrayList<>();
     
     @Override
     public final void construct() {
@@ -42,11 +42,11 @@ public abstract class PlateTectonicsTask extends BasicTask {
      * @return The list of positions defining the plate.
      */
     public List<Point> buildPlate(Point centralCell, int radius){
-        return null;
+        return new ArrayList<>();
     }
     
     public void addPlate(List<Point> plate){
-    	
+    	plates.add(plate);
     }
     
     /**
@@ -61,6 +61,6 @@ public abstract class PlateTectonicsTask extends BasicTask {
      * @return The number of plates
      */
     public int getNumberOfPlates(){
-    	return -1;
+    	return plates.size();
     }
 }
