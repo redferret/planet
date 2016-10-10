@@ -22,11 +22,8 @@ public class PlateTectonicsTaskTest {
 	private SurfaceThread testThread;
     private PlateTectonicsTask testTask;
 
-    /**
-     * @throws java.lang.Exception
-     */
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         testTask = new PlateTectonicsTask() {
             public void perform() {}
             public void before() {}
@@ -37,11 +34,8 @@ public class PlateTectonicsTaskTest {
         testThread.addTask(testTask);
     }
 
-    /**
-     * @throws java.lang.Exception
-     */
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
     	testThread.kill();
     }
 
