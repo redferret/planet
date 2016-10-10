@@ -3,22 +3,35 @@
 package worlds.planet.geosphere.tasks;
 
 import engine.util.Point;
+import engine.util.concurrent.SurfaceThread;
 import engine.util.task.BasicTask;
+
+import java.util.ArrayList;
 import java.util.List;
 
+import worlds.planet.PlanetCell;
+
 /**
- *
+ * Performs basic plate tectonics on a section of the Geosphere. 
+ * Each thread will have their own plates to update not exclusive
+ * to their own section of the surface; that is a thread can update
+ * a plate located anywhere on the surface. 
  * @author Richard DeSilvey
  */
 public abstract class PlateTectonicsTask extends BasicTask {
 
     private List<List<Point>> plates;
     
+    @Override
+    public final void construct() {
+    	plates = new ArrayList<>();
+    }
+    
     /**
      * Updates all the plates.
      */
     public void updatePlates(){
-
+    	
     }
     
     /**
@@ -34,6 +47,13 @@ public abstract class PlateTectonicsTask extends BasicTask {
     
     public void addPlate(List<Point> plate){
     	
+    }
+    
+    /**
+     * Will set the parent for each cell location.
+     */
+    public void setParent(PlanetCell cellToSet){
+    	cellToSet.setPlateControlThread(getTaskThread());
     }
     
     /**

@@ -1,13 +1,16 @@
 
 import java.util.List;
+import java.util.concurrent.CyclicBarrier;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import engine.util.Point;
+import engine.util.concurrent.SurfaceThread;
+import engine.util.task.Boundaries;
+import worlds.planet.PlanetCell;
 import worlds.planet.geosphere.tasks.PlateTectonicsTask;
-
 import static org.junit.Assert.*;
 
 /**
@@ -16,6 +19,7 @@ import static org.junit.Assert.*;
  */
 public class PlateTectonicsTaskTest {
 
+	private SurfaceThread testThread;
     private PlateTectonicsTask testTask;
 
     /**
@@ -28,6 +32,9 @@ public class PlateTectonicsTaskTest {
             public void before() {}
             public void after() {}
         };
+        
+        testThread = new SurfaceThread(1, new Boundaries(0, 1), new CyclicBarrier(1));
+        testThread.addTask(testTask);
     }
 
     /**
@@ -37,6 +44,21 @@ public class PlateTectonicsTaskTest {
     public void tearDown() throws Exception {
     }
 
+    /**
+     * Tests to see if a cell is given a reference to
+     * a SurfaceThread when a new plate is created. Each task
+     * when added to a thread will contain a reference to that thread.
+     * This will be used as a way to set the cell's thread reference.
+     */
+    @Test
+    public void setParentTest(){
+    	PlanetCell testCell = new PlanetCell(0, 0);
+        
+        testTask.setParent(testCell);
+        
+        assertEquals("Thread not set", testThread, testCell.getPlateControlThread());
+    }
+    
     /**
      * Adds a plate and tests to see if it was added.
      */
