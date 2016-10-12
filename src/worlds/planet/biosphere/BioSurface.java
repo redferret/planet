@@ -87,7 +87,7 @@ public class BioSurface extends SurfaceMap<BioNode> {
     /**
      * LifeForms are updated with this Task
      */
-    private class BioTask extends Task {
+    public class BioTask extends Task {
 
         @Override
         public void perform(int x, int y) {
@@ -102,7 +102,7 @@ public class BioSurface extends SurfaceMap<BioNode> {
             release(node);
         }
         
-        private BioNode[] countNeighbors(BioNode node){
+        public BioNode[] countNeighbors(BioNode node){
             int parentX = parentCell.getX(), neighborCellX = parentX;
             int parentY = parentCell.getY(), neighborCellY = parentY;
             PlanetCell neighborCell;
