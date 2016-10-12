@@ -78,7 +78,7 @@ public class PlateTectonicsTaskTest {
     	testTask.removePlate(5);
     	testTask.removePlate(1);
     	
-    	assertEquals("No plate was added", 8, testTask.getNumberOfPlates());
+    	assertEquals("Plate Removal not evident", 8, testTask.getNumberOfPlates());
     }
     
     /**
