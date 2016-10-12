@@ -19,7 +19,6 @@ import static org.junit.Assert.*;
  */
 public class PlateTectonicsTaskTest {
 
-    private SurfaceThread testThread;
     private PlateTectonicsTask testTask;
 
     @Before
@@ -29,14 +28,10 @@ public class PlateTectonicsTaskTest {
             public void before() {}
             public void after() {}
         };
-        
-        testThread = new SurfaceThread(1, new Boundaries(0, 1), new CyclicBarrier(1));
-        testThread.addTask(testTask);
     }
 
     @After
     public void tearDown() {
-    	testThread.kill();
     }
 
     /**
@@ -47,6 +42,10 @@ public class PlateTectonicsTaskTest {
      */
     @Test
     public void setParentTest(){
+    	
+    	SurfaceThread testThread = new SurfaceThread(1, new Boundaries(0, 1), new CyclicBarrier(1));
+        testThread.addTask(testTask);
+    	
     	PlanetCell testCell = new PlanetCell(0, 0);
         testTask.setParent(testCell);
         assertEquals("Thread not set", testThread, testCell.getPlateControlThread());
