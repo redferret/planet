@@ -68,6 +68,19 @@ public class PlateTectonicsTaskTest {
         assertEquals("No plate was added", 1, testTask.getNumberOfPlates());
     }
 
+    @Test
+    public void removePlateTest(){
+    	Point center = new Point(0, 0);
+    	for (int i = 1; i <= 10; i++){
+	        List<Point> plate = buildPlateWithNullTest(center, 5);
+	        testTask.addPlate(plate);
+    	}
+    	testTask.removePlate(5);
+    	testTask.removePlate(1);
+    	
+    	assertEquals("No plate was added", 8, testTask.getNumberOfPlates());
+    }
+    
     /**
      * Builds a plate and tests to make sure a point exists in the list of
      * points returned by the method.

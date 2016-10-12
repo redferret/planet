@@ -70,6 +70,10 @@ public abstract class PlateTectonicsTask extends BasicTask {
     	cellToSet.setPlateControlThread(getTaskThread());
     }
     
+    public void removePlate(int index){
+    	
+    }
+    
     /**
      * A non negative number of how many plates there are.
      * @return The number of plates
