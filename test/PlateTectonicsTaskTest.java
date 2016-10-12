@@ -19,7 +19,7 @@ import static org.junit.Assert.*;
  */
 public class PlateTectonicsTaskTest {
 
-	private SurfaceThread testThread;
+    private SurfaceThread testThread;
     private PlateTectonicsTask testTask;
 
     @Before
@@ -48,9 +48,7 @@ public class PlateTectonicsTaskTest {
     @Test
     public void setParentTest(){
     	PlanetCell testCell = new PlanetCell(0, 0);
-        
         testTask.setParent(testCell);
-        
         assertEquals("Thread not set", testThread, testCell.getPlateControlThread());
     }
     
@@ -77,14 +75,17 @@ public class PlateTectonicsTaskTest {
     	
     	Point expectedPoint = new Point(36, 33);
     	
-    	boolean containsTestPoint = false;
-    	for (Point point : plate) {
-            if (point.equals(expectedPoint)){
-                containsTestPoint = true;
-                break;
+    	boolean containsTestPoint = containsPoint(plate, expectedPoint);
+    	assertTrue("Test point not contained in list", containsTestPoint);
+    }
+    
+    private boolean containsPoint(List<Point> testPlate, Point testPoint){
+        for (Point point : testPlate) {
+            if (point.equals(testPoint)){
+                return true;
             }
     	}
-    	assertTrue("Test point not contained in list", containsTestPoint);
+        return false;
     }
     
     /**
