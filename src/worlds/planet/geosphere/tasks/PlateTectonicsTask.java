@@ -45,6 +45,20 @@ public abstract class PlateTectonicsTask extends BasicTask {
         return new ArrayList<>();
     }
     
+    /**
+     * At the simplest a cell will collide with another cell. This method
+     * won't test for a collision or change velocities. Instead the plates
+     * will fold or get thrust ontop or pushed down depending on the densities
+     * of both. There is a depth assigned to the function, below that depth
+     * other layers are ignored and melted.
+     * 
+     * @param from The cell moving that will thrust it's layers on top or below
+     * @param to The cell that will recieve the crust
+     */
+    public void collideCells(PlanetCell from, PlanetCell to, float maxDepth){
+    	
+    }
+    
     public void addPlate(List<Point> plate){
     	plates.add(plate);
     }
