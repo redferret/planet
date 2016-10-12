@@ -34,6 +34,11 @@ public class PlateTectonicsTaskTest {
     public void tearDown() {
     }
 
+    @Test
+    public void thrustFoldCrustTest(){
+    	fail("Not implemented yet");
+    }
+    
     /**
      * Tests to see if a cell is given a reference to
      * a SurfaceThread when a new plate is created. Each task
