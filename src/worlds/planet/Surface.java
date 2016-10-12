@@ -6,6 +6,7 @@ import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
+import sun.security.jca.GetInstance.Instance;
 import worlds.planet.PlanetCell;
 import engine.gui.DisplayAdapter;
 import engine.surface.SurfaceMap;
@@ -13,6 +14,7 @@ import engine.util.concurrent.SurfaceThread;
 import engine.util.concurrent.AtomicFloat;
 import engine.util.task.Boundaries;
 import engine.util.Delay;
+import engine.util.Point;
 import engine.util.task.Task;
 import engine.util.task.TaskFactory;
 import engine.util.task.TaskManager;
@@ -20,6 +22,7 @@ import engine.util.task.TaskManager;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static engine.util.Tools.checkBounds;
 import static worlds.planet.Surface.GEOUPDATE;
 import static worlds.planet.Surface.planetAge;
 
@@ -169,6 +172,54 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
     }
     public float getLowestHeight() {
         return mhFactory.getLowestHeight();
+    }
+    
+    /**
+     * Adds to the 'lowest' list passed into this method from the list of cells
+     * the lowest cells from the cell that is at the end of the cells list.
+     * @param lowest The list that will hold the lowest cells from the last cell or
+     * element in the 'cells' list.
+     * @param cells The list of cells to find the lowest cell from the last element in
+     * this list.
+     */
+    public static void getLowestCells(List<PlanetCell> lowest, List<PlanetCell> cells){
+        PlanetCell center = cells.get(cells.size() - 1);
+        float geoHeight = center.getHeightWithoutOceans();
+        for (int i = 0; i < cells.size() - 1; i++){
+            PlanetCell cell = cells.get(i);
+            if (cell.getHeightWithoutOceans() < geoHeight){
+                lowest.add(cell);
+            }
+        }
+    }
+
+    /**
+     * Selects all the positions that are around the position 'from'. This method
+     * does not select resources or cells from the map but builds a list
+     * of positions to use to select resources.
+     * @param from The center position
+     * @return The calculated positions around the center point 'from'
+     */
+    public static Point[] getCellIndexesFrom(Point from){
+        int tx, ty, mx, my;
+        int x = from.getX(), y = from.getY();
+        int xl = DIR_X_INDEX.length;
+        Point[] points = new Point[xl+1];
+        int worldSize = Planet.instance().getCellLength();
+        for (int s = 0; s < xl; s++) {
+
+            tx = x + DIR_X_INDEX[s];
+            ty = y + DIR_Y_INDEX[s];
+
+            // Check the boundaries
+            mx = checkBounds(tx, worldSize);
+            my = checkBounds(ty, worldSize);
+
+            Point p = new Point(mx, my);
+            points[s] = p;
+        }
+        points[xl] = from;
+        return points;
     }
     
     private class MinMaxHeightFactory implements TaskFactory {

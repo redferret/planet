@@ -37,14 +37,13 @@ public abstract class Geosphere extends Surface {
     private long ageStamp;
 
     public static boolean drawSediments;
-    private static int worldSize;
+    
     static {
         drawSediments = true;
     }
 
     public Geosphere(int worldSize, int surfaceDelay, int threadsDelay, int threadCount) {
         super(worldSize, surfaceDelay, threadsDelay, threadCount);
-        Geosphere.worldSize = worldSize;
         ageStamp = 0;
         produceTasks(new GeologicalUpdateFactory());
         produceTasks(new SedimentationFactory());
@@ -76,54 +75,6 @@ public abstract class Geosphere extends Surface {
         }
     }
 
-
-    /**
-     * Adds to the 'lowest' list passed into this method from the list of cells
-     * the lowest cells from the cell that is at the end of the cells list.
-     * @param lowest The list that will hold the lowest cells from the last cell or
-     * element in the 'cells' list.
-     * @param cells The list of cells to find the lowest cell from the last element in
-     * this list.
-     */
-    public static void getLowestCells(List<PlanetCell> lowest, List<PlanetCell> cells){
-        PlanetCell center = cells.get(cells.size() - 1);
-        float geoHeight = center.getHeightWithoutOceans();
-        for (int i = 0; i < cells.size() - 1; i++){
-            PlanetCell cell = cells.get(i);
-            if (cell.getHeightWithoutOceans() < geoHeight){
-                lowest.add(cell);
-            }
-        }
-    }
-
-    /**
-     * Selects all the positions that are around the position 'from'. This method
-     * does not select resources or cells from the map but builds a list
-     * of positions to use to select resources.
-     * @param from The center position
-     * @return The calculated positions around the center point 'from'
-     */
-    public static Point[] getCellIndexesFrom(Point from){
-        int tx, ty, mx, my;
-        int x = from.getX(), y = from.getY();
-        int xl = DIR_X_INDEX.length;
-        Point[] points = new Point[xl+1];
-        for (int s = 0; s < xl; s++) {
-
-            tx = x + DIR_X_INDEX[s];
-            ty = y + DIR_Y_INDEX[s];
-
-            // Check the boundaries
-            mx = checkBounds(tx, worldSize);
-            my = checkBounds(ty, worldSize);
-
-            Point p = new Point(mx, my);
-            points[s] = p;
-        }
-        points[xl] = from;
-        return points;
-    }
-    
     private class TransformationFactory implements TaskFactory {
 
         @Override
