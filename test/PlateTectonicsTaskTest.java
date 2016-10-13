@@ -36,7 +36,7 @@ public class PlateTectonicsTaskTest {
  
     @Test
     public void thrustFoldCrustTest(){
-    	fail("Not implemented yet");
+    	fail("Not implemented yet, but will be");
     }
     
     /**
