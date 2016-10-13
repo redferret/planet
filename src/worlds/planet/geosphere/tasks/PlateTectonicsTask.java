@@ -71,7 +71,7 @@ public abstract class PlateTectonicsTask extends BasicTask {
     }
     
     public void removePlate(int index){
-    	
+    	plates.remove(index);
     }
     
     /**
