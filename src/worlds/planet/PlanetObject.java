@@ -1,6 +1,6 @@
 
 
-package worlds.planet.geosphere;
+package worlds.planet;
 
 import engine.util.Point;
 import java.awt.Graphics2D;
