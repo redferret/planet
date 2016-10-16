@@ -45,13 +45,13 @@ public class PlateTectonicsTaskTest {
     public void energyTransferTotalInelasticTest(){
     	
     	Point velA = new Point(10, 0);
-    	Point velB = new Point(-12, 0);
-    	PlanetCell[] testCells = setupCellsForEnergyTransferTesting(2000, 1000, velA, velB);
+    	Point velB = new Point(0, 0);
+    	PlanetCell[] testCells = setupCellsForEnergyTransferTesting(1000, 1000, velA, velB);
     	
     	PlanetCell cellA = testCells[0];
     	PlanetCell cellB = testCells[1];
     	
-    	Point finalVelA = calcEnergyTransferWithNullTest(cellA, cellB);
+    	Point finalVelA = calcEnergyTransferWithNullTest(cellA, cellB, 0);
     	
     	Float expectedVelA = 5f;
     	Float actualVelA = finalVelA.getX();
@@ -69,40 +69,19 @@ public class PlateTectonicsTaskTest {
     	PlanetCell cellA = testCells[0];
     	PlanetCell cellB = testCells[1];
     	
-    	Point finalVelA = calcEnergyTransferWithNullTest(cellA, cellB);
-    	Point finalVelB = calcEnergyTransferWithNullTest(cellB, cellA);
+    	Point finalVelA = calcEnergyTransferWithNullTest(cellA, cellB, 1);
+    	Point finalVelB = calcEnergyTransferWithNullTest(cellB, cellA, 1);
     	
     	Float expectedVelA = -14000f/3000f;
     	Float actualVelA = finalVelA.getX();
     	
     	assertEquals("Velocities of A don't match", expectedVelA, actualVelA);
     	
-    	Float expectedVelB = 10f;
+    	Float expectedVelB = 52000f/3000f;
     	Float actualVelB = finalVelB.getX(); 
     	
     	assertEquals("Velocities of B don't match", expectedVelB, actualVelB);
     	
-    }
-    
-    private PlanetCell[] setupCellsForEnergyTransferTesting(float massA, float massB, Point velA, Point velB){
-    	PlanetCell cellA = new PlanetCell(0, 0);
-    	PlanetCell cellB = new PlanetCell(0, 0);
-    	
-    	GeoCell.cellArea = 1;
-    	
-    	cellA.add(Layer.BASALT, massA, true);
-    	cellB.add(Layer.BASALT, massB, true);
-    	
-    	cellA.setVelocity(velA);
-    	cellB.setVelocity(velB);
-    	
-    	return new PlanetCell[]{cellA, cellB};
-    }
-    
-    private Point calcEnergyTransferWithNullTest(PlanetCell cellA, PlanetCell cellB){
-    	Point finalVel = testTask.calculateEnergyTransfer(cellA, cellB);
-    	assertNotNull("Returned velocity is Null", finalVel);
-    	return finalVel;
     }
     
     /**
@@ -173,6 +152,27 @@ public class PlateTectonicsTaskTest {
         List<Point> plate = testTask.buildPlate(center, radius);
         assertNotNull("The returned list is null", plate);
         return plate;
+    }
+    
+    private PlanetCell[] setupCellsForEnergyTransferTesting(float massA, float massB, Point velA, Point velB){
+    	PlanetCell cellA = new PlanetCell(0, 0);
+    	PlanetCell cellB = new PlanetCell(0, 0);
+    	
+    	GeoCell.cellArea = 1;
+    	
+    	cellA.add(Layer.BASALT, massA, true);
+    	cellB.add(Layer.BASALT, massB, true);
+    	
+    	cellA.setVelocity(velA);
+    	cellB.setVelocity(velB);
+    	
+    	return new PlanetCell[]{cellA, cellB};
+    }
+    
+    private Point calcEnergyTransferWithNullTest(PlanetCell cellA, PlanetCell cellB, float c){
+    	Point finalVel = testTask.calculateEnergyTransfer(cellA, cellB, c);
+    	assertNotNull("Returned velocity is Null", finalVel);
+    	return finalVel;
     }
 
 }
