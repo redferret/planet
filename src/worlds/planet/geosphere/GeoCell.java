@@ -19,13 +19,11 @@ import worlds.planet.geosphere.Geosphere;
 import worlds.planet.PlanetSurface;
 import worlds.planet.enums.RockType;
 import static engine.util.Tools.*;
-import engine.util.concurrent.AtomicData;
 import engine.util.concurrent.SurfaceThread;
 
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 import static worlds.planet.Planet.instance;
-import worlds.planet.PlanetCell;
 import static worlds.planet.Surface.*;
 import static worlds.planet.enums.Layer.*;
 
@@ -327,6 +325,8 @@ public class GeoCell extends Mantel {
      */
     public static int heightIndexRatio = 17 / MAX_HEIGHT_INDEX;
 
+    public static int cellArea;
+    
     static {
         Color[] heightColors = {new Color(255, 255, 204), new Color(51, 153, 51),
             new Color(157, 166, 175), new Color(255, 255, 255)};
@@ -342,7 +342,7 @@ public class GeoCell extends Mantel {
             strataMap[i][2] = c.getBlue();
             strataMap[i][3] = c.getAlpha();
         }
-
+        cellArea = 0;
     }
 
     /**
@@ -531,7 +531,6 @@ public class GeoCell extends Mantel {
     public void addAtDepth(Layer type, float amount, float depth){
         float currentDepth = 0;
         Stratum selectedStratum;
-        int cellArea = Planet.instance().getCellArea();
         Deque<Stratum> workingStrata = new LinkedList<>();
         
         for (;peekTopStratum() != null && peekTopStratum() != null;){
@@ -545,7 +544,7 @@ public class GeoCell extends Mantel {
             if (currentDepth > depth){
                 if (type != selectedType){
                     float diff = currentDepth - depth;
-                    float diffInMass = Tools.calcMass(diff, cellArea, selectedType);
+                    float diffInMass = Tools.calcMass(diff, GeoCell.cellArea, selectedType);
                     selectedStratum.addToMass(-diffInMass);
                     Stratum splitLayer = new Stratum(selectedType, diffInMass);
                     workingStrata.push(selectedStratum);
@@ -749,13 +748,11 @@ public class GeoCell extends Mantel {
      */
     private void updateMV(float mass, Layer type) {
 
-        int cellArea = Planet.instance().getCellArea();
-
         if (type == null){
             throw new IllegalArgumentException("The layer type can't be null");
         }
         
-        totalStrataThickness += Tools.calcHeight(mass, cellArea, type);
+        totalStrataThickness += Tools.calcHeight(mass, GeoCell.cellArea, type);
         totalMass += mass;
         totalVolume += mass / type.getDensity();
     }

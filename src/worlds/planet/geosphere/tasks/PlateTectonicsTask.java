@@ -59,8 +59,24 @@ public abstract class PlateTectonicsTask extends BasicTask {
     	
     }
     
-    public float calculateEnergyTransfer(PlanetCell from, PlanetCell to){
-    	return -Float.MAX_VALUE;
+    public Point calculateEnergyTransfer(PlanetCell from, PlanetCell to, float c){
+    	
+    	float massA = from.getTotalMass();
+    	float massB = to.getTotalMass();
+    	
+    	float velA_X = from.getVelocity().getX();
+    	float velA_Y = from.getVelocity().getY();
+    	
+    	float velB_X = to.getVelocity().getX();
+    	float velB_Y = to.getVelocity().getY();
+    	
+    	float finalVelA_X, finalVelA_Y;
+    	float sumOfMasses = (massA + massB);
+    			
+    	finalVelA_X = (c * (massB * (velB_X-velA_X)) + (massA*velA_X) + (massB*velB_X)) / sumOfMasses;
+    	finalVelA_Y = (c * (massB * (velB_Y-velA_Y)) + (massA*velA_Y) + (massB*velB_Y)) / sumOfMasses;
+    	
+    	return new Point(finalVelA_X, finalVelA_Y);
     }
     
     public void addPlate(List<Point> plate){

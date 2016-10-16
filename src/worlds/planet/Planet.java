@@ -2,9 +2,13 @@ package worlds.planet;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import engine.surface.SurfaceMap;
 import engine.util.concurrent.SurfaceThread;
+
 import java.util.concurrent.atomic.AtomicInteger;
+
+import worlds.planet.geosphere.GeoCell;
 
 /**
  * The class that encapsulates a surface and keeps track of the timescale.
@@ -47,6 +51,7 @@ public abstract class Planet {
         Logger.getLogger(SurfaceMap.class.getName()).log(Level.INFO, "New Planet");
         checkForExistingInstance();
         area = new AtomicInteger(cellLength * cellLength);
+        GeoCell.cellArea = area.get();
         this.cellLength = new AtomicInteger(cellLength);
         timescale = TimeScale.None;
         planetSurface = new PlanetSurface(gridWidth, ageStepDelay, surfaceThreadsDelay, threadCount);

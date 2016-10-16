@@ -3,10 +3,8 @@ package worlds.planet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
-import sun.security.jca.GetInstance.Instance;
 import worlds.planet.PlanetCell;
 import engine.gui.DisplayAdapter;
 import engine.surface.SurfaceMap;
@@ -23,8 +21,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static engine.util.Tools.checkBounds;
-import static worlds.planet.Surface.GEOUPDATE;
-import static worlds.planet.Surface.planetAge;
 
 /**
  * The Surface is the geology for the planet. It provides a foundation for life
@@ -202,7 +198,7 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
      */
     public static Point[] getCellIndexesFrom(Point from){
         int tx, ty, mx, my;
-        int x = from.getX(), y = from.getY();
+        int x = (int)from.getX(), y = (int)from.getY();
         int xl = DIR_X_INDEX.length;
         Point[] points = new Point[xl+1];
         int worldSize = Planet.instance().getCellLength();

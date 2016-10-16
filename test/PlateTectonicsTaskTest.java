@@ -10,6 +10,8 @@ import engine.util.Point;
 import engine.util.concurrent.SurfaceThread;
 import engine.util.task.Boundaries;
 import worlds.planet.PlanetCell;
+import worlds.planet.enums.Layer;
+import worlds.planet.geosphere.GeoCell;
 import worlds.planet.geosphere.tasks.PlateTectonicsTask;
 import static org.junit.Assert.*;
 
@@ -40,8 +42,41 @@ public class PlateTectonicsTaskTest {
     }
     
     @Test
-    public void energyTransferTest(){
-    	fail("Not implemented yet");
+    public void energyTransferTotalInelasticTest(){
+    	
+    	Point velA = new Point(10, 0);
+    	Point velB = new Point(0, 0);
+    	PlanetCell[] testCells = setupCellsForEnergyTransferTesting(1000, 1000, velA, velB);
+    	
+    	PlanetCell cellA = testCells[0];
+    	PlanetCell cellB = testCells[1];
+    	
+    	Point finalVelA = calcEnergyTransferWithNullTest(cellA, cellB, 0);
+    	
+    	Point expectedVelocityA = new Point(5f, 0);
+    	
+    	assertEquals("Velocities don't match", expectedVelocityA, finalVelA);
+    }
+    
+    @Test
+    public void energyTransferTotalElasticTest(){
+    	
+    	Point velA = new Point(10, -9);
+    	Point velB = new Point(-12, 12);
+    	PlanetCell[] testCells = setupCellsForEnergyTransferTesting(2000, 1000, velA, velB);
+    	
+    	PlanetCell cellA = testCells[0];
+    	PlanetCell cellB = testCells[1];
+    	
+    	Point finalVelA = calcEnergyTransferWithNullTest(cellA, cellB, 1);
+    	Point finalVelB = calcEnergyTransferWithNullTest(cellB, cellA, 1);
+    	
+    	Point expectedVelocityA = new Point(-14000f/3000f, 5);
+    	assertEquals("Velocities of A don't match", expectedVelocityA, finalVelA);
+    	
+    	Point expectedVelocityB = new Point(52000f/3000f, -16);
+    	assertEquals("Velocities of B don't match", expectedVelocityB, finalVelB);
+    	
     }
     
     /**
@@ -112,6 +147,27 @@ public class PlateTectonicsTaskTest {
         List<Point> plate = testTask.buildPlate(center, radius);
         assertNotNull("The returned list is null", plate);
         return plate;
+    }
+    
+    private PlanetCell[] setupCellsForEnergyTransferTesting(float massA, float massB, Point velA, Point velB){
+    	PlanetCell cellA = new PlanetCell(0, 0);
+    	PlanetCell cellB = new PlanetCell(0, 0);
+    	
+    	GeoCell.cellArea = 1;
+    	
+    	cellA.add(Layer.BASALT, massA, true);
+    	cellB.add(Layer.BASALT, massB, true);
+    	
+    	cellA.setVelocity(velA);
+    	cellB.setVelocity(velB);
+    	
+    	return new PlanetCell[]{cellA, cellB};
+    }
+    
+    private Point calcEnergyTransferWithNullTest(PlanetCell cellA, PlanetCell cellB, float c){
+    	Point finalVel = testTask.calculateEnergyTransfer(cellA, cellB, c);
+    	assertNotNull("Returned velocity is Null", finalVel);
+    	return finalVel;
     }
 
 }

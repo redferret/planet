@@ -528,7 +528,7 @@ public abstract class SurfaceMap<C extends Cell> extends TaskRunner implements R
             int w = gridWidth;
             for (int i = 0; i < indexes.length; i++){
                 Point p = cellPositions[i];
-                int index = calcIndex(p.getX(), p.getY(), w);
+                int index = calcIndex((int)p.getX(), (int)p.getY(), w);
                 indexes[i] = index;
             }
             

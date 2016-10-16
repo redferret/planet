@@ -31,10 +31,6 @@ public class Stratum {
      */
     private float granularity;
     
-    /**
-     * The age of the stratum in years
-     */
-    private long age, lastAdd;
     
     /**
      * An object reference of the layer below this Stratum.
@@ -43,7 +39,6 @@ public class Stratum {
 
     public Stratum(Stratum stratum){
         this.mass = stratum.mass;
-        this.age = stratum.age;
         this.bottom = stratum.bottom;
         this.top = stratum.top;
         this.type = stratum.type;
@@ -56,18 +51,8 @@ public class Stratum {
 
         this.type = type;
         
-        this.age = Planet.instance().getSurface().getPlanetAge();
-        
-        lastAdd = this.age;
         top = null;
         bottom = null;
-    }
-
-    /**
-     * Sets the age of the Stratum to the current age of the planet.
-     */
-    public void resetAge(){
-        this.age = Planet.instance().getSurface().getPlanetAge();
     }
     
     public void setGranularity(float value){
@@ -118,27 +103,14 @@ public class Stratum {
         if (this.mass < 0){
             this.mass = 0;
         }
-        lastAdd = Planet.instance().getSurface().getPlanetAge();
     }
 
-    public long getLastAdd(){
-        return lastAdd;
-    }
-    
     public void setStratumType(Layer type){
         this.type = type;
     }
     
     public Layer getLayer() {
         return type;
-    }
-    
-    public void setAge(long age) {
-        this.age = age;
-    }
-
-    public long getAge() {
-        return age;
     }
 
     /**
