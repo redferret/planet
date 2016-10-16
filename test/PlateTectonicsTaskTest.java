@@ -61,8 +61,8 @@ public class PlateTectonicsTaskTest {
     @Test
     public void energyTransferTotalElasticTest(){
     	
-    	Point velA = new Point(10, 0);
-    	Point velB = new Point(-12, 0);
+    	Point velA = new Point(10, -9);
+    	Point velB = new Point(-12, 12);
     	PlanetCell[] testCells = setupCellsForEnergyTransferTesting(2000, 1000, velA, velB);
     	
     	PlanetCell cellA = testCells[0];
@@ -71,10 +71,10 @@ public class PlateTectonicsTaskTest {
     	Point finalVelA = calcEnergyTransferWithNullTest(cellA, cellB, 1);
     	Point finalVelB = calcEnergyTransferWithNullTest(cellB, cellA, 1);
     	
-    	Point expectedVelocityA = new Point(-14000f/3000f, 0);
+    	Point expectedVelocityA = new Point(-14000f/3000f, 5);
     	assertEquals("Velocities of A don't match", expectedVelocityA, finalVelA);
     	
-    	Point expectedVelocityB = new Point(52000f/3000f, 0);
+    	Point expectedVelocityB = new Point(52000f/3000f, -16);
     	assertEquals("Velocities of B don't match", expectedVelocityB, finalVelB);
     	
     }

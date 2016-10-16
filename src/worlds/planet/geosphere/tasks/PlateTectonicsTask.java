@@ -71,9 +71,10 @@ public abstract class PlateTectonicsTask extends BasicTask {
     	float velB_Y = to.getVelocity().getY();
     	
     	float finalVelA_X, finalVelA_Y;
-    	
-    	finalVelA_X = (c * (massB * (velB_X-velA_X)) + (massA*velA_X) + (massB*velB_X)) / (massA + massB);
-    	finalVelA_Y = (c * (massB * (velA_Y-velB_Y)) + (massA*velA_Y) + (massB*velB_Y)) / (massA + massB);
+    	float sumOfMasses = (massA + massB);
+    			
+    	finalVelA_X = (c * (massB * (velB_X-velA_X)) + (massA*velA_X) + (massB*velB_X)) / sumOfMasses;
+    	finalVelA_Y = (c * (massB * (velB_Y-velA_Y)) + (massA*velA_Y) + (massB*velB_Y)) / sumOfMasses;
     	
     	return new Point(finalVelA_X, finalVelA_Y);
     }
