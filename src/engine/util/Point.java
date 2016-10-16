@@ -49,5 +49,10 @@ public class Point {
         return hash;
     }
     
+    public String toString(){
+    	StringBuilder str = new StringBuilder();
+    	str.append(x).append(", ").append(y);
+    	return str.toString();
+    }
     
 }
