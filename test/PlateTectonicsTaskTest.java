@@ -102,12 +102,7 @@ public class PlateTectonicsTaskTest {
     }
     
     private boolean containsPoint(List<Point> testPlate, Point testPoint){
-        for (Point point : testPlate) {
-            if (point.equals(testPoint)){
-                return true;
-            }
-    	}
-        return false;
+        return testPlate.stream().anyMatch((point) -> (point.equals(testPoint)));
     }
     
     /**
