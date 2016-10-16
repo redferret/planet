@@ -59,6 +59,10 @@ public abstract class PlateTectonicsTask extends BasicTask {
     	
     }
     
+    public float calculateEnergyTransfer(PlanetCell from, PlanetCell to){
+    	return -Float.MAX_VALUE;
+    }
+    
     public void addPlate(List<Point> plate){
     	plates.add(plate);
     }

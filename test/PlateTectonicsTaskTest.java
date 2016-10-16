@@ -39,6 +39,11 @@ public class PlateTectonicsTaskTest {
     	fail("Not implemented yet");
     }
     
+    @Test
+    public void energyTransferTest(){
+    	fail("Not implemented yet");
+    }
+    
     /**
      * Tests to see if a cell is given a reference to
      * a SurfaceThread when a new plate is created. Each task
