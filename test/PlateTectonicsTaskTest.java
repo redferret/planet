@@ -53,10 +53,9 @@ public class PlateTectonicsTaskTest {
     	
     	Point finalVelA = calcEnergyTransferWithNullTest(cellA, cellB, 0);
     	
-    	Float expectedVelA = 5f;
-    	Float actualVelA = finalVelA.getX();
+    	Point expectedVelocityA = new Point(5f, 0);
     	
-    	assertEquals("Velocities don't match", expectedVelA, actualVelA);
+    	assertEquals("Velocities don't match", expectedVelocityA, finalVelA);
     }
     
     @Test
@@ -72,15 +71,11 @@ public class PlateTectonicsTaskTest {
     	Point finalVelA = calcEnergyTransferWithNullTest(cellA, cellB, 1);
     	Point finalVelB = calcEnergyTransferWithNullTest(cellB, cellA, 1);
     	
-    	Float expectedVelA = -14000f/3000f;
-    	Float actualVelA = finalVelA.getX();
+    	Point expectedVelocityA = new Point(-14000f/3000f, 0);
+    	assertEquals("Velocities of A don't match", expectedVelocityA, finalVelA);
     	
-    	assertEquals("Velocities of A don't match", expectedVelA, actualVelA);
-    	
-    	Float expectedVelB = 52000f/3000f;
-    	Float actualVelB = finalVelB.getX(); 
-    	
-    	assertEquals("Velocities of B don't match", expectedVelB, actualVelB);
+    	Point expectedVelocityB = new Point(52000f/3000f, 0);
+    	assertEquals("Velocities of B don't match", expectedVelocityB, finalVelB);
     	
     }
     
