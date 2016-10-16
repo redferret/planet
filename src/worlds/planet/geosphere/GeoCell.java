@@ -19,13 +19,11 @@ import worlds.planet.geosphere.Geosphere;
 import worlds.planet.PlanetSurface;
 import worlds.planet.enums.RockType;
 import static engine.util.Tools.*;
-import engine.util.concurrent.AtomicData;
 import engine.util.concurrent.SurfaceThread;
 
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 import static worlds.planet.Planet.instance;
-import worlds.planet.PlanetCell;
 import static worlds.planet.Surface.*;
 import static worlds.planet.enums.Layer.*;
 
