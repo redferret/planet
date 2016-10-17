@@ -38,47 +38,51 @@ public abstract class PlateTectonicsTask extends BasicTask {
      * Updates all the plates.
      */
     public void updatePlates(){
-        int cellLength = 20;
+    	int cellLength = Planet.instance().getCellArea();
     	plates.forEach(plate ->{
             plate.forEach(cellPoint -> {
-            
-                int x = (int)cellPoint.getX();
-                int y = (int)cellPoint.getY();
-                    
-                PlanetCell cell = geosphere.waitForCellAt(x, y);
-                Point cellVelocity = cell.getVelocity();
-                Point cellPos = cell.getGridPosition();
-                Point cellActPos = cell.getActualPosition();
-
-                cellActPos.add(cellVelocity);
-
-                Point adj = new Point(cellLength, cellLength);
-                cellPos.add(adj);
-
-                if (cellVelocity.getX() > 0){
-                    if (cellPos.getX() <= cellActPos.getX()){
-                        System.out.println("Move Cell"+cell+" in the X direction by +1 cell");
-                        cellActPos.set(cell.getGridPosition());
-                    }
-                }else if (cellVelocity.getX() < 0){
-                    if (cellPos.getX() >= cellActPos.getX()){
-                        System.out.println("Move Cell"+cell+" in the X direction by -1 cell");
-                    }
-                }
-
-                if (cellVelocity.getY() > 0){
-                    if (cellPos.getY() <= cellActPos.getY()){
-                        System.out.println("Move Cell"+cell+" in the Y direction by +1 cell");
-                    }
-                }else if (cellVelocity.getY() < 0){
-                    if (cellPos.getY() >= cellActPos.getY()){
-                        System.out.println("Move Cell"+cell+" in the Y direction by -1 cell");
-                    }
-                }
-                geosphere.release(cell);
+            	updateCellAt(cellPoint, cellLength);
             }); 
             System.out.println("Plate Updated");
         });
+    }
+    
+    private void updateCellAt(Point cellPoint, int cellLength){
+    	
+    	int x = (int)cellPoint.getX();
+        int y = (int)cellPoint.getY();
+            
+        PlanetCell cell = geosphere.waitForCellAt(x, y);
+        Point cellVelocity = cell.getVelocity();
+        Point cellPos = cell.getGridPosition();
+        Point cellActPos = cell.getActualPosition();
+
+        cellActPos.add(cellVelocity);
+
+        Point adj = new Point(cellLength, cellLength);
+        cellPos.add(adj);
+
+        if (cellVelocity.getX() > 0){
+            if (cellPos.getX() <= cellActPos.getX()){
+                System.out.println("Move Cell"+cell+" in the X direction by +1 cell");
+                cellActPos.set(cell.getGridPosition());
+            }
+        }else if (cellVelocity.getX() < 0){
+            if (cellPos.getX() >= cellActPos.getX()){
+                System.out.println("Move Cell"+cell+" in the X direction by -1 cell");
+            }
+        }
+
+        if (cellVelocity.getY() > 0){
+            if (cellPos.getY() <= cellActPos.getY()){
+                System.out.println("Move Cell"+cell+" in the Y direction by +1 cell");
+            }
+        }else if (cellVelocity.getY() < 0){
+            if (cellPos.getY() >= cellActPos.getY()){
+                System.out.println("Move Cell"+cell+" in the Y direction by -1 cell");
+            }
+        }
+        geosphere.release(cell);
     }
     
     /**
