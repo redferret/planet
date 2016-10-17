@@ -43,7 +43,6 @@ public abstract class PlateTectonicsTask extends BasicTask {
             plate.forEach(cellPoint -> {
             	updateCellAt(cellPoint, cellLength);
             }); 
-            System.out.println("Plate Updated");
         });
     }
     
@@ -142,16 +141,25 @@ public abstract class PlateTectonicsTask extends BasicTask {
     	
     }
     
-    public Point calculateEnergyTransfer(PlanetCell from, PlanetCell to, float c){
+    /**
+     * Calculates the transfer of energy when two cells collide. cellA is colliding into
+     * cellB and the returned object is the new velocity for cellA. 
+     * 
+     * @param cellA The cell colliding into cellB
+     * @param cellB The cell being collided into
+     * @param c The coefficient of restiution, 0 = complete inelastic, 1 = complete elastic
+     * @return The new velocity of cellA
+     */
+    public Point calculateEnergyTransfer(PlanetCell cellA, PlanetCell cellB, float c){
     	
-    	float massA = from.getTotalMass();
-    	float massB = to.getTotalMass();
+    	float massA = cellA.getTotalMass();
+    	float massB = cellB.getTotalMass();
     	
-    	float velA_X = from.getVelocity().getX();
-    	float velA_Y = from.getVelocity().getY();
+    	float velA_X = cellA.getVelocity().getX();
+    	float velA_Y = cellA.getVelocity().getY();
     	
-    	float velB_X = to.getVelocity().getX();
-    	float velB_Y = to.getVelocity().getY();
+    	float velB_X = cellB.getVelocity().getX();
+    	float velB_Y = cellB.getVelocity().getY();
     	
     	float finalVelA_X, finalVelA_Y;
     	float sumOfMasses = (massA + massB);
