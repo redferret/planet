@@ -1,5 +1,4 @@
 
-import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 import java.util.concurrent.CyclicBarrier;
@@ -13,7 +12,6 @@ import engine.util.concurrent.SurfaceThread;
 import engine.util.task.Boundaries;
 import worlds.planet.PlanetCell;
 import worlds.planet.enums.Layer;
-import worlds.planet.geosphere.GeoCell;
 import worlds.planet.geosphere.Stratum;
 import worlds.planet.geosphere.tasks.PlateTectonicsTask;
 import static org.junit.Assert.*;
@@ -55,7 +53,7 @@ public class PlateTectonicsTaskTest {
     	
     	float maxDepth = 4.5f;
     	
-    	GeoCell.cellArea = 1;
+    	PlanetCell.cellArea = 1;
     	
     	from.add(Layer.BASALT, 50000, true);
     	to.add(Layer.BASALT, 50000, true);
@@ -216,7 +214,7 @@ public class PlateTectonicsTaskTest {
     	PlanetCell cellA = new PlanetCell(0, 0);
     	PlanetCell cellB = new PlanetCell(0, 0);
     	
-    	GeoCell.cellArea = 1;
+    	PlanetCell.cellArea = 1;
     	
     	cellA.add(Layer.BASALT, massA, true);
     	cellB.add(Layer.BASALT, massB, true);

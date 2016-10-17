@@ -11,6 +11,12 @@ import java.util.List;
  */
 public class PlanetCell extends AtmoCell {
 
+	public static int cellArea;
+	
+	static {
+		cellArea = 0;
+	}
+	
     public PlanetCell(int x, int y) {
         super(x, y);
     }

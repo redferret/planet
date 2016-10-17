@@ -51,7 +51,7 @@ public abstract class Planet {
         Logger.getLogger(SurfaceMap.class.getName()).log(Level.INFO, "New Planet");
         checkForExistingInstance();
         area = new AtomicInteger(cellLength * cellLength);
-        GeoCell.cellArea = area.get();
+        PlanetCell.cellArea = area.get();
         this.cellLength = new AtomicInteger(cellLength);
         timescale = TimeScale.None;
         planetSurface = new PlanetSurface(gridWidth, ageStepDelay, surfaceThreadsDelay, threadCount);

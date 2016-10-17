@@ -3,6 +3,7 @@ package worlds.planet.geosphere;
 
 import worlds.planet.enums.Layer;
 import worlds.planet.Planet;
+import worlds.planet.PlanetCell;
 
 
 /**
@@ -91,7 +92,7 @@ public class Stratum {
      * @return The thickness of this stratum.
      */
     public float getThickness() {
-        return getVolume() / GeoCell.cellArea;
+        return getVolume() / PlanetCell.cellArea;
     }
     
     public void setMass(float m){
