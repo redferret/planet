@@ -13,7 +13,6 @@ import java.util.stream.Stream;
 import worlds.planet.Planet;
 import worlds.planet.PlanetCell;
 import worlds.planet.enums.Layer;
-import worlds.planet.geosphere.GeoCell;
 import worlds.planet.PlanetSurface;
 
 
@@ -232,10 +231,10 @@ public class Tools {
         points.add(new Point(x, y - radius));
         for (int xx = 1, yy; xx <= radius; xx++) {
             yy = (int) (Math.sqrt(r2 - xx*xx) + 0.5);
-            points.add(new Point(x + xx, y + yy));
-            points.add(new Point(x + xx, y - yy));
-            points.add(new Point(x - xx, y + yy));
-            points.add(new Point(x - xx, y - yy));
+            points.add(new Point(x + xx, y + yy).truncate());
+            points.add(new Point(x + xx, y - yy).truncate());
+            points.add(new Point(x - xx, y + yy).truncate());
+            points.add(new Point(x - xx, y - yy).truncate());
         }
         
         return points;
