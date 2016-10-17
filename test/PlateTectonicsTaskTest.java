@@ -53,8 +53,6 @@ public class PlateTectonicsTaskTest {
     	
     	float maxDepth = 4.5f;
     	
-    	PlanetCell.cellArea = 1;
-    	
     	from.add(Layer.BASALT, 50000, true);
     	to.add(Layer.BASALT, 50000, true);
     	
@@ -213,8 +211,6 @@ public class PlateTectonicsTaskTest {
     private PlanetCell[] setupCellsForEnergyTransferTesting(float massA, float massB, Point velA, Point velB){
     	PlanetCell cellA = new PlanetCell(0, 0);
     	PlanetCell cellB = new PlanetCell(0, 0);
-    	
-    	PlanetCell.cellArea = 1;
     	
     	cellA.add(Layer.BASALT, massA, true);
     	cellB.add(Layer.BASALT, massB, true);
