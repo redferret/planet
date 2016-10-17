@@ -51,7 +51,7 @@ public abstract class PlateTectonicsTask extends BasicTask {
     	
     	int x = (int)cellPoint.getX();
         int y = (int)cellPoint.getY();
-            
+        
         PlanetCell cell = geosphere.waitForCellAt(x, y);
         Point cellVelocity = cell.getVelocity();
         Point cellPos = cell.getGridPosition();
@@ -61,14 +61,14 @@ public abstract class PlateTectonicsTask extends BasicTask {
 
         Point adj = new Point(cellLength, cellLength);
         cellPos.mul(adj);
-
+        
         
         // Move the strata from one cell to the other
         // and if a collision occurs then energy is transfered
         // into the cell being collided with and crust is trust
         // on top or below depending on the densities of both
         // cells. The collision is 100% inelastic, cells will stick
-        // when collided.
+        // together when collision occures.
         if (cellVelocity.getX() > 0) { // Move right
             if (cellPos.getX() <= cellActPos.getX()) {
             	// Reset the cell's active position
@@ -92,7 +92,7 @@ public abstract class PlateTectonicsTask extends BasicTask {
         geosphere.release(cell);
     }
     
-    /**
+    /**	
      * Movement that has occured will move a given cell in the given direction. 
      * When movement happens the cell's actual position is reset.
      * @param cell The cell being moved
