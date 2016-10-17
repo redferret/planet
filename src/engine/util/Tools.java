@@ -227,8 +227,8 @@ public class Tools {
         List<Point> points = new ArrayList<>();
         
         r2 = radius * radius;
-        points.add(new Point(x, y + radius));
-        points.add(new Point(x, y - radius));
+        points.add(new Point(x, y + radius).truncate());
+        points.add(new Point(x, y - radius).truncate());
         for (int xx = 1, yy; xx <= radius; xx++) {
             yy = (int) (Math.sqrt(r2 - xx*xx) + 0.5);
             points.add(new Point(x + xx, y + yy).truncate());
