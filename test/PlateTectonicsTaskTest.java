@@ -160,6 +160,14 @@ public class PlateTectonicsTaskTest {
         return plate;
     }
     
+    /**
+     * Sets up two test cells for collision testing
+     * @param massA Mass of CellA
+     * @param massB Mass of CellB
+     * @param velA Velocity of A
+     * @param velB Velocity of B
+     * @return CellA and CellB
+     */
     private PlanetCell[] setupCellsForEnergyTransferTesting(float massA, float massB, Point velA, Point velB){
     	PlanetCell cellA = new PlanetCell(0, 0);
     	PlanetCell cellB = new PlanetCell(0, 0);
