@@ -59,24 +59,20 @@ public abstract class PlateTectonicsTask extends BasicTask {
                     if (cellPos.getX() <= cellActPos.getX()){
                         System.out.println("Move Cell"+cell+" in the X direction by +1 cell");
                         cellActPos.set(cellPos);
-                        return;
                     }
                 }else if (cellVelocity.getX() < 0){
                     if (cellPos.getX() >= cellActPos.getX()){
                         System.out.println("Move Cell"+cell+" in the X direction by -1 cell");
-                        return;
                     }
                 }
 
                 if (cellVelocity.getY() > 0){
                     if (cellPos.getY() <= cellActPos.getY()){
                         System.out.println("Move Cell"+cell+" in the Y direction by +1 cell");
-                        return;
                     }
                 }else if (cellVelocity.getY() < 0){
                     if (cellPos.getY() >= cellActPos.getY()){
                         System.out.println("Move Cell"+cell+" in the Y direction by -1 cell");
-                        return;
                     }
                 }
                 geosphere.release(cell);
