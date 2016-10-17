@@ -25,7 +25,7 @@ public abstract class PlateTectonicsTask extends BasicTask {
     private List<List<Point>> plates = new ArrayList<>();
     private Geosphere geosphere;
     
-    public PlateTectonicsTask(Geosphere geosphere){
+    public PlateTectonicsTask(Geosphere geosphere) {
         this.geosphere = geosphere;
     }
     
@@ -37,9 +37,9 @@ public abstract class PlateTectonicsTask extends BasicTask {
     /**
      * Updates all the plates.
      */
-    public void updatePlates(){
+    public void updatePlates() {
     	int cellLength = Planet.instance().getCellArea();
-    	plates.forEach(plate ->{
+    	plates.forEach(plate -> {
             plate.forEach(cellPoint -> {
             	updateCellAt(cellPoint, cellLength);
             }); 
@@ -47,7 +47,7 @@ public abstract class PlateTectonicsTask extends BasicTask {
         });
     }
     
-    private void updateCellAt(Point cellPoint, int cellLength){
+    private void updateCellAt(Point cellPoint, int cellLength) {
     	
     	int x = (int)cellPoint.getX();
         int y = (int)cellPoint.getY();
@@ -62,27 +62,46 @@ public abstract class PlateTectonicsTask extends BasicTask {
         Point adj = new Point(cellLength, cellLength);
         cellPos.add(adj);
 
-        if (cellVelocity.getX() > 0){
-            if (cellPos.getX() <= cellActPos.getX()){
-                System.out.println("Move Cell"+cell+" in the X direction by +1 cell");
-                cellActPos.set(cell.getGridPosition());
+        
+        // Move the strata from one cell to the other
+        // and if a collision occurs then energy is transfered
+        // into the cell being collided with and crust is trust
+        // on top or below depending on the densities of both
+        // cells. The collision is 100% inelastic, cells will stick
+        // when collided.
+        if (cellVelocity.getX() > 0) { // Move right
+            if (cellPos.getX() <= cellActPos.getX()) {
+            	// Reset the cell's active position
+            	moveCell(cell, new Point(1, 0));
             }
-        }else if (cellVelocity.getX() < 0){
-            if (cellPos.getX() >= cellActPos.getX()){
-                System.out.println("Move Cell"+cell+" in the X direction by -1 cell");
+        }else if (cellVelocity.getX() < 0) {
+            if (cellPos.getX() >= cellActPos.getX()) {
+                moveCell(cell, new Point(-1, 0));
             }
         }
 
-        if (cellVelocity.getY() > 0){
-            if (cellPos.getY() <= cellActPos.getY()){
-                System.out.println("Move Cell"+cell+" in the Y direction by +1 cell");
+        if (cellVelocity.getY() > 0) {
+            if (cellPos.getY() <= cellActPos.getY()) {
+            	moveCell(cell, new Point(0, 1));
             }
-        }else if (cellVelocity.getY() < 0){
-            if (cellPos.getY() >= cellActPos.getY()){
-                System.out.println("Move Cell"+cell+" in the Y direction by -1 cell");
+        }else if (cellVelocity.getY() < 0) {
+            if (cellPos.getY() >= cellActPos.getY()) {
+            	moveCell(cell, new Point(0, -1));
             }
         }
         geosphere.release(cell);
+    }
+    
+    /**
+     * Movement that has occured will move a given cell in the given direction. 
+     * When movement happens the cell's actual position is reset.
+     * @param cellActPos The
+     * @param cell
+     * @param direction
+     */
+    private void moveCell(PlanetCell cell, Point direction) {
+    	cell.getActualPosition().set(cell.getGridPosition());
+    	
     }
     
     /**
