@@ -46,7 +46,7 @@ public class PlateTectonicsTaskTest {
      * of the cell 'to' because 'to' is more dense.
      */
     @Test
-    public void thrustFoldCrustTest(){
+    public void crustFoldingTest(){
     	
     	PlanetCell from = new PlanetCell(0, 0);
     	PlanetCell to = new PlanetCell(1, 0);
