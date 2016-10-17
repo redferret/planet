@@ -23,6 +23,7 @@ import javax.swing.JFrame;
 import engine.gui.DisplayAdapter;
 import engine.util.concurrent.SurfaceThread;
 import engine.util.Delay;
+import engine.util.Point;
 import engine.util.Tools;
 import engine.util.task.BasicTask;
 import java.util.concurrent.ThreadLocalRandom;
@@ -74,6 +75,13 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
             cell.add(Layer.BASALT, ThreadLocalRandom.current().nextInt(500000, 1000000), true);
             surface.release(cell);
         }
+        
+        List<Point> points = Tools.fillPoints(new Point(125, 125), 64);
+        points.forEach(point -> {
+            PlanetCell cCell = surface.waitForCellAt((int)point.getX(), (int)point.getY());
+            cCell.add(Layer.DIORITE, 10000000, true);
+            surface.release(cCell);
+        });
 //        for (int i = 0; i < 50; i++) {
 //            cell = surface.waitForCellAt(i, 0);
 //            cell.add(Layer.BASALT, 250000, true);

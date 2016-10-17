@@ -221,6 +221,46 @@ public class Tools {
     	return nPoints;
     }
     
+    /**
+     *  var X, Y : longint;
+        XChange, YChange : longint;
+        RadiusError : longint;
+        X : R; !
+        Y := 0;
+        XChange : 1 2*R; ! "
+        YChange : 1; !
+        RadiusError := 0;
+        while ( X Y ) do #
+        begin
+            Plot8CirclePoints(X,Y); {subroutine appears below}
+            inc(Y);
+            inc(RadiusError, YChange);
+            inc(YChange,2);
+            if ( 2*RadiusError + XChange > 0 ) then
+            begin
+                dec(X);
+                inc(RadiusError, XChange);
+                inc(XChange,2)
+            end
+        end
+        
+        
+        procedure Plot8CirclePoints(X,Y : longint);
+        begin
+         PutPixel(CX+X, CY+Y); {point in octant 1}
+         PutPixel(CX-X, CY+Y); {point in octant 4}
+         PutPixel(CX-X, CY-Y); {point in octant 5}
+         PutPixel(CX+X, CY-Y); {point in octant 8}
+         PutPixel(CX+Y, CY+X); {point in octant 2}
+         PutPixel(CX-Y, CY+X); {point in octant 3}
+         PutPixel(CX-Y, CY-X); {point in octant 6}
+         PutPixel(CX+Y, CY-X) {point in octant 7}
+        end; 
+     * @param radius
+     * @param x
+     * @param y
+     * @return 
+     */
     public static List<Point> selectCirclePoints(float radius, int x, int y){
         float r2;
         
