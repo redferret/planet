@@ -38,7 +38,7 @@ public abstract class PlateTectonicsTask extends BasicTask {
      * Updates all the plates.
      */
     public void updatePlates() {
-    	int cellLength = Planet.instance().getCellArea();
+    	int cellLength = PlanetCell.cellArea;
     	plates.forEach(plate -> {
             plate.forEach(cellPoint -> {
             	updateCellAt(cellPoint, cellLength);

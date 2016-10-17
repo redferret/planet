@@ -343,7 +343,7 @@ public class BasicPlanet extends JFrame implements DisplayAdapter {
                     GeoCell.SedimentBuffer sedimentBuffer = cell.getSedimentBuffer();
                     Layer sedimentType = sedimentBuffer.getSedimentType();
                     if (sedimentType != null) {
-                        float sedDepth = Tools.calcHeight(sedimentBuffer.getSediments(), Planet.instance().getCellArea(), sedimentType.getDensity());
+                        float sedDepth = Tools.calcHeight(sedimentBuffer.getSediments(), Planet.PlanetCell.cellArea, sedimentType.getDensity());
                         layerThickness = sedDepth * cellThicknessRatio;
                         drawLayer(g2d, sedimentType.getColor(), cellIndex, cellWidth,
                                 startDrawHeight, windowHeight, layerThickness, cellThicknessRatio);

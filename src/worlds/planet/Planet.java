@@ -18,7 +18,6 @@ import worlds.planet.geosphere.GeoCell;
 public abstract class Planet {
 
     private AtomicInteger cellLength;
-    private AtomicInteger area;
     protected TimeScale timescale;
     private static Planet current;
     private PlanetSurface planetSurface;
@@ -50,8 +49,7 @@ public abstract class Planet {
     public Planet(int gridWidth, int cellLength, int ageStepDelay, int surfaceThreadsDelay, int threadCount) {
         Logger.getLogger(SurfaceMap.class.getName()).log(Level.INFO, "New Planet");
         checkForExistingInstance();
-        area = new AtomicInteger(cellLength * cellLength);
-        PlanetCell.cellArea = area.get();
+        PlanetCell.cellArea = cellLength * cellLength;
         this.cellLength = new AtomicInteger(cellLength);
         timescale = TimeScale.None;
         planetSurface = new PlanetSurface(gridWidth, ageStepDelay, surfaceThreadsDelay, threadCount);
@@ -111,15 +109,6 @@ public abstract class Planet {
      */
     public int getCellLength() {
         return cellLength.get();
-    }
-
-    /**
-     * The area of the cell is the cell length^2
-     *
-     * @return The area of a cell in square meters.
-     */
-    public int getCellArea() {
-        return area.get();
     }
 
 }

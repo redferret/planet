@@ -30,14 +30,14 @@ public abstract class RockFormationTask extends Task {
             return;
         }
         eb.applyBuffer();
-        height = calcHeight(eb.getSediments(), instance().getCellArea(), sedimentType);
+        height = calcHeight(eb.getSediments(), PlanetCell.cellArea, sedimentType);
         float maxHeight = calcDepth(sedimentType, 9.8f, pressure);
 
         if (height > maxHeight) {
 
             diff = (height - maxHeight);
 
-            massBeingDeposited = calcMass(diff, instance().getCellArea(), sedimentType);
+            massBeingDeposited = calcMass(diff, PlanetCell.cellArea, sedimentType);
 
             if (cell.getOceanMass() >= 4000) {
                 depositType = Layer.SHALE;
@@ -100,7 +100,7 @@ public abstract class RockFormationTask extends Task {
 //
 //                                diff = clamp(diff, -lowestHeight, currentCellHeight);
 //
-//                                float mass = calcMass(diff, instance().getCellArea(), moltenType);
+//                                float mass = calcMass(diff, PlanetCell.cellArea, moltenType);
 //                                mass = moltenLayer.putMoltenRockToSurface(-mass, moltenType) / 2f;
 //                                if (angle >= 0.71f) {
 //                                    mass = changeMass(mass * angle * 200f, moltenType, layerType);

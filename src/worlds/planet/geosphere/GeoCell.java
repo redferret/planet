@@ -958,7 +958,7 @@ public class GeoCell extends Mantel {
         float cellHeight;
         float oceanVolume = ((HydroCell) this).getOceanVolume();
 
-        cellHeight = (oceanVolume + getTotalVolume()) / instance().getCellArea();
+        cellHeight = (oceanVolume + getTotalVolume()) / PlanetCell.cellArea;
 
         if (instance().getTimeScale() == Planet.TimeScale.Geological) {
             recalculateHeight();
@@ -977,7 +977,7 @@ public class GeoCell extends Mantel {
         float cellHeight, amountSubmerged, density = getDensity();
         float oceanVolume = ((HydroCell) this).getOceanVolume();
 
-        cellHeight = (oceanVolume + getTotalVolume()) / instance().getCellArea();
+        cellHeight = (oceanVolume + getTotalVolume()) / PlanetCell.cellArea;
         amountSubmerged = cellHeight * (density / mantel_density);
 
         curAmountSubmerged = amountSubmerged;
@@ -991,7 +991,7 @@ public class GeoCell extends Mantel {
         float cellHeight, amountSubmerged, density = getDensity();
         float oceanVolume = ((HydroCell) this).getOceanVolume();
 
-        cellHeight = (oceanVolume + getTotalVolume()) / instance().getCellArea();
+        cellHeight = (oceanVolume + getTotalVolume()) / PlanetCell.cellArea;
         amountSubmerged = cellHeight * (density / mantel_density);
 
         shiftHeight(amountSubmerged);

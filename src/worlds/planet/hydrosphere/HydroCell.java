@@ -95,7 +95,7 @@ public class HydroCell extends GeoCell {
                 lowestHeight /= 2f;
 
                 differenceHeight = clamp(differenceHeight, -lowestHeight, curCellHeight);
-                area = instance().getCellArea();
+                area = PlanetCell.cellArea;
                 displacedMass = calcMass(differenceHeight, area, OCEAN);
 
                 toUpdateWaterBuffer.transferWater(-displacedMass);
@@ -267,7 +267,7 @@ public class HydroCell extends GeoCell {
     }
     
     public float getOceanHeight() {
-        return getOceanVolume() / instance().getCellArea();
+        return getOceanVolume() / PlanetCell.cellArea;
     }
     
     public List<Integer[]> render(List<Integer[]> settings) {
