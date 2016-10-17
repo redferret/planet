@@ -1,4 +1,5 @@
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CyclicBarrier;
 
@@ -130,7 +131,7 @@ public class PlateTectonicsTaskTest {
     	Point center = new Point(30, 30);
     	List<Point> plate = buildPlateWithNullTest(center, 10);
     	
-    	Point expectedPoint = new Point(36, 33);
+    	Point expectedPoint = new Point(33, 38);
     	
     	boolean containsTestPoint = containsPoint(plate, expectedPoint);
     	assertTrue("Test point not contained in list", containsTestPoint);

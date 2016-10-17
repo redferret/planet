@@ -3,9 +3,11 @@
 package worlds.planet.geosphere.tasks;
 
 import engine.util.Point;
+import engine.util.Tools;
 import engine.util.concurrent.SurfaceThread;
 import engine.util.task.BasicTask;
 
+import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +44,7 @@ public abstract class PlateTectonicsTask extends BasicTask {
      * @return The list of positions defining the plate.
      */
     public List<Point> buildPlate(Point centralCell, int radius){
-        return new ArrayList<>();
+        return Tools.fillPoints(centralCell, radius);
     }
     
     /**
