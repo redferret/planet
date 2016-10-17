@@ -6,6 +6,9 @@ import java.awt.Graphics2D;
 import java.awt.LinearGradientPaint;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
+
 import worlds.planet.Planet;
 import worlds.planet.PlanetCell;
 import worlds.planet.enums.Layer;
@@ -196,6 +199,39 @@ public class Tools {
         return of > lessThan ? of : then;
     }
 
+    public static List<Point> fillPoints(Point center, float radius){
+    	List<Point> points = new ArrayList<>(), circleList;
+    	int x = (int)center.getX();
+    	int y = (int)center.getY();
+    	
+    	while(radius > 0){
+    		circleList = selectCirclePoints(radius, x, y);
+    		radius -= 0.25f;
+    		points.addAll(circleList);
+    	}
+    	
+    	return points;
+    }
+    
+    public static List<Point> selectCirclePoints(float radius, int x, int y){
+        float r2;
+        
+        List<Point> points = new ArrayList<>();
+        
+        r2 = radius * radius;
+        points.add(new Point(x, y + radius));
+        points.add(new Point(x, y - radius));
+        for (int xx = 1, yy = 0; xx <= radius; xx++) {
+            yy = (int) (Math.sqrt(r2 - xx*xx) + 0.5);
+            points.add(new Point(x + xx, y + yy));
+            points.add(new Point(x + xx, y - yy));
+            points.add(new Point(x - xx, y + yy));
+            points.add(new Point(x - xx, y - yy));
+        }
+        
+        return points;
+    }
+    
     public static PlanetCell getLowestCellFrom(PlanetCell central) {
 
         if (central == null) {
