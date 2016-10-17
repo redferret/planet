@@ -60,7 +60,7 @@ public abstract class PlateTectonicsTask extends BasicTask {
         cellActPos.add(cellVelocity);
 
         Point adj = new Point(cellLength, cellLength);
-        cellPos.add(adj);
+        cellPos.mul(adj);
 
         
         // Move the strata from one cell to the other
@@ -95,9 +95,8 @@ public abstract class PlateTectonicsTask extends BasicTask {
     /**
      * Movement that has occured will move a given cell in the given direction. 
      * When movement happens the cell's actual position is reset.
-     * @param cellActPos The
-     * @param cell
-     * @param direction
+     * @param cell The cell being moved
+     * @param direction The direction the cell is moving in
      */
     private void moveCell(PlanetCell cell, Point direction) {
     	cell.getActualPosition().set(cell.getGridPosition());
