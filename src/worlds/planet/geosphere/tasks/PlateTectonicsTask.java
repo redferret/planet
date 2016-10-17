@@ -137,7 +137,7 @@ public abstract class PlateTectonicsTask extends BasicTask {
      * @param to The cell that will receive the crust
      * @param maxDepth The maximum depth that will not subduct
      */
-    public void collideCells(PlanetCell from, PlanetCell to, float maxDepth){
+    public void thrustCrust(PlanetCell from, PlanetCell to, float maxDepth){
     	
     }
     

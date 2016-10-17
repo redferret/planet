@@ -69,7 +69,7 @@ public class PlateTectonicsTaskTest {
     		to.add(toLayers[index], toAmounts[index], true);
     	}
     	
-    	testTask.collideCells(from, to, maxDepth);
+    	testTask.thrustCrust(from, to, maxDepth);
     	
     	Layer[] expectedLayers = {Layer.BASALT, Layer.MAFIC_SANDSTONE, Layer.FELSIC_SANDSTONE, Layer.SHALE,
     			Layer.MAFIC_SANDSTONE, Layer.FELSIC_SANDSTONE, Layer.LIMESTONE, Layer.FELSIC_SANDSTONE};
