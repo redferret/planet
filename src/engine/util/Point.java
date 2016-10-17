@@ -51,7 +51,7 @@ public class Point {
     
     public String toString(){
     	StringBuilder str = new StringBuilder();
-    	str.append(x).append(", ").append(y);
+    	str.append("[").append(x).append(", ").append(y).append("]");
     	return str.toString();
     }
     
