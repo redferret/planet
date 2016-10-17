@@ -58,7 +58,7 @@ public abstract class PlateTectonicsTask extends BasicTask {
                 if (cellVelocity.getX() > 0){
                     if (cellPos.getX() <= cellActPos.getX()){
                         System.out.println("Move Cell"+cell+" in the X direction by +1 cell");
-                        cellActPos.set(cellPos);
+                        cellActPos.set(cell.getGridPosition());
                     }
                 }else if (cellVelocity.getX() < 0){
                     if (cellPos.getX() >= cellActPos.getX()){

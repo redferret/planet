@@ -51,7 +51,7 @@ public class PlateTectonicsTaskTest {
         
     	List<Point> plate = buildPlateWithNullTest(1);
         testTask.addPlate(plate);
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 8; i++)
             testTask.updatePlates();
     }
     
