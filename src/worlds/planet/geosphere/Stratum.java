@@ -91,7 +91,7 @@ public class Stratum {
      * @return The thickness of this stratum.
      */
     public float getThickness() {
-        return getVolume() / Planet.instance().getCellArea();
+        return getVolume() / GeoCell.cellArea;
     }
     
     public void setMass(float m){
