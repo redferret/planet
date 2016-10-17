@@ -82,6 +82,12 @@ public class PlateTectonicsTaskTest {
     	
     	assertEquals("Layer count incorrect", expectedLayers.length, toStrata.size());
     	
+    	for (int s = 0; s < expectedLayers.length; s++) {
+    		Layer expected = expectedLayers[s];
+    		Layer actual = toStrata.pop().getLayer();
+    		
+    		assertEquals("Layer mismatch", expected, actual);
+    	}
     }
     
     @Test
