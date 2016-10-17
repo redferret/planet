@@ -8,6 +8,7 @@ import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import worlds.planet.Planet;
 import worlds.planet.PlanetCell;
@@ -200,17 +201,25 @@ public class Tools {
     }
 
     public static List<Point> fillPoints(Point center, float radius){
-    	List<Point> points = new ArrayList<>(), circleList;
+    	List<Point> points = new ArrayList<>();
+        List<Point> circleList;
     	int x = (int)center.getX();
     	int y = (int)center.getY();
     	
     	while(radius > 0){
-    		circleList = selectCirclePoints(radius, x, y);
-    		radius -= 0.25f;
-    		points.addAll(circleList);
+            circleList = selectCirclePoints(radius, x, y);
+            radius -= 0.25f;
+            points.addAll(circleList);
     	}
     	
-    	return points;
+        Stream<Point> distinctList = points.stream().distinct();
+        
+        List<Point> nPoints = new ArrayList<>();
+        distinctList.forEach(point ->{
+            nPoints.add(point);
+        });
+        
+    	return nPoints;
     }
     
     public static List<Point> selectCirclePoints(float radius, int x, int y){
@@ -221,7 +230,7 @@ public class Tools {
         r2 = radius * radius;
         points.add(new Point(x, y + radius));
         points.add(new Point(x, y - radius));
-        for (int xx = 1, yy = 0; xx <= radius; xx++) {
+        for (int xx = 1, yy; xx <= radius; xx++) {
             yy = (int) (Math.sqrt(r2 - xx*xx) + 0.5);
             points.add(new Point(x + xx, y + yy));
             points.add(new Point(x + xx, y - yy));

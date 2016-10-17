@@ -5,9 +5,11 @@
         <group>
             <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/test/DelayTest.java</file>
             <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/src/worlds/planet/PlanetCell.java</file>
+            <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/src/worlds/planet/geosphere/tasks/PlateTectonicsTask.java</file>
             <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/src/worlds/gui/basic/BasicPlanet.java</file>
             <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/test/PlateTectonicsTaskTest.java</file>
             <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/src/worlds/planet/geosphere/Geosphere.java</file>
+            <file>file:/C:/Users/Richard/Documents/NetBeansProjects/Planet/src/engine/util/Point.java</file>
         </group>
     </open-files>
 </project-private>

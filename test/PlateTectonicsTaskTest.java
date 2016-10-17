@@ -15,6 +15,8 @@ import worlds.planet.enums.Layer;
 import worlds.planet.geosphere.GeoCell;
 import worlds.planet.geosphere.tasks.PlateTectonicsTask;
 import static org.junit.Assert.*;
+import worlds.planet.PlanetSurface;
+import worlds.planet.TestWorld;
 
 /**
  * @author Richard DeSilvey
@@ -22,11 +24,13 @@ import static org.junit.Assert.*;
  */
 public class PlateTectonicsTaskTest {
 
+    private static final TestWorld TEST_WORLD = new TestWorld(64, 1);
+    private static final PlanetSurface SURFACE = TEST_WORLD.getSurface();
     private PlateTectonicsTask testTask;
 
     @Before
     public void setUp() {
-        testTask = new PlateTectonicsTask() {
+        testTask = new PlateTectonicsTask(SURFACE) {
             public void perform() {}
             public void before() {}
             public void after() {}
@@ -40,6 +44,15 @@ public class PlateTectonicsTaskTest {
     @Test
     public void thrustFoldCrustTest(){
     	fail("Not implemented yet");
+    }
+    
+    @Test
+    public void updatePlatesTest(){
+        
+    	List<Point> plate = buildPlateWithNullTest(1);
+        testTask.addPlate(plate);
+        for (int i = 0; i < 4; i++)
+            testTask.updatePlates();
     }
     
     @Test
@@ -102,8 +115,7 @@ public class PlateTectonicsTaskTest {
      */
     @Test
     public void addPlateTest() {
-    	Point center = new Point(0, 0);
-        List<Point> plate = buildPlateWithNullTest(center, 5);
+        List<Point> plate = buildPlateWithNullTest(5);
         testTask.addPlate(plate);
         
         assertEquals("No plate was added", 1, testTask.getNumberOfPlates());
@@ -111,10 +123,9 @@ public class PlateTectonicsTaskTest {
 
     @Test
     public void removePlateTest(){
-    	Point center = new Point(0, 0);
     	for (int i = 1; i <= 10; i++){
-	        List<Point> plate = buildPlateWithNullTest(center, 5);
-	        testTask.addPlate(plate);
+            List<Point> plate = buildPlateWithNullTest(5);
+            testTask.addPlate(plate);
     	}
     	testTask.removePlate(5);
     	testTask.removePlate(1);
@@ -128,8 +139,7 @@ public class PlateTectonicsTaskTest {
      */
     @Test
     public void buildPlateTest(){
-    	Point center = new Point(30, 30);
-    	List<Point> plate = buildPlateWithNullTest(center, 10);
+    	List<Point> plate = buildPlateWithNullTest(10);
     	
     	Point expectedPoint = new Point(33, 38);
     	
@@ -144,8 +154,8 @@ public class PlateTectonicsTaskTest {
     /**
      * Tests to make sure the list returned by the method is not null.
      */
-    private List<Point> buildPlateWithNullTest(Point center, int radius) {
-        List<Point> plate = testTask.buildPlate(center, radius);
+    private List<Point> buildPlateWithNullTest(int radius) {
+        List<Point> plate = testTask.buildPlate(new Point(32, 32), radius, new Point(5, 0));
         assertNotNull("The returned list is null", plate);
         return plate;
     }

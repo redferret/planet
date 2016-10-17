@@ -185,7 +185,7 @@ public class SurfaceMapAndTaskTest {
         
         TestCell[] cellArray = cells.toArray(new TestCell[cells.size()]);
         for (int i = 0; i < cellArray.length; i++){
-            Point testPoint = cellArray[i].getPosition();
+            Point testPoint = cellArray[i].getGridPosition();
             Point expected = cellPoints[i];
             assertEquals("Cell Position doesn't match", expected, testPoint);
         }
@@ -205,7 +205,7 @@ public class SurfaceMapAndTaskTest {
         
         TestCell[] cellArray = cells.toArray(new TestCell[cells.size()]);
         for (int i = 0; i < cellArray.length; i++){
-            Point testPoint = cellArray[i].getPosition();
+            Point testPoint = cellArray[i].getGridPosition();
             Integer testIndex = SurfaceMap.calcIndex((int)testPoint.getX(), (int)testPoint.getY(), MAP_SIZE);
             Integer expectedIndex = cellPoints[i]; 
             assertEquals("Cell Indexes don't match", expectedIndex, testIndex);

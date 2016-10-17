@@ -6,11 +6,12 @@ import engine.util.Point;
 import engine.util.Tools;
 import engine.util.task.BasicTask;
 
-import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 import java.util.List;
+import worlds.planet.Planet;
 
 import worlds.planet.PlanetCell;
+import worlds.planet.geosphere.Geosphere;
 
 /**
  * Performs basic plate tectonics on a section of the Geosphere. 
@@ -22,6 +23,11 @@ import worlds.planet.PlanetCell;
 public abstract class PlateTectonicsTask extends BasicTask {
 
     private List<List<Point>> plates = new ArrayList<>();
+    private Geosphere geosphere;
+    
+    public PlateTectonicsTask(Geosphere geosphere){
+        this.geosphere = geosphere;
+    }
     
     @Override
     public final void construct() {
@@ -32,7 +38,58 @@ public abstract class PlateTectonicsTask extends BasicTask {
      * Updates all the plates.
      */
     public void updatePlates(){
-    	
+        int cellLength = 20;
+    	plates.forEach(plate ->{
+            List<Point> previousUpdated = new ArrayList<>();
+            plate.forEach(cellPoint -> {
+            
+                int x = (int)cellPoint.getX();
+                int y = (int)cellPoint.getY();
+                Point test = new Point(x, y);
+                
+                if (!previousUpdated.contains(test)){
+                    
+                    previousUpdated.add(test);
+                    
+                    PlanetCell cell = geosphere.waitForCellAt(x, y);
+                    Point cellVelocity = cell.getVelocity();
+                    Point cellPos = cell.getGridPosition();
+                    Point cellActPos = cell.getActualPosition();
+
+                    cellActPos.add(cellVelocity);
+
+                    Point adj = new Point(cellLength, cellLength);
+                    cellPos.add(adj);
+
+                    if (cellVelocity.getX() > 0){
+                        if (cellPos.getX() <= cellActPos.getX()){
+                            System.out.println("Move Cell"+cell+" in the X direction by +1 cell");
+                            cellActPos.set(cellPos);
+                            return;
+                        }
+                    }else if (cellVelocity.getX() < 0){
+                        if (cellPos.getX() >= cellActPos.getX()){
+                            System.out.println("Move Cell"+cell+" in the X direction by -1 cell");
+                            return;
+                        }
+                    }
+
+                    if (cellVelocity.getY() > 0){
+                        if (cellPos.getY() <= cellActPos.getY()){
+                            System.out.println("Move Cell"+cell+" in the Y direction by +1 cell");
+                            return;
+                        }
+                    }else if (cellVelocity.getY() < 0){
+                        if (cellPos.getY() >= cellActPos.getY()){
+                            System.out.println("Move Cell"+cell+" in the Y direction by -1 cell");
+                            return;
+                        }
+                    }
+                    geosphere.release(cell);
+                }
+            }); 
+            System.out.println("Plate Updated");
+        });
     }
     
     /**
@@ -40,10 +97,23 @@ public abstract class PlateTectonicsTask extends BasicTask {
      * is always a non-null list.
      * @param centralCell The center of the plate
      * @param radius The radius of the plate
+     * @param velocity
      * @return The list of positions defining the plate.
      */
-    public List<Point> buildPlate(Point centralCell, int radius){
-        return Tools.fillPoints(centralCell, radius);
+    public List<Point> buildPlate(Point centralCell, int radius, Point velocity){
+        
+        List<Point> plate = Tools.fillPoints(centralCell, radius);
+        
+        plate.forEach(point -> {
+            int x = (int)point.getX();
+            int y = (int)point.getY();
+            PlanetCell cell = geosphere.waitForCellAt(x, y);
+            Point cellVelocity = cell.getVelocity();
+            
+            cellVelocity.set(velocity);
+        });
+        
+        return plate;
     }
     
     /**
@@ -55,6 +125,7 @@ public abstract class PlateTectonicsTask extends BasicTask {
      * 
      * @param from The cell moving that will thrust it's layers on top or below
      * @param to The cell that will receive the crust
+     * @param maxDepth The maximum depth that will not subduct
      */
     public void collideCells(PlanetCell from, PlanetCell to, float maxDepth){
     	

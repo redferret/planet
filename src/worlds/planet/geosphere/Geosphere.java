@@ -261,10 +261,14 @@ public abstract class Geosphere extends Surface {
 
         @Override
         public Task buildResource() {
-            return new PlateTectonicsResource();
+            return new PlateTectonicsResource(Geosphere.this);
         }
         
         private class PlateTectonicsResource extends PlateTectonicsTask {
+
+            public PlateTectonicsResource(Geosphere geosphere) {
+                super(geosphere);
+            }
 
             @Override
             public void before(){}

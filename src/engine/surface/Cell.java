@@ -11,28 +11,34 @@ import engine.util.Point;
  */
 public abstract class Cell {	
     
-    private final Point position;
+    private final Point gridPosition, actualPosition;
 
     public Cell(int x, int y) {
-        position = new Point(x, y);
+        gridPosition = new Point(x, y);
+        actualPosition = new Point(x, y);
     }
 
     public int getX() {
-        return (int)position.getX();
+        return (int)gridPosition.getX();
     }
 
     public int getY() {
-        return (int)position.getY();
+        return (int)gridPosition.getY();
     }
     
-    public Point getPosition(){
-    	return position.copy();
+    public Point getGridPosition(){
+    	return gridPosition.copy();
+    }
+    
+    public Point getActualPosition(){
+        return actualPosition;
     }
     
     public abstract List<Integer[]> render(List<Integer[]> settings);
     
     public String toString() {
-        return "[" + position.getX() + ", " + position.getY() + "]";
+        return "[" + gridPosition.getX() + ", " + gridPosition.getY() + "]" +
+                "[" + actualPosition.getX() + ", " + actualPosition.getY() + "]";
     }
 
 }

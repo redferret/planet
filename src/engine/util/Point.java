@@ -31,6 +31,22 @@ public class Point {
     	return new Point(this);
     }
     
+    public Point add(Point p){
+        this.x += p.x;
+        this.y += p.y;
+        return this.copy();
+    }
+    
+    public Point set(Point p){
+        this.x = p.x;
+        this.y = p.y;
+        return this.copy();
+    }
+    
+    public Point truncate(){
+        return new Point((int)x, (int)y);
+    }
+    
     @Override
     public boolean equals(Object obj) {
         if (obj == null || !(obj instanceof Point)){
