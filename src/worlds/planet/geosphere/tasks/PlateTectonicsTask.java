@@ -49,6 +49,12 @@ public abstract class PlateTectonicsTask extends BasicTask {
         });
     }
     
+    private boolean isOwnedByThisPlate(PlanetCell cell){
+        SurfaceThread pct = cell.getPlateControlThread();
+        SurfaceThread taskThread = getTaskThread();
+        return pct.equals(taskThread);
+    }
+    
     private void updateCellAt(Iterator<Point> plateIter, int cellLength) {
     	
         Point cellPoint = plateIter.next();
@@ -58,10 +64,7 @@ public abstract class PlateTectonicsTask extends BasicTask {
         
         PlanetCell cell = geosphere.waitForCellAt(x, y);
         
-        SurfaceThread pct = cell.getPlateControlThread();
-        SurfaceThread taskThread = getTaskThread();
-        
-        if (pct.equals(taskThread)){
+        if (isOwnedByThisPlate(cell)){
         
             Point cellVelocity = cell.getVelocity();
             Point cellPos = cell.getGridPosition();
