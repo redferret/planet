@@ -96,7 +96,7 @@ public abstract class PlateTectonicsTask extends BasicTask {
                 }
             }
             
-        }else{
+        } else {
             plateIter.remove();
         }
         geosphere.release(cell);
@@ -132,6 +132,7 @@ public abstract class PlateTectonicsTask extends BasicTask {
             Point cellVelocity = cell.getVelocity();
             
             cellVelocity.set(velocity);
+            cell.setPlateControlThread(getTaskThread());
         });
         
         return plate;
