@@ -20,8 +20,8 @@ public class AtomicData<Data> {
 
     private Data data;
     private Thread currentOwner;
-    private ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
-    private Lock cellLock = readWriteLock.writeLock();
+    private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
+    private final Lock cellLock = readWriteLock.writeLock();
 
     public AtomicData(Data data) {
         this.data = data;
