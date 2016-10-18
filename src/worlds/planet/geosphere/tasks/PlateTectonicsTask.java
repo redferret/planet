@@ -230,6 +230,8 @@ public abstract class PlateTectonicsTask extends BasicTask {
         
         cellA.getVelocity().set(cellAVel);
         cellB.getVelocity().set(cellBVel);
+        
+        thrustCrust(cellA, cellB, 2f);
     }
     
     private void resetActualPosition(PlanetCell cell){
