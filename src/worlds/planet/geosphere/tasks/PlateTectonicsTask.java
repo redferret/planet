@@ -43,7 +43,7 @@ public abstract class PlateTectonicsTask extends BasicTask {
     	plates.forEach(plate -> {
             Iterator<Point> plateIter = plate.iterator();
             while(plateIter.hasNext()){
-                updateCellAt(plateIter, cellLength);
+                updateNext(plateIter, cellLength);
             }
         });
     }
@@ -147,7 +147,7 @@ public abstract class PlateTectonicsTask extends BasicTask {
         return pct.equals(taskThread);
     }
     
-    private void updateCellAt(Iterator<Point> plateIter, int cellLength) {
+    private void updateNext(Iterator<Point> plateIter, int cellLength) {
     	
         Point cellPoint = plateIter.next();
         
