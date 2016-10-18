@@ -10,7 +10,6 @@ import engine.util.task.BasicTask;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import worlds.planet.Planet;
 
 import worlds.planet.PlanetCell;
 import worlds.planet.geosphere.Geosphere;
@@ -40,7 +39,7 @@ public abstract class PlateTectonicsTask extends BasicTask {
      * Updates all the plates.
      */
     public void updatePlates() {
-    	int cellLength = PlanetCell.cellArea;
+    	int cellLength = PlanetCell.cellLength;
     	plates.forEach(plate -> {
             Iterator<Point> plateIter = plate.iterator();
             while(plateIter.hasNext()){
@@ -136,9 +135,7 @@ public abstract class PlateTectonicsTask extends BasicTask {
             int x = (int)point.getX();
             int y = (int)point.getY();
             PlanetCell cell = geosphere.waitForCellAt(x, y);
-            Point cellVelocity = cell.getVelocity();
-            
-            cellVelocity.set(velocity);
+            cell.getVelocity().set(velocity);
             cell.setPlateControlThread(getTaskThread());
             geosphere.release(cell);
         });
