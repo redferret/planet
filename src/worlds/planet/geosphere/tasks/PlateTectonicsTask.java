@@ -110,7 +110,11 @@ public abstract class PlateTectonicsTask extends BasicTask {
     	
     	float finalVelA_X, finalVelA_Y;
     	float sumOfMasses = (massA + massB);
-    			
+    		
+        if (sumOfMasses == 0){
+            return new Point(0, 0);
+        }
+        
     	finalVelA_X = (c * (massB * (velB_X-velA_X)) + (massA*velA_X) + (massB*velB_X)) / sumOfMasses;
     	finalVelA_Y = (c * (massB * (velB_Y-velA_Y)) + (massA*velA_Y) + (massB*velB_Y)) / sumOfMasses;
     	
