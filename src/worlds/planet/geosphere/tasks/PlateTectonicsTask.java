@@ -48,83 +48,6 @@ public abstract class PlateTectonicsTask extends BasicTask {
         });
     }
     
-    private boolean isOwnedByThisPlate(PlanetCell cell){
-        SurfaceThread pct = cell.getPlateControlThread();
-        SurfaceThread taskThread = getTaskThread();
-        return pct.equals(taskThread);
-    }
-    
-    private void updateCellAt(Iterator<Point> plateIter, int cellLength) {
-    	
-        Point cellPoint = plateIter.next();
-        
-    	int x = (int)cellPoint.getX();
-        int y = (int)cellPoint.getY();
-        
-        PlanetCell cell = geosphere.waitForCellAt(x, y);
-        
-        if (isOwnedByThisPlate(cell)){
-        
-            Point cellVelocity = cell.getVelocity();
-            Point cellPos = cell.getGridPosition();
-            Point cellActPos = cell.getActualPosition();
-
-            cellActPos.add(cellVelocity);
-
-            Point adj = new Point(cellLength, cellLength);
-            cellPos.mul(adj);
-
-
-            // Move the strata from one cell to the other
-            // and if a collision occurs then energy is transfered
-            // into the cell being collided with and crust is trust
-            // on top or below depending on the densities of both
-            // cells. The collision is 100% inelastic, cells will stick
-            // together when collision occures.
-            if (cellVelocity.getX() > 0) { // Move right
-                if (cellPos.getX() <= cellActPos.getX()) {
-                    // Reset the cell's active position
-                    moveCell(cell, new Point(1, 0));
-                }
-            }else if (cellVelocity.getX() < 0) {
-                if (cellPos.getX() >= cellActPos.getX()) {
-                    moveCell(cell, new Point(-1, 0));
-                }
-            }
-
-            if (cellVelocity.getY() > 0) {
-                if (cellPos.getY() <= cellActPos.getY()) {
-                    moveCell(cell, new Point(0, 1));
-                }
-            }else if (cellVelocity.getY() < 0) {
-                if (cellPos.getY() >= cellActPos.getY()) {
-                    moveCell(cell, new Point(0, -1));
-                }
-            }
-            
-        } else {
-            plateIter.remove();
-        }
-        geosphere.release(cell);
-    }
-    
-    /**	
-     * Movement that has occured will move a given cell in the given direction. 
-     * When movement happens the cell's actual position is reset.
-     * @param cell The cell being moved
-     * @param direction The direction the cell is moving in
-     */
-    private void moveCell(PlanetCell cell, Point direction) {
-    	resetActualPosition(cell);
-    	
-    }
-    
-    private void resetActualPosition(PlanetCell cell){
-    	int cellLength = PlanetCell.cellLength;
-    	cell.getActualPosition().set(cell.getGridPosition());
-    	cell.getActualPosition().mul(new Point(cellLength, cellLength));
-    }
-    
     /**
      * Builds a list of points that define a new plate. The list
      * is always a non-null list.
@@ -216,5 +139,82 @@ public abstract class PlateTectonicsTask extends BasicTask {
      */
     public int getNumberOfPlates(){
     	return plates.size();
+    }
+    
+    private boolean isOwnedByThisPlate(PlanetCell cell){
+        SurfaceThread pct = cell.getPlateControlThread();
+        SurfaceThread taskThread = getTaskThread();
+        return pct.equals(taskThread);
+    }
+    
+    private void updateCellAt(Iterator<Point> plateIter, int cellLength) {
+    	
+        Point cellPoint = plateIter.next();
+        
+    	int x = (int)cellPoint.getX();
+        int y = (int)cellPoint.getY();
+        
+        PlanetCell cell = geosphere.waitForCellAt(x, y);
+        
+        if (isOwnedByThisPlate(cell)){
+        
+            Point cellVelocity = cell.getVelocity();
+            Point cellPos = cell.getGridPosition();
+            Point cellActPos = cell.getActualPosition();
+
+            cellActPos.add(cellVelocity);
+
+            Point adj = new Point(cellLength, cellLength);
+            cellPos.mul(adj);
+
+
+            // Move the strata from one cell to the other
+            // and if a collision occurs then energy is transfered
+            // into the cell being collided with and crust is trust
+            // on top or below depending on the densities of both
+            // cells. The collision is 100% inelastic, cells will stick
+            // together when collision occures.
+            if (cellVelocity.getX() > 0) { // Move right
+                if (cellPos.getX() <= cellActPos.getX()) {
+                    // Reset the cell's active position
+                    moveCell(cell, new Point(1, 0));
+                }
+            }else if (cellVelocity.getX() < 0) {
+                if (cellPos.getX() >= cellActPos.getX()) {
+                    moveCell(cell, new Point(-1, 0));
+                }
+            }
+
+            if (cellVelocity.getY() > 0) {
+                if (cellPos.getY() <= cellActPos.getY()) {
+                    moveCell(cell, new Point(0, 1));
+                }
+            }else if (cellVelocity.getY() < 0) {
+                if (cellPos.getY() >= cellActPos.getY()) {
+                    moveCell(cell, new Point(0, -1));
+                }
+            }
+            
+        } else {
+            plateIter.remove();
+        }
+        geosphere.release(cell);
+    }
+    
+    /**	
+     * Movement that has occured will move a given cell in the given direction. 
+     * When movement happens the cell's actual position is reset.
+     * @param cell The cell being moved
+     * @param direction The direction the cell is moving in
+     */
+    private void moveCell(PlanetCell cell, Point direction) {
+    	resetActualPosition(cell);
+    	
+    }
+    
+    private void resetActualPosition(PlanetCell cell){
+    	int cellLength = PlanetCell.cellLength;
+    	cell.getActualPosition().set(cell.getGridPosition());
+    	cell.getActualPosition().mul(new Point(cellLength, cellLength));
     }
 }
