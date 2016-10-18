@@ -133,6 +133,7 @@ public abstract class PlateTectonicsTask extends BasicTask {
             
             cellVelocity.set(velocity);
             cell.setPlateControlThread(getTaskThread());
+            geosphere.release(cell);
         });
         
         return plate;
