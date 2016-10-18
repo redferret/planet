@@ -35,7 +35,7 @@ public class Tools {
      * @param width The number of colors after interpolation
      * @return The samples array
      */
-    public static Integer[][] constructSamples(Color[] colors, int width){
+    public static Integer[][] constructSamples(Color[] colors, int width) {
         
         if (colors.length > width){
             throw new IndexOutOfBoundsException("The width of the gradient is invalid");
@@ -68,7 +68,7 @@ public class Tools {
      * @param width The number of colors after interpolation
      * @return The samples array
      */
-    public static Integer[][] constructGradient(Color[] colors, float[] dist, int width){
+    public static Integer[][] constructGradient(Color[] colors, float[] dist, int width) {
         
         Integer[][] colorArray = new Integer[width][4];
         
@@ -103,7 +103,7 @@ public class Tools {
      * @param samples The list of samples
      * @return The list of colors given by the samples array.
      */
-    public static Color[] constructColors(int[][] samples){
+    public static Color[] constructColors(int[][] samples) {
         
         Color[] colors = new Color[samples.length];
         
@@ -129,7 +129,7 @@ public class Tools {
      * @param b The bounds
      * @return The corrected tx value
      */
-    public static int checkBounds(int tx, int b){
+    public static int checkBounds(int tx, int b) {
         return (tx >= b) ? tx - b :(tx < 0)? b + tx : tx;
     }
     
@@ -143,11 +143,11 @@ public class Tools {
      * @param base The base of the cell in square kilometers.
      * @return The calculated mass in kilograms
      */
-    public static float calcMass(float height, long base, Layer layerType){
+    public static float calcMass(float height, long base, Layer layerType) {
         return calcMass(height, base, layerType.getDensity());
     }
     
-    public static float calcMass(float height, long base, float density){
+    public static float calcMass(float height, long base, float density) {
         return (height * base * density);
     }
     
@@ -159,31 +159,31 @@ public class Tools {
      * @param layerType The density of the mass in kilograms per cubic meter.
      * @return The height in kilometers.
      */
-    public static float calcHeight(float mass, long base, Layer layerType){
+    public static float calcHeight(float mass, long base, Layer layerType) {
         return calcHeight(mass, base, layerType.getDensity());
     }
     
-    public static float calcHeight(float mass, long base, float density){
+    public static float calcHeight(float mass, long base, float density) {
         return mass / (base * density);
     }
     
-    public static float changeMass(float massToChange, Layer from, Layer to){
+    public static float changeMass(float massToChange, Layer from, Layer to) {
         return changeMass(massToChange, from.getDensity(), to.getDensity());
     }
 
-    public static float changeMass(float massToChange, float fromDensity, float toDensity){
+    public static float changeMass(float massToChange, float fromDensity, float toDensity) {
         return (massToChange * fromDensity) / toDensity;
     }
     
-    public static float calcDepth(Layer layer, float gravity, float maxPressure){
+    public static float calcDepth(Layer layer, float gravity, float maxPressure) {
         return calcDepth(layer.getDensity(), gravity, maxPressure);
     }
     
-    public static float calcDepth(float density, float gravity, float maxPressure){
+    public static float calcDepth(float density, float gravity, float maxPressure) {
         return (maxPressure / (gravity * density));
     }
     
-    public static float calcPressure(float density, float gravity, float depth){
+    public static float calcPressure(float density, float gravity, float depth) {
         return depth * density * gravity;
     }
     
@@ -191,23 +191,30 @@ public class Tools {
         return 0.9f / (1 + (float)Math.exp(2*x - 4)) + 0.1f;
     }
     
-    public static float clamp(float heightDiff, float min, float max){
+    public static float clamp(float heightDiff, float min, float max) {
         return (heightDiff < min) ? min : (heightDiff > max ? max : heightDiff);
     }
     
-    public static float maxOf(float lessThan, float of, float then){
+    public static float maxOf(float lessThan, float of, float then) {
         return of > lessThan ? of : then;
     }
 
-    public static List<Point> fillPoints(Point center, float radius){
+    public static List<Point> fillPoints(Point center, int radius) {
     	List<Point> points = new ArrayList<>();
         List<Point> circleList;
     	int x = (int)center.getX();
     	int y = (int)center.getY();
-    	
-    	while(radius > 0){
-            circleList = selectCirclePoints(radius, x, y);
-            radius -= 0.25f;
+    	int wRadius = radius;
+        
+    	while(wRadius > 0){
+            circleList = selectCirclePoints(wRadius, x, y);
+            wRadius -= 1;
+            points.addAll(circleList);
+    	}
+        wRadius = radius;
+        while(wRadius > 0){
+            circleList = selectCirclePoints(wRadius, x-1, y);
+            wRadius -= 1;
             points.addAll(circleList);
     	}
     	
@@ -222,30 +229,33 @@ public class Tools {
     }
     
     /**
-     *  var X, Y : longint;
-        XChange, YChange : longint;
-        RadiusError : longint;
-        X : R; !
-        Y := 0;
-        XChange : 1 2*R; ! "
-        YChange : 1; !
-        RadiusError := 0;
-        while ( X Y ) do #
-        begin
-            Plot8CirclePoints(X,Y); {subroutine appears below}
-            inc(Y);
-            inc(RadiusError, YChange);
-            inc(YChange,2);
-            if ( 2*RadiusError + XChange > 0 ) then
-            begin
-                dec(X);
-                inc(RadiusError, XChange);
-                inc(XChange,2)
-            end
-        end
+     * @param radius
+     * @param cx
+     * @param cy
+     * @return 
+     */
+    public static List<Point> selectCirclePoints(int radius, int cx, int cy) {
+        int xChange = 1 - (2*radius), yChange = 1;
+        int radiusError = 0, x = radius, y = 0;
+        List<Point> points = new ArrayList<>();
         
+        while (x >= y) {
+            plotCirclePoints(points, x, y, cx, cy);
+            y++;
+            radiusError += yChange;
+            yChange += 2;
+            if (((2*radiusError) + xChange) > 0) {
+                x--;
+                radiusError += xChange;
+                xChange += 2;
+            }
+        }
         
-        procedure Plot8CirclePoints(X,Y : longint);
+        return points;
+    }
+    
+    /**
+     * procedure Plot8CirclePoints(X,Y : longint);
         begin
          PutPixel(CX+X, CY+Y); {point in octant 1}
          PutPixel(CX-X, CY+Y); {point in octant 4}
@@ -256,28 +266,20 @@ public class Tools {
          PutPixel(CX-Y, CY-X); {point in octant 6}
          PutPixel(CX+Y, CY-X) {point in octant 7}
         end; 
-     * @param radius
-     * @param x
-     * @param y
-     * @return 
+     * @param points
+     * @param xy
+     * @param cxcy 
      */
-    public static List<Point> selectCirclePoints(float radius, int x, int y){
-        float r2;
-        
-        List<Point> points = new ArrayList<>();
-        
-        r2 = radius * radius;
-        points.add(new Point(x, y + radius).truncate());
-        points.add(new Point(x, y - radius).truncate());
-        for (int xx = 1, yy; xx <= radius; xx++) {
-            yy = (int) (Math.sqrt(r2 - xx*xx) + 0.5);
-            points.add(new Point(x + xx, y + yy).truncate());
-            points.add(new Point(x + xx, y - yy).truncate());
-            points.add(new Point(x - xx, y + yy).truncate());
-            points.add(new Point(x - xx, y - yy).truncate());
-        }
-        
-        return points;
+    private static void plotCirclePoints(List<Point> points, int x, int y, 
+            int cx, int cy) {
+        points.add(new Point(cx+x,cy+y));
+        points.add(new Point(cx-x,cy+y));
+        points.add(new Point(cx-x,cy-y));
+        points.add(new Point(cx+x,cy-y));
+        points.add(new Point(cx+y,cy+x));
+        points.add(new Point(cx-y,cy+x));
+        points.add(new Point(cx-y,cy-x));
+        points.add(new Point(cx+y,cy-x));
     }
     
     public static PlanetCell getLowestCellFrom(PlanetCell central) {
