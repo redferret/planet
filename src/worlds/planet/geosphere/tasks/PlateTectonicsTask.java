@@ -201,9 +201,11 @@ public abstract class PlateTectonicsTask extends BasicTask {
         geosphere.release(cell);
     }
     
-    /**	
-     * Movement that has occured will move a given cell in the given direction. 
-     * When movement happens the cell's actual position is reset.
+    /**
+     * Movement that occurs will move a given cell in the given direction. When
+     * movement happens the actual position of the cell is reset. The cells the
+     * collide will have their velocities updated
+     *
      * @param cell The cell being moved
      * @param direction The direction the cell is moving in
      */
