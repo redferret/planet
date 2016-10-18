@@ -89,6 +89,9 @@ public class PlateTectonicsTaskTest {
     @Test
     public void updatePlatesTest(){
         
+        SurfaceThread testThread = new SurfaceThread(1, new Boundaries(0, 1), new CyclicBarrier(1));
+        testThread.addTask(testTask);
+        
     	List<Point> plate = buildPlateWithNullTest(1);
         testTask.addPlate(plate);
         for (int i = 0; i < 8; i++)

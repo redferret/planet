@@ -4,6 +4,7 @@ package worlds.planet.geosphere.tasks;
 
 import engine.util.Point;
 import engine.util.Tools;
+import engine.util.concurrent.SurfaceThread;
 import engine.util.task.BasicTask;
 
 import java.util.ArrayList;
@@ -57,7 +58,10 @@ public abstract class PlateTectonicsTask extends BasicTask {
         
         PlanetCell cell = geosphere.waitForCellAt(x, y);
         
-        if (cell.getPlateControlThread().equals(getTaskThread())){
+        SurfaceThread pct = cell.getPlateControlThread();
+        SurfaceThread taskThread = getTaskThread();
+        
+        if (pct.equals(taskThread)){
         
             Point cellVelocity = cell.getVelocity();
             Point cellPos = cell.getGridPosition();
