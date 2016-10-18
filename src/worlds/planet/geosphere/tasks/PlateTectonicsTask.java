@@ -94,7 +94,7 @@ public abstract class PlateTectonicsTask extends BasicTask {
      * 
      * @param cellA The cell colliding into cellB
      * @param cellB The cell being collided into
-     * @param c The coefficient of restiution, 0 = complete inelastic, 1 = complete elastic
+     * @param c The coefficient of restitution, 0 = complete inelastic, 1 = complete elastic
      * @return The new velocity of cellA
      */
     public Point calculateEnergyTransfer(PlanetCell cellA, PlanetCell cellB, float c){
