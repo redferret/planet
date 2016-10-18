@@ -25,7 +25,7 @@ public abstract class PlateTectonicsTask extends BasicTask {
     private List<List<Point>> plates = new ArrayList<>();
     private Geosphere geosphere;
     
-    public PlateTectonicsTask(Geosphere geosphere){
+    public PlateTectonicsTask(Geosphere geosphere) {
         this.geosphere = geosphere;
     }
     
@@ -37,48 +37,69 @@ public abstract class PlateTectonicsTask extends BasicTask {
     /**
      * Updates all the plates.
      */
-    public void updatePlates(){
-        int cellLength = 20;
-    	plates.forEach(plate ->{
+    public void updatePlates() {
+    	int cellLength = PlanetCell.cellArea;
+    	plates.forEach(plate -> {
             plate.forEach(cellPoint -> {
-            
-                int x = (int)cellPoint.getX();
-                int y = (int)cellPoint.getY();
-                    
-                PlanetCell cell = geosphere.waitForCellAt(x, y);
-                Point cellVelocity = cell.getVelocity();
-                Point cellPos = cell.getGridPosition();
-                Point cellActPos = cell.getActualPosition();
-
-                cellActPos.add(cellVelocity);
-
-                Point adj = new Point(cellLength, cellLength);
-                cellPos.add(adj);
-
-                if (cellVelocity.getX() > 0){
-                    if (cellPos.getX() <= cellActPos.getX()){
-                        System.out.println("Move Cell"+cell+" in the X direction by +1 cell");
-                        cellActPos.set(cell.getGridPosition());
-                    }
-                }else if (cellVelocity.getX() < 0){
-                    if (cellPos.getX() >= cellActPos.getX()){
-                        System.out.println("Move Cell"+cell+" in the X direction by -1 cell");
-                    }
-                }
-
-                if (cellVelocity.getY() > 0){
-                    if (cellPos.getY() <= cellActPos.getY()){
-                        System.out.println("Move Cell"+cell+" in the Y direction by +1 cell");
-                    }
-                }else if (cellVelocity.getY() < 0){
-                    if (cellPos.getY() >= cellActPos.getY()){
-                        System.out.println("Move Cell"+cell+" in the Y direction by -1 cell");
-                    }
-                }
-                geosphere.release(cell);
+            	updateCellAt(cellPoint, cellLength);
             }); 
-            System.out.println("Plate Updated");
         });
+    }
+    
+    private void updateCellAt(Point cellPoint, int cellLength) {
+    	
+    	int x = (int)cellPoint.getX();
+        int y = (int)cellPoint.getY();
+        
+        PlanetCell cell = geosphere.waitForCellAt(x, y);
+        Point cellVelocity = cell.getVelocity();
+        Point cellPos = cell.getGridPosition();
+        Point cellActPos = cell.getActualPosition();
+
+        cellActPos.add(cellVelocity);
+
+        Point adj = new Point(cellLength, cellLength);
+        cellPos.mul(adj);
+        
+        
+        // Move the strata from one cell to the other
+        // and if a collision occurs then energy is transfered
+        // into the cell being collided with and crust is trust
+        // on top or below depending on the densities of both
+        // cells. The collision is 100% inelastic, cells will stick
+        // together when collision occures.
+        if (cellVelocity.getX() > 0) { // Move right
+            if (cellPos.getX() <= cellActPos.getX()) {
+            	// Reset the cell's active position
+            	moveCell(cell, new Point(1, 0));
+            }
+        }else if (cellVelocity.getX() < 0) {
+            if (cellPos.getX() >= cellActPos.getX()) {
+                moveCell(cell, new Point(-1, 0));
+            }
+        }
+
+        if (cellVelocity.getY() > 0) {
+            if (cellPos.getY() <= cellActPos.getY()) {
+            	moveCell(cell, new Point(0, 1));
+            }
+        }else if (cellVelocity.getY() < 0) {
+            if (cellPos.getY() >= cellActPos.getY()) {
+            	moveCell(cell, new Point(0, -1));
+            }
+        }
+        geosphere.release(cell);
+    }
+    
+    /**	
+     * Movement that has occured will move a given cell in the given direction. 
+     * When movement happens the cell's actual position is reset.
+     * @param cell The cell being moved
+     * @param direction The direction the cell is moving in
+     */
+    private void moveCell(PlanetCell cell, Point direction) {
+    	cell.getActualPosition().set(cell.getGridPosition());
+    	
     }
     
     /**
@@ -116,20 +137,29 @@ public abstract class PlateTectonicsTask extends BasicTask {
      * @param to The cell that will receive the crust
      * @param maxDepth The maximum depth that will not subduct
      */
-    public void collideCells(PlanetCell from, PlanetCell to, float maxDepth){
+    public void thrustCrust(PlanetCell from, PlanetCell to, float maxDepth){
     	
     }
     
-    public Point calculateEnergyTransfer(PlanetCell from, PlanetCell to, float c){
+    /**
+     * Calculates the transfer of energy when two cells collide. cellA is colliding into
+     * cellB and the returned object is the new velocity for cellA. 
+     * 
+     * @param cellA The cell colliding into cellB
+     * @param cellB The cell being collided into
+     * @param c The coefficient of restiution, 0 = complete inelastic, 1 = complete elastic
+     * @return The new velocity of cellA
+     */
+    public Point calculateEnergyTransfer(PlanetCell cellA, PlanetCell cellB, float c){
     	
-    	float massA = from.getTotalMass();
-    	float massB = to.getTotalMass();
+    	float massA = cellA.getTotalMass();
+    	float massB = cellB.getTotalMass();
     	
-    	float velA_X = from.getVelocity().getX();
-    	float velA_Y = from.getVelocity().getY();
+    	float velA_X = cellA.getVelocity().getX();
+    	float velA_Y = cellA.getVelocity().getY();
     	
-    	float velB_X = to.getVelocity().getX();
-    	float velB_Y = to.getVelocity().getY();
+    	float velB_X = cellB.getVelocity().getX();
+    	float velB_Y = cellB.getVelocity().getY();
     	
     	float finalVelA_X, finalVelA_Y;
     	float sumOfMasses = (massA + massB);

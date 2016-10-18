@@ -201,7 +201,7 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
         int x = (int)from.getX(), y = (int)from.getY();
         int xl = DIR_X_INDEX.length;
         Point[] points = new Point[xl+1];
-        int worldSize = Planet.instance().getCellLength();
+        int worldSize = PlanetCell.cellLength;
         for (int s = 0; s < xl; s++) {
 
             tx = x + DIR_X_INDEX[s];

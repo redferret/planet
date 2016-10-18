@@ -54,7 +54,7 @@ public abstract class TransformationTask extends CompoundTask {
 
         if (height > maxDepth) {
             float diff = Tools.calcMass(height - maxDepth, 
-                    instance().getCellArea(), cell.getDensity());
+                    PlanetCell.cellArea, cell.getDensity());
             cell.remove(diff, false, false);
         }
     }
@@ -109,7 +109,7 @@ public abstract class TransformationTask extends CompoundTask {
         Stratum bottom = cell.peekBottomStratum();
         Layer bottomType = bottom.getLayer();
 
-        massToChange = calcMass(MASS_TO_MELT, instance().getCellArea(), bottomType);
+        massToChange = calcMass(MASS_TO_MELT, PlanetCell.cellArea, bottomType);
         massToChange = removeAndChangeMass(cell, massToChange, bottomType, metaType);
         if (metaStratum == null) {
             metaStratum = new Stratum(metaType, massToChange);

@@ -1,5 +1,5 @@
 
-import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 import java.util.concurrent.CyclicBarrier;
 
@@ -12,7 +12,7 @@ import engine.util.concurrent.SurfaceThread;
 import engine.util.task.Boundaries;
 import worlds.planet.PlanetCell;
 import worlds.planet.enums.Layer;
-import worlds.planet.geosphere.GeoCell;
+import worlds.planet.geosphere.Stratum;
 import worlds.planet.geosphere.tasks.PlateTectonicsTask;
 import static org.junit.Assert.*;
 import worlds.planet.PlanetSurface;
@@ -41,9 +41,49 @@ public class PlateTectonicsTaskTest {
     public void tearDown() {
     }
  
+    /**
+     * It is expected that the cell 'from' will have it's layers thrusted ON TOP
+     * of the cell 'to' because 'to' is more dense.
+     */
     @Test
-    public void thrustFoldCrustTest(){
-    	fail("Not implemented yet");
+    public void crustFoldingTest(){
+    	
+    	PlanetCell from = new PlanetCell(0, 0);
+    	PlanetCell to = new PlanetCell(1, 0);
+    	
+    	float maxDepth = 4.5f;
+    	
+    	from.add(Layer.BASALT, 50000, true);
+    	to.add(Layer.BASALT, 50000, true);
+    	
+    	Layer[] fromLayers = {Layer.MAFIC_SANDSTONE, Layer.FELSIC_SANDSTONE, Layer.LIMESTONE, Layer.FELSIC_SANDSTONE};
+    	Layer[] toLayers = {Layer.MAFIC_SANDSTONE, Layer.FELSIC_SANDSTONE, Layer.SHALE};
+    	
+    	float[] fromAmounts = {6000, 3000, 800, 100};
+    	float[] toAmounts = {1000, 2000, 400};
+    	
+    	for (int index = 0; index < fromLayers.length; index++) {
+    		from.add(fromLayers[index], fromAmounts[index], true);
+    	}
+    	for (int index = 0; index < toLayers.length; index++) {
+    		to.add(toLayers[index], toAmounts[index], true);
+    	}
+    	
+    	testTask.thrustCrust(from, to, maxDepth);
+    	
+    	Layer[] expectedLayers = {Layer.BASALT, Layer.MAFIC_SANDSTONE, Layer.FELSIC_SANDSTONE, Layer.SHALE,
+    			Layer.MAFIC_SANDSTONE, Layer.FELSIC_SANDSTONE, Layer.LIMESTONE, Layer.FELSIC_SANDSTONE};
+    	
+    	Deque<Stratum> toStrata = to.getStrata();
+    	
+    	assertEquals("Layer count incorrect", expectedLayers.length, toStrata.size());
+    	
+    	for (int s = 0; s < expectedLayers.length; s++) {
+    		Layer expected = expectedLayers[s];
+    		Layer actual = toStrata.pop().getLayer();
+    		
+    		assertEquals("Layer mismatch", expected, actual);
+    	}
     }
     
     @Test
@@ -171,8 +211,6 @@ public class PlateTectonicsTaskTest {
     private PlanetCell[] setupCellsForEnergyTransferTesting(float massA, float massB, Point velA, Point velB){
     	PlanetCell cellA = new PlanetCell(0, 0);
     	PlanetCell cellB = new PlanetCell(0, 0);
-    	
-    	GeoCell.cellArea = 1;
     	
     	cellA.add(Layer.BASALT, massA, true);
     	cellB.add(Layer.BASALT, massB, true);

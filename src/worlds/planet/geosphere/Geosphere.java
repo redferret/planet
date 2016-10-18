@@ -227,7 +227,7 @@ public abstract class Geosphere extends Surface {
                         if (spreadFrom.hasOcean()) {
                             diff *= 0.05f;
                         }
-                        mass = calcMass(diff, instance().getCellArea(), spreadFromSedType);
+                        mass = calcMass(diff, PlanetCell.cellArea, spreadFromSedType);
                         mass = calcFlow(mass);
 
                         spreadFromEB.transferSediment(spreadFromSedType, -mass);
