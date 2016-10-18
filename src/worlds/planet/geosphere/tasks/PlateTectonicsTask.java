@@ -177,21 +177,21 @@ public abstract class PlateTectonicsTask extends BasicTask {
             if (cellVelocity.getX() > 0) { // Move right
                 if (cellPos.getX() <= cellActPos.getX()) {
                     // Reset the cell's active position
-                    moveCell(cell, new Point(1, 0));
+                    collide(cell, new Point(1, 0));
                 }
             }else if (cellVelocity.getX() < 0) {
                 if (cellPos.getX() >= cellActPos.getX()) {
-                    moveCell(cell, new Point(-1, 0));
+                    collide(cell, new Point(-1, 0));
                 }
             }
 
             if (cellVelocity.getY() > 0) {
                 if (cellPos.getY() <= cellActPos.getY()) {
-                    moveCell(cell, new Point(0, 1));
+                    collide(cell, new Point(0, 1));
                 }
             }else if (cellVelocity.getY() < 0) {
                 if (cellPos.getY() >= cellActPos.getY()) {
-                    moveCell(cell, new Point(0, -1));
+                    collide(cell, new Point(0, -1));
                 }
             }
             
@@ -207,9 +207,27 @@ public abstract class PlateTectonicsTask extends BasicTask {
      * @param cell The cell being moved
      * @param direction The direction the cell is moving in
      */
-    private void moveCell(PlanetCell cell, Point direction) {
+    private void collide(PlanetCell cell, Point direction) {
     	resetActualPosition(cell);
-    	
+        Point cellPos = cell.getGridPosition();
+        
+    	geosphere.release(cell);
+        
+        int nx = (int)(cellPos.getX() + direction.getX());
+        int ny = (int)(cellPos.getY() + direction.getY());
+        
+        Point[] cells = {cellPos, new Point(nx, ny)};
+        
+        List<PlanetCell> workingCells = geosphere.waitForCells(cells);
+        
+        PlanetCell cellA = workingCells.get(0);
+        PlanetCell cellB = workingCells.get(1);
+        
+        Point cellAVel = calculateEnergyTransfer(cellA, cellB, 0);
+        Point cellBVel = calculateEnergyTransfer(cellB, cellA, 0);
+        
+        cellA.getVelocity().set(cellAVel);
+        cellB.getVelocity().set(cellBVel);
     }
     
     private void resetActualPosition(PlanetCell cell){
