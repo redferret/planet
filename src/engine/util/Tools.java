@@ -229,6 +229,9 @@ public class Tools {
     }
     
     /**
+     * Uses the "Fast Bresenham Type Algorithm For Drawing Circles"
+     * taken from "A Fast Bresenham Type Algorithm For Drawing Circles"
+     * John Kennedy et. all.
      * @param radius
      * @param cx
      * @param cy
@@ -255,17 +258,6 @@ public class Tools {
     }
     
     /**
-     * procedure Plot8CirclePoints(X,Y : longint);
-        begin
-         PutPixel(CX+X, CY+Y); {point in octant 1}
-         PutPixel(CX-X, CY+Y); {point in octant 4}
-         PutPixel(CX-X, CY-Y); {point in octant 5}
-         PutPixel(CX+X, CY-Y); {point in octant 8}
-         PutPixel(CX+Y, CY+X); {point in octant 2}
-         PutPixel(CX-Y, CY+X); {point in octant 3}
-         PutPixel(CX-Y, CY-X); {point in octant 6}
-         PutPixel(CX+Y, CY-X) {point in octant 7}
-        end; 
      * @param points
      * @param xy
      * @param cxcy 
