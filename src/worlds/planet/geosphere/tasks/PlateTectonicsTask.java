@@ -24,7 +24,7 @@ import worlds.planet.geosphere.Geosphere;
 public abstract class PlateTectonicsTask extends BasicTask {
 
     private List<List<Point>> plates = new ArrayList<>();
-    private Geosphere geosphere;
+    private final Geosphere geosphere;
     
     public PlateTectonicsTask(Geosphere geosphere) {
         this.geosphere = geosphere;
