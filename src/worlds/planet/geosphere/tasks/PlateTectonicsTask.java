@@ -7,6 +7,7 @@ import engine.util.Tools;
 import engine.util.task.BasicTask;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import worlds.planet.Planet;
 
@@ -40,53 +41,63 @@ public abstract class PlateTectonicsTask extends BasicTask {
     public void updatePlates() {
     	int cellLength = PlanetCell.cellArea;
     	plates.forEach(plate -> {
-            plate.forEach(cellPoint -> {
-            	updateCellAt(cellPoint, cellLength);
-            }); 
+            Iterator<Point> plateIter = plate.iterator();
+            while(plateIter.hasNext()){
+                updateCellAt(plateIter, cellLength);
+            }
         });
     }
     
-    private void updateCellAt(Point cellPoint, int cellLength) {
+    private void updateCellAt(Iterator<Point> plateIter, int cellLength) {
     	
+        Point cellPoint = plateIter.next();
+        
     	int x = (int)cellPoint.getX();
         int y = (int)cellPoint.getY();
         
         PlanetCell cell = geosphere.waitForCellAt(x, y);
-        Point cellVelocity = cell.getVelocity();
-        Point cellPos = cell.getGridPosition();
-        Point cellActPos = cell.getActualPosition();
-
-        cellActPos.add(cellVelocity);
-
-        Point adj = new Point(cellLength, cellLength);
-        cellPos.mul(adj);
         
+        if (cell.getPlateControlThread().equals(getTaskThread())){
         
-        // Move the strata from one cell to the other
-        // and if a collision occurs then energy is transfered
-        // into the cell being collided with and crust is trust
-        // on top or below depending on the densities of both
-        // cells. The collision is 100% inelastic, cells will stick
-        // together when collision occures.
-        if (cellVelocity.getX() > 0) { // Move right
-            if (cellPos.getX() <= cellActPos.getX()) {
-            	// Reset the cell's active position
-            	moveCell(cell, new Point(1, 0));
-            }
-        }else if (cellVelocity.getX() < 0) {
-            if (cellPos.getX() >= cellActPos.getX()) {
-                moveCell(cell, new Point(-1, 0));
-            }
-        }
+            Point cellVelocity = cell.getVelocity();
+            Point cellPos = cell.getGridPosition();
+            Point cellActPos = cell.getActualPosition();
 
-        if (cellVelocity.getY() > 0) {
-            if (cellPos.getY() <= cellActPos.getY()) {
-            	moveCell(cell, new Point(0, 1));
+            cellActPos.add(cellVelocity);
+
+            Point adj = new Point(cellLength, cellLength);
+            cellPos.mul(adj);
+
+
+            // Move the strata from one cell to the other
+            // and if a collision occurs then energy is transfered
+            // into the cell being collided with and crust is trust
+            // on top or below depending on the densities of both
+            // cells. The collision is 100% inelastic, cells will stick
+            // together when collision occures.
+            if (cellVelocity.getX() > 0) { // Move right
+                if (cellPos.getX() <= cellActPos.getX()) {
+                    // Reset the cell's active position
+                    moveCell(cell, new Point(1, 0));
+                }
+            }else if (cellVelocity.getX() < 0) {
+                if (cellPos.getX() >= cellActPos.getX()) {
+                    moveCell(cell, new Point(-1, 0));
+                }
             }
-        }else if (cellVelocity.getY() < 0) {
-            if (cellPos.getY() >= cellActPos.getY()) {
-            	moveCell(cell, new Point(0, -1));
+
+            if (cellVelocity.getY() > 0) {
+                if (cellPos.getY() <= cellActPos.getY()) {
+                    moveCell(cell, new Point(0, 1));
+                }
+            }else if (cellVelocity.getY() < 0) {
+                if (cellPos.getY() >= cellActPos.getY()) {
+                    moveCell(cell, new Point(0, -1));
+                }
             }
+            
+        }else{
+            plateIter.remove();
         }
         geosphere.release(cell);
     }
