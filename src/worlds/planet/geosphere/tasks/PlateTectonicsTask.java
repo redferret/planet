@@ -66,7 +66,7 @@ public abstract class PlateTectonicsTask extends BasicTask {
             PlanetCell cell = geosphere.waitForCellAt(x, y);
             cell.getVelocity().set(velocity);
             cell.setPlateControlThread(getTaskThread());
-            resetActualPosition(cell);
+            resetActualPositionOf(cell);
             geosphere.release(cell);
         });
         
@@ -213,7 +213,7 @@ public abstract class PlateTectonicsTask extends BasicTask {
      * @param direction The direction the cell is moving in
      */
     private void collide(PlanetCell cell, Point direction) {
-    	resetActualPosition(cell);
+    	resetActualPositionOf(cell);
         Point cellPos = cell.getGridPosition();
         
     	geosphere.release(cell);
@@ -261,7 +261,7 @@ public abstract class PlateTectonicsTask extends BasicTask {
         geosphere.release(workingCells);
     }
     
-    private void resetActualPosition(PlanetCell cell){
+    private void resetActualPositionOf(PlanetCell cell){
     	int cellLength = PlanetCell.cellLength;
     	cell.getActualPosition().set(cell.getGridPosition());
     	cell.getActualPosition().mul(new Point(cellLength, cellLength));
