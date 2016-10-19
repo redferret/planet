@@ -142,9 +142,16 @@ public class PlateTectonicsTaskTest {
     	PlanetCell cellA = testCells[0];
     	PlanetCell cellB = testCells[1];
     	
+        Point beforeNegAVel = velA.copy().neg();
+        Point beforeNegBVel = velB.copy().neg();
+        
     	Point finalVelA = calcEnergyTransferWithNullTest(cellA, cellB, 1);
     	Point finalVelB = calcEnergyTransferWithNullTest(cellB, cellA, 1);
     	
+        boolean dirChanged = testTask.directionsChanged(finalVelA, finalVelB, 
+                                        beforeNegAVel, beforeNegBVel);
+        assertTrue("Directions didn't change", dirChanged);
+        
     	Point expectedVelocityA = new Point(-14000f/3000f, 5);
     	assertEquals("Velocities of A don't match", expectedVelocityA, finalVelA);
     	
