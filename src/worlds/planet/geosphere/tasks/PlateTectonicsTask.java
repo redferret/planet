@@ -126,8 +126,8 @@ public abstract class PlateTectonicsTask extends BasicTask {
     }
     
     /**
-     * Will set the parent for each cell location.
-     * @param cellToSet
+     * Sets the given cell the control thread for plate tectonics.
+     * @param cellToSet The cell being set
      */
     public void setParent(PlanetCell cellToSet){
     	cellToSet.setPlateControlThread(getTaskThread());
@@ -145,6 +145,12 @@ public abstract class PlateTectonicsTask extends BasicTask {
     	return plates.size();
     }
     
+    /**
+     * Checks to makes sure the given cell belongs to the associated 
+     * thread of this task.
+     * @param cell The test cell.
+     * @return If the given cell is owned by the associated thread.
+     */
     public boolean isOwnedByThisPlate(PlanetCell cell){
         SurfaceThread pct = cell.getPlateControlThread();
         SurfaceThread taskThread = getTaskThread();
