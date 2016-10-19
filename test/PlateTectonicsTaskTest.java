@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import engine.util.Point;
+import engine.util.Tools;
 import engine.util.concurrent.SurfaceThread;
 import engine.util.task.Boundaries;
 import worlds.planet.PlanetCell;
@@ -83,6 +84,22 @@ public class PlateTectonicsTaskTest {
 
             assertEquals("Layer mismatch", expected, actual);
         }
+    }
+    
+    @Test
+    public void crustDepthTest(){
+        PlanetCell testCell = new PlanetCell(0, 0);
+        testCell.add(Layer.FELSIC_SANDSTONE, 100000, true);
+        PlanetCell.cellArea = 1;
+        testCell.recalculateHeight();
+        float heightWithoutOceans = testCell.getHeightWithoutOceans();
+        float massNotSubducted = Tools.calcMass(heightWithoutOceans, 1, 2990);
+        float massToRemove = Tools.calcHeight(massNotSubducted, 1, 2990);
+        
+        Float expectedMass = testCell.getTotalMass() - massToRemove;
+        testCell.remove(massToRemove, false, true);
+        Float actualMass = testCell.getTotalMass();
+        assertEquals("Masses don't match", expectedMass, actualMass);
     }
     
     @Test
