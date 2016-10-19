@@ -94,12 +94,13 @@ public class PlateTectonicsTaskTest {
         testCell.recalculateHeight();
         float heightWithoutOceans = testCell.getHeightWithoutOceans();
         float massNotSubducted = Tools.calcMass(heightWithoutOceans, 1, 2990);
-        float massToRemove = Tools.calcHeight(massNotSubducted, 1, 2990);
         
-        Float expectedMass = testCell.getTotalMass() - massToRemove;
-        testCell.remove(massToRemove, false, true);
+        Float expectedMass = testCell.getTotalMass() - massNotSubducted;
+        testCell.remove(massNotSubducted, false, true);
         Float actualMass = testCell.getTotalMass();
         assertEquals("Masses don't match", expectedMass, actualMass);
+        
+        
     }
     
     @Test
