@@ -31,21 +31,27 @@ public class Point {
     	return new Point(this);
     }
     
-    public Point add(Point p){
+    public Point add(Point p) {
         this.x += p.x;
         this.y += p.y;
         return this.copy();
     }
     
-    public Point mul(Point p){
+    public Point mul(Point p) {
     	this.x *= p.x;
     	this.y *= p.y;
     	return this.copy();
     }
     
-    public Point set(Point p){
+    public Point set(Point p) {
         this.x = p.x;
         this.y = p.y;
+        return this.copy();
+    }
+    
+    public Point neg() {
+        x = -x;
+        y = -y;
         return this.copy();
     }
     
