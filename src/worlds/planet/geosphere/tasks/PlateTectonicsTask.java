@@ -243,16 +243,8 @@ public abstract class PlateTectonicsTask extends BasicTask {
         cellA.getVelocity().set(cellAVel);
         cellB.getVelocity().set(cellBVel);
         
-        boolean xDirAChanged = (cellAVel.getX() * beforeNegAVel.getX()) < 0;
-        boolean yDirAChanged = (cellAVel.getY() * beforeNegAVel.getY()) < 0;
-        
-        boolean xDirBChanged = (cellBVel.getX() * beforeNegBVel.getX()) < 0;
-        boolean yDirBChanged = (cellBVel.getY() * beforeNegBVel.getY()) < 0;
-        
-        boolean noDirChange = (!xDirAChanged && !yDirAChanged) 
-                || (!xDirBChanged && !yDirBChanged);
-        
-        if (noDirChange){
+        if (directionsChanged(cellAVel, cellBVel, 
+                beforeNegAVel, beforeNegBVel)) {
             float magOfA = cellAVel.mag();
             float magOfB = cellBVel.mag();
             if (magOfA > magOfB){
@@ -265,6 +257,18 @@ public abstract class PlateTectonicsTask extends BasicTask {
         
         
         geosphere.release(workingCells);
+    }
+    
+    private boolean directionsChanged(Point cellAVel, Point cellBVel,
+                            Point beforeNegAVel, Point beforeNegBVel) {
+        boolean xDirAChanged = (cellAVel.getX() * beforeNegAVel.getX()) < 0;
+        boolean yDirAChanged = (cellAVel.getY() * beforeNegAVel.getY()) < 0;
+        
+        boolean xDirBChanged = (cellBVel.getX() * beforeNegBVel.getX()) < 0;
+        boolean yDirBChanged = (cellBVel.getY() * beforeNegBVel.getY()) < 0;
+        
+        return (!xDirAChanged && !yDirAChanged) 
+                || (!xDirBChanged && !yDirBChanged);
     }
     
     private void resetActualPositionOf(PlanetCell cell){
