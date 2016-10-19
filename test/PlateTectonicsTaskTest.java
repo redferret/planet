@@ -150,6 +150,10 @@ public class PlateTectonicsTaskTest {
     	PlanetCell testCell = new PlanetCell(0, 0);
         testTask.setParent(testCell);
         assertEquals("Thread not set", testThread, testCell.getPlateControlThread());
+        
+        boolean isOwnedByThread = testTask.isOwnedByThisPlate(testCell);
+        
+        assertTrue("Invaid Ownership", isOwnedByThread);
     }
     
     /**

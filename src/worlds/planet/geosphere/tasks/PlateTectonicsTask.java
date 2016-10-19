@@ -145,7 +145,7 @@ public abstract class PlateTectonicsTask extends BasicTask {
     	return plates.size();
     }
     
-    private boolean isOwnedByThisPlate(PlanetCell cell){
+    public boolean isOwnedByThisPlate(PlanetCell cell){
         SurfaceThread pct = cell.getPlateControlThread();
         SurfaceThread taskThread = getTaskThread();
         return pct.equals(taskThread);
@@ -180,7 +180,6 @@ public abstract class PlateTectonicsTask extends BasicTask {
             // together when collision occures.
             if (cellVelocity.getX() > 0) { // Move right
                 if (cellPos.getX() <= cellActPos.getX()) {
-                    // Reset the cell's active position
                     collide(cell, new Point(1, 0));
                 }
             }else if (cellVelocity.getX() < 0) {
