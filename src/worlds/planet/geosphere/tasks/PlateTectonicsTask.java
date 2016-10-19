@@ -259,7 +259,7 @@ public abstract class PlateTectonicsTask extends BasicTask {
         geosphere.release(workingCells);
     }
     
-    private boolean directionsChanged(Point cellAVel, Point cellBVel,
+    public boolean directionsChanged(Point cellAVel, Point cellBVel,
                             Point beforeNegAVel, Point beforeNegBVel) {
         boolean xDirAChanged = (cellAVel.getX() * beforeNegAVel.getX()) < 0;
         boolean yDirAChanged = (cellAVel.getY() * beforeNegAVel.getY()) < 0;
