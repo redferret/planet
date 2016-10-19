@@ -55,6 +55,10 @@ public class Point {
         return this.copy();
     }
     
+    public float mag(){
+        return (float) Math.sqrt((x*x + y*y));
+    }
+    
     public Point truncate(){
         return new Point((int)x, (int)y);
     }
