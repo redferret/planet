@@ -228,13 +228,35 @@ public abstract class PlateTectonicsTask extends BasicTask {
         PlanetCell cellA = workingCells.get(0);
         PlanetCell cellB = workingCells.get(1);
         
+        Point beforeNegAVel = cellA.getVelocity().copy().neg();
+        Point beforeNegBVel = cellB.getVelocity().copy().neg();
+        
         Point cellAVel = calculateEnergyTransfer(cellA, cellB, 0);
         Point cellBVel = calculateEnergyTransfer(cellB, cellA, 0);
         
         cellA.getVelocity().set(cellAVel);
         cellB.getVelocity().set(cellBVel);
         
-        thrustCrust(cellA, cellB, 2f);
+        boolean xDirAChanged = (cellAVel.getX() * beforeNegAVel.getX()) < 0;
+        boolean yDirAChanged = (cellAVel.getY() * beforeNegAVel.getY()) < 0;
+        
+        boolean xDirBChanged = (cellBVel.getX() * beforeNegBVel.getX()) < 0;
+        boolean yDirBChanged = (cellBVel.getY() * beforeNegBVel.getY()) < 0;
+        
+        boolean noDirChange = (!xDirAChanged && !yDirAChanged) 
+                || (!xDirBChanged && !yDirBChanged);
+        
+        if (noDirChange){
+            float magOfA = cellAVel.mag();
+            float magOfB = cellBVel.mag();
+            if (magOfA > magOfB){
+                thrustCrust(cellA, cellB, 2f);
+            }else{
+                thrustCrust(cellB, cellA, 2f);
+            }
+            
+        }
+        
         
         geosphere.release(workingCells);
     }
