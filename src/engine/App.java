@@ -5,16 +5,17 @@ import com.jme3.renderer.RenderManager;
 import worlds.planet.TestWorld;
 
 /**
- * This is the Main Class of your Game. You should only do initialization here.
- * Move your Logic into AppStates or Controls
- *
- * @author normenhansen
+ * Main entry point
  */
 public class App extends SimpleApplication {
 
-  private TestWorld world;
+  private static TestWorld world;
   
   public static void main(String[] args) {
+    
+    world = new TestWorld();
+    world.play();
+    
     App app = new App();
     app.showSettings = false;
     app.start();
@@ -22,11 +23,12 @@ public class App extends SimpleApplication {
 
   @Override
   public void simpleInitApp() {
-    
+    inputManager.setCursorVisible(true);
   }
 
   @Override
   public void simpleUpdate(float tpf) {
+    
   }
 
   @Override

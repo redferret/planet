@@ -56,6 +56,10 @@ public abstract class Planet {
     planetSurface.pauseThreads();
   }
 
+  public final void shutdown() {
+    planetSurface.killAllThreads();
+  }
+  
   public PlanetSurface getSurface() {
     return planetSurface;
   }
@@ -79,11 +83,6 @@ public abstract class Planet {
 
   public void setTimescale(TimeScale timescale) {
     this.timescale = timescale;
-  }
-
-  public static void main(String[] args) {
-    TestWorld world = new TestWorld();
-    world.play();
   }
   
 }
