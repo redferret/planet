@@ -315,6 +315,9 @@ public abstract class SurfaceMap<C extends Cell> {
    * Shuts down all threads in the pool.
    */
   public void killAllThreads() {
+    threadReferences.forEach(thread -> {
+      thread.kill();
+    });
     threadPool.shutdownNow();
   }
 

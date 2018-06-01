@@ -35,4 +35,11 @@ public class App extends SimpleApplication {
   public void simpleRender(RenderManager rm) {
 
   }
+
+  @Override
+  public void destroy() {
+    super.destroy();
+    world.shutdown();
+  }
+  
 }
