@@ -3,7 +3,7 @@ import java.util.Set;
 import org.junit.*;
 import worlds.planet.geosphere.Layer;
 import static org.junit.Assert.*;
-import worlds.planet.geosphere.Material;
+import worlds.planet.geosphere.LayerMaterial;
 
 /**
  *
@@ -16,7 +16,7 @@ public class LayerTest {
     Layer testLayer = new Layer();
     assertTrue(testLayer.getMass() == 0);
     
-    Material m1 = new Material("Test Material 1", 1000, 1, 1.2f, 1, null);
+    LayerMaterial m1 = new LayerMaterial("Test Material 1", 1000, 1, 1.2f, 1, null);
     
     testLayer.addMaterial(m1);
     testLayer.addMaterial(m1);
@@ -24,7 +24,7 @@ public class LayerTest {
     assertTrue(testLayer.getMass() == 2000);
     assertTrue(testLayer.getDensity() == 1.2f);
     
-    Set<Material> materials = testLayer.copyMaterials();
+    Set<LayerMaterial> materials = testLayer.copyMaterials();
     
     assertTrue(materials.size() == 1);
     materials.forEach(mat -> {
@@ -38,9 +38,9 @@ public class LayerTest {
     Layer testLayer = new Layer();
     assertTrue(testLayer.getMass() == 0);
     
-    Material m1 = new Material("Test Material 1", 1000, 1, 1.2f, 1, null);
-    Material m2 = new Material("Test Material 2", 50, 1, 2.2f, 1, null);
-    Material m3 = new Material("Test Material 3", 100, 1, 1.3f, 1, null);
+    LayerMaterial m1 = new LayerMaterial("Test Material 1", 1000, 1, 1.2f, 1, null);
+    LayerMaterial m2 = new LayerMaterial("Test Material 2", 50, 1, 2.2f, 1, null);
+    LayerMaterial m3 = new LayerMaterial("Test Material 3", 100, 1, 1.3f, 1, null);
     
     testLayer.addMaterial(m1);
     assertTrue(testLayer.getMass() == 1000);
@@ -58,11 +58,11 @@ public class LayerTest {
     Layer testLayer = new Layer();
     assertTrue(testLayer.getMass() == 0);
     
-    Material m1 = new Material("Test Material 1", 1000, 1, 1.2f, 1, null);
-    Material m2 = new Material("Test Material 2", 50, 1, 2.2f, 1, null);
-    Material m3 = new Material("Test Material 3", 100, 1, 1.3f, 1, null);
+    LayerMaterial m1 = new LayerMaterial("Test Material 1", 1000, 1, 1.2f, 1, null);
+    LayerMaterial m2 = new LayerMaterial("Test Material 2", 50, 1, 2.2f, 1, null);
+    LayerMaterial m3 = new LayerMaterial("Test Material 3", 100, 1, 1.3f, 1, null);
     
-    Set<Material> materials = new HashSet<>();
+    Set<LayerMaterial> materials = new HashSet<>();
     
     materials.add(m1);
     materials.add(m2);
@@ -80,11 +80,11 @@ public class LayerTest {
     Layer testLayer2 = new Layer();
     assertTrue(testLayer1.getMass() == 0);
     
-    Material m1 = new Material("Test Material 1", 1000, 1, 1.2f, 1, null);
-    Material m2 = new Material("Test Material 2", 50, 1, 2.2f, 1, null);
-    Material m3 = new Material("Test Material 3", 100, 1, 1.3f, 1, null);
+    LayerMaterial m1 = new LayerMaterial("Test Material 1", 1000, 1, 1.2f, 1, null);
+    LayerMaterial m2 = new LayerMaterial("Test Material 2", 50, 1, 2.2f, 1, null);
+    LayerMaterial m3 = new LayerMaterial("Test Material 3", 100, 1, 1.3f, 1, null);
     
-    Set<Material> materials = new HashSet<>();
+    Set<LayerMaterial> materials = new HashSet<>();
     
     materials.add(m1);
     materials.add(m2);
@@ -102,18 +102,18 @@ public class LayerTest {
   public void removeMaterialTest() {
     Layer testLayer = new Layer();
     
-    Material m1 = new Material("Test Material 1", 1000, 1, 1.2f, 1, null);
-    Material m2 = new Material("Test Material 2", 50, 1, 2.2f, 1, null);
-    Material m3 = new Material("Test Material 3", 100, 1, 1.3f, 1, null);
+    LayerMaterial m1 = new LayerMaterial("Test Material 1", 1000, 1, 1.2f, 1, null);
+    LayerMaterial m2 = new LayerMaterial("Test Material 2", 50, 1, 2.2f, 1, null);
+    LayerMaterial m3 = new LayerMaterial("Test Material 3", 100, 1, 1.3f, 1, null);
     
-    Set<Material> materials = new HashSet<>();
+    Set<LayerMaterial> materials = new HashSet<>();
     
     materials.add(m1);
     materials.add(m2);
     materials.add(m3);
     testLayer.addMaterials(materials);
     
-    Set<Material> removed = testLayer.removeMaterial(500);
+    Set<LayerMaterial> removed = testLayer.removeMaterial(500);
     
     float expectedM1Mass = (1000f/1150f) * 500;
     float expectedM2Mass = (50f/1150f) * 500;

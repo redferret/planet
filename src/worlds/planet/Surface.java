@@ -110,7 +110,7 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
     int x = (int) from.getX(), y = (int) from.getY();
     int xl = DIR_X_INDEX.length;
     Vec2[] points = new Vec2[xl + 1];
-    int worldSize = getGridWidth();
+    int worldSize = getSize();
     for (int s = 0; s < xl; s++) {
 
       tx = x + DIR_X_INDEX[s];

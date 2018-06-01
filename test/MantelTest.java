@@ -4,7 +4,7 @@ import worlds.planet.PlanetCell;
 import worlds.planet.PlanetSurface;
 import worlds.planet.TestWorld;
 import worlds.planet.geosphere.Layer;
-import worlds.planet.geosphere.Material;
+import worlds.planet.geosphere.LayerMaterial;
 import static org.junit.Assert.*;
 import worlds.planet.Planet;
 import static worlds.planet.Planet.instance;
@@ -30,7 +30,7 @@ public class MantelTest {
     instance().setTimescale(Planet.TimeScale.Geological);
     PlanetCell cell = surface.getCellAt(0, 0);
     
-    Material m1 = new Material("Basalt", 6E16f, 0.84f, 1900f, 1f, null);
+    LayerMaterial m1 = new LayerMaterial("Basalt", 6E16f, 0.84f, 1900f, 1f, null);
     Layer layer = new Layer();
     layer.addMaterial(m1);
     cell.addToStrata(layer, true);

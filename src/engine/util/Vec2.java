@@ -28,7 +28,7 @@ public class Vec2 {
   public float getY() {
     return y;
   }
-
+  
   public Vec2 copy() {
     return new Vec2(this);
   }

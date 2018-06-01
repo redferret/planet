@@ -1,5 +1,12 @@
 package engine.surface;
 
+import com.jme3.material.Material;
+import com.jme3.math.Vector2f;
+import com.jme3.renderer.Camera;
+import com.jme3.scene.Node;
+import com.jme3.terrain.geomipmap.TerrainLodControl;
+import com.jme3.terrain.geomipmap.TerrainQuad;
+import com.jme3.terrain.geomipmap.lodcalc.DistanceLodCalculator;
 import com.jme3.terrain.heightmap.AbstractHeightMap;
 import engine.util.concurrent.MThread;
 import java.util.ArrayList;
@@ -23,7 +30,8 @@ import engine.util.task.TaskFactory;
  * contains generic cells that implement the Cell class. 
  * A SurfaceMap by default doesn't setup any surface threads, therefore
  * the <code>setupThreads(int threadDivision, int delay)</code> needs to be
- * called after this super class is created.
+ * called after this super class is created. This class also extends
+ * AbstractHeightMap to render the surface.
  *
  * @author Richard DeSilvey
  * @param <C> The highest level abstraction of the cell i.e. PlanetCell
@@ -34,17 +42,14 @@ public abstract class SurfaceMap<C extends Cell> extends AbstractHeightMap {
    * The direction look up list for X values
    */
   public static final int[] DIR_X_INDEX = {-1, 0, 1, 1, 1, 0, -1, -1};
-
   /**
    * The direction look up list for Y values
    */
   public static final int[] DIR_Y_INDEX = {-1, -1, -1, 0, 1, 1, 1, 0};
-
   /**
    * The direction look up list for X values
    */
   public static final int[] HDIR_X_INDEX = {0, 1, 0, -1};
-
   /**
    * The direction look up list for Y values
    */
@@ -55,14 +60,16 @@ public abstract class SurfaceMap<C extends Cell> extends AbstractHeightMap {
   /**
    * The map containing the references to each data point on the surface.
    */
-  private Map<Integer, C> map;
+  protected Map<Integer, C> map;
   protected List<MThread> threadReferences;
   private final List<Integer[]> data;
   private int prevSubThreadAvg;
-  private final int gridWidth;
   private ExecutorService threadPool;
   private CyclicBarrier waitingGate;
-
+  
+  protected final TerrainQuad terrain;
+  private TerrainLodControl control;
+  
   /**
    * Create a new SurfaceMap. SurfaceThreads and Map need to be initialized
    * separably.
@@ -71,13 +78,30 @@ public abstract class SurfaceMap<C extends Cell> extends AbstractHeightMap {
    * @param delay The number of frames to delay updating
    */
   public SurfaceMap(int mapWidth, int delay) {
-    gridWidth = mapWidth;
+    this.size = mapWidth;
     threadReferences = new ArrayList<>();
     data = new ArrayList<>();
     prevSubThreadAvg = 0;
     displaySetting = 0;
+    terrain = new TerrainQuad("surface", 65, mapWidth + 1, null);
   }
 
+  public void bindMaterial(Material material) {
+    terrain.setMaterial(material);
+  }
+  
+  public void bindCameraForLODControl(Camera camera) {
+    control = new TerrainLodControl(terrain, camera);
+    control.setLodCalculator( new DistanceLodCalculator(65, 1.7f) ); // patch size, and a multiplier
+    terrain.addControl(control);
+  }
+  
+  public void bindTerrain(Node rootNode) {
+    terrain.setLocalTranslation(0, -100, 0);
+    terrain.setLocalScale(2f, 1f, 2f);
+    rootNode.attachChild(terrain);
+  }
+  
   /**
    * Using a ConcurrentHashMap as the Map data structure.
    *
@@ -185,13 +209,8 @@ public abstract class SurfaceMap<C extends Cell> extends AbstractHeightMap {
     prevSubThreadAvg = avg / threadReferences.size();
   }
 
-  public final int getGridWidth() {
-    return gridWidth;
-  }
-
   public final int getTotalNumberOfCells() {
-    int gw = getGridWidth();
-    return gw * gw;
+    return size * size;
   }
 
   /**
@@ -248,9 +267,9 @@ public abstract class SurfaceMap<C extends Cell> extends AbstractHeightMap {
    * called after the engine is created or if the map needs to be reset.
    */
   protected void buildMap() {
-    int cellCountWidth = gridWidth;
+    int cellCountWidth = size;
     int totalCells = (cellCountWidth * cellCountWidth);
-    int flagUpdate = totalCells / 2;
+    int flagUpdate = totalCells / 4;
     int generated = 0;
     // Initialize the map
     map.clear();
@@ -292,7 +311,7 @@ public abstract class SurfaceMap<C extends Cell> extends AbstractHeightMap {
 
     int threadCount = threadDivision * threadDivision;
     waitingGate = new CyclicBarrier(threadCount);
-    int w = gridWidth / threadDivision;
+    int w = size / threadDivision;
     Boundaries bounds;
     threadPool = Executors.newFixedThreadPool(threadCount + 1);
     for (int y = 0; y < threadDivision; y++) {
@@ -351,7 +370,7 @@ public abstract class SurfaceMap<C extends Cell> extends AbstractHeightMap {
    * data doesn't exist or if the data is locked by another thread.
    */
   public C getCellAt(int x, int y) {
-    int index = calcIndex(x, y, gridWidth);
+    int index = calcIndex(x, y);
     return getCellAt(index);
   }
 
@@ -371,10 +390,9 @@ public abstract class SurfaceMap<C extends Cell> extends AbstractHeightMap {
   public List<C> getCells(Vec2... cellPositions) {
 
     int[] indexes = new int[cellPositions.length];
-    int w = gridWidth;
     for (int i = 0; i < indexes.length; i++) {
       Vec2 p = cellPositions[i];
-      int index = calcIndex((int) p.getX(), (int) p.getY(), w);
+      int index = calcIndex((int) p.getX(), (int) p.getY());
       indexes[i] = index;
     }
 
@@ -400,7 +418,7 @@ public abstract class SurfaceMap<C extends Cell> extends AbstractHeightMap {
    */
   private void setCell(C cell) {
     int x = cell.getX(), y = cell.getY();
-    int index = calcIndex(x, y, gridWidth);
+    int index = calcIndex(x, y);
     map.put(index, cell);
   }
 
@@ -410,11 +428,10 @@ public abstract class SurfaceMap<C extends Cell> extends AbstractHeightMap {
    *
    * @param x The x coordinate
    * @param y The y coordinate
-   * @param w The width of the map
    * @return The index corresponding to the x and y location
    */
-  public static int calcIndex(int x, int y, int w) {
-    return (w * y) + x;
+  public int calcIndex(int x, int y) {
+    return (size * y) + x;
   }
 
   /**
@@ -422,11 +439,10 @@ public abstract class SurfaceMap<C extends Cell> extends AbstractHeightMap {
    * index.
    *
    * @param index The index of the element
-   * @param w The width of the map
    * @return The x coordinate
    */
-  public static int calcX(int index, int w) {
-    return index % w;
+  public int calcX(int index) {
+    return index % size;
   }
 
   /**
@@ -434,11 +450,10 @@ public abstract class SurfaceMap<C extends Cell> extends AbstractHeightMap {
    * index.
    *
    * @param index The index of the element
-   * @param w The width of the map
    * @return The y coordinate
    */
-  public static int calcY(int index, int w) {
-    return index / w;
+  public int calcY(int index) {
+    return index / size;
   }
 
   public List<Integer[]> getCellData(int x, int y) {

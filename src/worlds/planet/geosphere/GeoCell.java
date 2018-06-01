@@ -13,6 +13,7 @@ import worlds.planet.PlanetCell;
 import worlds.planet.PlanetSurface;
 
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static worlds.planet.Planet.instance;
 import static worlds.planet.Surface.*;
@@ -102,6 +103,11 @@ public class GeoCell extends Mantle {
     totalVolume = 0f;
     curAmountSubmerged = 0f;
     crustTemperature = 0;
+    LayerMaterial m1 = new LayerMaterial("Test Material 1", 
+            ThreadLocalRandom.current().nextFloat()*200000, 1, 1.2f, 1, null);
+    Layer layer = new Layer();
+    layer.addMaterial(m1);
+    addToStrata(layer, true);
   }
 
   public void setVelocity(Vec2 vel) {
@@ -245,7 +251,7 @@ public class GeoCell extends Mantle {
       if (currentDepth < depth) {
         float diff = depth - currentDepth;
         float diffInMass = Util.calcMass(diff, PlanetCell.area, selectedType.getDensity());
-        Set<Material> removedMaterials = selectedRockLayer.removeMaterial(-diffInMass);
+        Set<LayerMaterial> removedMaterials = selectedRockLayer.removeMaterial(-diffInMass);
         Layer splitRockLayer = new Layer(removedMaterials);
         workingStrata.push(selectedRockLayer);
         workingStrata.push(rockToAdd.copy());

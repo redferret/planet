@@ -57,7 +57,7 @@ public class SurfaceMapAndTaskTest {
 
   @Test
   public void mapSizeTest() {
-    int mapWidth = testSurface.getGridWidth();
+    int mapWidth = testSurface.getSize();
     assertTrue("Number of cells don't match", MAP_SIZE == mapWidth);
   }
 
@@ -164,7 +164,7 @@ public class SurfaceMapAndTaskTest {
     TestCell[] cellArray = cells.toArray(new TestCell[cells.size()]);
     for (int i = 0; i < cellArray.length; i++) {
       Vec2 testPoint = cellArray[i].getGridPosition();
-      Integer testIndex = SurfaceMap.calcIndex((int) testPoint.getX(), (int) testPoint.getY(), MAP_SIZE);
+      Integer testIndex = testSurface.calcIndex((int) testPoint.getX(), (int) testPoint.getY());
       Integer expectedIndex = cellPoints[i];
       assertEquals("Cell Indexes don't match", expectedIndex, testIndex);
     }
@@ -191,13 +191,13 @@ public class SurfaceMapAndTaskTest {
    * @param expectedIndex The expected calculated index
    */
   private void testIndex(int testX, int testY, final int WIDTH, Integer expectedIndex) {
-    Integer index = TestSurface.calcIndex(testX, testY, WIDTH);
+    Integer index = testSurface.calcIndex(testX, testY);
     assertEquals(expectedIndex, index);
   }
 
   private void testXY(int testIndex, int testWidth, Integer expectedX, Integer expectedY) {
-    Integer testX = TestSurface.calcX(testIndex, testWidth);
-    Integer testY = TestSurface.calcY(testIndex, testWidth);
+    Integer testX = testSurface.calcX(testIndex);
+    Integer testY = testSurface.calcY(testIndex);
 
     assertEquals(expectedX, testX);
     assertEquals(expectedY, testY);

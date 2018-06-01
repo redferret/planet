@@ -1,4 +1,4 @@
-package worlds.planet.enums;
+package worlds.planet.geosphere;
 
 /**
  *

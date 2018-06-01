@@ -1,3 +1,0 @@
-MyFactory
-TaskFactoryTest
-MyFactory$MyTask

@@ -12,7 +12,7 @@ import java.awt.Color;
  * 
  * @author Richard
  */
-public class Material {
+public class LayerMaterial {
   
   private final String name;
   
@@ -38,7 +38,7 @@ public class Material {
    */
   private final Color color;
   
-  public Material(String name, float mass, float specificHeat, 
+  public LayerMaterial(String name, float mass, float specificHeat, 
           float density, float erosionFactor, Color color) {
     this.name = name;
     this.density = density;
@@ -48,8 +48,8 @@ public class Material {
     this.specificHeat = specificHeat;
   }
   
-  public Material copy() {
-    return new Material(this.name, this.mass, this.specificHeat, 
+  public LayerMaterial copy() {
+    return new LayerMaterial(this.name, this.mass, this.specificHeat, 
             this.density, this.erosionFactor, this.color);
   }
 
@@ -63,8 +63,8 @@ public class Material {
 
   @Override
   public boolean equals(Object obj) {
-    if (obj instanceof Material) {
-      Material mat = (Material) obj;
+    if (obj instanceof LayerMaterial) {
+      LayerMaterial mat = (LayerMaterial) obj;
       return mat.name.equals(this.name);
     } else {
       return false;

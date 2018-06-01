@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Set;
 import worlds.planet.PlanetCell;
 import worlds.planet.Surface;
-import worlds.planet.enums.RockType;
 
 /**
  *
@@ -45,7 +44,7 @@ public class Layer {
    * such as granite, basalt, sandstones, or sediments eroded from these
    * rocks. 
    */
-  private final Set<Material> materials;
+  private final Set<LayerMaterial> materials;
   
   public Layer() {
     this.materials = new HashSet<>();
@@ -68,7 +67,7 @@ public class Layer {
     this.type = layer.type;
   }
 
-  public Layer(Set<Material> materials) {
+  public Layer(Set<LayerMaterial> materials) {
     this.materials = new HashSet<>();
     this.materials.addAll(materials);
     update();
@@ -127,7 +126,7 @@ public class Layer {
     addMaterials(layer.materials);
   }
   
-  public void addMaterials(Set<Material> materials) {
+  public void addMaterials(Set<LayerMaterial> materials) {
     materials.forEach(material -> {
       addMaterial(material);
     });
@@ -138,11 +137,11 @@ public class Layer {
    * adds the material, matches update the current material.
    * @param material 
    */
-  public void addMaterial(Material material) {
+  public void addMaterial(LayerMaterial material) {
     // Search for the material if it exists and update that instead of
     // adding a new one, otherwise add a new one.
     boolean found = false;
-    for (Material m : materials) {
+    for (LayerMaterial m : materials) {
       if (m.getName().equals(material.getName())) {
         m.addMass(material.getMass());
         found = true;
@@ -186,8 +185,8 @@ public class Layer {
    * Performs a deep copy of the materials in the layer.
    * @return 
    */
-  public Set<Material> copyMaterials() {
-    Set<Material> copies = new HashSet<>();
+  public Set<LayerMaterial> copyMaterials() {
+    Set<LayerMaterial> copies = new HashSet<>();
     totalMass = 0;
     materials.forEach(material -> {
       copies.add(material.copy());
@@ -201,8 +200,8 @@ public class Layer {
    * @param mass The amount of mass being removed from this Rock Layer.
    * @return 
    */
-  public Set<Material> removeMaterial(float mass) {
-    Set<Material> removedMaterials = new HashSet<>();
+  public Set<LayerMaterial> removeMaterial(float mass) {
+    Set<LayerMaterial> removedMaterials = new HashSet<>();
     // If the mass being removed is greater than the totalMass
     if (mass > totalMass) {
       removedMaterials = copyMaterials();
@@ -215,13 +214,13 @@ public class Layer {
     
     // Search for the material if it exists and update that instead of
     // adding a new one, otherwise add a new one.
-    for (Material material : materials) {
+    for (LayerMaterial material : materials) {
       float massOfMaterial = material.getMass();
       float ratioOfMaterial = massOfMaterial / totalMass;
       float removedMass = massToRemove * ratioOfMaterial;
       
       // Copy the material and set it's mass to the correct ratio
-      Material removedMaterial = material.copy();
+      LayerMaterial removedMaterial = material.copy();
       
       material.addMass(-removedMass);
       if (material.getMass() == 0) {
