@@ -2,8 +2,6 @@
 package worlds.planet.geosphere.tasks;
 
 import engine.util.task.Task;
-import worlds.planet.PlanetCell;
-import static worlds.planet.Surface.timeStep;
 import worlds.planet.Util;
 import worlds.planet.geosphere.GeoCell;
 import worlds.planet.geosphere.Geosphere;

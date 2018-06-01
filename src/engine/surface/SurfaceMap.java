@@ -1,5 +1,6 @@
 package engine.surface;
 
+import com.jme3.terrain.heightmap.AbstractHeightMap;
 import engine.util.concurrent.MThread;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,18 +20,16 @@ import engine.util.task.TaskFactory;
 
 /**
  * The SurfaceMap is a generic map for all the systems on the planet. The map
- * contains generic cells. The RenderInterface is not required for this class
- * but it gives two methods for rendering each map. This implementation may
- * change in the future when new graphic rendering capabilities change. A
- * SurfaceMap also by default doesn't instantiate any SurfaceThreads, therefore
+ * contains generic cells that implement the Cell class. 
+ * A SurfaceMap by default doesn't setup any surface threads, therefore
  * the <code>setupThreads(int threadDivision, int delay)</code> needs to be
  * called after this super class is created.
  *
  * @author Richard DeSilvey
  * @param <C> The highest level abstraction of the cell i.e. PlanetCell
  */
-public abstract class SurfaceMap<C extends Cell> {
-
+public abstract class SurfaceMap<C extends Cell> extends AbstractHeightMap {
+  
   /**
    * The direction look up list for X values
    */

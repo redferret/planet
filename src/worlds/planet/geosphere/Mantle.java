@@ -3,6 +3,7 @@ package worlds.planet.geosphere;
 import java.awt.Color;
 import java.util.List;
 import engine.surface.Cell;
+import engine.util.concurrent.AtomicFloat;
 import worlds.planet.Util;
 
 /**
@@ -16,7 +17,7 @@ public class Mantle extends Cell {
 
   private static Integer[][] heatMap;
 
-  private float temperature;
+  private AtomicFloat temperature;
   
   /**
    * The average density of the mantel. The units are in kilograms per cubic
@@ -31,7 +32,7 @@ public class Mantle extends Cell {
 
   public Mantle(int x, int y) {
     super(x, y);
-    temperature = 1200;
+    temperature = new AtomicFloat(1200);
   }
 
   /**
@@ -40,33 +41,34 @@ public class Mantle extends Cell {
    * @return A value between 1 and 0. Value of 1 is a temperature of zero.
    */
   public float mantleDensityFactor() {
-    return -0.00000006f * (temperature * temperature) + 1f;
+    float temp = temperature.get();
+    return -0.00000006f * (temp * temp) + 1f;
   }
   
   public void addToMantleHeat(float amount) {
-    temperature += amount;
-    if (temperature > 4000) {
-      temperature = 4000;
-    } else if (temperature < -273) {
-      temperature = -273;
+    float temp = temperature.getAndSet(temperature.get() + amount);
+    if (temp > 4000) {
+      temperature.getAndSet(4000);
+    } else if (temp < -273) {
+      temperature.getAndSet(-273);
     }
   }
 
   public void cool(float amount) {
-    temperature -= amount;
-    if (temperature < 0) {
-      temperature = 0;
+    float temp = temperature.getAndSet(temperature.get() - amount);
+    if (temp < -273) {
+      temperature.getAndSet(-273);
     }
   }
 
   public float getMantleTemperature() {
-    return temperature;
+    return temperature.get();
   }
 
   @Override
   public List<Integer[]> render(List<Integer[]> settings) {
 
-    int index = (int) (temperature / 12);
+    int index = (int) (temperature.get() / 12);
     index = index >= heatMap.length - 1 ? heatMap.length - 1 : index < 0 ? 0 : index;
     settings.add(heatMap[index]);
 

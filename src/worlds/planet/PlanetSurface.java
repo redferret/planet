@@ -22,4 +22,9 @@ public class PlanetSurface extends Geosphere {
     super(worldSize, surfaceDelay, threadsDelay, threadCount);
 
   }
+
+  @Override
+  public boolean load() {
+    return false;
+  }
 }

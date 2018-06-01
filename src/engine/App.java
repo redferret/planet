@@ -33,7 +33,7 @@ public class App extends SimpleApplication {
 
   @Override
   public void simpleRender(RenderManager rm) {
-
+    world.getSurface().getCellData(0, 0);
   }
 
   @Override

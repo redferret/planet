@@ -508,7 +508,7 @@ public class GeoCell extends Mantle {
   }
 
   @Override
-  public List<Integer[]> render(List<Integer[]> settings) {
+  public synchronized List<Integer[]> render(List<Integer[]> settings) {
     int setting;
     PlanetSurface surface = (PlanetSurface) instance().getSurface();
     switch (surface.displaySetting) {
