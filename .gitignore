@@ -1,2 +1,5 @@
 /nbproject/private/
 /dist/
+/build/*
+/build/assets.jar
+/build/built-jar.properties

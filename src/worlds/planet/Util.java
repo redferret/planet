@@ -1,6 +1,9 @@
 package worlds.planet;
 
+import com.jme3.math.Vector2f;
 import engine.surface.Cell;
+import static engine.surface.SurfaceMap.DIR_X_INDEX;
+import static engine.surface.SurfaceMap.DIR_Y_INDEX;
 import engine.util.Vec2;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -21,6 +24,41 @@ import worlds.planet.geosphere.Layer;
  */
 public class Util {
 
+  public static Vector2f scalePositionForTerrain(float x, float y, int quadWidth) {
+    return new Vector2f((x * 2) - quadWidth, (y * 2) - quadWidth);
+  }
+  
+  /**
+   * Selects all the positions that are around the position 'from'. This method
+   * does not select resources or cells from the map but builds a list of
+   * positions to use to select resources. The last element of this list if the
+   * Vec2 from.
+   *
+   * @param from The center position
+   * @param size Width of the surface
+   * @return The calculated positions around the center point 'from'
+   */
+  public static Vec2[] getCellIndexesFrom(Vec2 from, int size) {
+    int tx, ty, mx, my;
+    int x = (int) from.getX(), y = (int) from.getY();
+    int xl = DIR_X_INDEX.length;
+    Vec2[] points = new Vec2[xl];
+    int worldSize = size;
+    for (int s = 0; s < xl; s++) {
+
+      tx = x + DIR_X_INDEX[s];
+      ty = y + DIR_Y_INDEX[s];
+
+      // Check the boundaries
+      mx = checkBounds(tx, worldSize);
+      my = checkBounds(ty, worldSize);
+
+      Vec2 p = new Vec2(mx, my);
+      points[s] = p;
+    }
+    return points;
+  }
+  
   /**
    * To help create height maps, heat maps, etc, the method takes a list of
    * colors, the colors are then interpolated with each other evenly across the

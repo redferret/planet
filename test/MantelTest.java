@@ -5,10 +5,9 @@ import worlds.planet.PlanetSurface;
 import worlds.planet.TestWorld;
 import worlds.planet.geosphere.Layer;
 import worlds.planet.geosphere.LayerMaterial;
-import static org.junit.Assert.*;
 import worlds.planet.Planet;
 import static worlds.planet.Planet.instance;
-import worlds.planet.geosphere.tasks.MantleHeatLoss;
+import worlds.planet.geosphere.tasks.MantleRadiation;
 
 /**
  *
@@ -35,7 +34,7 @@ public class MantelTest {
     layer.addMaterial(m1);
     cell.addToStrata(layer, true);
     
-    MantleHeatLoss testTask = new MantleHeatLoss(surface);
+    MantleRadiation testTask = new MantleRadiation(surface);
     testTask.perform(0, 0);
     System.out.println("Cell Thickness " + cell.getStrataThickness());
     System.out.println("Cell Height " + cell.getHeight());

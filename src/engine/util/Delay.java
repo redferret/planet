@@ -11,7 +11,7 @@ import java.io.Serializable;
 public class Delay implements Serializable {
 
   private int delayTime;
-  private final int maxDelay;
+  private int maxDelay;
 
   private boolean reset;
 
@@ -44,6 +44,11 @@ public class Delay implements Serializable {
     delayTime = 0;
   }
 
+  public void setDelay(int delayTime) {
+    this.maxDelay = delayTime;
+    reset();
+  }
+  
   /**
    * Increment then check to see if this delay has reached it's trigger delay
    * (max delay defined by constructor)

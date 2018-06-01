@@ -103,8 +103,7 @@ public class GeoCell extends Mantle {
     totalVolume = 0f;
     curAmountSubmerged = 0f;
     crustTemperature = 0;
-    LayerMaterial m1 = new LayerMaterial("Test Material 1", 
-            ThreadLocalRandom.current().nextFloat()*200000, 1, 1.2f, 1, null);
+    LayerMaterial m1 = new LayerMaterial("Test Material 1",1e8f, 12.8f, 1.2f, 1, null);
     Layer layer = new Layer();
     layer.addMaterial(m1);
     addToStrata(layer, true);

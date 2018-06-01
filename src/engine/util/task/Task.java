@@ -42,7 +42,8 @@ public abstract class Task {
    * This method is called when a task is added to a TaskManager. This method is
    * used because in some instances the rest of the framework hasn't been
    * initialized yet. CompoundTasks that add subtasks would use this method
-   * instead of a constructor.
+   * instead of a constructor, otherwise the constructor is called then
+   * this method is called.
    */
   public abstract void construct();
 

@@ -1,9 +1,14 @@
 package worlds.planet;
 
+import com.jme3.math.Vector2f;
 import java.util.concurrent.atomic.AtomicLong;
 
 import engine.surface.SurfaceMap;
 import engine.util.Vec2;
+import engine.util.task.BasicTask;
+import engine.util.task.Task;
+import java.util.ArrayList;
+import java.util.List;
 import worlds.MinMaxHeightFactory;
 
 import static worlds.planet.Util.checkBounds;
@@ -54,7 +59,7 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
   public Surface(int planetWidth, int ageStepDelay, int threadsDelay, int threadCount) {
     super(planetWidth, DEFAULT_THREAD_DELAY);
     setupThreads(threadCount, threadsDelay);
-    setupDefaultMap(planetWidth, threadCount);
+    setupDefaultMap(planetWidth + 1, threadCount);
     mhFactory = new MinMaxHeightFactory(this);
     produceTasks(mhFactory);
     reset();
@@ -93,38 +98,6 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
 
   public float getLowestHeight() {
     return mhFactory.getLowestHeight();
-  }
-
-
-  /**
-   * Selects all the positions that are around the position 'from'. This method
- does not select resources or cells from the map but builds a list of
- positions to use to select resources. The last element of this list if the
- Vec2 from.
-   *
-   * @param from The center position
-   * @return The calculated positions around the center point 'from'
-   */
-  public Vec2[] getCellIndexesFrom(Vec2 from) {
-    int tx, ty, mx, my;
-    int x = (int) from.getX(), y = (int) from.getY();
-    int xl = DIR_X_INDEX.length;
-    Vec2[] points = new Vec2[xl + 1];
-    int worldSize = getSize();
-    for (int s = 0; s < xl; s++) {
-
-      tx = x + DIR_X_INDEX[s];
-      ty = y + DIR_Y_INDEX[s];
-
-      // Check the boundaries
-      mx = checkBounds(tx, worldSize);
-      my = checkBounds(ty, worldSize);
-
-      Vec2 p = new Vec2(mx, my);
-      points[s] = p;
-    }
-    points[xl] = from;
-    return points;
   }
 
 }

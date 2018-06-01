@@ -12,10 +12,8 @@ import com.jme3.renderer.RenderManager;
 import com.jme3.system.AppSettings;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
-import java.util.concurrent.ThreadLocalRandom;
+import engine.util.Delay;
 import worlds.planet.TestWorld;
-import worlds.planet.geosphere.Layer;
-import worlds.planet.geosphere.LayerMaterial;
 
 /**
  * Main entry point
@@ -26,6 +24,7 @@ public class App extends SimpleApplication {
   private Material terrainMaterial;
   private Material wireFrameMat;
   private boolean wireframe = false;
+  private final Delay delay = new Delay(500);
   
   public static void main(String[] args) {
     world = new TestWorld();
@@ -38,7 +37,7 @@ public class App extends SimpleApplication {
 
   @Override
   public void simpleInitApp() {
-    flyCam.setMoveSpeed(250f);
+    flyCam.setMoveSpeed(300f);
     flyCam.setZoomSpeed(25f);
 
     inputManager.setCursorVisible(true);
@@ -46,7 +45,7 @@ public class App extends SimpleApplication {
     world.getSurface().bindCameraForLODControl(getCamera());
     terrainMaterial = new Material(assetManager,
             "Common/MatDefs/Terrain/TerrainLighting.j3md");
-    Texture def = assetManager.loadTexture("Textures/terrain.jpg");
+    Texture def = assetManager.loadTexture("Textures/lava2.jpg");
     def.setWrap(WrapMode.Repeat);
 
     terrainMaterial.setBoolean("useTriPlanarMapping", false);
@@ -69,12 +68,7 @@ public class App extends SimpleApplication {
 
     inputManager.addMapping("wireframe", new KeyTrigger(KeyInput.KEY_T));
     inputManager.addListener(actionListener, "wireframe");
-    
-//    LayerMaterial m1 = new LayerMaterial("Test Material 1",1000000, 1, 1.2f, 1, null);
-//    Layer layer = new Layer();
-//    layer.addMaterial(m1);
-//    world.getSurface().getCellAt(0, 0).addToStrata(layer, true);
-//    world.getSurface().getCellAt(0, 1).addToStrata(layer, true);
+    world.getSurface().getCellAt(10, 10).addToMantleHeat(4000);
     world.play();
   }
   private final ActionListener actionListener = new ActionListener() {
@@ -94,6 +88,7 @@ public class App extends SimpleApplication {
 
   @Override
   public void simpleUpdate(float tpf) {
+    if (delay.check())
     world.getSurface().updateHeightMap();
   }
 

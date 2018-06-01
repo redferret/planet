@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.List;
 import engine.surface.Cell;
 import engine.util.concurrent.AtomicFloat;
+import java.util.concurrent.ThreadLocalRandom;
 import worlds.planet.Util;
 
 /**
@@ -15,9 +16,10 @@ import worlds.planet.Util;
  */
 public class Mantle extends Cell {
 
-  private static Integer[][] heatMap;
+  public static Integer[][] heatMap;
 
-  private AtomicFloat temperature;
+  private final AtomicFloat temperature;
+  private float temperatureFlux, temperatureAcc;
   
   /**
    * The average density of the mantel. The units are in kilograms per cubic
@@ -32,9 +34,31 @@ public class Mantle extends Cell {
 
   public Mantle(int x, int y) {
     super(x, y);
-    temperature = new AtomicFloat(1200);
+    temperature = new AtomicFloat(ThreadLocalRandom.current().nextInt(500, 700));
+    temperatureFlux = 0;
+    temperatureAcc = 0;
   }
 
+  public void zeroTemperatureAcc() {
+    this.temperatureAcc = 0;
+  }
+  
+  public void applyTemperatureAcc(float rate) {
+    this.temperatureAcc += rate;
+  }
+
+  public void applyTemperatureFlux(float temperatureAcc) {
+    this.temperatureFlux += temperatureAcc;
+  }
+
+  public float getTemperatureAcc() {
+    return temperatureAcc;
+  }
+
+  public float getTemperatureFlux() {
+    return temperatureFlux;
+  }
+  
   /**
    * A cell is less dense if it's hotter. This will be a percentage of the 
    * actual density of the material for this cell. 
@@ -46,18 +70,13 @@ public class Mantle extends Cell {
   }
   
   public void addToMantleHeat(float amount) {
-    float temp = temperature.getAndSet(temperature.get() + amount);
+    float temp = temperature.get() + amount;
     if (temp > 4000) {
       temperature.getAndSet(4000);
     } else if (temp < -273) {
       temperature.getAndSet(-273);
-    }
-  }
-
-  public void cool(float amount) {
-    float temp = temperature.getAndSet(temperature.get() - amount);
-    if (temp < -273) {
-      temperature.getAndSet(-273);
+    } else {
+      temperature.getAndSet(temp);
     }
   }
 

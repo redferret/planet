@@ -1,6 +1,7 @@
 
 package worlds.planet.geosphere.tasks;
 
+import engine.util.Delay;
 import engine.util.task.Task;
 import worlds.planet.Util;
 import worlds.planet.geosphere.GeoCell;
@@ -13,24 +14,15 @@ import worlds.planet.geosphere.Geosphere;
  * much heat is diffused into the rock above. 
  * @author Richard
  */
-public class MantleHeatLoss extends Task {
+public class MantleRadiation extends Task {
 
   private final Geosphere geosphere;
-
-  /**
-   * A simple task that allows heat to radiate out vertically. This cooling
-   * is based off of inferred flux. The hotter the cell is the more it will
-   * release that heat. The rate that this heat is released can trigger
-   * volcanoes. 
-   */
-  public static float mantleSpecificHeat;
+  private final Delay delay;
   
-  static {
-    mantleSpecificHeat = 2.6f;
-  }
   
-  public MantleHeatLoss(Geosphere geosphere) {
+  public MantleRadiation(Geosphere geosphere) {
     this.geosphere = geosphere;
+    delay = new Delay(10000);
   }
   
   @Override
@@ -43,8 +35,9 @@ public class MantleHeatLoss extends Task {
     float heatFromMantle = Util.calcHeatRadiation(cell.getMantleTemperature());
     float denom = (cell.getTotalMass() * cell.getSpecificHeat());
     float tempChangeToMantle = heatFromMantle / denom;
-    cell.addToMantleHeat(-tempChangeToMantle);
     
+    float acc = tempChangeToMantle;
+    cell.applyTemperatureAcc(acc);
   }
 
   @Override
@@ -57,7 +50,7 @@ public class MantleHeatLoss extends Task {
 
   @Override
   public boolean check() {
-    return true;
+    return delay.check();
   }
   
 }
