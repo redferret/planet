@@ -2,13 +2,10 @@ package worlds.planet.geosphere;
 
 import com.jme3.math.Vector2f;
 import engine.util.Vec2;
-import engine.util.task.Task;
 import java.util.ArrayList;
 import java.util.List;
-import worlds.planet.PlanetCell;
 import worlds.planet.Surface;
 import worlds.planet.Util;
-import worlds.planet.geosphere.tasks.MantleHeatUpdate;
 import worlds.planet.geosphere.tasks.MantleConduction;
 import worlds.planet.geosphere.tasks.MantleRadiation;
 /**
@@ -28,9 +25,6 @@ public abstract class Geosphere extends Surface {
     });
     produceTasks(() -> {
       return new MantleConduction(this);
-    });
-    produceTasks(() -> {
-      return new MantleHeatUpdate(this);
     });
   }
   

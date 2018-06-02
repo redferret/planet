@@ -19,7 +19,7 @@ public class Mantle extends Cell {
   public static Integer[][] heatMap;
 
   private final AtomicFloat temperature;
-  private float temperatureFlux, temperatureAcc;
+  private float temperatureFlux;
   
   /**
    * The average density of the mantel. The units are in kilograms per cubic
@@ -34,29 +34,12 @@ public class Mantle extends Cell {
 
   public Mantle(int x, int y) {
     super(x, y);
-    temperature = new AtomicFloat(ThreadLocalRandom.current().nextInt(200, 900));
+    temperature = new AtomicFloat(ThreadLocalRandom.current().nextInt(200, 2000));
     temperatureFlux = 0;
-    temperatureAcc = 0;
   }
 
-  public void zeroTemperatureAcc() {
-    this.temperatureAcc = 0;
-  }
-  
-  public void applyTemperatureAcc(float rate) {
-    this.temperatureAcc += rate;
-  }
-
-  public void applyTemperatureFlux(float temperatureAcc) {
-    this.temperatureFlux += temperatureAcc;
-  }
-
-  public float getTemperatureAcc() {
-    return temperatureAcc;
-  }
-
-  public float getTemperatureFlux() {
-    return temperatureFlux;
+  public void updateTemperatureFlux(float rate) {
+    temperatureFlux = rate;
   }
   
   /**

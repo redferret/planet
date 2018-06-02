@@ -29,8 +29,10 @@ public class App extends SimpleApplication {
   public static void main(String[] args) {
     world = new TestWorld();
     App app = new App();
+    
     app.showSettings = false;
     app.settings = new AppSettings(true);
+//    app.settings.setFullscreen(true);
     app.settings.setTitle("Planet");
     app.start();
   }
@@ -39,7 +41,8 @@ public class App extends SimpleApplication {
   public void simpleInitApp() {
     flyCam.setMoveSpeed(400f);
     flyCam.setZoomSpeed(20f);
-
+    
+    setDisplayStatView(false);
     inputManager.setCursorVisible(true);
 
     world.getSurface().bindCameraForLODControl(getCamera());
@@ -68,7 +71,6 @@ public class App extends SimpleApplication {
 
     inputManager.addMapping("wireframe", new KeyTrigger(KeyInput.KEY_T));
     inputManager.addListener(actionListener, "wireframe");
-    
     world.play();
   }
   private final ActionListener actionListener = new ActionListener() {
