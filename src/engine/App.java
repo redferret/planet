@@ -37,8 +37,8 @@ public class App extends SimpleApplication {
 
   @Override
   public void simpleInitApp() {
-    flyCam.setMoveSpeed(300f);
-    flyCam.setZoomSpeed(25f);
+    flyCam.setMoveSpeed(400f);
+    flyCam.setZoomSpeed(20f);
 
     inputManager.setCursorVisible(true);
 
@@ -68,7 +68,7 @@ public class App extends SimpleApplication {
 
     inputManager.addMapping("wireframe", new KeyTrigger(KeyInput.KEY_T));
     inputManager.addListener(actionListener, "wireframe");
-    world.getSurface().getCellAt(10, 10).addToMantleHeat(4000);
+    
     world.play();
   }
   private final ActionListener actionListener = new ActionListener() {

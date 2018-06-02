@@ -28,7 +28,7 @@ public class MantleConduction extends Task {
   public static float mantleSpecificHeat;
   
   static {
-    mantleSpecificHeat = 2.2f;
+    mantleSpecificHeat = 1.9f;
   }
   
   public MantleConduction(Geosphere surface) {
@@ -58,7 +58,7 @@ public class MantleConduction extends Task {
       GeoCell neighborCell = surface.getCellAt(pos);
       float cellTemp = neighborCell.getMantleTemperature();
       float Q = mantleSpecificHeat * (temp - cellTemp);
-      float tempChange = Q / (mantleSpecificHeat * 1e5f);
+      float tempChange = Q / (mantleSpecificHeat * 1e6f);
       cell.applyTemperatureAcc(tempChange);
     }
   }

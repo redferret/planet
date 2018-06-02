@@ -34,7 +34,7 @@ public class Mantle extends Cell {
 
   public Mantle(int x, int y) {
     super(x, y);
-    temperature = new AtomicFloat(ThreadLocalRandom.current().nextInt(500, 700));
+    temperature = new AtomicFloat(ThreadLocalRandom.current().nextInt(200, 900));
     temperatureFlux = 0;
     temperatureAcc = 0;
   }

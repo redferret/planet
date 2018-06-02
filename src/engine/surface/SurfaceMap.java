@@ -92,7 +92,7 @@ public abstract class SurfaceMap<C extends Cell> extends AbstractHeightMap {
   
   public void bindCameraForLODControl(Camera camera) {
     control = new TerrainLodControl(terrain, camera);
-    control.setLodCalculator( new DistanceLodCalculator(65, 1.1f) ); // patch size, and a multiplier
+    control.setLodCalculator( new DistanceLodCalculator(65, 1.5f) ); // patch size, and a multiplier
     terrain.addControl(control);
   }
   

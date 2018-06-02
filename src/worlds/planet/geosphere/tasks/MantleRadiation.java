@@ -22,7 +22,7 @@ public class MantleRadiation extends Task {
   
   public MantleRadiation(Geosphere geosphere) {
     this.geosphere = geosphere;
-    delay = new Delay(10000);
+    delay = new Delay(5000);
   }
   
   @Override
