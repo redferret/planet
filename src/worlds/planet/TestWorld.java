@@ -8,14 +8,13 @@ package worlds.planet;
 public class TestWorld extends Planet {
 
   public static  int CELL_LENGTH, DEFAULT_CELL_COUNT,
-          SURFACE_THREAD_DELAY, DEFAULT_THREAD_COUNT, PLANET_SURFACE_DELAY;
+          SURFACE_THREAD_DELAY, DEFAULT_THREAD_COUNT;
 
   static {
     CELL_LENGTH = 100000;
     DEFAULT_THREAD_COUNT = 2;
     SURFACE_THREAD_DELAY = 1;
-    PLANET_SURFACE_DELAY = 1125;
-    DEFAULT_CELL_COUNT = 128;
+    DEFAULT_CELL_COUNT = 64;
   }
 
   /**
@@ -39,11 +38,12 @@ public class TestWorld extends Planet {
    * Constructs a new test world for the simulation with a specified number of
    * threads. Each thread will get a chunk size.
    *
-   * @param worldSize The size chunk for each thread
+   * @param worldSize The size chunk for each thread, must be even (i.e. 32, 64,
+   * 128, 512 etc.)
    * @param threadCount The number of thread divisions
    */
   public TestWorld(int worldSize, int threadCount) {
-    super(worldSize * threadCount, CELL_LENGTH, PLANET_SURFACE_DELAY, SURFACE_THREAD_DELAY, threadCount);
+    super((worldSize * threadCount) + 1, CELL_LENGTH, SURFACE_THREAD_DELAY, threadCount);
     startThreads();
   }
 }

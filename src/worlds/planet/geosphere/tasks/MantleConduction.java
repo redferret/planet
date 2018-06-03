@@ -20,7 +20,7 @@ public class MantleConduction extends Task {
   
   public MantleConduction(Geosphere surface) {
     this.surface = surface;
-    delay = new Delay(100);
+    delay = new Delay(250);
   }
   
   @Override
@@ -38,7 +38,7 @@ public class MantleConduction extends Task {
   @Override
   public void perform(int x, int y) throws Exception {
     GeoCell cell = surface.getCellAt(x, y);
-    Vec2[] cells = Util.getCellIndexesFrom(cell.getGridPosition(), surface.getSize());
+    Vec2[] cells = Util.getCellIndexesFrom(cell.getGridPosition(), surface.getTerrainSize());
     float temp = cell.getMantleTemperature(); 
     for (Vec2 pos : cells) {
       GeoCell neighborCell = surface.getCellAt(pos);

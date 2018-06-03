@@ -70,7 +70,7 @@ public class Util {
    * @param width The number of colors after interpolation
    * @return The samples array
    */
-  public static Integer[][] constructSamples(Color[] colors, int width) {
+  public static float[][] constructSamples(Color[] colors, int width) {
 
     if (colors.length > width) {
       throw new IndexOutOfBoundsException("The width of the gradient is invalid");
@@ -103,12 +103,12 @@ public class Util {
    * @param width The number of colors after interpolation
    * @return The samples array
    */
-  public static Integer[][] constructGradient(Color[] colors, float[] dist, int width) {
+  public static float[][] constructGradient(Color[] colors, float[] dist, int width) {
 
-    Integer[][] colorArray = new Integer[width][4];
+    float[][] colorArray = new float[width][4];
 
-    BufferedImage buffer = new BufferedImage(width, 1, BufferedImage.TYPE_INT_ARGB);
-    Graphics2D g2d = buffer.createGraphics();
+    BufferedImage bufferImg = new BufferedImage(width, 1, BufferedImage.TYPE_INT_ARGB);
+    Graphics2D g2d = bufferImg.createGraphics();
 
     Point2D start = new Point2D.Float(0, 0);
     Point2D end = new Point2D.Float(width, 0);
@@ -119,14 +119,14 @@ public class Util {
     g2d.fillRect(0, 0, width, 1);
     g2d.dispose();
 
-    int[][] b = new int[width][4];
+    int[][] buffer = new int[width][4];
     for (int x = 0, y = 0; x < width; x++) {
-      buffer.getRaster().getPixel(x, y, b[x]);
+      bufferImg.getRaster().getPixel(x, y, buffer[x]);
       for (int a = 0; a < 4; a++) {
-        colorArray[x][a] = b[x][a];
+        colorArray[x][a] = buffer[x][a] / 255f;
       }
     }
-
+    
     return colorArray;
 
   }
@@ -168,7 +168,7 @@ public class Util {
   }
 
   public static float calcHeatRadiation(float temperature) {
-    return 5.7e-8f * ((float) Math.pow(temperature, 4)) * PlanetCell.area;
+    return 5.7e-8f * ((float) Math.pow(temperature, 3)) * PlanetCell.area;
   }
   
   public static float calcMass(float height, long base, float density) {

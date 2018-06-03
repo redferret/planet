@@ -41,19 +41,9 @@ public class TaskManager {
       if (task.check()) {
         task.before();
 
-        int ystart = lowerYBound;
-        int yinc = 1;
-
-        for (int b = 0; b < 2; b++) {
-          for (int y = ystart; (y < upperYBound); y += yinc) {
-
-            int m = ((b > 0) && (y % 2 == 0)) ? lowerXBound + 1
-                    : ((b > 0) && (y % 2 != 0)
-                            ? lowerXBound - 1 : lowerXBound);
-
-            for (int x = (y % 2) + m; x < upperXBound; x += 2) {
-              task.perform(x, y);
-            }
+        for (int x = lowerXBound; x < upperXBound; x++) {
+          for (int y = lowerYBound; y < upperYBound; y++){
+            task.perform(x, y);
           }
         }
         task.after();

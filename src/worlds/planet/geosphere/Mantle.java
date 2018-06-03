@@ -16,10 +16,10 @@ import worlds.planet.Util;
  */
 public class Mantle extends Cell {
 
-  public static Integer[][] heatMap;
+  public static float[][] heatMap;
+  public static float[] heatMapFl;
 
   private final AtomicFloat temperature;
-  private float temperatureFlux;
   
   /**
    * The average density of the mantel. The units are in kilograms per cubic
@@ -29,18 +29,14 @@ public class Mantle extends Cell {
 
   static {
     Color[] colors = {new Color(95, 0, 15), new Color(255, 45, 45), new Color(250, 250, 0)};
-    heatMap = Util.constructSamples(colors, 100);
+    heatMap = Util.constructSamples(colors, 50);
   }
 
   public Mantle(int x, int y) {
     super(x, y);
-    temperature = new AtomicFloat(ThreadLocalRandom.current().nextInt(200, 2000));
-    temperatureFlux = 0;
+    temperature = new AtomicFloat(ThreadLocalRandom.current().nextInt(2500, 4000));
   }
 
-  public void updateTemperatureFlux(float rate) {
-    temperatureFlux = rate;
-  }
   
   /**
    * A cell is less dense if it's hotter. This will be a percentage of the 
@@ -67,14 +63,14 @@ public class Mantle extends Cell {
     return temperature.get();
   }
 
-  @Override
-  public List<Integer[]> render(List<Integer[]> settings) {
-
-    int index = (int) (temperature.get() / 12);
-    index = index >= heatMap.length - 1 ? heatMap.length - 1 : index < 0 ? 0 : index;
-    settings.add(heatMap[index]);
-
-    return settings;
-  }
+//  @Override
+//  public List<Integer[]> render(List<Integer[]> settings) {
+//
+//    int index = (int) (temperature.get() / 12);
+//    index = index >= heatMap.length - 1 ? heatMap.length - 1 : index < 0 ? 0 : index;
+//    settings.add(heatMap[index]);
+//
+//    return settings;
+//  }
 
 }

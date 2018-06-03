@@ -1,17 +1,12 @@
 package worlds.planet;
 
-import com.jme3.math.Vector2f;
 import java.util.concurrent.atomic.AtomicLong;
 
 import engine.surface.SurfaceMap;
-import engine.util.Vec2;
-import engine.util.task.BasicTask;
-import engine.util.task.Task;
-import java.util.ArrayList;
-import java.util.List;
+import engine.util.concurrent.MThread;
+import engine.util.task.Boundaries;
 import worlds.MinMaxHeightFactory;
 
-import static worlds.planet.Util.checkBounds;
 
 /**
  * The first abstraction for the surface of a Planet.
@@ -23,7 +18,6 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
    * The number of years that pass for each step of erosion
    */
   public static long GEOUPDATE;
-
   private long geologicalTimeStamp;
 
   /**
@@ -51,15 +45,14 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
   /**
    * Constructs a new Surface with an empty map.
    *
-   * @param planetWidth The size of the surface
-   * @param ageStepDelay The amount of time to delay updating planet age
+   * @param totalSize The size of the surface
    * @param threadsDelay The amount of time to delay each frame in milliseconds.
    * @param threadCount The number of threads that will work on the map
    */
-  public Surface(int planetWidth, int ageStepDelay, int threadsDelay, int threadCount) {
-    super(planetWidth, DEFAULT_THREAD_DELAY);
+  public Surface(int totalSize, int threadsDelay, int threadCount) {
+    super(totalSize, DEFAULT_THREAD_DELAY);
     setupThreads(threadCount, threadsDelay);
-    setupDefaultMap(planetWidth + 1, threadCount);
+    setupDefaultMap(threadCount);
     mhFactory = new MinMaxHeightFactory(this);
     produceTasks(mhFactory);
     reset();

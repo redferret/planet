@@ -24,8 +24,4 @@ public class PlanetCell extends GeoCell {
     super(x, y);
   }
 
-  public synchronized List<Integer[]> render(List<Integer[]> settings) {
-    return super.render(settings);
-  }
-
 }

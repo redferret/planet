@@ -18,13 +18,9 @@ public class PlanetSurface extends Geosphere {
     suppressAtmosphere = false;
   }
 
-  public PlanetSurface(int worldSize, int surfaceDelay, int threadsDelay, int threadCount) {
-    super(worldSize, surfaceDelay, threadsDelay, threadCount);
+  public PlanetSurface(int totalSize, int threadsDelay, int threadCount) {
+    super(totalSize, threadsDelay, threadCount);
 
   }
 
-  @Override
-  public boolean load() {
-    return false;
-  }
 }

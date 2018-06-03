@@ -91,6 +91,7 @@ public class Vec2 {
     return hash;
   }
 
+  @Override
   public String toString() {
     StringBuilder str = new StringBuilder();
     str.append("[").append(x).append(", ").append(y).append("]");

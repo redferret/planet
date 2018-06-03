@@ -1,10 +1,7 @@
 package engine.surface;
 
-import java.util.List;
-
 import engine.util.Vec2;
 import engine.util.concurrent.MThread;
-import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * The cell is a base class for each cell contained in a SurfaceMap. The Cell
@@ -59,7 +56,7 @@ public abstract class Cell {
     return actualPosition;
   }
 
-  public abstract List<Integer[]> render(List<Integer[]> settings);
+//  public abstract List<Integer[]> render(List<Integer[]> settings);
 
   public String toString() {
     return "[" + gridPosition.getX() + ", " + gridPosition.getY() + "]"

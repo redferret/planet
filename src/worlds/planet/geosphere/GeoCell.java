@@ -65,7 +65,7 @@ public class GeoCell extends Mantle {
    */
   private Vec2 velocity;
 
-  private static Integer[][] heightMap;
+  public static float[][] heightMap;
 
   public final static int MAX_HEIGHT_INDEX = 17;
   /**
@@ -103,7 +103,8 @@ public class GeoCell extends Mantle {
     totalVolume = 0f;
     curAmountSubmerged = 0f;
     crustTemperature = 0;
-    LayerMaterial m1 = new LayerMaterial("Test Material",5e14f, 0.3f, 1.2f, 1, null);
+    float mass = Util.calcMass(2, PlanetCell.area, 1.2f);
+    LayerMaterial m1 = new LayerMaterial("Test Material", mass, 0.3f, 1.2f, 1, null);
     Layer layer = new Layer();
     layer.addMaterial(m1);
     addToStrata(layer, true);
@@ -512,22 +513,22 @@ public class GeoCell extends Mantle {
     return false;//((HydroCell) this).getOceanMass() > 0;
   }
 
-  @Override
-  public synchronized List<Integer[]> render(List<Integer[]> settings) {
-    int setting;
-    PlanetSurface surface = (PlanetSurface) instance().getSurface();
-    switch (surface.displaySetting) {
-      case HEIGHTMAP:
-        float thisHeight = getHeightWithoutOceans() * 1000;
-        float height = Math.max(0, thisHeight - surface.getLowestHeight());
-        setting = (int) Math.min((height / heightIndexRatio), MAX_HEIGHT_INDEX - 1);
-        settings.add(heightMap[setting]);
-
-        return super.render(settings);
-
-      
-      default: // The display setting is not listed
-        return super.render(settings);
-    }
-  }
+//  @Override
+//  public synchronized List<Integer[]> render(List<Integer[]> settings) {
+//    int setting;
+//    PlanetSurface surface = (PlanetSurface) instance().getSurface();
+//    switch (surface.displaySetting) {
+//      case HEIGHTMAP:
+//        float thisHeight = getHeightWithoutOceans() * 1000;
+//        float height = Math.max(0, thisHeight - surface.getLowestHeight());
+//        setting = (int) Math.min((height / heightIndexRatio), MAX_HEIGHT_INDEX - 1);
+//        settings.add(heightMap[setting]);
+//
+//        return super.render(settings);
+//
+//      
+//      default: // The display setting is not listed
+//        return super.render(settings);
+//    }
+//  }
 }

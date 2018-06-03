@@ -140,6 +140,7 @@ public abstract class TaskRunner implements Runnable {
         }
       } catch (InterruptedException | BrokenBarrierException e) {
       } catch (Exception ex) {
+        System.err.println(Thread.currentThread().getName() + " failed");
         ex.printStackTrace();
         executing = false;
       }
