@@ -1,14 +1,10 @@
 package engine.surface;
 
-import com.jme3.material.Material;
-import com.jme3.math.Vector2f;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Node;
 import com.jme3.terrain.geomipmap.TerrainLodControl;
-import com.jme3.terrain.geomipmap.TerrainPatch;
 import com.jme3.terrain.geomipmap.TerrainQuad;
 import com.jme3.terrain.geomipmap.lodcalc.DistanceLodCalculator;
-import com.jme3.terrain.heightmap.AbstractHeightMap;
 import engine.util.concurrent.MThread;
 import java.util.ArrayList;
 import java.util.List;
@@ -99,7 +95,7 @@ public abstract class SurfaceMap<C extends Cell> extends TerrainQuad {
   }
   
   public void bindTerrainToNode(Node rootNode) {
-    setLocalTranslation(0, -10, 0);
+    setLocalTranslation(0, -50, 0);
     setLocalScale(2f, 1f, 2f);
     rootNode.attachChild(this);
   }
