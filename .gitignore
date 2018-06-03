@@ -4,3 +4,5 @@
 /build/assets.jar
 /build/built-jar.properties
 *.class
+
+build/
