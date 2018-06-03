@@ -13,10 +13,11 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
-import worlds.planet.geosphere.Layer;
+import worlds.planet.geosphere.layer.Layer;
 
 import static engine.surface.SurfaceMap.DIR_X_INDEX;
 import static engine.surface.SurfaceMap.DIR_Y_INDEX;
+import worlds.planet.geosphere.layer.LayerMaterial;
 
 /**
  * A utility class for the system.
@@ -172,15 +173,23 @@ public class Util {
     return 5.7e-8f * ((float) Math.pow(temperature, 3)) * PlanetCell.area;
   }
   
+  public static float calcMass(float height, LayerMaterial lm) {
+    return calcMass(height, PlanetCell.area, lm.getDensity());
+  }
+  
   public static float calcMass(float height, long base, float density) {
     return (height * base * density);
   }
 
+  public static float calcHeight(float mass, LayerMaterial lm) {
+    return calcHeight(mass, PlanetCell.area, lm.getDensity());
+  }
+  
   public static float calcHeight(float mass, long base, float density) {
     return mass / (base * density);
   }
 
-  public static float changeMass(float massToChange, Layer from, Layer to) {
+  public static float changeMass(float massToChange, LayerMaterial from, LayerMaterial to) {
     return changeMass(massToChange, from.getDensity(), to.getDensity());
   }
 
@@ -188,7 +197,7 @@ public class Util {
     return (massToChange * fromDensity) / toDensity;
   }
 
-  public static float calcDepth(Layer layer, float gravity, float maxPressure) {
+  public static float calcDepth(LayerMaterial layer, float gravity, float maxPressure) {
     return calcDepth(layer.getDensity(), gravity, maxPressure);
   }
 
@@ -198,14 +207,6 @@ public class Util {
 
   public static float calcPressure(float density, float gravity, float depth) {
     return depth * density * gravity;
-  }
-
-  public static float calcLimit(float x) {
-    return 0.9f / (1 + (float) Math.exp(2 * x - 4)) + 0.1f;
-  }
-
-  public static float clamp(float heightDiff, float min, float max) {
-    return (heightDiff < min) ? min : (heightDiff > max ? max : heightDiff);
   }
 
   public static float maxOf(float lessThan, float of, float then) {

@@ -1,17 +1,13 @@
 
-package worlds.planet.geosphere;
+package worlds.planet.geosphere.layer;
 
-import java.awt.Color;
+import com.jme3.math.Vector4f;
 
 /**
- * Iron Oxide
- * Olivine biotite
- * plagioclase feldspar and pyroxene
- * Biotite
- * orthoclase feldspar, quartz, plagioclase feldspar, mica, and amphibole
- * 
+ *
  * @author Richard
  */
+
 public class LayerMaterial {
   
   private final String name;
@@ -20,7 +16,6 @@ public class LayerMaterial {
    * The density of this material
    */
   private final float density;
-  
   private final float erosionFactor;
   
   /**
@@ -28,7 +23,6 @@ public class LayerMaterial {
    * See more at https://www.khanacademy.org/science/physics/thermodynamics/specific-heat-and-heat-transfer/a/what-is-thermal-conductivity
    */
   private float specificHeat;
-  
   /**
    * The mass of this material
    */
@@ -36,10 +30,10 @@ public class LayerMaterial {
   /**
    * The displayed color this layer should be on the screen.
    */
-  private final Color color;
+  private final Vector4f color;
   
-  public LayerMaterial(String name, float mass, float specificHeat, 
-          float density, float erosionFactor, Color color) {
+  private LayerMaterial(String name, float mass, float specificHeat, 
+          float density, float erosionFactor, Vector4f color) {
     this.name = name;
     this.density = density;
     this.erosionFactor = erosionFactor;
@@ -84,7 +78,7 @@ public class LayerMaterial {
     return mass;
   }
 
-  public Color getColor() {
+  public Vector4f getColor() {
     return color;
   }
   
@@ -106,6 +100,23 @@ public class LayerMaterial {
   @Override
   public String toString() {
     return "(" + getName() + " " + getMass() + ")";
+  }
+  
+  public static final String BASALT = "Basalt";
+  
+  public static LayerMaterial getLayer(String layerName) {
+    return getLayer(layerName, 0);
+  }
+  
+  public static LayerMaterial getLayer(String layerName, float initMass) {
+    switch(layerName) {
+      case BASALT:
+        return new LayerMaterial(layerName, initMass, 1.5f, 2.8f, 2.0f, 
+                new Vector4f(0.44f, 0.36f, 0.4f, 1.0f));
+
+      default:
+        return null;
+    }
   }
   
 }

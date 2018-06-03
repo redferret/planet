@@ -5,15 +5,17 @@ import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.material.Material;
+import com.jme3.terrain.geomipmap.TerrainQuad;
 import engine.PlanetApp;
 
 /**
  *
  * @author Richard
  */
-public class UnshadedMaterialState extends AbstractAppState {
+public class TerrrainUnshadedMaterialState extends AbstractAppState {
   
   private PlanetApp app;
+  private TerrainQuad terrain;
   private boolean wireframe = false;
   private Material wireFrameMat;
   
@@ -24,7 +26,8 @@ public class UnshadedMaterialState extends AbstractAppState {
     wireFrameMat.setBoolean("VertexColor", true);
     wireFrameMat.getAdditionalRenderState().setWireframe(wireframe);
     this.app = (PlanetApp) app;
-    this.app.getWorld().getSurface().setMaterial(wireFrameMat);
+    terrain = this.app.getStateManager().getState(TerrainState.class).getWorld().getSurface();
+    terrain.setMaterial(wireFrameMat);
   }
   
   public boolean isWireFramed() {
@@ -39,14 +42,13 @@ public class UnshadedMaterialState extends AbstractAppState {
   public void setEnabled(boolean enabled) {
     super.setEnabled(enabled);
     if (isEnabled()) {
-      this.app.getWorld().getSurface().setMaterial(wireFrameMat);
+      terrain.setMaterial(wireFrameMat);
     }
   }
   
   @Override
   public void update(float timeSlice) {
-    app.getWorld().getSurface().getMaterial().getAdditionalRenderState().setWireframe(wireframe);
-    
+    terrain.getMaterial().getAdditionalRenderState().setWireframe(wireframe);
   }
   
   @Override

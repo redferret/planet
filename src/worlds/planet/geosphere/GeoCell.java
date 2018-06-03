@@ -1,22 +1,21 @@
 package worlds.planet.geosphere;
 
+import worlds.planet.geosphere.layer.LayerMaterial;
+import worlds.planet.geosphere.layer.Layer;
 import java.awt.Color;
 import java.util.Deque;
 import java.util.LinkedList;
-import java.util.List;
 
 import engine.util.Vec2;
 import java.util.Set;
 import worlds.planet.Util;
 import worlds.planet.Planet;
 import worlds.planet.PlanetCell;
-import worlds.planet.PlanetSurface;
 
 import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.concurrent.ThreadLocalRandom;
 
 import static worlds.planet.Planet.instance;
-import static worlds.planet.Surface.*;
+import static worlds.planet.geosphere.layer.LayerMaterial.getLayer;
 
 /**
  * A GeoCell is a Cell representing land Geologically. The cell contains strata
@@ -103,8 +102,10 @@ public class GeoCell extends Mantle {
     totalVolume = 0f;
     curAmountSubmerged = 0f;
     crustTemperature = 0;
-    float mass = Util.calcMass(2, PlanetCell.area, 1.2f);
-    LayerMaterial m1 = new LayerMaterial("Test Material", mass, 0.3f, 1.2f, 1, null);
+    
+    LayerMaterial m1 = getLayer("Basalt");
+    float mass = Util.calcMass(10, m1);
+    m1.setMass(mass);
     Layer layer = new Layer();
     layer.addMaterial(m1);
     addToStrata(layer, true);

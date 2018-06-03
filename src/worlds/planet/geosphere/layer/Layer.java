@@ -1,5 +1,5 @@
 
-package worlds.planet.geosphere;
+package worlds.planet.geosphere.layer;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -1,4 +1,4 @@
-package worlds.planet.geosphere;
+package worlds.planet.geosphere.layer;
 
 /**
  *

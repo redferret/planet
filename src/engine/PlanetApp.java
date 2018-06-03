@@ -12,7 +12,7 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.system.AppSettings;
-import engine.states.UnshadedMaterialState;
+import engine.states.TerrrainUnshadedMaterialState;
 import engine.util.Delay;
 import worlds.planet.TestWorld;
 import worlds.planet.geosphere.GeoCell;
@@ -23,12 +23,10 @@ import static worlds.planet.geosphere.Mantle.heatMap;
  */
 public class PlanetApp extends SimpleApplication {
 
-  private static TestWorld world;
-  
   private final Delay delay = new Delay(500);
   
   public static void main(String[] args) {
-    world = new TestWorld();
+    
     PlanetApp app = new PlanetApp();
     
     app.showSettings = false;
@@ -36,10 +34,6 @@ public class PlanetApp extends SimpleApplication {
 //    app.settings.setFullscreen(true);
     app.settings.setTitle("Planet");
     app.start();
-  }
-
-  public TestWorld getWorld() {
-    return world;
   }
   
   @Override
@@ -59,7 +53,7 @@ public class PlanetApp extends SimpleApplication {
 
     inputManager.addMapping("wireframe", new KeyTrigger(KeyInput.KEY_T));
     inputManager.addListener(actionListener, "wireframe");
-    stateManager.attach(new UnshadedMaterialState());
+    stateManager.attach(new TerrrainUnshadedMaterialState());
 //    stateManager.attach(null);
     
     world.play();
@@ -68,14 +62,13 @@ public class PlanetApp extends SimpleApplication {
     @Override
     public void onAction(String name, boolean pressed, float tpf) {
       if (name.equals("wireframe") && !pressed) {
-        stateManager.getState(UnshadedMaterialState.class).negWireFramed();
+        stateManager.getState(TerrrainUnshadedMaterialState.class).negWireFramed();
       }
     }
   };
 
   @Override
   public void simpleUpdate(float tpf) {
-    stateManager.update(tpf);
     if (delay.check()) {
       world.getSurface().updateTerrainHeight(0.01f, (cell) -> {
          return ((GeoCell) cell).getMantleTemperature();
