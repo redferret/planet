@@ -1,6 +1,8 @@
 package engine;
 
+import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
+import com.jme3.app.state.AppState;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
@@ -10,6 +12,7 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.system.AppSettings;
+import engine.states.UnshadedMaterialState;
 import engine.util.Delay;
 import worlds.planet.TestWorld;
 import worlds.planet.geosphere.GeoCell;
@@ -18,15 +21,15 @@ import static worlds.planet.geosphere.Mantle.heatMap;
 /**
  * Main entry point
  */
-public class App extends SimpleApplication {
+public class PlanetApp extends SimpleApplication {
 
   private static TestWorld world;
-  private boolean wireframe = true;
+  
   private final Delay delay = new Delay(500);
   
   public static void main(String[] args) {
     world = new TestWorld();
-    App app = new App();
+    PlanetApp app = new PlanetApp();
     
     app.showSettings = false;
     app.settings = new AppSettings(true);
@@ -35,6 +38,10 @@ public class App extends SimpleApplication {
     app.start();
   }
 
+  public TestWorld getWorld() {
+    return world;
+  }
+  
   @Override
   public void simpleInitApp() {
     flyCam.setMoveSpeed(400f);
@@ -43,12 +50,6 @@ public class App extends SimpleApplication {
     setDisplayStatView(false);
     inputManager.setCursorVisible(true);
     
-    
-    Material basicMaterial = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-    basicMaterial.setBoolean("VertexColor", true);
-//    basicMaterial.setColor("Color", ColorRGBA.Blue);
-    basicMaterial.getAdditionalRenderState().setWireframe(wireframe);
-    world.getSurface().setMaterial(basicMaterial);
     world.getSurface().bindCameraForLODControl(getCamera());
     world.getSurface().bindTerrainToNode(rootNode);
     
@@ -58,23 +59,23 @@ public class App extends SimpleApplication {
 
     inputManager.addMapping("wireframe", new KeyTrigger(KeyInput.KEY_T));
     inputManager.addListener(actionListener, "wireframe");
+    stateManager.attach(new UnshadedMaterialState());
+//    stateManager.attach(null);
     
     world.play();
   }
   private final ActionListener actionListener = new ActionListener() {
-
     @Override
     public void onAction(String name, boolean pressed, float tpf) {
       if (name.equals("wireframe") && !pressed) {
-        wireframe = !wireframe;
-        world.getSurface().getMaterial()
-                .getAdditionalRenderState().setWireframe(wireframe);
+        stateManager.getState(UnshadedMaterialState.class).negWireFramed();
       }
     }
   };
 
   @Override
   public void simpleUpdate(float tpf) {
+    stateManager.update(tpf);
     if (delay.check()) {
       world.getSurface().updateTerrainHeight(0.01f, (cell) -> {
          return ((GeoCell) cell).getMantleTemperature();
