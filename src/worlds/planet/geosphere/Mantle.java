@@ -28,7 +28,7 @@ public class Mantle extends Cell {
   public static float mantle_density = 3500f;
 
   static {
-    Color[] colors = {new Color(95, 0, 15), new Color(255, 45, 45), new Color(250, 250, 0)};
+    Color[] colors = {new Color(0, 0, 0), new Color(255, 0, 0), new Color(250, 250, 0)};
     heatMap = Util.constructSamples(colors, 50);
   }
 
