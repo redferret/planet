@@ -26,7 +26,7 @@ public abstract class Task {
     parentThread = thread;
   }
 
-  public MThread getThread() {
+  public final MThread getThread() {
     return parentThread;
   }
 

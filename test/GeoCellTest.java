@@ -17,13 +17,6 @@ import static org.junit.Assert.*;
  */
 public class GeoCellTest {
 
-  private static final int WORLD_SIZE = 100;
-  private static final TestWorld testWorld;
-
-  static {
-    testWorld = new TestWorld(WORLD_SIZE, 1);
-    PlanetCell.area = PlanetCell.length = 1;
-  }
 
   /**
    * Tests for correct density calculation without oceans.

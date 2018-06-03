@@ -25,7 +25,7 @@ import static org.junit.Assert.*;
 public class SurfaceMapAndTaskTest {
 
   private static final int MAP_SIZE = 2, SURFACE_DELAY = 1, THREAD_COUNT = 2,
-          CELL_COUNT = MAP_SIZE * MAP_SIZE;
+          CELL_COUNT = (MAP_SIZE * THREAD_COUNT) * (MAP_SIZE * THREAD_COUNT);
 
   /**
    * The synchronization latch for the test threads.
@@ -51,14 +51,15 @@ public class SurfaceMapAndTaskTest {
 
   @Test
   public void totalCellCountTest() {
-    int numberOfCells = testSurface.getTotalNumberOfCells();
-    assertTrue("Number of cells don't match", CELL_COUNT == numberOfCells);
+    Integer numberOfCells = testSurface.getTotalNumberOfCells();
+    Integer expected = CELL_COUNT;
+    assertEquals("Number of cells don't match", expected, numberOfCells);
   }
 
   @Test
   public void mapSizeTest() {
-    int mapWidth = testSurface.getSize();
-    assertTrue("Number of cells don't match", MAP_SIZE == mapWidth);
+    int mapWidth = testSurface.getTerrainSize();
+    assertTrue("Number of cells don't match", (MAP_SIZE * THREAD_COUNT) == mapWidth);
   }
 
   @Test
@@ -105,31 +106,32 @@ public class SurfaceMapAndTaskTest {
 
   @Test
   public void calculateIndexTest() {
-    for (int testX = 0; testX < 100; testX++) {
-      for (int testY = 0; testY < 100; testY++) {
-        for (int testWidth = 0; testWidth < 100; testWidth++) {
-          testCaseForIndexTesting(testX, testY, testWidth);
-        }
+    int width = testSurface.getTerrainSize();
+    for (int testX = 0; testX < 4; testX++) {
+      for (int testY = 0; testY < 4; testY++) {
+        Integer expectedIndex = testX + (testY * width);
+        Integer index = testSurface.calcIndex(testX, testY);
+        assertEquals(expectedIndex, index);
       }
     }
   }
-
+  
   @Test
   public void calculateXYTest() {
-    int testIndex = 11;
-    int testWidth = 3;
-    Integer expectedX = 2, expectedY = 3;
+    int totalSize = testSurface.getTotalNumberOfCells();
+    int width = testSurface.getTerrainSize();
+    for (int testIndex = 0; testIndex < totalSize; testIndex++) {
+      Integer expectedX = testIndex % width;
+      Integer expectedY = testIndex / width;
+      
+      Integer testX = testSurface.calcX(testIndex);
+      Integer testY = testSurface.calcY(testIndex);
 
-    testXY(testIndex, testWidth, expectedX, expectedY);
-
-    testIndex = 33;
-    testWidth = 10;
-    expectedX = 3;
-    expectedY = 3;
-
-    testXY(testIndex, testWidth, expectedX, expectedY);
+      assertEquals("Failed on index " + testIndex, expectedX, testX);
+      assertEquals("Failed on index " + testIndex,expectedY, testY);
+    }
   }
-
+  
   /**
    * Tests the method that gets a list of cells that will be only available to
    * the calling thread.
@@ -175,33 +177,6 @@ public class SurfaceMapAndTaskTest {
     testSurface.playThreads();
   }
 
-  private void testCaseForIndexTesting(int testX, int testY, int testWidth) {
-    int expectedIndex = testX + (testY * testWidth);
-    testIndex(testX, testY, testWidth, expectedIndex);
-  }
-
-  /**
-   * Performs an assertion with the given expectedIndex based on the three
-   * parameters testX, testY, and the WIDTH. The assertion will fail if the
-   * expected index isn't equal to the SurfaceMap#calcIndex return value.
-   *
-   * @param testX The test X coordinate
-   * @param testY The test y coordinate
-   * @param WIDTH The width of the map
-   * @param expectedIndex The expected calculated index
-   */
-  private void testIndex(int testX, int testY, final int WIDTH, Integer expectedIndex) {
-    Integer index = testSurface.calcIndex(testX, testY);
-    assertEquals(expectedIndex, index);
-  }
-
-  private void testXY(int testIndex, int testWidth, Integer expectedX, Integer expectedY) {
-    Integer testX = testSurface.calcX(testIndex);
-    Integer testY = testSurface.calcY(testIndex);
-
-    assertEquals(expectedX, testX);
-    assertEquals(expectedY, testY);
-  }
 
 }
 
@@ -211,10 +186,10 @@ class TestSurface extends SurfaceMap<TestCell> {
 
   public TestSurface(int planetWidth, int surfaceThreadDelay, int threadCount,
           CountDownLatch latch) {
-    super(planetWidth, surfaceThreadDelay);
+    super((planetWidth * threadCount) + 1, surfaceThreadDelay);
     this.latch = latch;
     setupThreads(threadCount, surfaceThreadDelay);
-    setupDefaultMap(planetWidth, threadCount);
+    setupDefaultMap(threadCount);
   }
 
   @Override
@@ -225,11 +200,6 @@ class TestSurface extends SurfaceMap<TestCell> {
   @Override
   public TestCell generateCell(int x, int y) {
     return new TestCell(x, y, latch);
-  }
-
-  @Override
-  public boolean load() {
-    return false;
   }
 
   public class SurfaceTask extends TaskAdapter {
@@ -280,11 +250,6 @@ class TestCell extends Cell {
       System.err.println("Thread was rudely interrupted "
               + Thread.currentThread().getName());
     }
-  }
-
-  @Override
-  public List<Integer[]> render(List<Integer[]> settings) {
-    return settings;
   }
 
 }

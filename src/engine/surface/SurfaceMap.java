@@ -345,7 +345,10 @@ public abstract class SurfaceMap<C extends Cell> extends TerrainQuad {
   /**
    * Sets up the surface further by setting each cell the parent thread.
    */
-  private class SetParentThreads extends TaskAdapter {
+  protected class SetParentThreads extends TaskAdapter {
+
+    public SetParentThreads() {
+    }
     
     @Override
     public void before() {

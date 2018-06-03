@@ -1,12 +1,9 @@
 
 import engine.surface.Cell;
 import engine.surface.SurfaceMap;
-import engine.util.concurrent.MThread;
-import engine.util.task.Boundaries;
 import engine.util.task.TaskAdapter;
 import java.util.List;
 import org.junit.*;
-import static org.junit.Assert.*;
 import org.junit.Before;
 
 /**
@@ -34,9 +31,9 @@ class EventTestSurface extends SurfaceMap<EventTestCell> {
 
 
   public EventTestSurface(int planetWidth, int surfaceThreadDelay, int threadCount) {
-    super(planetWidth, surfaceThreadDelay);
+    super((planetWidth * threadCount) + 1, surfaceThreadDelay);
     setupThreads(threadCount, surfaceThreadDelay);
-    setupDefaultMap(planetWidth, threadCount);
+    setupDefaultMap(threadCount);
     addTaskToThreads(new EventTask());
   }
 
@@ -48,11 +45,6 @@ class EventTestSurface extends SurfaceMap<EventTestCell> {
   @Override
   public EventTestCell generateCell(int x, int y) {
     return new EventTestCell(x, y);
-  }
-
-  @Override
-  public boolean load() {
-    return false;
   }
 
   private class EventTask extends TaskAdapter {
@@ -93,11 +85,6 @@ class EventTestCell extends Cell {
   
   public void update() {
     counter++;
-  }
-
-  @Override
-  public List<Integer[]> render(List<Integer[]> settings) {
-    return settings;
   }
 
 }

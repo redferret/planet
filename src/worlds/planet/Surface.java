@@ -3,8 +3,6 @@ package worlds.planet;
 import java.util.concurrent.atomic.AtomicLong;
 
 import engine.surface.SurfaceMap;
-import engine.util.concurrent.MThread;
-import engine.util.task.Boundaries;
 import worlds.MinMaxHeightFactory;
 
 
@@ -66,7 +64,10 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
   public final void reset() {
     planetAge = new AtomicLong(0);
     geologicalTimeStamp = 0;
+    pauseThreads();
     buildMap();
+    addTaskToThreads(new SetParentThreads());
+    playThreads();
   }
 
   public long getPlanetAge() {

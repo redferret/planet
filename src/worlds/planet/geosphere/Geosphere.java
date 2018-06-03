@@ -59,7 +59,7 @@ public abstract class Geosphere extends Surface {
       int colorIndex = 0;
       for (int h = 0; h < heightMap.length; h++) {
         float height = heightMap[h];
-        int heatColorIndex = (int)(height % heatMap.length);
+        int heatColorIndex = (int) (height < -2.73f ? 0 : (height > 50 ? 50 : height));
         float[] heatColor = heatMap[heatColorIndex];
         colorArray[colorIndex++] = heatColor[0];// red
         colorArray[colorIndex++] = heatColor[1];// green
