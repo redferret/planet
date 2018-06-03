@@ -115,7 +115,7 @@ public abstract class SurfaceMap<C extends Cell> extends TerrainQuad {
     map.values().forEach(cell -> {
       float height = cellData.getHeightValue(cell) * scale;
       Vec2 pos = cell.getGridPosition();
-      locs.add(Util.scalePositionForTerrain(pos.getX(), pos.getY(), getTerrainSize() + 1));
+      locs.add(Util.scalePositionForTerrain(pos.getX(), pos.getY(), getTerrainSize()));
       heights.add(height);
     });
     setHeight(locs, heights);
@@ -133,12 +133,12 @@ public abstract class SurfaceMap<C extends Cell> extends TerrainQuad {
       int colorIndex = 0;
       for (int h = 0; h < heightMap.length; h++) {
         float height = heightMap[h];
-        int heatColorIndex = bounds.getIndex(height);
-        float[] heatColor = colorMap[heatColorIndex];
-        colorArray[colorIndex++] = heatColor[0];// red
-        colorArray[colorIndex++] = heatColor[1];// green
-        colorArray[colorIndex++] = heatColor[2];// blue
-        colorArray[colorIndex++] = heatColor[3];// alpha
+        int colorMapIndex = bounds.getIndex(height);
+        float[] color = colorMap[colorMapIndex];
+        colorArray[colorIndex++] = color[0];// red
+        colorArray[colorIndex++] = color[1];// green
+        colorArray[colorIndex++] = color[2];// blue
+        colorArray[colorIndex++] = color[3];// alpha
       }
       
       patch.getMesh().setBuffer(VertexBuffer.Type.Color, 4, colorArray);

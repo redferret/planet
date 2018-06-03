@@ -2,8 +2,7 @@ package worlds.planet;
 
 import com.jme3.math.Vector2f;
 import engine.surface.Cell;
-import static engine.surface.SurfaceMap.DIR_X_INDEX;
-import static engine.surface.SurfaceMap.DIR_Y_INDEX;
+
 import engine.util.Vec2;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -16,6 +15,8 @@ import java.util.List;
 import java.util.stream.Stream;
 import worlds.planet.geosphere.Layer;
 
+import static engine.surface.SurfaceMap.DIR_X_INDEX;
+import static engine.surface.SurfaceMap.DIR_Y_INDEX;
 
 /**
  * A utility class for the system.
