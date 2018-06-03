@@ -12,6 +12,8 @@ import com.jme3.renderer.RenderManager;
 import com.jme3.system.AppSettings;
 import engine.util.Delay;
 import worlds.planet.TestWorld;
+import worlds.planet.geosphere.GeoCell;
+import static worlds.planet.geosphere.Mantle.heatMap;
 
 /**
  * Main entry point
@@ -74,8 +76,15 @@ public class App extends SimpleApplication {
   @Override
   public void simpleUpdate(float tpf) {
     if (delay.check()) {
-      world.getSurface().updateTerrainForMantleTemp(0.01f);
-      world.getSurface().updateVertexColors();
+      world.getSurface().updateTerrainHeight(0.01f, (cell) -> {
+         return ((GeoCell) cell).getMantleTemperature();
+      });
+      
+      world.getSurface().updateVertexColors(heatMap, (heightVal) -> {
+        return (int) (heightVal < -2.73f ? 0 
+                   : (heightVal > heatMap.length - 1 ? heatMap.length - 1 
+                   : heightVal));
+      });
     }
   }
 

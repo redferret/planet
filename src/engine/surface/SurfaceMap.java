@@ -1,8 +1,11 @@
 package engine.surface;
 
+import com.jme3.math.Vector2f;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Node;
+import com.jme3.scene.VertexBuffer;
 import com.jme3.terrain.geomipmap.TerrainLodControl;
+import com.jme3.terrain.geomipmap.TerrainPatch;
 import com.jme3.terrain.geomipmap.TerrainQuad;
 import com.jme3.terrain.geomipmap.lodcalc.DistanceLodCalculator;
 import engine.util.concurrent.MThread;
@@ -21,6 +24,7 @@ import engine.util.task.Boundaries;
 import engine.util.task.Task;
 import engine.util.task.TaskAdapter;
 import engine.util.task.TaskFactory;
+import worlds.planet.Util;
 
 /**
  * The SurfaceMap is a generic map for all the systems on the planet. The map
@@ -98,6 +102,48 @@ public abstract class SurfaceMap<C extends Cell> extends TerrainQuad {
     setLocalTranslation(0, -50, 0);
     setLocalScale(2f, 1f, 2f);
     rootNode.attachChild(this);
+  }
+  
+  /**
+   * Update the terrain's height based on the temperature of the mantle.
+   * @param scale Scale the height with this value
+   * @param cellData
+   */
+  public void updateTerrainHeight(float scale, TerrainHeightValue cellData) {
+    List<Vector2f> locs = new ArrayList<>();
+    List<Float> heights = new ArrayList<>();
+    map.values().forEach(cell -> {
+      float height = cellData.getHeightValue(cell) * scale;
+      Vec2 pos = cell.getGridPosition();
+      locs.add(Util.scalePositionForTerrain(pos.getX(), pos.getY(), getTerrainSize() + 1));
+      heights.add(height);
+    });
+    setHeight(locs, heights);
+  }
+  
+  public void updateVertexColors(float colorMap[][], MapBounds bounds) {
+    List<TerrainPatch> patches = new ArrayList<>();
+    getAllTerrainPatches(patches);
+    patches.forEach(patch -> {
+      float[] heightMap = patch.getHeightMap();
+      float[] colorArray = new float[heightMap.length * 4];
+      
+      // Iterate over the heightMap, plug the height values into a function
+      // to get a color and set that into the colorArray.
+      int colorIndex = 0;
+      for (int h = 0; h < heightMap.length; h++) {
+        float height = heightMap[h];
+        int heatColorIndex = bounds.getIndex(height);
+        float[] heatColor = colorMap[heatColorIndex];
+        colorArray[colorIndex++] = heatColor[0];// red
+        colorArray[colorIndex++] = heatColor[1];// green
+        colorArray[colorIndex++] = heatColor[2];// blue
+        colorArray[colorIndex++] = heatColor[3];// alpha
+      }
+      
+      patch.getMesh().setBuffer(VertexBuffer.Type.Color, 4, colorArray);
+      
+    });
   }
   
   /**
