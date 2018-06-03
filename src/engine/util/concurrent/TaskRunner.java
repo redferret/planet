@@ -133,7 +133,9 @@ public abstract class TaskRunner implements Runnable {
           timeLapse.getAndSet((int) (System.currentTimeMillis() - start));
         }
 
-        Thread.sleep(miliSeconds);
+        if (miliSeconds > 0) {
+          Thread.sleep(miliSeconds);
+        }
 
         if (!running || !continuous) {
           waiter.await();

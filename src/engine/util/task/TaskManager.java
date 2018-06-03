@@ -1,7 +1,6 @@
 package engine.util.task;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  *
@@ -9,11 +8,11 @@ import java.util.List;
  */
 public class TaskManager {
 
-  private final List<Task> tasks;
+  private final ConcurrentLinkedQueue<Task> tasks;
   protected Boundaries bounds;
 
   public TaskManager(Boundaries bounds) {
-    tasks = new ArrayList<>();
+    tasks = new ConcurrentLinkedQueue<>();
     this.bounds = bounds;
   }
 

@@ -20,6 +20,12 @@ public abstract class BasicTask extends Task {
   public final void perform(int x, int y) {
   }
 
+  @Override
+  public void before() throws Exception {}
+  
+  @Override
+  public void after() throws Exception {}
+  
   /**
    * Implement this method to perform this task. before() and after() are
    * invoked in their respective order as normal.
