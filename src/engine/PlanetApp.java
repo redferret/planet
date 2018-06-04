@@ -58,18 +58,15 @@ public class PlanetApp extends SimpleApplication {
     stateManager.attach(new SurfaceState());
   }
   
-  private final ActionListener actionListener = new ActionListener() {
-    @Override
-    public void onAction(String name, boolean pressed, float tpf) {
-      if (!pressed) {
-        switch(name) {
-          case "wireframe":
-            stateManager.getState(SurfaceState.class).negWireFramed();
-            break;
-          case "playpause":
-            stateManager.getState(WorldState.class).setIsPaused();
-            break;
-        }
+  private final ActionListener actionListener = (String name, boolean pressed, float tpf) -> {
+    if (!pressed) {
+      switch(name) {
+        case "wireframe":
+          stateManager.getState(SurfaceState.class).negWireFramed();
+          break;
+        case "playpause":
+          stateManager.getState(WorldState.class).setIsPaused();
+          break;
       }
     }
   };
