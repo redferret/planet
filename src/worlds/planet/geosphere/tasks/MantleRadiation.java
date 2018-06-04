@@ -22,7 +22,7 @@ public class MantleRadiation extends Task {
   
   public MantleRadiation(Geosphere geosphere) {
     this.geosphere = geosphere;
-    delay = new Delay(400);
+    delay = new Delay(200);
   }
   
   @Override
@@ -37,7 +37,7 @@ public class MantleRadiation extends Task {
     denom = denom == 0 ? 1 : denom;
     float tempChangeToMantle = heatFromMantle / denom;
     
-    cell.addToMantleHeat(-tempChangeToMantle * 0.001f);
+    cell.addToMantleHeat(-tempChangeToMantle * 0.1f);
   }
 
   @Override

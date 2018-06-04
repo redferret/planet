@@ -45,12 +45,12 @@ public abstract class Planet {
     planetSurface.startThreads();
   }
 
-  public final void play() {
-    planetSurface.playThreads();
-  }
-
-  public final void pause() {
-    planetSurface.pauseThreads();
+  public void setIsPaused(boolean paused) {
+    if (paused) {
+      planetSurface.pauseThreads();
+    } else {
+      planetSurface.playThreads();
+    }
   }
 
   public final void shutdown() {

@@ -1,12 +1,12 @@
 package worlds.planet.geosphere;
 
+import com.jme3.math.Vector2f;
 import worlds.planet.geosphere.layer.LayerMaterial;
 import worlds.planet.geosphere.layer.Layer;
 import java.awt.Color;
 import java.util.Deque;
 import java.util.LinkedList;
 
-import engine.util.Vec2;
 import java.util.Set;
 import worlds.planet.Util;
 import worlds.planet.Planet;
@@ -62,7 +62,7 @@ public class GeoCell extends Mantle {
    * is inelastic and will reduce it's velocity as well as moving a little
    * bit of it's energy through the system.
    */
-  private Vec2 velocity;
+  private Vector2f velocity;
 
   public static float[][] heightMap;
 
@@ -95,7 +95,7 @@ public class GeoCell extends Mantle {
   private void setup() {
 
     strata = new ConcurrentLinkedDeque<>();
-    velocity = new Vec2(0, 0);
+    velocity = new Vector2f(0, 0);
 
     totalStrataThickness = 0f;
     totalMass = 0f;
@@ -104,18 +104,18 @@ public class GeoCell extends Mantle {
     crustTemperature = 0;
     
     LayerMaterial m1 = getLayer("Basalt");
-    float mass = Util.calcMass(10, m1);
+    float mass = Util.calcMass(1f, m1);
     m1.setMass(mass);
     Layer layer = new Layer();
     layer.addMaterial(m1);
     addToStrata(layer, true);
   }
 
-  public void setVelocity(Vec2 vel) {
-    velocity = new Vec2(vel);
+  public void setVelocity(Vector2f vel) {
+    velocity = new Vector2f(vel);
   }
 
-  public Vec2 getVelocity() {
+  public Vector2f getVelocity() {
     return velocity;
   }
 

@@ -3,7 +3,6 @@ package worlds.planet;
 import com.jme3.math.Vector2f;
 import engine.surface.Cell;
 
-import engine.util.Vec2;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.LinearGradientPaint;
@@ -13,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
-import worlds.planet.geosphere.layer.Layer;
 
 import static engine.surface.SurfaceMap.DIR_X_INDEX;
 import static engine.surface.SurfaceMap.DIR_Y_INDEX;
@@ -34,17 +32,17 @@ public class Util {
    * Selects all the positions that are around the position 'from'. This method
    * does not select resources or cells from the map but builds a list of
    * positions to use to select resources. The last element of this list if the
-   * Vec2 from.
+   * Vector2f from.
    *
    * @param from The center position
    * @param size Width of the surface
    * @return The calculated positions around the center point 'from'
    */
-  public static Vec2[] getCellIndexesFrom(Vec2 from, int size) {
+  public static Vector2f[] getCellIndexesFrom(Vector2f from, int size) {
     int tx, ty, mx, my;
     int x = (int) from.getX(), y = (int) from.getY();
     int xl = DIR_X_INDEX.length;
-    Vec2[] points = new Vec2[xl];
+    Vector2f[] points = new Vector2f[xl];
     int worldSize = size;
     for (int s = 0; s < xl; s++) {
 
@@ -55,7 +53,7 @@ public class Util {
       mx = checkBounds(tx, worldSize);
       my = checkBounds(ty, worldSize);
 
-      Vec2 p = new Vec2(mx, my);
+      Vector2f p = new Vector2f(mx, my);
       points[s] = p;
     }
     return points;
@@ -213,9 +211,9 @@ public class Util {
     return of > lessThan ? of : then;
   }
 
-  public static List<Vec2> fillPoints(Vec2 center, int radius) {
-    List<Vec2> points = new ArrayList<>();
-    List<Vec2> circleList;
+  public static List<Vector2f> fillPoints(Vector2f center, int radius) {
+    List<Vector2f> points = new ArrayList<>();
+    List<Vector2f> circleList;
     int x = (int) center.getX();
     int y = (int) center.getY();
     int wRadius = radius;
@@ -232,9 +230,9 @@ public class Util {
       points.addAll(circleList);
     }
 
-    Stream<Vec2> distinctList = points.stream().distinct();
+    Stream<Vector2f> distinctList = points.stream().distinct();
 
-    List<Vec2> nPoints = new ArrayList<>();
+    List<Vector2f> nPoints = new ArrayList<>();
     distinctList.forEach(point -> {
       nPoints.add(point);
     });
@@ -251,10 +249,10 @@ public class Util {
    * @param cy
    * @return
    */
-  public static List<Vec2> selectCirclePoints(int radius, int cx, int cy) {
+  public static List<Vector2f> selectCirclePoints(int radius, int cx, int cy) {
     int xChange = 1 - (2 * radius), yChange = 1;
     int radiusError = 0, x = radius, y = 0;
-    List<Vec2> points = new ArrayList<>();
+    List<Vector2f> points = new ArrayList<>();
 
     while (x >= y) {
       plotCirclePoints(points, x, y, cx, cy);
@@ -276,16 +274,16 @@ public class Util {
    * @param xy
    * @param cxcy
    */
-  private static void plotCirclePoints(List<Vec2> points, int x, int y,
+  private static void plotCirclePoints(List<Vector2f> points, int x, int y,
           int cx, int cy) {
-    points.add(new Vec2(cx + x, cy + y));
-    points.add(new Vec2(cx - x, cy + y));
-    points.add(new Vec2(cx - x, cy - y));
-    points.add(new Vec2(cx + x, cy - y));
-    points.add(new Vec2(cx + y, cy + x));
-    points.add(new Vec2(cx - y, cy + x));
-    points.add(new Vec2(cx - y, cy - x));
-    points.add(new Vec2(cx + y, cy - x));
+    points.add(new Vector2f(cx + x, cy + y));
+    points.add(new Vector2f(cx - x, cy + y));
+    points.add(new Vector2f(cx - x, cy - y));
+    points.add(new Vector2f(cx + x, cy - y));
+    points.add(new Vector2f(cx + y, cy + x));
+    points.add(new Vector2f(cx - y, cy + x));
+    points.add(new Vector2f(cx - y, cy - x));
+    points.add(new Vector2f(cx + y, cy - x));
   }
 
   public static <C extends Cell> List<C> getLargestCellsFrom(C central, List<C> cells, Comparator<C> cellComparator) {

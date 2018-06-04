@@ -45,21 +45,22 @@ public class SurfaceState extends AbstractAppState {
   
   public void negWireFramed() {
     wireframe = !wireframe;
+    surface.getMaterial().getAdditionalRenderState().setWireframe(wireframe);
   }
   
   @Override
   public void update(float timeSlice) {
-    surface.getMaterial().getAdditionalRenderState().setWireframe(wireframe);
+    if (!app.getStateManager().getState(WorldState.class).isPaused()) {
+      surface.updateTerrainHeight(0.01f, (cell) -> {
+        return ((GeoCell) cell).getMantleTemperature();
+      });
 
-    surface.updateTerrainHeight(0.01f, (cell) -> {
-      return ((GeoCell) cell).getMantleTemperature();
-    });
-
-    surface.updateVertexColors(heatMap, (heightVal) -> {
-      return (int) (heightVal < -2.73f ? 0
-              : (heightVal > heatMap.length - 1 ? heatMap.length - 1
-                      : heightVal));
-    });
+      surface.updateVertexColors(heatMap, (heightVal) -> {
+        return (int) (heightVal < -2.73f ? 0
+                : (heightVal > heatMap.length - 1 ? heatMap.length - 1
+                        : heightVal));
+      });
+    }
   }
 
   @Override

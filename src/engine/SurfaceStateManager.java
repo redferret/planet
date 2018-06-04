@@ -7,7 +7,8 @@ import engine.util.concurrent.MThread;
 import engine.util.task.BasicTask;
 
 /**
- *
+ * This is a prototype for updating the mesh of the terrain based on the
+ * display setting from the user. 
  * @author Richard
  */
 public class SurfaceStateManager extends AppStateManager {

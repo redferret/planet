@@ -1,4 +1,5 @@
 
+import com.jme3.math.Vector2f;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -9,7 +10,6 @@ import org.junit.Test;
 
 import engine.surface.Cell;
 import engine.surface.SurfaceMap;
-import engine.util.Vec2;
 import engine.util.task.TaskAdapter;
 import static org.junit.Assert.*;
 
@@ -138,16 +138,16 @@ public class SurfaceMapAndTaskTest {
    */
   @Test
   public void getCellsWithPointsTest() {
-    Vec2[] cellPoints = {new Vec2(0, 0), new Vec2(0, 1),
-      new Vec2(1, 0), new Vec2(1, 1)};
+    Vector2f[] cellPoints = {new Vector2f(0, 0), new Vector2f(0, 1),
+      new Vector2f(1, 0), new Vector2f(1, 1)};
     List<TestCell> cells = testSurface.getCells(cellPoints);
 
     assertNotNull("Nothing was returned", cells);
 
     TestCell[] cellArray = cells.toArray(new TestCell[cells.size()]);
     for (int i = 0; i < cellArray.length; i++) {
-      Vec2 testPoint = cellArray[i].getGridPosition();
-      Vec2 expected = cellPoints[i];
+      Vector2f testPoint = cellArray[i].getGridPosition();
+      Vector2f expected = cellPoints[i];
       assertEquals("Cell Position doesn't match", expected, testPoint);
     }
   }
@@ -165,7 +165,7 @@ public class SurfaceMapAndTaskTest {
 
     TestCell[] cellArray = cells.toArray(new TestCell[cells.size()]);
     for (int i = 0; i < cellArray.length; i++) {
-      Vec2 testPoint = cellArray[i].getGridPosition();
+      Vector2f testPoint = cellArray[i].getGridPosition();
       Integer testIndex = testSurface.calcIndex((int) testPoint.getX(), (int) testPoint.getY());
       Integer expectedIndex = cellPoints[i];
       assertEquals("Cell Indexes don't match", expectedIndex, testIndex);

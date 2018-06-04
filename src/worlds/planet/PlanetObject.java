@@ -1,8 +1,7 @@
 package worlds.planet;
 
-import engine.util.Vec2;
+import com.jme3.math.Vector2f;
 import java.awt.Graphics2D;
-import static worlds.planet.Planet.instance;
 
 /**
  *
@@ -10,11 +9,11 @@ import static worlds.planet.Planet.instance;
  */
 public abstract class PlanetObject {
 
-  protected Vec2 pos;
+  protected Vector2f pos;
   private boolean isDead;
 
   public PlanetObject(int x, int y) {
-    pos = new Vec2(x, y);
+    pos = new Vector2f(x, y);
     isDead = false;
   }
 

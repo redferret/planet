@@ -14,15 +14,17 @@ import worlds.planet.TestWorld;
 public class WorldState extends AbstractAppState {
   
   private TestWorld world;
+  private boolean isWorldPaused;
   
   public WorldState() {
     world = new TestWorld();
+    isWorldPaused = false;
   }
   
   @Override
   public void initialize(AppStateManager stateManager, Application app) {
     super.initialize(stateManager, app);
-    world.play();
+    world.setIsPaused(isWorldPaused);
   }
   
   public TestWorld getWorld() {
@@ -38,6 +40,14 @@ public class WorldState extends AbstractAppState {
   public void cleanup() {
     super.cleanup();
     world.shutdown();
+  }
+
+  public void setIsPaused() {
+    world.setIsPaused(isWorldPaused = !isWorldPaused);
+  }
+
+  boolean isPaused() {
+    return isWorldPaused;
   }
   
 }

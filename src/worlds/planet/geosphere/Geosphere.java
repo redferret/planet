@@ -1,6 +1,7 @@
 package worlds.planet.geosphere;
 
 import worlds.planet.Surface;
+import worlds.planet.geosphere.tasks.HotSpotManager;
 import worlds.planet.geosphere.tasks.MantleConduction;
 import worlds.planet.geosphere.tasks.MantleRadiation;
 /**
@@ -20,6 +21,9 @@ public abstract class Geosphere extends Surface {
     });
     produceTasks(() -> {
       return new MantleConduction(this);
+    });
+    produceTasks(() -> {
+      return new HotSpotManager(this);
     });
   }
   

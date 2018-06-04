@@ -19,7 +19,6 @@ import java.util.logging.Logger;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import engine.util.Vec2;
 import engine.util.task.Boundaries;
 import engine.util.task.Task;
 import engine.util.task.TaskAdapter;
@@ -114,10 +113,11 @@ public abstract class SurfaceMap<C extends Cell> extends TerrainQuad {
     List<Float> heights = new ArrayList<>();
     map.values().forEach(cell -> {
       float height = cellData.getHeightValue(cell) * scale;
-      Vec2 pos = cell.getGridPosition();
+      Vector2f pos = cell.getGridPosition();
       locs.add(Util.scalePositionForTerrain(pos.getX(), pos.getY(), getTerrainSize()));
       heights.add(height);
     });
+    setNormalRecalcNeeded(null);
     setHeight(locs, heights);
   }
   
@@ -412,7 +412,7 @@ public abstract class SurfaceMap<C extends Cell> extends TerrainQuad {
     }
   }
   
-  public C getCellAt(Vec2 pos) {
+  public C getCellAt(Vector2f pos) {
     return getCellAt((int) pos.getX(), (int) pos.getY());
   }
   
@@ -432,6 +432,9 @@ public abstract class SurfaceMap<C extends Cell> extends TerrainQuad {
    * data doesn't exist or if the data is locked by another thread.
    */
   public C getCellAt(int x, int y) {
+    int len = getTerrainSize();
+    x = x < 0 ? len - 1 : (x >= len ? 0 : x);
+    y = y < 0 ? len - 1 : (y >= len ? 0 : y);
     int index = calcIndex(x, y);
     return getCellAt(index);
   }
@@ -454,11 +457,11 @@ public abstract class SurfaceMap<C extends Cell> extends TerrainQuad {
     return c;
   }
 
-  public List<C> getCells(Vec2... cellPositions) {
+  public List<C> getCells(Vector2f... cellPositions) {
 
     int[] indexes = new int[cellPositions.length];
     for (int i = 0; i < indexes.length; i++) {
-      Vec2 p = cellPositions[i];
+      Vector2f p = cellPositions[i];
       int index = calcIndex((int) p.getX(), (int) p.getY());
       indexes[i] = index;
     }

@@ -10,7 +10,7 @@ import com.jme3.renderer.RenderManager;
 import com.jme3.system.AppSettings;
 import engine.states.SurfaceState;
 import engine.states.WorldState;
-import engine.util.Delay;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Main entry point
@@ -20,6 +20,14 @@ public class PlanetApp extends SimpleApplication {
   private SurfaceStateManager surfaceStateManager;
   
   public static void main(String[] args) {
+    
+//    float trials = 100000;
+//    float successes = 0;
+//    for (int i = 0; i < trials; i++) {
+//      successes += (ThreadLocalRandom.current().nextFloat() < 0.5f) ? 1 : 0;
+//    }
+//    System.out.println(successes + " / " + trials);
+//    System.out.println(successes / trials);
     
     PlanetApp app = new PlanetApp();
     
@@ -35,7 +43,7 @@ public class PlanetApp extends SimpleApplication {
     
     surfaceStateManager = new SurfaceStateManager(this);
     
-    flyCam.setMoveSpeed(400f);
+    flyCam.setMoveSpeed(600f);
     flyCam.setZoomSpeed(20f);
     
     setDisplayStatView(false);
@@ -47,8 +55,9 @@ public class PlanetApp extends SimpleApplication {
 
     this.getCamera().setLocation(getCamera().getLocation().add(0, 300, 250));
     
+    inputManager.addMapping("playpause", new KeyTrigger(KeyInput.KEY_P));
     inputManager.addMapping("wireframe", new KeyTrigger(KeyInput.KEY_T));
-    inputManager.addListener(actionListener, "wireframe");
+    inputManager.addListener(actionListener, "wireframe", "playpause");
     
     stateManager.attach(new WorldState());
     surfaceStateManager.attach(new SurfaceState());
@@ -62,8 +71,15 @@ public class PlanetApp extends SimpleApplication {
   private final ActionListener actionListener = new ActionListener() {
     @Override
     public void onAction(String name, boolean pressed, float tpf) {
-      if (name.equals("wireframe") && !pressed) {
-        surfaceStateManager.getState(SurfaceState.class).negWireFramed();
+      if (!pressed) {
+        switch(name) {
+          case "wireframe":
+            surfaceStateManager.getState(SurfaceState.class).negWireFramed();
+            break;
+          case "playpause":
+            stateManager.getState(WorldState.class).setIsPaused();
+            break;
+        }
       }
     }
   };

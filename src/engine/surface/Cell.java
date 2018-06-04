@@ -1,6 +1,6 @@
 package engine.surface;
 
-import engine.util.Vec2;
+import com.jme3.math.Vector2f;
 import engine.util.concurrent.MThread;
 
 /**
@@ -13,12 +13,12 @@ import engine.util.concurrent.MThread;
  */
 public abstract class Cell {
 
-  private final Vec2 gridPosition, actualPosition;
+  private final Vector2f gridPosition, actualPosition;
   private MThread parentThread;
 
   public Cell(int x, int y) {
-    gridPosition = new Vec2(x, y);
-    actualPosition = new Vec2(x, y);
+    gridPosition = new Vector2f(x, y);
+    actualPosition = new Vector2f(x, y);
   }
   
   public void setParentThread(MThread parentThread) {
@@ -42,8 +42,8 @@ public abstract class Cell {
    *
    * @return The copy of the cell position object.
    */
-  public Vec2 getGridPosition() {
-    return gridPosition.copy();
+  public Vector2f getGridPosition() {
+    return gridPosition.clone();
   }
 
   /**
@@ -52,7 +52,7 @@ public abstract class Cell {
    *
    * @return
    */
-  public Vec2 getActualPosition() {
+  public Vector2f getActualPosition() {
     return actualPosition;
   }
 

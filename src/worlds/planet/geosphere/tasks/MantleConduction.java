@@ -1,8 +1,8 @@
 
 package worlds.planet.geosphere.tasks;
 
+import com.jme3.math.Vector2f;
 import engine.util.Delay;
-import engine.util.Vec2;
 import engine.util.task.Task;
 import worlds.planet.PlanetCell;
 import worlds.planet.Util;
@@ -20,7 +20,7 @@ public class MantleConduction extends Task {
   
   public MantleConduction(Geosphere surface) {
     this.surface = surface;
-    delay = new Delay(250);
+    delay = new Delay(100);
   }
   
   @Override
@@ -38,9 +38,9 @@ public class MantleConduction extends Task {
   @Override
   public void perform(int x, int y) throws Exception {
     GeoCell cell = surface.getCellAt(x, y);
-    Vec2[] cells = Util.getCellIndexesFrom(cell.getGridPosition(), surface.getTerrainSize());
+    Vector2f[] cells = Util.getCellIndexesFrom(cell.getGridPosition(), surface.getTerrainSize());
     float temp = cell.getMantleTemperature(); 
-    for (Vec2 pos : cells) {
+    for (Vector2f pos : cells) {
       GeoCell neighborCell = surface.getCellAt(pos);
       float cellTemp = neighborCell.getMantleTemperature();
       float tempChange = (PlanetCell.length * (temp - cellTemp)) / (1e7f);
