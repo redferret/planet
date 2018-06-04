@@ -13,12 +13,12 @@ import worlds.planet.TestWorld;
  */
 public class WorldState extends AbstractAppState {
   
-  private TestWorld world;
+  private final TestWorld world;
   private boolean isWorldPaused;
   
   public WorldState() {
     world = new TestWorld();
-    isWorldPaused = false;
+    isWorldPaused = true;
   }
   
   @Override

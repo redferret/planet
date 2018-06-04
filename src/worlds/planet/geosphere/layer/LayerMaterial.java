@@ -22,7 +22,7 @@ public class LayerMaterial {
    * The thermal conductivity of this material. High values means high conductivity
    * See more at https://www.khanacademy.org/science/physics/thermodynamics/specific-heat-and-heat-transfer/a/what-is-thermal-conductivity
    */
-  private float specificHeat;
+  private final float specificHeat;
   /**
    * The mass of this material
    */

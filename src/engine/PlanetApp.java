@@ -10,15 +10,12 @@ import com.jme3.renderer.RenderManager;
 import com.jme3.system.AppSettings;
 import engine.states.SurfaceState;
 import engine.states.WorldState;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Main entry point
  */
 public class PlanetApp extends SimpleApplication {
 
-  private SurfaceStateManager surfaceStateManager;
-  
   public static void main(String[] args) {
     
 //    float trials = 100000;
@@ -41,8 +38,6 @@ public class PlanetApp extends SimpleApplication {
   @Override
   public void simpleInitApp() {
     
-    surfaceStateManager = new SurfaceStateManager(this);
-    
     flyCam.setMoveSpeed(600f);
     flyCam.setZoomSpeed(20f);
     
@@ -60,12 +55,7 @@ public class PlanetApp extends SimpleApplication {
     inputManager.addListener(actionListener, "wireframe", "playpause");
     
     stateManager.attach(new WorldState());
-    surfaceStateManager.attach(new SurfaceState());
-    surfaceStateManager.start();
-  }
-  
-  public SurfaceStateManager getSurfaceStateManager() {
-    return surfaceStateManager;
+    stateManager.attach(new SurfaceState());
   }
   
   private final ActionListener actionListener = new ActionListener() {
@@ -74,7 +64,7 @@ public class PlanetApp extends SimpleApplication {
       if (!pressed) {
         switch(name) {
           case "wireframe":
-            surfaceStateManager.getState(SurfaceState.class).negWireFramed();
+            stateManager.getState(SurfaceState.class).negWireFramed();
             break;
           case "playpause":
             stateManager.getState(WorldState.class).setIsPaused();
@@ -97,7 +87,6 @@ public class PlanetApp extends SimpleApplication {
   @Override
   public void destroy() {
     super.destroy();
-    surfaceStateManager.cleanup();
   }
 
 }

@@ -104,7 +104,7 @@ public class GeoCell extends Mantle {
     crustTemperature = 0;
     
     LayerMaterial m1 = getLayer("Basalt");
-    float mass = Util.calcMass(1f, m1);
+    float mass = Util.calcMass(10f, m1);
     m1.setMass(mass);
     Layer layer = new Layer();
     layer.addMaterial(m1);
