@@ -56,7 +56,7 @@ public class UpperMantle extends SurfaceMap<Mantle> {
       }
       
       @Override
-      public float topNullConducance() {
+      public float topNullConductance() {
         return 0;
       }
       

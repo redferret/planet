@@ -44,7 +44,7 @@ public class Core extends SurfaceMap {
       }
       
       @Override
-      public float topNullConducance() {
+      public float topNullConductance() {
         return 0;
       }
       

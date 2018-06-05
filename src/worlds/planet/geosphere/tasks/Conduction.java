@@ -75,7 +75,7 @@ public abstract class Conduction<C extends Cell> extends Task {
             calculateConductance(PlanetCell.area, zLength, centerCapacity, 
                     top.getHeatCapacity(), top.getVerticalResistence()) 
             : 
-            centerCell.topNullConducance();
+            centerCell.topNullConductance();
     K_neighbors[5] = (bottom != null) ?
             calculateConductance(PlanetCell.area, zLength, centerCapacity, 
                     bottom.getHeatCapacity(), bottom.getVerticalResistence()) 

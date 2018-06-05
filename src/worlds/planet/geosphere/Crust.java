@@ -129,7 +129,7 @@ public class Crust extends Cell {
   }
 
   @Override
-  public float topNullConducance() {
+  public float topNullConductance() {
     return 0;
   }
 

@@ -40,7 +40,7 @@ public abstract class HeatConduction {
    * If there is no top cell for heat to conduct, then use this value.
    * @return 
    */
-  public abstract float topNullConducance();
+  public abstract float topNullConductance();
   
   /**
    * If there is no bottom cell for heat to conduct, then use this value.
