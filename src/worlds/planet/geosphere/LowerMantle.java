@@ -18,8 +18,10 @@ public class LowerMantle extends SurfaceMap<Mantle> {
   public static final float LOWER_MANTLE_DENSITY = 3500f;
   public static final float LOWER_MANTLE_SPECIFIC_HEAT = 4.6f;
 
-  public LowerMantle(int totalSize, SurfaceThreads threads) {
-    super(totalSize, threads);
+  public LowerMantle(int totalSize, SurfaceThreads surfaceThreads) {
+    super("Lower Mantle", totalSize, surfaceThreads);
+    setupDefaultMap(surfaceThreads.getThreadCount());
+    reset();
   }
 
   @Override

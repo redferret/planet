@@ -51,6 +51,8 @@ public abstract class SurfaceMap<C extends Cell> extends TerrainQuad {
 
   public int displaySetting;
 
+  private String surfaceName;
+  
   /**
    * The map containing the references to each data point on the surface.
    */
@@ -68,20 +70,22 @@ public abstract class SurfaceMap<C extends Cell> extends TerrainQuad {
    * Create a new SurfaceMap. SurfaceThreads and Map need to be initialized
    * separably.
    *
+   * @param surfaceName The name of this surface. i.e. Geosphere
    * @param totalSize The size of this entire terrain (on one side). Power of 2
    * plus 1 (eg. 513, 1025, 2049...)
    * @param surfaceThreads
    */
-  public SurfaceMap(int totalSize, SurfaceThreads surfaceThreads) {
+  public SurfaceMap(String surfaceName, int totalSize, SurfaceThreads surfaceThreads) {
     super("surface", 65, totalSize, null);
+    this.surfaceName = surfaceName;
     displaySetting = 0;
     this.surfaceThreads = surfaceThreads;
   }
   
-  public final SurfaceThreads getSurfaceThreads() {
-    return surfaceThreads;
+  public String getSurfaceName() {
+    return name;
   }
-  
+
   public void reset() {
     planetAge = new AtomicLong(0);
     surfaceThreads.pauseThreads();
@@ -185,7 +189,7 @@ public abstract class SurfaceMap<C extends Cell> extends TerrainQuad {
   protected void buildMap() {
     int terrainSize = getTerrainSize();
     map.clear();
-    Logger.getLogger(SurfaceMap.class.getName()).log(Level.INFO, "Setting up map");
+    Logger.getLogger(SurfaceMap.class.getName()).log(Level.INFO, "Setting up {0}", surfaceName);
     for (int x = 0; x < terrainSize; x++) {
       for (int y = 0; y < terrainSize; y++) {
         C generatedCell = generateCell(x, y);

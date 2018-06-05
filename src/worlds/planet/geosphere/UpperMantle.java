@@ -24,8 +24,10 @@ public class UpperMantle extends SurfaceMap<Mantle> {
   public final static float UPPER_MANTLE_MASS = Util.calcMass(UPPER_MANTLE_DEPTH, PlanetCell.area, UPPER_MANTLE_DENSITY);
   public static final float UPPER_MANTLE_SPECIFIC_HEAT = 2.6f;
 
-  public UpperMantle(int totalSize, SurfaceThreads threads) {
-    super(totalSize, threads);
+  public UpperMantle(int totalSize, SurfaceThreads surfaceThreads) {
+    super("Upper Mantle", totalSize, surfaceThreads);
+    setupDefaultMap(surfaceThreads.getThreadCount());
+    reset();
   }
 
   @Override

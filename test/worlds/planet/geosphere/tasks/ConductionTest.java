@@ -2,8 +2,8 @@
 package worlds.planet.geosphere.tasks;
 
 import org.junit.Test;
-import static org.junit.Assert.*;
 import worlds.planet.PlanetCell;
+import static org.junit.Assert.*;
 
 /**
  *
@@ -20,25 +20,47 @@ public class ConductionTest {
     conductionTest = new ConductionImpl(surfaceMock);
     PlanetCell.length = 100000;
     PlanetCell.area = PlanetCell.length * PlanetCell.length;
+    
+    
   }
 
 
   @Test
   public void testCalculateHeatConductance() {
+    float[] K_vals = getConductances();
+    
+    float[] expectedValues = new float[]{1250.0f, 1250.0f, 1250.0f, 1250.0f, 8812.909f, 8812.909f};
+    for (int k = 0; k < 6; k++){
+      assertTrue(K_vals[k] == expectedValues[k]);
+    }
+  }
+  
+  private float[] getConductances() {
     int x = 0;
     int y = 0;
-    MockCell top = surfaceMock.getCellAt(x, y);
-    MockCell bottom = surfaceMock.getCellAt(x, y);
-    float[] K_vals = conductionTest.calculateHeatConductance(x, y, 2000, top, bottom);
-    
+    MockCell top = new MockCell(x, y, 500, 2.5f);
+    MockCell bottom = new MockCell(x, y, 3000, 2.5f);
+    return conductionTest.calculateHeatConductance(x, y, 2000, top, bottom);
   }
 
   @Test
   public void testCalculateHeatFlow() {
+    float[] K_vals = getConductances();
+    float[] T_vals = new float[]{350, 1000, 768, 400, 500, 3000};
+    float heatFlow = conductionTest.calculateHeatFlow(K_vals, T_vals, 4000);
+    assertTrue(heatFlow < 0);
+    heatFlow = conductionTest.calculateHeatFlow(K_vals, T_vals, 0);
+    assertTrue(heatFlow > 0);
+    
   }
 
   @Test
   public void testCalculateNewTemperature() {
+    float[] K_vals = getConductances();
+    float[] T_vals = new float[]{350, 1000, 768, 400, 500, 3000};
+    float heatFlow = conductionTest.calculateHeatFlow(K_vals, T_vals, 4000);
+    float newTemp = conductionTest.calculateNewTemperature(heatFlow, 4000, K_vals, 2000);
+    assertTrue(newTemp == 1502.3848f);
   }
 
   public class ConductionImpl extends Conduction {

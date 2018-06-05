@@ -2,10 +2,8 @@ package worlds.planet.geosphere;
 
 import engine.surface.SurfaceMap;
 import engine.surface.SurfaceThreads;
-import engine.surface.tasks.SetParentThreads;
 import java.util.concurrent.atomic.AtomicLong;
 import worlds.MinMaxHeightFactory;
-import worlds.planet.PlanetCell;
 
 /**
  * Contains all logic that works on the geology of the planet.
@@ -48,13 +46,10 @@ public class Lithosphere extends SurfaceMap<Crust> {
    * @param surfaceThreads Reference to the surface threads
    */
   public Lithosphere(int totalSize, SurfaceThreads surfaceThreads) {
-    super(totalSize, surfaceThreads);
+    super("Lithosphere", totalSize, surfaceThreads);
     setupDefaultMap(surfaceThreads.getThreadCount());
     mhFactory = new MinMaxHeightFactory(this);
     surfaceThreads.produceTasks(mhFactory);
-    surfaceThreads.produceTasks(() -> {
-      return new SetParentThreads(this);
-    });
     ageStamp = 0;
 
     reset();

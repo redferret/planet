@@ -25,11 +25,6 @@ public abstract class Mantle extends Cell {
       temperature.getAndSet(temp);
     }
   }
-
-  public float getMantleTemperature() {
-    return temperature.get();
-  }
-
   @Override
   public void addToTemperatureFlux(float flux) {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -37,7 +32,7 @@ public abstract class Mantle extends Cell {
 
   @Override
   public float getTemperature() {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    return temperature.get();
   }
   
 }
