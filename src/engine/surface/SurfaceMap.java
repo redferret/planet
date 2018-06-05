@@ -51,7 +51,7 @@ public abstract class SurfaceMap<C extends Cell> extends TerrainQuad {
 
   public int displaySetting;
 
-  private String surfaceName;
+  private final String surfaceName;
   
   /**
    * The map containing the references to each data point on the surface.
@@ -86,6 +86,10 @@ public abstract class SurfaceMap<C extends Cell> extends TerrainQuad {
     return name;
   }
 
+  public SurfaceThreads getSurfaceThreads() {
+    return surfaceThreads;
+  }
+  
   public void reset() {
     planetAge = new AtomicLong(0);
     surfaceThreads.pauseThreads();

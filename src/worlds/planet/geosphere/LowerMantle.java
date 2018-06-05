@@ -6,6 +6,7 @@ import engine.surface.SurfaceThreads;
 import java.util.concurrent.ThreadLocalRandom;
 import worlds.planet.PlanetCell;
 import worlds.planet.Util;
+import worlds.planet.geosphere.tasks.LowerMantleConduction;
 
 /**
  *
@@ -24,6 +25,12 @@ public class LowerMantle extends SurfaceMap<Mantle> {
     reset();
   }
 
+  public void setDependentSurfaces(UpperMantle upperMantle, Core core) {
+    getSurfaceThreads().produceTasks(() -> {
+      return new LowerMantleConduction(this, upperMantle, core);
+    });
+  }
+  
   @Override
   public Mantle generateCell(int x, int y) {
     return new Mantle(x, y, ThreadLocalRandom.current().nextInt(3000, 4000)) {

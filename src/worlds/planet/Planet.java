@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import engine.surface.SurfaceMap;
 import engine.surface.SurfaceThreads;
+import worlds.planet.geosphere.Core;
 import worlds.planet.geosphere.Lithosphere;
 import worlds.planet.geosphere.LowerMantle;
 import worlds.planet.geosphere.UpperMantle;
@@ -22,6 +23,7 @@ public abstract class Planet {
   private final Lithosphere lithosphere;
   private final UpperMantle upperMantle;
   private final LowerMantle lowerMantle;
+  private final Core core;
 
   public static enum TimeScale {
     Geological, Evolutionary, Civilization, None
@@ -50,6 +52,8 @@ public abstract class Planet {
     lithosphere = new Lithosphere(totalSize, surfaceThreads);
     upperMantle = new UpperMantle(totalSize, surfaceThreads);
     lowerMantle = new LowerMantle(totalSize, surfaceThreads);
+    core = new Core(totalSize, surfaceThreads);
+    lowerMantle.setDependentSurfaces(upperMantle, core);
   }
 
   protected final void startThreads() {

@@ -55,8 +55,6 @@ public class Crust extends Cell {
    * The amount of this cell that is currently submerged in the mantel.
    */
   private final AtomicFloat curAmountSubmerged;
-
-  private final AtomicFloat crustTemperature;
   
   /**
    * A Point that is represented as the velocity for Plate Tectonics. When a
@@ -90,8 +88,7 @@ public class Crust extends Cell {
    * @param y The y coordinate
    */
   public Crust(int x, int y) {
-    super(x, y);
-    crustTemperature = new AtomicFloat(0);
+    super(x, y, 0);
     totalStrataThickness = new AtomicFloat(0);
     totalMass = new AtomicFloat(0);
     totalVolume = new AtomicFloat(0);
@@ -120,25 +117,6 @@ public class Crust extends Cell {
     return velocity;
   }
 
-  @Override
-  public void addToTemperatureFlux(float flux) {
-    
-  }
-  
-  public void addCrustHeat(float amount) {
-    float temp = crustTemperature.get() + amount;
-    if (temp < -273) {
-      crustTemperature.getAndSet(-273);
-    } else {
-      crustTemperature.getAndSet(temp);
-    }
-  }
-
-  @Override
-  public float getTemperature() {
-    return crustTemperature.get();
-  }
-  
   /**
    * Creates a deep copy of this Crust and it's strata.
    *

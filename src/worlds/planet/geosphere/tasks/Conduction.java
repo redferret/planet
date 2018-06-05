@@ -32,6 +32,24 @@ public abstract class Conduction<C extends Cell> extends Task {
     return delay.check();
   }
   
+  public float[] getTemperatures(int x, int y, HeatConduction top, HeatConduction bottom) {
+    Vector2f left = new Vector2f(x + 1, y);
+    Vector2f right = new Vector2f(x - 1, y);
+    Vector2f forward = new Vector2f(x, y + 1);
+    Vector2f back = new Vector2f(x, y - 1);
+    Vector2f[] neighbors = new Vector2f[]{left, right, forward, back};
+    
+    float T[] = new float[6];
+    for (int t = 0; t < 4; t++) {
+      HeatConduction cell = surface.getCellAt(neighbors[t]);
+      T[t] = cell.getTemperature();
+    }
+    T[4] = top.getTemperature();
+    T[5] = bottom.getTemperature();
+    
+    return T;
+  } 
+  
   public float[] calculateHeatConductance(int x, int y, float zLength, 
           HeatConduction top, HeatConduction bottom) {
     HeatConduction centerCell = surface.getCellAt(x, y);

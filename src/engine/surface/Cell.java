@@ -12,12 +12,13 @@ import worlds.planet.geosphere.HeatConduction;
  *
  * @author Richard DeSilvey
  */
-public abstract class Cell implements HeatConduction {
+public abstract class Cell extends HeatConduction {
 
   private final Vector2f gridPosition, actualPosition;
   private MThread parentThread;
 
-  public Cell(int x, int y) {
+  public Cell(int x, int y, float initialTemperature) {
+    super(initialTemperature);
     gridPosition = new Vector2f(x, y);
     actualPosition = new Vector2f(x, y);
   }
