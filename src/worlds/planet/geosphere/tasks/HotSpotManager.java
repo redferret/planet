@@ -8,8 +8,8 @@ import engine.util.task.Task;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-import worlds.planet.geosphere.GeoCell;
-import worlds.planet.geosphere.Geosphere;
+import worlds.planet.geosphere.Crust;
+import worlds.planet.geosphere.Lithosphere;
 import worlds.planet.geosphere.HotSpot;
 
 /**
@@ -19,16 +19,16 @@ import worlds.planet.geosphere.HotSpot;
 public class HotSpotManager extends BasicTask {
 
   
-  private final Geosphere surface;
+  private final Lithosphere surface;
   private static final ThreadLocalRandom LOCAL_RAND = ThreadLocalRandom.current();
   private final List<HotSpot> hotSpots;
   public static int maxHotSpots = 3000;
   private final Delay delay;
 
-  public HotSpotManager(Geosphere surface) {
+  public HotSpotManager(Lithosphere surface) {
     hotSpots = new ArrayList<>();
     this.surface = surface;
-    delay = new Delay(1500);
+    delay = new Delay(500);
   }
   
   private float getProb(float temp) {
@@ -63,7 +63,7 @@ public class HotSpotManager extends BasicTask {
       indexes.forEach(index -> {
         int x = surface.calcX(index);
         int y = surface.calcY(index);
-        GeoCell cell = surface.getCellAt(x, y);
+        Crust cell = surface.getCellAt(x, y);
         Vector2f[] pos = new Vector2f[]{
             new Vector2f(x + 1, y),
             new Vector2f(x - 1, y),
@@ -72,9 +72,9 @@ public class HotSpotManager extends BasicTask {
         };
         float prob = getProb(cell.getMantleTemperature());
         if (LOCAL_RAND.nextFloat() < prob) {
-          cell.addToMantleHeat(15f * 0.8f);
+          cell.addToLowerMantleHeat(15f * 0.8f);
           for(Vector2f p : pos) {
-            surface.getCellAt(p).addToMantleHeat(12.5f * 0.8f);
+            surface.getCellAt(p).addToLowerMantleHeat(12.5f * 0.8f);
           }
         }
       });

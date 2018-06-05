@@ -3,15 +3,14 @@ package engine.states;
 
 import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
-import com.jme3.app.state.AppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.material.Material;
 import engine.PlanetApp;
-import worlds.planet.PlanetSurface;
+import java.util.concurrent.ThreadLocalRandom;
 import worlds.planet.TestWorld;
-import worlds.planet.geosphere.GeoCell;
-import static worlds.planet.geosphere.Mantle.heatMap;
-
+import worlds.planet.geosphere.Crust;
+import worlds.planet.geosphere.Lithosphere;
+import static worlds.planet.Util.heatMap;
 /**
  *
  * @author Richard
@@ -19,7 +18,7 @@ import static worlds.planet.geosphere.Mantle.heatMap;
 public class SurfaceState extends AbstractAppState {
   
   private PlanetApp app;
-  private PlanetSurface surface;
+  private Lithosphere surface;
   private boolean wireframe = false;
   private Material unshadedMat;
   
@@ -33,7 +32,7 @@ public class SurfaceState extends AbstractAppState {
     AppStateManager asm = this.app.getStateManager();
     WorldState worldState = asm.getState(WorldState.class);
     TestWorld world = worldState.getWorld();
-    surface = world.getSurface();
+    surface = world.getGeosphere();
     surface.bindCameraForLODControl(app.getCamera());
     surface.bindTerrainToNode(((PlanetApp) app).getRootNode());
     surface.setMaterial(unshadedMat);
@@ -52,7 +51,7 @@ public class SurfaceState extends AbstractAppState {
   public void update(float timeSlice) {
     if (!app.getStateManager().getState(WorldState.class).isPaused()) {
       surface.updateTerrainHeight(0.01f, (cell) -> {
-        return ((GeoCell) cell).getMantleTemperature();
+        return 2000;
       });
 
       surface.updateVertexColors(heatMap, (heightVal) -> {

@@ -1,6 +1,8 @@
 package worlds.planet.geosphere;
 
 import com.jme3.math.Vector2f;
+import engine.surface.Cell;
+import engine.util.concurrent.AtomicFloat;
 import worlds.planet.geosphere.layer.LayerMaterial;
 import worlds.planet.geosphere.layer.Layer;
 import java.awt.Color;
@@ -18,12 +20,12 @@ import static worlds.planet.Planet.instance;
 import static worlds.planet.geosphere.layer.LayerMaterial.getLayer;
 
 /**
- * A GeoCell is a Cell representing land Geologically. The cell contains strata
+ * A Crust is a Cell representing land Geologically. The cell contains strata
  * and specialized methods for adding and/or removing from the strata.
  *
  * @author Richard DeSilvey
  */
-public class GeoCell extends Mantle {
+public class Crust extends Cell {
 
   /**
    * The list of strata for this cell
@@ -33,28 +35,28 @@ public class GeoCell extends Mantle {
   /**
    * Tracks the total thickness of the strata.
    */
-  private float totalStrataThickness;
+  private final AtomicFloat totalStrataThickness;
 
   /**
    * The total height makes adding up each layer faster. Each time a layer
    * is removed or it's thickness is altered the totalMass is updated. The units
    * are in kilograms.
    */
-  private float totalMass;
+  private final AtomicFloat totalMass;
   
   /**
    * The total volume is calculated each time layer is added or removed or
    * updated and is used to determine the average density of this cell in cubic
    * meters.
    */
-  private float totalVolume;
+  private final AtomicFloat totalVolume;
 
   /**
    * The amount of this cell that is currently submerged in the mantel.
    */
-  private float curAmountSubmerged;
+  private final AtomicFloat curAmountSubmerged;
 
-  private float crustTemperature;
+  private final AtomicFloat crustTemperature;
   
   /**
    * A Point that is represented as the velocity for Plate Tectonics. When a
@@ -87,8 +89,13 @@ public class GeoCell extends Mantle {
    * @param x The x coordinate
    * @param y The y coordinate
    */
-  public GeoCell(int x, int y) {
+  public Crust(int x, int y) {
     super(x, y);
+    crustTemperature = new AtomicFloat(0);
+    totalStrataThickness = new AtomicFloat(0);
+    totalMass = new AtomicFloat(0);
+    totalVolume = new AtomicFloat(0);
+    curAmountSubmerged = new AtomicFloat(0);
     setup();
   }
 
@@ -96,12 +103,6 @@ public class GeoCell extends Mantle {
 
     strata = new ConcurrentLinkedDeque<>();
     velocity = new Vector2f(0, 0);
-
-    totalStrataThickness = 0f;
-    totalMass = 0f;
-    totalVolume = 0f;
-    curAmountSubmerged = 0f;
-    crustTemperature = 0;
     
     LayerMaterial m1 = getLayer("Basalt");
     float mass = Util.calcMass(10f, m1);
@@ -119,25 +120,33 @@ public class GeoCell extends Mantle {
     return velocity;
   }
 
-  public void addCrustTemperature(float rate) {
-    crustTemperature += rate;
-    if (crustTemperature < -273) {
-      crustTemperature = -273;
+  @Override
+  public void addToTemperatureFlux(float flux) {
+    
+  }
+  
+  public void addCrustHeat(float amount) {
+    float temp = crustTemperature.get() + amount;
+    if (temp < -273) {
+      crustTemperature.getAndSet(-273);
+    } else {
+      crustTemperature.getAndSet(temp);
     }
   }
 
-  public float getCrustTemperature() {
-    return crustTemperature;
+  @Override
+  public float getTemperature() {
+    return crustTemperature.get();
   }
   
   /**
-   * Creates a deep copy of this GeoCell and it's strata.
+   * Creates a deep copy of this Crust and it's strata.
    *
-   * @return The copy of this GeoCell.
+   * @return The copy of this Crust.
    */
-  public GeoCell copy() {
+  public Crust copy() {
 
-    GeoCell copy = new GeoCell(getX(), getY());
+    Crust copy = new Crust(getX(), getY());
     Deque<Layer> copyStrata = new ConcurrentLinkedDeque<>();
 
     strata.forEach(layer -> {
@@ -163,9 +172,9 @@ public class GeoCell extends Mantle {
 
   public Deque<Layer> removeAllStrata() {
     Deque<Layer> removed = removeStrata(getStrataThickness());
-    totalStrataThickness = 0f;
-    totalMass = 0f;
-    totalVolume = 0f;
+    totalStrataThickness.set(0);
+    totalMass.set(0);
+    totalVolume.set(0);
     return removed;
   }
 
@@ -222,11 +231,11 @@ public class GeoCell extends Mantle {
   }
 
   public float getTotalMass() {
-    return totalMass;
+    return totalMass.get();
   }
 
   public float getTotalVolume() {
-    return totalVolume;
+    return totalVolume.get();
   }
 
   /**
@@ -311,12 +320,13 @@ public class GeoCell extends Mantle {
       throw new IllegalArgumentException("The layer can't be null");
     }
     float mass = rock.getMass();
-    totalStrataThickness = Math.max(0, totalStrataThickness + Util.calcHeight(mass, PlanetCell.area, rock.getDensity()));
-    totalMass = Math.max(0, totalMass + mass);
-    totalVolume = Math.max(0, totalVolume + (mass / rock.getDensity()));
+    totalStrataThickness.set(Math.max(0, totalStrataThickness.get() + Util.calcHeight(mass, PlanetCell.area, rock.getDensity())));
+    totalMass.set(Math.max(0, totalMass.get() + mass));
+    totalVolume.set(Math.max(0, totalVolume.get() + (mass / rock.getDensity())));
   }
 
-  public float getSpecificHeat() {
+  @Override
+  public float getHeatConductivity() {
     float sp = 0;
     sp = strata.stream()
             .map((layer) -> layer.getSpecificHeat())
@@ -469,7 +479,7 @@ public class GeoCell extends Mantle {
    * @return
    */
   public float getStrataThickness() {
-    return totalStrataThickness;
+    return totalStrataThickness.get();
   }
 
   /**
@@ -490,7 +500,7 @@ public class GeoCell extends Mantle {
       recalculateHeight();
     }
 
-    return cellHeight - curAmountSubmerged;
+    return cellHeight - curAmountSubmerged.get();
 
   }
 
@@ -504,32 +514,13 @@ public class GeoCell extends Mantle {
     float oceanVolume = 0;//((HydroCell) this).getOceanVolume();
 
     cellHeight = (oceanVolume + getTotalVolume()) / PlanetCell.area;
-    float factor = mantleDensityFactor();
-    amountSubmerged = cellHeight * density / (Mantle.mantle_density * factor);
+    amountSubmerged = cellHeight * density / (UpperMantle.UPPER_MANTLE_DENSITY);
 
-    curAmountSubmerged = amountSubmerged;
+    curAmountSubmerged.set(amountSubmerged);
   }
 
   public boolean hasOcean() {
     return false;//((HydroCell) this).getOceanMass() > 0;
   }
 
-//  @Override
-//  public synchronized List<Integer[]> render(List<Integer[]> settings) {
-//    int setting;
-//    PlanetSurface surface = (PlanetSurface) instance().getSurface();
-//    switch (surface.displaySetting) {
-//      case HEIGHTMAP:
-//        float thisHeight = getHeightWithoutOceans() * 1000;
-//        float height = Math.max(0, thisHeight - surface.getLowestHeight());
-//        setting = (int) Math.min((height / heightIndexRatio), MAX_HEIGHT_INDEX - 1);
-//        settings.add(heightMap[setting]);
-//
-//        return super.render(settings);
-//
-//      
-//      default: // The display setting is not listed
-//        return super.render(settings);
-//    }
-//  }
 }

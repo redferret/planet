@@ -17,15 +17,6 @@ import engine.states.WorldState;
 public class PlanetApp extends SimpleApplication {
 
   public static void main(String[] args) {
-    
-//    float trials = 100000;
-//    float successes = 0;
-//    for (int i = 0; i < trials; i++) {
-//      successes += (ThreadLocalRandom.current().nextFloat() < 0.5f) ? 1 : 0;
-//    }
-//    System.out.println(successes + " / " + trials);
-//    System.out.println(successes / trials);
-    
     PlanetApp app = new PlanetApp();
     
     app.showSettings = false;

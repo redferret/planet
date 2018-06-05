@@ -24,6 +24,14 @@ import worlds.planet.geosphere.layer.LayerMaterial;
  */
 public class Util {
 
+  public static float[][] heatMap;
+  
+  static {
+    Color[] colors = {new Color(0, 0, 0), new Color(255, 0, 0), new Color(250, 250, 0),
+      new Color(255, 255, 255)};
+    heatMap = Util.constructSamples(colors, 50);
+  }
+  
   public static Vector2f scalePositionForTerrain(float x, float y, int quadWidth) {
     return new Vector2f((x * 2) - quadWidth, (y * 2) - quadWidth);
   }

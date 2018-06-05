@@ -7,14 +7,15 @@ import engine.util.task.TaskFactory;
 import java.util.ArrayList;
 import java.util.List;
 import worlds.planet.PlanetCell;
-import worlds.planet.Surface;
+import worlds.planet.geosphere.Crust;
+import worlds.planet.geosphere.Lithosphere;
 
 public class MinMaxHeightFactory implements TaskFactory {
 
   private final List<MinMaxHeightTask> taskReferences;
-  private final Surface surface;
+  private final Lithosphere surface;
 
-  public MinMaxHeightFactory(Surface surface) {
+  public MinMaxHeightFactory(Lithosphere surface) {
     taskReferences = new ArrayList<>();
     this.surface = surface;
   }
@@ -86,7 +87,7 @@ public class MinMaxHeightFactory implements TaskFactory {
     }
 
     private void updateMinMaxHeight(int x, int y) {
-      PlanetCell cell = surface.getCellAt(x, y);
+      Crust cell = surface.getCellAt(x, y);
       float cellHeight = cell.getHeightWithoutOceans();
       if (cellHeight < absLowestHeight) {
         absLowestHeight = cellHeight;

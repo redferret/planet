@@ -4,14 +4,14 @@ import java.util.Deque;
 
 import org.junit.Test;
 
-import worlds.planet.geosphere.GeoCell;
+import worlds.planet.geosphere.Crust;
 import worlds.planet.TestWorld;
 import worlds.planet.PlanetCell;
 
 import static org.junit.Assert.*;
 
 /**
- * Does basic unit testing on the GeoCell class.
+ * Does basic unit testing on the Crust class.
  *
  * @author Richard DeSilvey
  */

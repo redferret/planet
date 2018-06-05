@@ -4,7 +4,6 @@ package engine.states;
 import com.jme3.app.Application;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
-import engine.PlanetApp;
 import worlds.planet.TestWorld;
 
 /**
@@ -18,7 +17,7 @@ public class WorldState extends AbstractAppState {
   
   public WorldState() {
     world = new TestWorld();
-    isWorldPaused = true;
+    isWorldPaused = false;
   }
   
   @Override

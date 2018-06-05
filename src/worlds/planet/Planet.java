@@ -4,6 +4,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import engine.surface.SurfaceMap;
+import engine.surface.SurfaceThreads;
+import worlds.planet.geosphere.Lithosphere;
 
 /**
  * The class that encapsulates a surface and keeps track of the timescale.
@@ -14,7 +16,8 @@ public abstract class Planet {
 
   protected TimeScale timescale;
   private static Planet current;
-  private final PlanetSurface planetSurface;
+  private final SurfaceThreads surfaceThreads;
+  private final Lithosphere geosphere;
 
   public static enum TimeScale {
     Geological, Evolutionary, Civilization, None
@@ -38,27 +41,29 @@ public abstract class Planet {
     PlanetCell.area = cellLength * cellLength;
     PlanetCell.length = cellLength;
     timescale = TimeScale.None;
-    planetSurface = new PlanetSurface(totalSize, surfaceThreadsDelay, threadCount);
+    surfaceThreads = new SurfaceThreads();
+    surfaceThreads.setupThreads(threadCount, surfaceThreadsDelay, totalSize - 1);
+    geosphere = new Lithosphere(totalSize, surfaceThreads);
   }
 
   protected final void startThreads() {
-    planetSurface.startThreads();
+    geosphere.getSurfaceThreads().startThreads();
   }
 
   public void setIsPaused(boolean paused) {
     if (paused) {
-      planetSurface.pauseThreads();
+      geosphere.getSurfaceThreads().pauseThreads();
     } else {
-      planetSurface.playThreads();
+      geosphere.getSurfaceThreads().playThreads();
     }
   }
 
   public final void shutdown() {
-    planetSurface.killAllThreads();
+    geosphere.getSurfaceThreads().killAllThreads();
   }
   
-  public PlanetSurface getSurface() {
-    return planetSurface;
+  public Lithosphere getGeosphere() {
+    return geosphere;
   }
 
   /**

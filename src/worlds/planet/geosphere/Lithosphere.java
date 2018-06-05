@@ -1,16 +1,21 @@
-package worlds.planet;
-
-import java.util.concurrent.atomic.AtomicLong;
+package worlds.planet.geosphere;
 
 import engine.surface.SurfaceMap;
+import engine.surface.SurfaceThreads;
+import engine.surface.tasks.SetParentThreads;
+import java.util.concurrent.atomic.AtomicLong;
 import worlds.MinMaxHeightFactory;
-
+import worlds.planet.PlanetCell;
 
 /**
- * The first abstraction for the surface of a Planet.
+ * Contains all logic that works on the geology of the planet.
+ *
  * @author Richard DeSilvey
  */
-public abstract class Surface extends SurfaceMap<PlanetCell> {
+public class Lithosphere extends SurfaceMap<Crust> {
+
+  private long ageStamp;
+  private final MinMaxHeightFactory mhFactory;
 
   /**
    * The number of years that pass for each step of erosion
@@ -22,7 +27,7 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
    * The age of the planet in years
    */
   public static AtomicLong planetAge;
-  
+
   /**
    * The number of years that pass for each update to the geosphere
    */
@@ -32,10 +37,6 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
   public final static int STRATAMAP = 1;
   public final static int LANDOCEAN = 2;
 
-  private static final int DEFAULT_THREAD_DELAY = 50;
-
-  private final MinMaxHeightFactory mhFactory;
-
   static {
     timeStep = 7125000;
   }
@@ -44,30 +45,19 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
    * Constructs a new Surface with an empty map.
    *
    * @param totalSize The size of the surface
-   * @param threadsDelay The amount of time to delay each frame in milliseconds.
-   * @param threadCount The number of threads that will work on the map
+   * @param surfaceThreads Reference to the surface threads
    */
-  public Surface(int totalSize, int threadsDelay, int threadCount) {
-    super(totalSize, DEFAULT_THREAD_DELAY);
-    setupThreads(threadCount, threadsDelay);
-    setupDefaultMap(threadCount);
+  public Lithosphere(int totalSize, SurfaceThreads surfaceThreads) {
+    super(totalSize, surfaceThreads);
+    setupDefaultMap(surfaceThreads.getThreadCount());
     mhFactory = new MinMaxHeightFactory(this);
-    produceTasks(mhFactory);
-    reset();
-  }
+    surfaceThreads.produceTasks(mhFactory);
+    surfaceThreads.produceTasks(() -> {
+      return new SetParentThreads(this);
+    });
+    ageStamp = 0;
 
-  /**
-   * Resets the surface to an empty map and resets the planet's age. This method
-   * should be calling the <code>buildMap()</code> method.
-   */
-  @Override
-  public final void reset() {
-    planetAge = new AtomicLong(0);
-    geologicalTimeStamp = 0;
-    pauseThreads();
-    buildMap();
-    addTaskToThreads(new SetParentThreads());
-    playThreads();
+    reset();
   }
 
   public long getPlanetAge() {
@@ -82,8 +72,8 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
   }
 
   @Override
-  public PlanetCell generateCell(int x, int y) {
-    return new PlanetCell(x, y);
+  public Crust generateCell(int x, int y) {
+    return new Crust(x, y);
   }
 
   public float getHighestHeight() {
@@ -92,6 +82,14 @@ public abstract class Surface extends SurfaceMap<PlanetCell> {
 
   public float getLowestHeight() {
     return mhFactory.getLowestHeight();
+  }
+
+  public long getAgeStamp() {
+    return ageStamp;
+  }
+
+  public void setAgeStamp(long ageStamp) {
+    this.ageStamp = ageStamp;
   }
 
 }

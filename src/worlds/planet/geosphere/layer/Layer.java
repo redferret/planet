@@ -4,7 +4,7 @@ package worlds.planet.geosphere.layer;
 import java.util.HashSet;
 import java.util.Set;
 import worlds.planet.PlanetCell;
-import worlds.planet.Surface;
+import worlds.planet.geosphere.Lithosphere;
 
 /**
  *
@@ -77,11 +77,11 @@ public class Layer {
    * Sets the age of this cell to the time stamp given.
    */
   public void recordTime() {
-    this.depositTimeStamp = Surface.planetAge.get();
+    this.depositTimeStamp = Lithosphere.planetAge.get();
   }
 
   public long getAge() {
-    return Surface.planetAge.get() - depositTimeStamp;
+    return Lithosphere.planetAge.get() - depositTimeStamp;
   }
   
   private void update() {

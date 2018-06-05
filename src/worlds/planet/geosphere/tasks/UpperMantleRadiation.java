@@ -4,8 +4,9 @@ package worlds.planet.geosphere.tasks;
 import engine.util.Delay;
 import engine.util.task.Task;
 import worlds.planet.Util;
-import worlds.planet.geosphere.GeoCell;
-import worlds.planet.geosphere.Geosphere;
+import worlds.planet.geosphere.Crust;
+import worlds.planet.geosphere.Lithosphere;
+import worlds.planet.geosphere.UpperMantle;
 
 /**
  * Mantel Cooling can take place when heat is transfered to the crust above.
@@ -14,15 +15,10 @@ import worlds.planet.geosphere.Geosphere;
  * much heat is diffused into the rock above. 
  * @author Richard
  */
-public class MantleRadiation extends Task {
+public class UpperMantleRadiation extends Radiation {
 
-  private final Geosphere geosphere;
-  private final Delay delay;
-  
-  
-  public MantleRadiation(Geosphere geosphere) {
-    this.geosphere = geosphere;
-    delay = new Delay(200);
+  public UpperMantleRadiation(Lithosphere geosphere) {
+    super(geosphere);
   }
   
   @Override
@@ -31,13 +27,12 @@ public class MantleRadiation extends Task {
 
   @Override
   public void perform(int x, int y) {
-    GeoCell cell = geosphere.getCellAt(x, y);
-    float heatFromMantle = Util.calcHeatRadiation(cell.getMantleTemperature());
-    float denom = (cell.getTotalMass() * cell.getSpecificHeat());
-    denom = denom == 0 ? 1 : denom;
-    float tempChangeToMantle = heatFromMantle / denom;
-    
-    cell.addToMantleHeat(-tempChangeToMantle * 0.1f);
+    UpperMantle upperMantle = geosphere.getCellAt(x, y);
+    this.updateRadiation(upperMantle, UpperMantle.UPPER_MANTLE_MASS, 2.2f, (cell) -> {
+      return ((UpperMantle)cell).getUpperMantleTemperature();
+    },(flux) -> {
+        upperMantle.addToUpperMantleHeat(flux);
+    });
   }
 
   @Override
