@@ -22,7 +22,7 @@ public abstract class Conduction<C extends Cell> extends Task {
   
   public Conduction(SurfaceMap surface) {
     this.surface = surface;
-    delay = new Delay(100);
+    delay = new Delay(1);
   }
   @Override
   public void construct() {}
@@ -44,8 +44,8 @@ public abstract class Conduction<C extends Cell> extends Task {
       HeatConduction cell = surface.getCellAt(neighbors[t]);
       T[t] = cell.getTemperature();
     }
-    T[4] = top.getTemperature();
-    T[5] = bottom.getTemperature();
+    T[4] = (top != null) ? top.getTemperature() : -273f;
+    T[5] = (bottom != null) ? bottom.getTemperature() : -273f;
     
     return T;
   } 
@@ -53,7 +53,7 @@ public abstract class Conduction<C extends Cell> extends Task {
   public float[] calculateHeatConductance(int x, int y, float zLength, 
           HeatConduction top, HeatConduction bottom) {
     HeatConduction centerCell = surface.getCellAt(x, y);
-    float centerConductivity = centerCell.getHeatConductivity();
+    float centerCapacity = centerCell.getHeatCapacity();
     
     Vector2f left = new Vector2f(x + 1, y);
     Vector2f right = new Vector2f(x - 1, y);
@@ -66,49 +66,55 @@ public abstract class Conduction<C extends Cell> extends Task {
     float area = zLength * PlanetCell.length;
     for (int k = 0; k < 4; k++) {
       HeatConduction cell = surface.getCellAt(neighbors[k]);
-      float heatConductivity = cell.getHeatConductivity();
-      K_neighbors[k] = calculateConductance(area, zLength, centerConductivity, heatConductivity);
+      float heatCapacity = cell.getHeatCapacity();
+      K_neighbors[k] = calculateConductance(area, zLength, centerCapacity, 
+              heatCapacity, cell.getHorizontalResistence());
     }
     // Calculate the conductance of each top and bottom cell
-    K_neighbors[4] = calculateConductance(PlanetCell.area, zLength, centerConductivity, top.getHeatConductivity());
-    K_neighbors[5] = calculateConductance(PlanetCell.area, zLength, centerConductivity, bottom.getHeatConductivity());
+    K_neighbors[4] = (top != null) ?
+            calculateConductance(PlanetCell.area, zLength, centerCapacity, 
+                    top.getHeatCapacity(), top.getVerticalResistence()) 
+            : 
+            centerCell.topNullConducance();
+    K_neighbors[5] = (bottom != null) ?
+            calculateConductance(PlanetCell.area, zLength, centerCapacity, 
+                    bottom.getHeatCapacity(), bottom.getVerticalResistence()) 
+            : 
+            centerCell.bottomNullConductance();
+    
     return K_neighbors;
   }
 
+  public void setNewTemperature(int x, int y, float zLength, Cell top, Cell bottom) {
+    float[] K = calculateHeatConductance(x, y, zLength, top, bottom);
+    Cell center = surface.getCellAt(x, y);
+    float curTemp = center.getTemperature();
+    float[] T = getTemperatures(x, y, top, bottom);
+    float heatFlow = calculateHeatFlow(K, T, curTemp);
+    float newTemp = this.calculateNewTemperature(heatFlow, curTemp, K, zLength);
+    center.setNewTemperature(newTemp);
+  }
+  
   private static float calculateConductance(float area, float zLength, 
-          float h1Conductivity, float h2Conductivity) {
-    return area / ((zLength / (2*h1Conductivity)) * (zLength / (2*h2Conductivity)));
+          float h1Capacity, float h2Capacity, float additionalResistence) {
+    return area / ((zLength / (2*h1Capacity)) + (zLength / (2*h2Capacity)) + additionalResistence);
   }
 
   public float calculateHeatFlow(float[] K, float[] T, float temperatureCenterCell) {
     float heatFlow = 0;
     for (int c = 0; c < 6; c++) {
       heatFlow += (K[c] * (T[c] - temperatureCenterCell));
-    }
+      }
     return heatFlow;
   }
   
   public float calculateNewTemperature(float heatFlow, float currentTemp, 
           float[] K_conds, float zLength) {
-    
     float sumOfK = 0;
     for (float K : K_conds) {
       sumOfK += K;
     }
-    float volume = PlanetCell.area * zLength;
-    float capacity = timeStep * (sumOfK / volume);
-    
-    return currentTemp + ((timeStep * heatFlow) / (capacity * volume));
+    return currentTemp + ((heatFlow / sumOfK) * 0.01f);
   }
   
-  protected float getTemperatureChange(float joules, float area, float k, float length) {
-    return (joules * length) / (k * area);
-  }
-  
-  protected float getJoules(float neighborCellTemp, float curCellTemp, 
-          float mass, float specificHeat) {
-    float tempDiff = (curCellTemp - neighborCellTemp);
-    float joules = (specificHeat * PlanetCell.area * tempDiff) / PlanetCell.length;
-    return joules;
-  }
 }

@@ -9,6 +9,8 @@ import worlds.planet.geosphere.Core;
 import worlds.planet.geosphere.Lithosphere;
 import worlds.planet.geosphere.LowerMantle;
 import worlds.planet.geosphere.UpperMantle;
+import worlds.planet.geosphere.tasks.ApplyNewTemperatures;
+import worlds.planet.geosphere.tasks.RemoveHeatTest;
 
 /**
  * The class that encapsulates a surface and keeps track of the timescale.
@@ -46,16 +48,33 @@ public abstract class Planet {
     current = this;
     PlanetCell.area = cellLength * cellLength;
     PlanetCell.length = cellLength;
+    
     timescale = TimeScale.None;
     surfaceThreads = new SurfaceThreads();
-    surfaceThreads.setupThreads(threadCount, surfaceThreadsDelay, totalSize - 1);
+    surfaceThreads.setupThreads(totalSize - 1, threadCount, surfaceThreadsDelay);
+    
     lithosphere = new Lithosphere(totalSize, surfaceThreads);
     upperMantle = new UpperMantle(totalSize, surfaceThreads);
     lowerMantle = new LowerMantle(totalSize, surfaceThreads);
     core = new Core(totalSize, surfaceThreads);
     lowerMantle.setDependentSurfaces(upperMantle, core);
+    upperMantle.setDependentSurfaces(lowerMantle, lithosphere);
+    lithosphere.setDependentSurface(upperMantle);
+    core.setDependentSurface(lowerMantle);
+    applyTasks(lithosphere, upperMantle, lowerMantle, core);
+    surfaceThreads.produceTasks(() -> {
+      return new RemoveHeatTest(lithosphere);
+    });
   }
 
+  public final void applyTasks(SurfaceMap... surfaces) {
+    for (SurfaceMap surface : surfaces) {
+      surfaceThreads.produceTasks(() -> {
+        return new ApplyNewTemperatures(surface);
+      });
+    }
+  }
+  
   protected final void startThreads() {
     surfaceThreads.startThreads();
   }
@@ -72,8 +91,20 @@ public abstract class Planet {
     surfaceThreads.killAllThreads();
   }
   
-  public Lithosphere getGeosphere() {
+  public Lithosphere getLithosphere() {
     return lithosphere;
+  }
+  
+  public UpperMantle getUpperMantle() {
+    return upperMantle;
+  }
+  
+  public LowerMantle getLowerMantle() {
+    return lowerMantle;
+  }
+  
+  public Core getCore() {
+    return core;
   }
 
   /**

@@ -31,12 +31,7 @@ public class LowerMantleConduction extends Conduction<Mantle> {
   public void perform(int x, int y) throws Exception {
     Mantle top = upperMantle.getCellAt(x, y);
     Cell bottom = core.getCellAt(x, y);
-    float[] K = calculateHeatConductance(x, y, LOWER_MANTLE_DEPTH, top, bottom);
-    Mantle center = surface.getCellAt(x, y);
-    float[] T = this.getTemperatures(x, y, top, bottom);
-    float heatFlow = calculateHeatFlow(K, T, center.getTemperature());
-    float newTemp = this.calculateNewTemperature(heatFlow, center.getTemperature(), K, LOWER_MANTLE_DEPTH);
-    center.setNewTemperature(newTemp);
+    setNewTemperature(x, y, LOWER_MANTLE_DEPTH, top, bottom);
   }
 
   @Override

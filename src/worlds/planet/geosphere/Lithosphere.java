@@ -4,6 +4,7 @@ import engine.surface.SurfaceMap;
 import engine.surface.SurfaceThreads;
 import java.util.concurrent.atomic.AtomicLong;
 import worlds.MinMaxHeightFactory;
+import worlds.planet.geosphere.tasks.CrustConduction;
 
 /**
  * Contains all logic that works on the geology of the planet.
@@ -51,10 +52,16 @@ public class Lithosphere extends SurfaceMap<Crust> {
     mhFactory = new MinMaxHeightFactory(this);
     surfaceThreads.produceTasks(mhFactory);
     ageStamp = 0;
-
+    
     reset();
   }
 
+  public void setDependentSurface(UpperMantle upperMantle) {
+    getSurfaceThreads().produceTasks(() -> {
+      return new CrustConduction(this, upperMantle);
+    });
+  }
+  
   public long getPlanetAge() {
     return planetAge.get();
   }

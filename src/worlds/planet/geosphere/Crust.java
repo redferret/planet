@@ -15,6 +15,7 @@ import worlds.planet.Planet;
 import worlds.planet.PlanetCell;
 
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static worlds.planet.Planet.instance;
 import static worlds.planet.geosphere.layer.LayerMaterial.getLayer;
@@ -88,7 +89,7 @@ public class Crust extends Cell {
    * @param y The y coordinate
    */
   public Crust(int x, int y) {
-    super(x, y, 0);
+    super(x, y, ThreadLocalRandom.current().nextInt(0, 200));
     totalStrataThickness = new AtomicFloat(0);
     totalMass = new AtomicFloat(0);
     totalVolume = new AtomicFloat(0);
@@ -116,7 +117,37 @@ public class Crust extends Cell {
   public Vector2f getVelocity() {
     return velocity;
   }
+  
+  @Override
+  public float getVerticalResistence() {
+    return 0;
+  }
+  
+  @Override
+  public float getHorizontalResistence() {
+    return 0;
+  }
 
+  @Override
+  public float topNullConducance() {
+    return 0;
+  }
+
+  @Override
+  public float bottomNullConductance() {
+    return 0;
+  }
+
+
+  @Override
+  public float getHeatCapacity() {
+    float sp = 0;
+    sp = strata.stream()
+            .map((layer) -> layer.getSpecificHeat())
+            .reduce(sp, (accumulator, _item) -> accumulator + _item);
+    return sp / strata.size();
+  }
+  
   /**
    * Creates a deep copy of this Crust and it's strata.
    *
@@ -303,15 +334,6 @@ public class Crust extends Cell {
     totalVolume.set(Math.max(0, totalVolume.get() + (mass / rock.getDensity())));
   }
 
-  @Override
-  public float getHeatConductivity() {
-    float sp = 0;
-    sp = strata.stream()
-            .map((layer) -> layer.getSpecificHeat())
-            .reduce(sp, (accumulator, _item) -> accumulator + _item);
-    return sp / strata.size();
-  }
-  
   /**
    * Adds a new layer layer to the strata, if the layer is null nothing will
    * happen.

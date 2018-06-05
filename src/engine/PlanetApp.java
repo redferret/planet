@@ -9,6 +9,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.system.AppSettings;
 import engine.states.SurfaceState;
+import static engine.states.SurfaceState.*;
 import engine.states.WorldState;
 
 /**
@@ -29,7 +30,7 @@ public class PlanetApp extends SimpleApplication {
   @Override
   public void simpleInitApp() {
     
-    flyCam.setMoveSpeed(600f);
+    flyCam.setMoveSpeed(500f);
     flyCam.setZoomSpeed(20f);
     
     setDisplayStatView(false);
@@ -41,9 +42,14 @@ public class PlanetApp extends SimpleApplication {
 
     this.getCamera().setLocation(getCamera().getLocation().add(0, 300, 250));
     
+    inputManager.addMapping(LITHOSPHERE, new KeyTrigger(KeyInput.KEY_1));
+    inputManager.addMapping(UPPER_MANTLE, new KeyTrigger(KeyInput.KEY_2));
+    inputManager.addMapping(LOWER_MANTLE, new KeyTrigger(KeyInput.KEY_3));
+    inputManager.addMapping(CORE, new KeyTrigger(KeyInput.KEY_4));
     inputManager.addMapping("playpause", new KeyTrigger(KeyInput.KEY_P));
     inputManager.addMapping("wireframe", new KeyTrigger(KeyInput.KEY_T));
-    inputManager.addListener(actionListener, "wireframe", "playpause");
+    inputManager.addListener(actionListener, "wireframe", "playpause",
+            LITHOSPHERE, UPPER_MANTLE,LOWER_MANTLE, CORE);
     
     stateManager.attach(new WorldState());
     stateManager.attach(new SurfaceState());
@@ -57,6 +63,18 @@ public class PlanetApp extends SimpleApplication {
           break;
         case "playpause":
           stateManager.getState(WorldState.class).setIsPaused();
+          break;
+        case LITHOSPHERE:
+          stateManager.getState(SurfaceState.class).renderSurface(LITHOSPHERE);
+          break;
+        case UPPER_MANTLE:
+          stateManager.getState(SurfaceState.class).renderSurface(UPPER_MANTLE);
+          break;
+        case LOWER_MANTLE:
+          stateManager.getState(SurfaceState.class).renderSurface(LOWER_MANTLE);
+          break;
+        case CORE:
+          stateManager.getState(SurfaceState.class).renderSurface(CORE);
           break;
       }
     }

@@ -9,26 +9,20 @@ import engine.surface.Cell;
  */
 public class MockCell extends Cell {
 
-  private final float testTemperature, testConductivity;
+  private final float testConductivity;
   
   public MockCell(int x, int y, float testTemperature, float testConductivity) {
-    super(x, y);
-    this.testTemperature = testTemperature;
+    super(x, y, 0);
     this.testConductivity = testConductivity;
   }
 
 
   @Override
-  public float getHeatConductivity() {
+  public float getHeatCapacity() {
     return testConductivity;
   }
 
   @Override
-  public void addToTemperatureFlux(float flux) {}
+  public float getVerticalResistence() {return 0;}
 
-  @Override
-  public float getTemperature() {
-    return testTemperature;
-  }
-  
 }

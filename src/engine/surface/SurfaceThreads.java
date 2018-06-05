@@ -173,7 +173,7 @@ public class SurfaceThreads {
     waitingGate = new CyclicBarrier(threadCount);
     int w = terrainSize / threadDivision;
     Boundaries bounds;
-    threadPool = Executors.newFixedThreadPool(threadCount + 1);
+    threadPool = Executors.newFixedThreadPool(threadCount);
     for (int y = 0; y < threadDivision; y++) {
       for (int x = 0; x < threadDivision; x++) {
         int lowerX = w * x;

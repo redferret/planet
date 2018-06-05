@@ -100,10 +100,14 @@ public abstract class SurfaceMap<C extends Cell> extends TerrainQuad {
     surfaceThreads.playThreads();
   }
   
+  public void clearCameraControl() {
+    removeControl(control);
+  }
+  
   public void bindCameraForLODControl(Camera camera) {
-    control = new TerrainLodControl(this, camera);
-    control.setLodCalculator(new DistanceLodCalculator(getPatchSize(), 1.5f));
-    addControl(control);
+//    control = new TerrainLodControl(this, camera);
+//    control.setLodCalculator(new DistanceLodCalculator(getPatchSize(), 1.5f));
+//    addControl(control);
   }
   
   public void bindTerrainToNode(Node rootNode) {

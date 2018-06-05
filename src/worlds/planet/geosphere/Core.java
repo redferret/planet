@@ -1,14 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package worlds.planet.geosphere;
 
 import engine.surface.Cell;
 import engine.surface.SurfaceMap;
 import engine.surface.SurfaceThreads;
-import engine.util.concurrent.AtomicFloat;
+import java.util.concurrent.ThreadLocalRandom;
+import worlds.planet.geosphere.tasks.CoreConduction;
 
 /**
  *
@@ -22,12 +19,38 @@ public class Core extends SurfaceMap {
     reset();
   }
 
+  public void setDependentSurface(LowerMantle lowerMantle) {
+    getSurfaceThreads().produceTasks(() -> {
+      return new CoreConduction(this, lowerMantle);
+    });
+  }
+  
   @Override
   public Cell generateCell(int x, int y) {
-    return new Cell(x, y, 8000) {
+    return new Cell(x, y, ThreadLocalRandom.current().nextInt(4000, 6000)) {
       @Override
-      public float getHeatConductivity() {
+      public float getHeatCapacity() {
         return 45.0f;
+      }
+
+      @Override
+      public float getVerticalResistence() {
+        return 1e2f;
+      }
+      
+      @Override
+      public float getHorizontalResistence() {
+        return 2e8f;
+      }
+      
+      @Override
+      public float topNullConducance() {
+        return 0;
+      }
+      
+      @Override
+      public float bottomNullConductance() {
+        return 0;
       }
     };
   }
