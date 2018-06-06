@@ -3,10 +3,9 @@ package worlds.planet.geosphere.tasks;
 
 import engine.surface.Cell;
 import worlds.planet.geosphere.Lithosphere;
-import worlds.planet.geosphere.LowerMantle;
+import worlds.planet.geosphere.Core;
 import worlds.planet.geosphere.Mantle;
 import worlds.planet.geosphere.UpperMantle;
-import static worlds.planet.geosphere.UpperMantle.UPPER_MANTLE_DEPTH;
 
 /**
  *
@@ -14,14 +13,14 @@ import static worlds.planet.geosphere.UpperMantle.UPPER_MANTLE_DEPTH;
  */
 public class UpperMantleConduction extends Conduction<Mantle> {
 
-  private final LowerMantle lowerMantle;
+  private final Core core;
   private final Lithosphere lithosphere;
   
-  public UpperMantleConduction(UpperMantle surface, LowerMantle lowerMantle,
+  public UpperMantleConduction(UpperMantle surface, Core core,
           Lithosphere lithosphere) {
     super(surface);
     this.lithosphere = lithosphere;
-    this.lowerMantle = lowerMantle;
+    this.core = core;
   }
   
   @Override
@@ -30,9 +29,9 @@ public class UpperMantleConduction extends Conduction<Mantle> {
 
   @Override
   public void perform(int x, int y) throws Exception {
-    Mantle top = lowerMantle.getCellAt(x, y);
-    Cell bottom = lithosphere.getCellAt(x, y);
-    setNewTemperature(x, y, UPPER_MANTLE_DEPTH, top, bottom);
+    Cell bottom = core.getCellAt(x, y);
+    Cell top = lithosphere.getCellAt(x, y);
+    setNewTemperature(x, y, top, bottom);
   }
 
   @Override

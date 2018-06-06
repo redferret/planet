@@ -56,7 +56,7 @@ public class Lithosphere extends SurfaceMap<Crust> {
     reset();
   }
 
-  public void setDependentSurface(UpperMantle upperMantle) {
+  public void setupConduction(UpperMantle upperMantle) {
     getSurfaceThreads().produceTasks(() -> {
       return new CrustConduction(this, upperMantle);
     });

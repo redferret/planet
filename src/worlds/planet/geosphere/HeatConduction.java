@@ -34,19 +34,35 @@ public abstract class HeatConduction {
    * How much resistence is applied vertically
    * @return 
    */
-  public abstract float getVerticalResistence();
+  public abstract float getBottomResistence();
+  
+  public abstract float getTopResistence();
+  
+  public abstract float getZLength();
+  
+  public float getTopNullTemperature() {
+    return -273f;
+  }
+  
+  public float getBottomNullTemperature() {
+    return -273f;
+  }
   
   /**
    * If there is no top cell for heat to conduct, then use this value.
    * @return 
    */
-  public abstract float topNullConductance();
+  public float topNullConductance() {
+    return 0;
+  }
   
   /**
    * If there is no bottom cell for heat to conduct, then use this value.
    * @return 
    */
-  public abstract float bottomNullConductance();
+  public float bottomNullConductance() {
+    return 0;
+  }
   
   public void setNewTemperature(float newTemperature) {
     this.newTemperature = newTemperature;

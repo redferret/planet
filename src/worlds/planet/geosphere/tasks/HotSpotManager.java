@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import worlds.planet.geosphere.HotSpot;
-import worlds.planet.geosphere.LowerMantle;
+import worlds.planet.geosphere.UpperMantle;
 import worlds.planet.geosphere.Mantle;
 
 /**
@@ -18,13 +18,13 @@ import worlds.planet.geosphere.Mantle;
 public class HotSpotManager extends BasicTask {
 
   
-  private final LowerMantle surface;
+  private final UpperMantle surface;
   private static final ThreadLocalRandom LOCAL_RAND = ThreadLocalRandom.current();
   private final List<HotSpot> hotSpots;
   public static int maxHotSpots = 3000;
   private final Delay delay;
 
-  public HotSpotManager(LowerMantle surface) {
+  public HotSpotManager(UpperMantle surface) {
     hotSpots = new ArrayList<>();
     this.surface = surface;
     delay = new Delay(500);

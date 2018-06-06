@@ -20,7 +20,7 @@ public class UpperMantle extends SurfaceMap<Mantle> {
    * The average density of the mantel. The units are in kilograms per cubic
    * meter.
    */
-  public final static float UPPER_MANTLE_DEPTH = 4.3e5f;
+  public final static float UPPER_MANTLE_DEPTH = 2.708e6f;
   public static final float UPPER_MANTLE_DENSITY = 3500f;
   public final static float UPPER_MANTLE_MASS = Util.calcMass(UPPER_MANTLE_DEPTH, PlanetCell.area, UPPER_MANTLE_DENSITY);
   public static final float UPPER_MANTLE_SPECIFIC_HEAT = 20f;
@@ -31,37 +31,37 @@ public class UpperMantle extends SurfaceMap<Mantle> {
     reset();
   }
   
-  public void setDependentSurfaces(LowerMantle lowerMantle, Lithosphere litherosphere) {
+  public void setupConduction(Core core, Lithosphere litherosphere) {
     getSurfaceThreads().produceTasks(() -> {
-      return new UpperMantleConduction(this, lowerMantle, litherosphere);
+      return new UpperMantleConduction(this, core, litherosphere);
     });
   }
 
   @Override
   public Mantle generateCell(int x, int y) {
-    return new Mantle(x, y, ThreadLocalRandom.current().nextInt(500, 1000)) {
+    return new Mantle(x, y, ThreadLocalRandom.current().nextInt(400, 1000)) {
       @Override
       public float getHeatCapacity() {
         return UPPER_MANTLE_SPECIFIC_HEAT;
       }
 
       @Override
-      public float getVerticalResistence() {
-        return 1e5f;
+      public float getZLength() {
+        return UPPER_MANTLE_DEPTH;
+      }
+      
+      @Override
+      public float getBottomResistence() {
+        return 0;
       }
 
       @Override
       public float getHorizontalResistence() {
-        return 2e7f;
-      }
-      
-      @Override
-      public float topNullConductance() {
         return 0;
       }
-      
+
       @Override
-      public float bottomNullConductance() {
+      public float getTopResistence() {
         return 0;
       }
       

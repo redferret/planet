@@ -17,7 +17,7 @@ public class WorldState extends AbstractAppState {
   
   public WorldState() {
     world = new TestWorld();
-    isWorldPaused = false;
+    isWorldPaused = true;
   }
   
   @Override

@@ -2,8 +2,8 @@
 package worlds.planet.geosphere.tasks;
 
 import engine.surface.SurfaceMap;
-import worlds.planet.geosphere.LowerMantle;
 import worlds.planet.geosphere.Mantle;
+import worlds.planet.geosphere.UpperMantle;
 
 /**
  *
@@ -11,11 +11,11 @@ import worlds.planet.geosphere.Mantle;
  */
 public class CoreConduction extends Conduction {
 
-  private final LowerMantle lowerMantle;
+  private final UpperMantle upperMantle;
   
-  public CoreConduction(SurfaceMap surface, LowerMantle lowerMantle) {
+  public CoreConduction(SurfaceMap surface, UpperMantle lowerMantle) {
     super(surface);
-    this.lowerMantle = lowerMantle;
+    this.upperMantle = lowerMantle;
   }
 
   @Override
@@ -23,8 +23,8 @@ public class CoreConduction extends Conduction {
 
   @Override
   public void perform(int x, int y) throws Exception {
-    Mantle top = lowerMantle.getCellAt(x, y);
-    setNewTemperature(x, y, 1.22e6f, top, null);
+    Mantle top = upperMantle.getCellAt(x, y);
+    setNewTemperature(x, y, top, null);
   }
 
   @Override

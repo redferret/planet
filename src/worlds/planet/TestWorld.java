@@ -1,5 +1,7 @@
 package worlds.planet;
 
+import engine.surface.TerrainSurface;
+
 /**
  * This class is used for testing purposes.
  *
@@ -13,7 +15,7 @@ public class TestWorld extends Planet {
   static {
     DEFAULT_THREAD_COUNT = 1;
     SURFACE_THREAD_DELAY = 1;
-    DEFAULT_CELL_COUNT = 128;
+    DEFAULT_CELL_COUNT = 64;
     CELL_LENGTH = 100000;
   }
 
@@ -43,7 +45,8 @@ public class TestWorld extends Planet {
    * @param threadCount The number of thread divisions
    */
   public TestWorld(int worldSize, int threadCount) {
-    super((worldSize * threadCount) + 1, CELL_LENGTH, SURFACE_THREAD_DELAY, threadCount);
+    super((worldSize * threadCount), CELL_LENGTH, SURFACE_THREAD_DELAY, threadCount);
     startThreads();
   }
+
 }

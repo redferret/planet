@@ -2,6 +2,7 @@
 package worlds.planet.geosphere.tasks;
 
 import engine.surface.SurfaceMap;
+import worlds.planet.Util;
 import worlds.planet.geosphere.Crust;
 import worlds.planet.geosphere.Mantle;
 import worlds.planet.geosphere.UpperMantle;
@@ -25,8 +26,7 @@ public class CrustConduction extends Conduction<Crust> {
   @Override
   public void perform(int x, int y) throws Exception {
     Mantle bottom = upperMantle.getCellAt(x, y);
-    Crust crust = surface.getCellAt(x, y);
-    setNewTemperature(x, y, crust.getStrataThickness(), null, bottom);
+    setNewTemperature(x, y, null, bottom);
   }
 
   @Override

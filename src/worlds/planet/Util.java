@@ -175,8 +175,12 @@ public class Util {
     return (tx >= b) ? tx - b : (tx < 0) ? b + tx : tx;
   }
 
+  public static float calcChangeInTemperature(float joules, float heatCap, float mass) {
+    return joules / (heatCap * mass);
+  }
+  
   public static float calcHeatRadiation(float temperature) {
-    return 5.7e-8f * ((float) Math.pow(temperature, 3)) * PlanetCell.area;
+    return 5.7e-8f * (float) Math.pow(temperature, 4);
   }
   
   public static float calcMass(float height, LayerMaterial lm) {

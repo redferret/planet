@@ -5,12 +5,13 @@ import java.util.logging.Logger;
 
 import engine.surface.SurfaceMap;
 import engine.surface.SurfaceThreads;
+import engine.surface.TerrainSurface;
 import worlds.planet.geosphere.Core;
 import worlds.planet.geosphere.Lithosphere;
-import worlds.planet.geosphere.LowerMantle;
 import worlds.planet.geosphere.UpperMantle;
 import worlds.planet.geosphere.tasks.ApplyNewTemperatures;
-import worlds.planet.geosphere.tasks.RemoveHeatTest;
+import worlds.planet.geosphere.tasks.CrustHeatRadiation;
+import worlds.planet.geosphere.tasks.RadioactiveDecay;
 
 /**
  * The class that encapsulates a surface and keeps track of the timescale.
@@ -19,12 +20,12 @@ import worlds.planet.geosphere.tasks.RemoveHeatTest;
  */
 public abstract class Planet {
 
+  private final TerrainSurface terrain;
   protected TimeScale timescale;
   private static Planet current;
   private final SurfaceThreads surfaceThreads;
   private final Lithosphere lithosphere;
   private final UpperMantle upperMantle;
-  private final LowerMantle lowerMantle;
   private final Core core;
 
   public static enum TimeScale {
@@ -48,22 +49,25 @@ public abstract class Planet {
     current = this;
     PlanetCell.area = cellLength * cellLength;
     PlanetCell.length = cellLength;
-    
+    terrain = new TerrainSurface(totalSize);
     timescale = TimeScale.None;
     surfaceThreads = new SurfaceThreads();
-    surfaceThreads.setupThreads(totalSize - 1, threadCount, surfaceThreadsDelay);
+    surfaceThreads.setupThreads(totalSize, threadCount, surfaceThreadsDelay);
     
     lithosphere = new Lithosphere(totalSize, surfaceThreads);
     upperMantle = new UpperMantle(totalSize, surfaceThreads);
-    lowerMantle = new LowerMantle(totalSize, surfaceThreads);
     core = new Core(totalSize, surfaceThreads);
-    lowerMantle.setDependentSurfaces(upperMantle, core);
-    upperMantle.setDependentSurfaces(lowerMantle, lithosphere);
-    lithosphere.setDependentSurface(upperMantle);
-    core.setDependentSurface(lowerMantle);
-    applyTasks(lithosphere, upperMantle, lowerMantle, core);
+    
+    upperMantle.setupConduction(core, lithosphere);
+    lithosphere.setupConduction(upperMantle);
+    core.setupConduction(upperMantle);
+    
+    applyTasks(lithosphere, upperMantle, core);
+//    surfaceThreads.produceTasks(() -> {
+//      return new RadioactiveDecay(lithosphere, upperMantle);
+//    });
     surfaceThreads.produceTasks(() -> {
-      return new RemoveHeatTest(lithosphere);
+      return new CrustHeatRadiation(lithosphere);
     });
   }
 
@@ -73,6 +77,10 @@ public abstract class Planet {
         return new ApplyNewTemperatures(surface);
       });
     }
+  }
+  
+  public TerrainSurface getTerrain() {
+    return terrain;
   }
   
   protected final void startThreads() {
@@ -97,10 +105,6 @@ public abstract class Planet {
   
   public UpperMantle getUpperMantle() {
     return upperMantle;
-  }
-  
-  public LowerMantle getLowerMantle() {
-    return lowerMantle;
   }
   
   public Core getCore() {

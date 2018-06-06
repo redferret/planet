@@ -5,12 +5,13 @@ import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.light.DirectionalLight;
+import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.system.AppSettings;
 import engine.states.SurfaceState;
-import static engine.states.SurfaceState.*;
 import engine.states.WorldState;
+import static engine.states.SurfaceState.*;
 
 /**
  * Main entry point
@@ -29,7 +30,7 @@ public class PlanetApp extends SimpleApplication {
   
   @Override
   public void simpleInitApp() {
-    
+    getViewPort().setBackgroundColor(ColorRGBA.Gray);
     flyCam.setMoveSpeed(500f);
     flyCam.setZoomSpeed(20f);
     
@@ -44,12 +45,11 @@ public class PlanetApp extends SimpleApplication {
     
     inputManager.addMapping(LITHOSPHERE, new KeyTrigger(KeyInput.KEY_1));
     inputManager.addMapping(UPPER_MANTLE, new KeyTrigger(KeyInput.KEY_2));
-    inputManager.addMapping(LOWER_MANTLE, new KeyTrigger(KeyInput.KEY_3));
-    inputManager.addMapping(CORE, new KeyTrigger(KeyInput.KEY_4));
+    inputManager.addMapping(CORE, new KeyTrigger(KeyInput.KEY_3));
     inputManager.addMapping("playpause", new KeyTrigger(KeyInput.KEY_P));
     inputManager.addMapping("wireframe", new KeyTrigger(KeyInput.KEY_T));
     inputManager.addListener(actionListener, "wireframe", "playpause",
-            LITHOSPHERE, UPPER_MANTLE,LOWER_MANTLE, CORE);
+            LITHOSPHERE, UPPER_MANTLE, CORE);
     
     stateManager.attach(new WorldState());
     stateManager.attach(new SurfaceState());
@@ -69,9 +69,6 @@ public class PlanetApp extends SimpleApplication {
           break;
         case UPPER_MANTLE:
           stateManager.getState(SurfaceState.class).renderSurface(UPPER_MANTLE);
-          break;
-        case LOWER_MANTLE:
-          stateManager.getState(SurfaceState.class).renderSurface(LOWER_MANTLE);
           break;
         case CORE:
           stateManager.getState(SurfaceState.class).renderSurface(CORE);

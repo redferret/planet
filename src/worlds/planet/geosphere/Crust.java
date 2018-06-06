@@ -103,7 +103,7 @@ public class Crust extends Cell {
     velocity = new Vector2f(0, 0);
     
     LayerMaterial m1 = getLayer("Basalt");
-    float mass = Util.calcMass(10f, m1);
+    float mass = Util.calcMass(ThreadLocalRandom.current().nextInt(1, 5), m1);
     m1.setMass(mass);
     Layer layer = new Layer();
     layer.addMaterial(m1);
@@ -119,7 +119,17 @@ public class Crust extends Cell {
   }
   
   @Override
-  public float getVerticalResistence() {
+  public float getZLength() {
+    return getStrataThickness();
+  }
+  
+  @Override
+  public float getBottomResistence() {
+    return 0;
+  }
+  
+  @Override
+  public float getTopResistence() {
     return 0;
   }
   
@@ -130,21 +140,15 @@ public class Crust extends Cell {
 
   @Override
   public float topNullConductance() {
-    return 0;
+    return 1000000;
   }
-
-  @Override
-  public float bottomNullConductance() {
-    return 0;
-  }
-
 
   @Override
   public float getHeatCapacity() {
     float sp = 0;
     sp = strata.stream()
             .map((layer) -> layer.getSpecificHeat())
-            .reduce(sp, (accumulator, _item) -> accumulator + _item);
+            .reduce(sp, (total, specificHeat) -> total + specificHeat);
     return sp / strata.size();
   }
   
@@ -522,5 +526,7 @@ public class Crust extends Cell {
   public boolean hasOcean() {
     return false;//((HydroCell) this).getOceanMass() > 0;
   }
+
+  
 
 }

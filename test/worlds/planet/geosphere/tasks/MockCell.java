@@ -23,6 +23,6 @@ public class MockCell extends Cell {
   }
 
   @Override
-  public float getVerticalResistence() {return 0;}
+  public float getBottomResistence() {return 0;}
 
 }

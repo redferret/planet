@@ -30,7 +30,7 @@ import static worlds.planet.geosphere.Lithosphere.planetAge;
  * @author Richard DeSilvey
  * @param <C> The highest level abstraction of the cell i.e. PlanetCell
  */
-public abstract class SurfaceMap<C extends Cell> extends TerrainQuad {
+public abstract class SurfaceMap<C extends Cell> {
   
   /**
    * The direction look up list for X values
@@ -63,9 +63,8 @@ public abstract class SurfaceMap<C extends Cell> extends TerrainQuad {
   */
   private final SurfaceThreads surfaceThreads;
 //  private final MThread hotSpotThread;
-  
-  private TerrainLodControl control;
-  
+  private final int totalSize;
+  private final String name;
   /**
    * Create a new SurfaceMap. SurfaceThreads and Map need to be initialized
    * separably.
@@ -76,7 +75,8 @@ public abstract class SurfaceMap<C extends Cell> extends TerrainQuad {
    * @param surfaceThreads
    */
   public SurfaceMap(String surfaceName, int totalSize, SurfaceThreads surfaceThreads) {
-    super("surface", 65, totalSize, null);
+    this.totalSize = totalSize;
+    this.name = surfaceName;
     this.surfaceName = surfaceName;
     displaySetting = 0;
     this.surfaceThreads = surfaceThreads;
@@ -100,64 +100,6 @@ public abstract class SurfaceMap<C extends Cell> extends TerrainQuad {
     surfaceThreads.playThreads();
   }
   
-  public void clearCameraControl() {
-    removeControl(control);
-  }
-  
-  public void bindCameraForLODControl(Camera camera) {
-//    control = new TerrainLodControl(this, camera);
-//    control.setLodCalculator(new DistanceLodCalculator(getPatchSize(), 1.5f));
-//    addControl(control);
-  }
-  
-  public void bindTerrainToNode(Node rootNode) {
-    setLocalTranslation(0, -50, 0);
-    setLocalScale(2f, 1f, 2f);
-    rootNode.attachChild(this);
-  }
-  
-  /**
-   * Update the terrain's height based on the temperature of the mantle.
-   * @param scale Scale the height with this value
-   * @param cellData
-   */
-  public void updateTerrainHeight(float scale, TerrainHeightValue cellData) {
-    List<Vector2f> locs = new ArrayList<>();
-    List<Float> heights = new ArrayList<>();
-    map.values().forEach(cell -> {
-      float height = cellData.getHeightValue(cell) * scale;
-      Vector2f pos = cell.getGridPosition();
-      locs.add(Util.scalePositionForTerrain(pos.getX(), pos.getY(), getTerrainSize()));
-      heights.add(height);
-    });
-    setHeight(locs, heights);
-  }
-  
-  public void updateVertexColors(float colorMap[][], MapBounds bounds) {
-    List<TerrainPatch> patches = new ArrayList<>();
-    getAllTerrainPatches(patches);
-    patches.forEach(patch -> {
-      float[] heightMap = patch.getHeightMap();
-      float[] colorArray = new float[heightMap.length * 4];
-      
-      // Iterate over the heightMap, plug the height values into a function
-      // to get a color and set that into the colorArray.
-      int colorIndex = 0;
-      for (int h = 0; h < heightMap.length; h++) {
-        float height = heightMap[h];
-        int colorMapIndex = bounds.getIndex(height);
-        float[] color = colorMap[colorMapIndex];
-        colorArray[colorIndex++] = color[0];// red
-        colorArray[colorIndex++] = color[1];// green
-        colorArray[colorIndex++] = color[2];// blue
-        colorArray[colorIndex++] = color[3];// alpha
-      }
-      
-      patch.getMesh().setBuffer(VertexBuffer.Type.Color, 4, colorArray);
-      
-    });
-  }
-  
   /**
    * Using a ConcurrentHashMap as the Map data structure.
    *
@@ -165,7 +107,7 @@ public abstract class SurfaceMap<C extends Cell> extends TerrainQuad {
    */
   protected void setupDefaultMap(int threadCount) {
     final float loadFactor = 1.0f;
-    int terrainSize = getTerrainSize();
+    int terrainSize = getSize();
     int totalCells = (terrainSize * terrainSize);
     Map<Integer, C> defaultMap = new ConcurrentHashMap<>(totalCells, loadFactor, threadCount);
     setMap(defaultMap);
@@ -186,7 +128,7 @@ public abstract class SurfaceMap<C extends Cell> extends TerrainQuad {
   public abstract C generateCell(int x, int y);
 
   public final int getTotalNumberOfCells() {
-    int tSize = getTerrainSize();
+    int tSize = getSize();
     return tSize * tSize;
   }
 
@@ -195,7 +137,7 @@ public abstract class SurfaceMap<C extends Cell> extends TerrainQuad {
    * called after the engine is created or if the map needs to be reset.
    */
   protected void buildMap() {
-    int terrainSize = getTerrainSize();
+    int terrainSize = getSize();
     map.clear();
     Logger.getLogger(SurfaceMap.class.getName()).log(Level.INFO, "Setting up {0}", surfaceName);
     for (int x = 0; x < terrainSize; x++) {
@@ -212,9 +154,12 @@ public abstract class SurfaceMap<C extends Cell> extends TerrainQuad {
     return getCellAt((int) pos.getX(), (int) pos.getY());
   }
   
-  @Override
-  public int getTerrainSize() {
-    return super.getTerrainSize() - 1;
+  public Map<Integer, C> getMapData() {
+    return map;
+  }
+  
+  public int getSize() {
+    return totalSize;
   }
   
   /**
@@ -228,7 +173,7 @@ public abstract class SurfaceMap<C extends Cell> extends TerrainQuad {
    * data doesn't exist or if the data is locked by another thread.
    */
   public C getCellAt(int x, int y) {
-    int len = getTerrainSize();
+    int len = getSize();
     x = x < 0 ? len - 1 : (x >= len ? 0 : x);
     y = y < 0 ? len - 1 : (y >= len ? 0 : y);
     int index = calcIndex(x, y);
@@ -295,7 +240,7 @@ public abstract class SurfaceMap<C extends Cell> extends TerrainQuad {
    * @return The index corresponding to the x and y location
    */
   public int calcIndex(int x, int y) {
-    return (getTerrainSize() * y) + x;
+    return (getSize() * y) + x;
   }
 
   /**
@@ -306,7 +251,7 @@ public abstract class SurfaceMap<C extends Cell> extends TerrainQuad {
    * @return The x coordinate
    */
   public int calcX(int index) {
-    return index % getTerrainSize();
+    return index % getSize();
   }
 
   /**
@@ -317,7 +262,7 @@ public abstract class SurfaceMap<C extends Cell> extends TerrainQuad {
    * @return The y coordinate
    */
   public int calcY(int index) {
-    return index / getTerrainSize();
+    return index / getSize();
   }
 
 }

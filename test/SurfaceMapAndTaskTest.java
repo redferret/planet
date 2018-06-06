@@ -58,7 +58,7 @@ public class SurfaceMapAndTaskTest {
 
   @Test
   public void mapSizeTest() {
-    int mapWidth = testSurface.getTerrainSize();
+    int mapWidth = testSurface.getSize();
     assertTrue("Number of cells don't match", (MAP_SIZE * THREAD_COUNT) == mapWidth);
   }
 
@@ -106,7 +106,7 @@ public class SurfaceMapAndTaskTest {
 
   @Test
   public void calculateIndexTest() {
-    int width = testSurface.getTerrainSize();
+    int width = testSurface.getSize();
     for (int testX = 0; testX < 4; testX++) {
       for (int testY = 0; testY < 4; testY++) {
         Integer expectedIndex = testX + (testY * width);
@@ -119,7 +119,7 @@ public class SurfaceMapAndTaskTest {
   @Test
   public void calculateXYTest() {
     int totalSize = testSurface.getTotalNumberOfCells();
-    int width = testSurface.getTerrainSize();
+    int width = testSurface.getSize();
     for (int testIndex = 0; testIndex < totalSize; testIndex++) {
       Integer expectedX = testIndex % width;
       Integer expectedY = testIndex / width;
