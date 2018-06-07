@@ -19,6 +19,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import static worlds.planet.Planet.instance;
 import static worlds.planet.geosphere.layer.LayerMaterial.getLayer;
+import static worlds.planet.geosphere.tasks.Conduction.calculateConductance;
 
 /**
  * A Crust is a Cell representing land Geologically. The cell contains strata
@@ -103,7 +104,8 @@ public class Crust extends Cell {
     velocity = new Vector2f(0, 0);
     
     LayerMaterial m1 = getLayer("Basalt");
-    float mass = Util.calcMass(ThreadLocalRandom.current().nextInt(1, 5), m1);
+    int height = ThreadLocalRandom.current().nextInt(1, 2);
+    float mass = Util.calcMass(height, m1);
     m1.setMass(mass);
     Layer layer = new Layer();
     layer.addMaterial(m1);
@@ -135,12 +137,13 @@ public class Crust extends Cell {
   
   @Override
   public float getHorizontalResistence() {
-    return 0;
+    return 5e20f;
   }
 
   @Override
   public float topNullConductance() {
-    return 1000000;
+    return calculateConductance(PlanetCell.area, 0.25e6f, getZLength(), 
+            1.05f, getHeatCapacity(), 0);
   }
 
   @Override

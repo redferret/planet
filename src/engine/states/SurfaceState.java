@@ -5,6 +5,7 @@ import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.material.Material;
 import engine.PlanetApp;
+import engine.surface.Cell;
 import engine.surface.SurfaceMap;
 import engine.surface.TerrainSurface;
 import worlds.planet.TestWorld;
@@ -63,22 +64,20 @@ public class SurfaceState extends AbstractAppState {
 
   @Override
   public void update(float timeSlice) {
-    if (!app.getStateManager().getState(WorldState.class).isPaused()) {
-      switch (attachedSurface) {
-        case LITHOSPHERE:
-          showTemperature(lithosphere);
-          return;
-        case UPPER_MANTLE:
-          showTemperature(upperMantle);
-          return;
-        case CORE:
-          showTemperature(core);
-      }
+    switch (attachedSurface) {
+      case LITHOSPHERE:
+        showTemperature(lithosphere);
+        return;
+      case UPPER_MANTLE:
+        showTemperature(upperMantle);
+        return;
+      case CORE:
+        showTemperature(core);
     }
   }
 
   public void showTemperature(SurfaceMap map) {
-    terrain.updateTerrainHeight(0.01f, map.getMapData(), (cell) -> {
+    terrain.updateTerrainHeight(0.01f, map, (cell) -> {
       return cell.getTemperature();
     });
 

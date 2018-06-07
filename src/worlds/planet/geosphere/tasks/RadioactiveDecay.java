@@ -17,11 +17,12 @@ public class RadioactiveDecay extends TaskAdapter {
 
   private final Lithosphere surface;
   private final UpperMantle upperMantle;
-  private float joules;
+  private float joules, prob;
 
   public RadioactiveDecay(Lithosphere surface, UpperMantle upperMantle) {
     this.surface = surface;
     this.upperMantle = upperMantle;
+    prob = 1f / surface.getTotalNumberOfCells();
     joules = 2e13f;
   }
   
@@ -30,15 +31,15 @@ public class RadioactiveDecay extends TaskAdapter {
 
   @Override
   public void perform(int x, int y) throws Exception {
-    if (ThreadLocalRandom.current().nextFloat() < 0.0002f) {
-      Crust crust = surface.getCellAt(x, y);
-      float change = (joules * 0.01f) / (crust.getHeatCapacity() * crust.getTotalMass());
-      crust.addToTemperature(change);
-      
-    }
-    if (ThreadLocalRandom.current().nextFloat() < 0.0002f) {
+//    if (ThreadLocalRandom.current().nextFloat() < prob) {
+//      Crust crust = surface.getCellAt(x, y);
+//      float change = (joules * 0.01f) / (crust.getHeatCapacity() * crust.getTotalMass());
+//      crust.addToTemperature(change);
+//      
+//    }
+    if (ThreadLocalRandom.current().nextFloat() < prob) {
       Mantle mantle = upperMantle.getCellAt(x, y);
-      float change = (joules) / (mantle.getHeatCapacity() * UpperMantle.UPPER_MANTLE_MASS);
+      float change = (joules * 2.0f) / (mantle.getHeatCapacity() * UpperMantle.UPPER_MANTLE_MASS);
       mantle.addToTemperature(change);
       
     }

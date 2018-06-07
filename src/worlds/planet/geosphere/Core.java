@@ -38,6 +38,7 @@ public class Core extends SurfaceMap {
         return 45.0f;
       }
 
+      @Override
       public float getZLength() {
         return CORE_DEPTH;
       }
@@ -49,7 +50,7 @@ public class Core extends SurfaceMap {
       
       @Override
       public float getHorizontalResistence() {
-        return 0;
+        return 5e8f;
       }
 
       @Override

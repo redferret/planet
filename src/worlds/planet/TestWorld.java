@@ -15,8 +15,8 @@ public class TestWorld extends Planet {
   static {
     DEFAULT_THREAD_COUNT = 1;
     SURFACE_THREAD_DELAY = 1;
-    DEFAULT_CELL_COUNT = 64;
-    CELL_LENGTH = 100000;
+    DEFAULT_CELL_COUNT = 128;
+    CELL_LENGTH = 50000;
   }
 
   /**

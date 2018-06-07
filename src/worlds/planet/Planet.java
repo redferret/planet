@@ -10,7 +10,7 @@ import worlds.planet.geosphere.Core;
 import worlds.planet.geosphere.Lithosphere;
 import worlds.planet.geosphere.UpperMantle;
 import worlds.planet.geosphere.tasks.ApplyNewTemperatures;
-import worlds.planet.geosphere.tasks.CrustHeatRadiation;
+import worlds.planet.geosphere.tasks.HotSpotManager;
 import worlds.planet.geosphere.tasks.RadioactiveDecay;
 
 /**
@@ -63,11 +63,11 @@ public abstract class Planet {
     core.setupConduction(upperMantle);
     
     applyTasks(lithosphere, upperMantle, core);
-//    surfaceThreads.produceTasks(() -> {
-//      return new RadioactiveDecay(lithosphere, upperMantle);
-//    });
     surfaceThreads.produceTasks(() -> {
-      return new CrustHeatRadiation(lithosphere);
+      return new RadioactiveDecay(lithosphere, upperMantle);
+    });
+    surfaceThreads.produceTasks(() -> {
+      return new HotSpotManager(core);
     });
   }
 

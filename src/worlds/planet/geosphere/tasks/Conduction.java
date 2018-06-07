@@ -100,7 +100,7 @@ public abstract class Conduction<C extends Cell> extends Task {
     center.setNewTemperature(newTemp);
   }
   
-  private static float calculateConductance(float area, float zLength1, float zLength2, 
+  public static float calculateConductance(float area, float zLength1, float zLength2, 
           float h1Capacity, float h2Capacity, float additionalResistence) {
     return area / ((zLength1 / (2*h1Capacity)) + (zLength2 / (2*h2Capacity)) + additionalResistence);
   }
@@ -119,7 +119,7 @@ public abstract class Conduction<C extends Cell> extends Task {
     for (float K : K_conds) {
       sumOfK += K;
     }
-    return currentTemp + ((heatFlow / sumOfK) * 1.0f);
+    return currentTemp + ((heatFlow / sumOfK) * 0.005f);
   }
   
 }

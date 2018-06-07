@@ -57,12 +57,12 @@ public class UpperMantle extends SurfaceMap<Mantle> {
 
       @Override
       public float getHorizontalResistence() {
-        return 0;
+        return 5e9f;
       }
 
       @Override
       public float getTopResistence() {
-        return 0;
+        return 0.1e6f;
       }
       
     };

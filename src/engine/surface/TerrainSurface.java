@@ -32,12 +32,12 @@ public class TerrainSurface extends TerrainQuad {
   
   public void bindCameraForLODControl(Camera camera) {
 //    control = new TerrainLodControl(this, camera);
-//    control.setLodCalculator(new DistanceLodCalculator(getPatchSize(), 1.5f));
+//    control.setLodCalculator(new DistanceLodCalculator(getPatchSize(), 5f));
 //    addControl(control);
   }
   
   public void bindTerrainToNode(Node rootNode) {
-    setLocalTranslation(0, -50, 0);
+    setLocalTranslation(0, 200, 0);
     setLocalScale(2f, 1f, 2f);
     rootNode.attachChild(this);
   }
@@ -48,15 +48,37 @@ public class TerrainSurface extends TerrainQuad {
    * @param map The data being mapped to this terrain
    * @param cellData
    */
-  public void updateTerrainHeight(float scale, Map<Integer, Cell> map, TerrainHeightValue cellData) {
+  public void updateTerrainHeight(float scale, SurfaceMap<Cell> map, TerrainHeightValue cellData) {
     List<Vector2f> locs = new ArrayList<>();
     List<Float> heights = new ArrayList<>();
-    map.values().forEach(cell -> {
+    map.getMapData().values().forEach(cell -> {
       float height = cellData.getHeightValue(cell) * scale;
       Vector2f pos = cell.getGridPosition();
-      locs.add(Util.scalePositionForTerrain(pos.getX(), pos.getY(), getTerrainSize()));
+      locs.add(Util.scalePositionForTerrain(pos.getX(), pos.getY(), map.getSize()));
       heights.add(height);
     });
+    setHeight(locs, heights);
+  }
+  
+  /**
+   * Update the terrain's height based on the temperature of the mantle.
+   * @param scale Scale the height with this value
+   * @param map The data being mapped to this terrain
+   * @param cellData
+   */
+  public void updateTerrainPatches(float scale, SurfaceMap map, TerrainHeightValue cellData) {
+    List<Vector2f> locs = new ArrayList<>();
+    List<Float> heights = new ArrayList<>();
+    
+    List<TerrainPatch> patches = new ArrayList<>();
+    getAllTerrainPatches(patches);
+    patches.forEach(patch -> {
+      float[] heightMap = patch.getHeightMap();
+      int x = 0;
+      int y = 0;
+      map.getCellAt(x, y);
+    });
+    
     setHeight(locs, heights);
   }
   
