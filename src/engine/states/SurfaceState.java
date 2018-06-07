@@ -77,7 +77,7 @@ public class SurfaceState extends AbstractAppState {
   }
 
   public void showTemperature(SurfaceMap map) {
-    terrain.updateTerrainHeight(0.01f, map, (cell) -> {
+    terrain.updateTerrainHeight(0.01f,-2.73f, 50, map, (cell) -> {
       return cell.getTemperature();
     });
 
