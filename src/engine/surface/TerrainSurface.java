@@ -24,7 +24,6 @@ public class TerrainSurface extends TerrainQuad {
   
   public TerrainSurface(int totalSize) {
     super("surface", 33, totalSize + 1, null);
-    
   }
   public void clearCameraControl() {
     removeControl(control);
@@ -45,17 +44,20 @@ public class TerrainSurface extends TerrainQuad {
   /**
    * Update the terrain's height based on the temperature of the mantle.
    * @param scale Scale the height with this value
+   * @param min
+   * @param max
    * @param map The data being mapped to this terrain
    * @param cellData
    */
-  public void updateTerrainHeight(float scale, SurfaceMap<Cell> map, TerrainHeightValue cellData) {
+  public void updateTerrainHeight(float scale, float min, float max, 
+          SurfaceMap<Cell> map, TerrainHeightValue cellData) {
     List<Vector2f> locs = new ArrayList<>();
     List<Float> heights = new ArrayList<>();
     map.getMapData().values().forEach(cell -> {
       float height = cellData.getHeightValue(cell) * scale;
       Vector2f pos = cell.getGridPosition();
       locs.add(Util.scalePositionForTerrain(pos.getX(), pos.getY(), map.getSize()));
-      heights.add(height);
+      heights.add(height < min ? min : (height > max ? max : height));
     });
     setHeight(locs, heights);
   }
