@@ -12,6 +12,7 @@ import com.jme3.terrain.geomipmap.lodcalc.DistanceLodCalculator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import worlds.planet.Util;
 
 /**
@@ -61,29 +62,7 @@ public class TerrainSurface extends TerrainQuad {
     });
     setHeight(locs, heights);
   }
-  
-  /**
-   * Update the terrain's height based on the temperature of the mantle.
-   * @param scale Scale the height with this value
-   * @param map The data being mapped to this terrain
-   * @param cellData
-   */
-  public void updateTerrainPatches(float scale, SurfaceMap map, TerrainHeightValue cellData) {
-    List<Vector2f> locs = new ArrayList<>();
-    List<Float> heights = new ArrayList<>();
-    
-    List<TerrainPatch> patches = new ArrayList<>();
-    getAllTerrainPatches(patches);
-    patches.forEach(patch -> {
-      float[] heightMap = patch.getHeightMap();
-      int x = 0;
-      int y = 0;
-      map.getCellAt(x, y);
-    });
-    
-    setHeight(locs, heights);
-  }
-  
+
   public void updateVertexColors(float colorMap[][], MapBounds bounds) {
     List<TerrainPatch> patches = new ArrayList<>();
     getAllTerrainPatches(patches);
