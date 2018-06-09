@@ -21,15 +21,9 @@ public class CrustConduction extends Conduction<Crust> {
   }
 
   @Override
-  public void before() throws Exception {}
-
-  @Override
   public void perform(int x, int y) throws Exception {
     Mantle bottom = upperMantle.getCellAt(x, y);
     setNewTemperature(x, y, null, bottom);
   }
 
-  @Override
-  public void after() throws Exception {}
-  
 }

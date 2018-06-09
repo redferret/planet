@@ -12,7 +12,13 @@ public abstract class TaskAdapter extends Task {
   public void construct() {}
     
   @Override
-  public boolean check() {
+  public boolean check() throws Exception {
     return true;
   }
+
+  @Override
+  public void before() throws Exception {}
+
+  @Override
+  public void after() throws Exception {}
 }

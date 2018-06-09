@@ -25,10 +25,6 @@ public class RadioactiveDecay extends TaskAdapter {
     prob = 1f / surface.getTotalNumberOfCells();
     joules = 2e13f;
   }
-  
-  @Override
-  public void before() throws Exception {}
-
   @Override
   public void perform(int x, int y) throws Exception {
 //    if (ThreadLocalRandom.current().nextFloat() < prob) {
@@ -37,15 +33,11 @@ public class RadioactiveDecay extends TaskAdapter {
 //      crust.addToTemperature(change);
 //      
 //    }
-    if (ThreadLocalRandom.current().nextFloat() < prob) {
-      Mantle mantle = upperMantle.getCellAt(x, y);
-      float change = (joules * 2.0f) / (mantle.getHeatCapacity() * UpperMantle.UPPER_MANTLE_MASS);
-      mantle.addToTemperature(change);
-      
-    }
+//    if (ThreadLocalRandom.current().nextFloat() < prob) {
+//      Mantle mantle = upperMantle.getCellAt(x, y);
+//      float change = (joules * 2.0f) / (mantle.getHeatCapacity() * UpperMantle.UPPER_MANTLE_MASS);
+//      mantle.addToTemperature(change);
+//      
+//    }
   }
-
-  @Override
-  public void after() throws Exception {}
-
 }

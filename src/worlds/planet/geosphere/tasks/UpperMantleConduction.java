@@ -24,18 +24,10 @@ public class UpperMantleConduction extends Conduction<Mantle> {
   }
   
   @Override
-  public void before() throws Exception {
-  }
-
-  @Override
   public void perform(int x, int y) throws Exception {
     Cell bottom = core.getCellAt(x, y);
     Cell top = lithosphere.getCellAt(x, y);
     setNewTemperature(x, y, top, bottom);
-  }
-
-  @Override
-  public void after() throws Exception {
   }
   
 }

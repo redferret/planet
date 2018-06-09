@@ -5,7 +5,7 @@ import engine.util.concurrent.AtomicFloat;
 import static java.lang.Float.NaN;
 
 /**
- *
+ * Each cell will have the ability to conduct heat
  * @author Richard
  */
 public abstract class HeatConduction {

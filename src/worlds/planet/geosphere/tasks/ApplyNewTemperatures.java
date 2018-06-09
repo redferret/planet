@@ -17,15 +17,9 @@ public class ApplyNewTemperatures extends TaskAdapter {
   }
   
   @Override
-  public void before() throws Exception {}
-
-  @Override
   public void perform(int x, int y) throws Exception {
     Cell cell = surface.getCellAt(x, y);
     cell.updateTemperature();
   }
 
-  @Override
-  public void after() throws Exception {}
-  
 }

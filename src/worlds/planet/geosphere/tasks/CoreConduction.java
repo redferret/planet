@@ -19,15 +19,8 @@ public class CoreConduction extends Conduction {
   }
 
   @Override
-  public void before() throws Exception {}
-
-  @Override
   public void perform(int x, int y) throws Exception {
     Mantle top = upperMantle.getCellAt(x, y);
     setNewTemperature(x, y, top, null);
   }
-
-  @Override
-  public void after() throws Exception {}
-  
 }
