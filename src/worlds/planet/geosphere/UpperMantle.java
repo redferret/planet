@@ -32,9 +32,9 @@ public class UpperMantle extends SurfaceMap<Mantle> {
     reset();
   }
   
-  public void setupConduction(Core core, Lithosphere litherosphere) {
+  public void setupConduction(Core core, Lithosphere lithosphere) {
     getSurfaceThreads().produceTasks(() -> {
-      return new UpperMantleConduction(this, core, litherosphere);
+      return new UpperMantleConduction(this, core, lithosphere);
     });
   }
 

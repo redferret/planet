@@ -64,6 +64,7 @@ public abstract class Planet {
     core.setupConduction(upperMantle);
     
     applyTasks(lithosphere, upperMantle, core);
+    
     surfaceThreads.produceTasks(() -> {
       return new RadioactiveDecay(lithosphere, upperMantle);
     });
