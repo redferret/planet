@@ -21,7 +21,7 @@ public class MagmaFlow extends CompoundTask {
   @Override
   public void setup() {
     addSubTask(new UpdateVelocities());
-    addSubTask(new ApplyVelocities());
+    addSubTask(new ApplyAcceleration());
   }
 
   /**
@@ -38,7 +38,7 @@ public class MagmaFlow extends CompoundTask {
   /**
    * Applies the acceleration to the velocity of the magma
    */
-  private class ApplyVelocities extends TaskAdapter {
+  private class ApplyAcceleration extends TaskAdapter {
     @Override
     public void perform(int x, int y) throws Exception {
       Crust crustCell = crust.getCellAt(x, y);
