@@ -1,13 +1,6 @@
 package engine.surface;
 
 import com.jme3.math.Vector2f;
-import com.jme3.renderer.Camera;
-import com.jme3.scene.Node;
-import com.jme3.scene.VertexBuffer;
-import com.jme3.terrain.geomipmap.TerrainLodControl;
-import com.jme3.terrain.geomipmap.TerrainPatch;
-import com.jme3.terrain.geomipmap.TerrainQuad;
-import com.jme3.terrain.geomipmap.lodcalc.DistanceLodCalculator;
 import engine.surface.tasks.SetParentThreads;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +9,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import worlds.planet.Util;
 import static worlds.planet.geosphere.Lithosphere.planetAge;
 
 /**
