@@ -2,6 +2,7 @@ package worlds.planet.geosphere;
 
 import engine.surface.SurfaceMap;
 import engine.surface.SurfaceThreads;
+import engine.util.concurrent.AtomicFloat;
 import java.util.concurrent.ThreadLocalRandom;
 import worlds.planet.PlanetCell;
 import worlds.planet.Util;
@@ -23,7 +24,7 @@ public class UpperMantle extends SurfaceMap<Mantle> {
   public final static float UPPER_MANTLE_DEPTH = 2.708e6f;
   public static final float UPPER_MANTLE_DENSITY = 3500f;
   public final static float UPPER_MANTLE_MASS = Util.calcMass(UPPER_MANTLE_DEPTH, PlanetCell.area, UPPER_MANTLE_DENSITY);
-  public static final float UPPER_MANTLE_SPECIFIC_HEAT = 20f;
+  public static final float UPPER_MANTLE_SPECIFIC_HEAT = 5f;
 
   public UpperMantle(int totalSize, SurfaceThreads surfaceThreads) {
     super("Upper Mantle", totalSize, surfaceThreads);
@@ -39,33 +40,7 @@ public class UpperMantle extends SurfaceMap<Mantle> {
 
   @Override
   public Mantle generateCell(int x, int y) {
-    return new Mantle(x, y, ThreadLocalRandom.current().nextInt(400, 1000)) {
-      @Override
-      public float getHeatCapacity() {
-        return UPPER_MANTLE_SPECIFIC_HEAT;
-      }
-
-      @Override
-      public float getZLength() {
-        return UPPER_MANTLE_DEPTH;
-      }
-      
-      @Override
-      public float getBottomResistence() {
-        return 0;
-      }
-
-      @Override
-      public float getHorizontalResistence() {
-        return 5e9f;
-      }
-
-      @Override
-      public float getTopResistence() {
-        return 0.1e6f;
-      }
-      
-    };
+    return new Mantle(x, y);
   }
   
 

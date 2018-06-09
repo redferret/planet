@@ -50,7 +50,7 @@ public class Core extends SurfaceMap {
       
       @Override
       public float getHorizontalResistence() {
-        return 5e8f;
+        return 0;
       }
 
       @Override

@@ -5,7 +5,7 @@ import com.jme3.math.Vector2f;
 import engine.surface.Cell;
 import engine.surface.SurfaceMap;
 import engine.util.Delay;
-import engine.util.task.Task;
+import engine.util.task.TaskAdapter;
 import worlds.planet.PlanetCell;
 import worlds.planet.geosphere.HeatConduction;
 
@@ -14,7 +14,7 @@ import worlds.planet.geosphere.HeatConduction;
  * @author Richard
  * @param <C>
  */
-public abstract class Conduction<C extends Cell> extends Task {
+public abstract class Conduction<C extends Cell> extends TaskAdapter {
   
   protected final SurfaceMap<C> surface;
   protected final Delay delay;
@@ -23,8 +23,6 @@ public abstract class Conduction<C extends Cell> extends Task {
     this.surface = surface;
     delay = new Delay(1);
   }
-  @Override
-  public void construct() {}
   
   @Override
   public boolean check() throws Exception {
@@ -71,9 +69,10 @@ public abstract class Conduction<C extends Cell> extends Task {
       K_neighbors[k] = calculateConductance(neighboringArea, zLength1, zLength2, h2Capacity, 
               h1Capacity, centerCell.getHorizontalResistence());
     }
+    
+    // Calculate the conductance of each top and bottom cell
     if (top != null) {
       float totalResistenceToTop = top.getBottomResistence() + centerCell.getTopResistence();
-      // Calculate the conductance of each top and bottom cell
       K_neighbors[4] = calculateConductance(PlanetCell.area, zLength1, top.getZLength(), h2Capacity,
               top.getHeatCapacity(), totalResistenceToTop);
       centerCell.topNullConductance();
@@ -119,7 +118,7 @@ public abstract class Conduction<C extends Cell> extends Task {
     for (float K : K_conds) {
       sumOfK += K;
     }
-    return currentTemp + ((heatFlow / sumOfK) * 0.005f);
+    return currentTemp + ((heatFlow / sumOfK) * 0.05f );
   }
   
 }

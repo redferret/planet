@@ -11,6 +11,7 @@ import worlds.planet.geosphere.Lithosphere;
 import worlds.planet.geosphere.UpperMantle;
 import worlds.planet.geosphere.tasks.ApplyNewTemperatures;
 import worlds.planet.geosphere.tasks.HotSpotManager;
+import worlds.planet.geosphere.tasks.MagmaFlow;
 import worlds.planet.geosphere.tasks.RadioactiveDecay;
 
 /**
@@ -41,7 +42,7 @@ public abstract class Planet {
    *
    * @param totalSize The number of cells of one side of the surface (width) + 1
    * @param cellLength The length of one side of a cell in meters.
-   * @param surfaceThreadsDelay How fast does the planet thread(s) update
+   * @param surfaceThreadsDelay The delay for each thread in milliseconds
    * @param threadCount The number of threadReferences that work on the map
    */
   public Planet(int totalSize, int cellLength, int surfaceThreadsDelay, int threadCount) {
@@ -68,6 +69,9 @@ public abstract class Planet {
     });
     surfaceThreads.produceTasks(() -> {
       return new HotSpotManager(core);
+    });
+    surfaceThreads.produceTasks(() -> {
+      return new MagmaFlow(lithosphere);
     });
   }
 

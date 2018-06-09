@@ -2,6 +2,7 @@ package worlds.planet.geosphere;
 
 import engine.surface.SurfaceMap;
 import engine.surface.SurfaceThreads;
+import engine.util.concurrent.AtomicFloat;
 import java.util.concurrent.atomic.AtomicLong;
 import worlds.MinMaxHeightFactory;
 import worlds.planet.geosphere.tasks.CrustConduction;
@@ -15,7 +16,7 @@ public class Lithosphere extends SurfaceMap<Crust> {
 
   private long ageStamp;
   private final MinMaxHeightFactory mhFactory;
-
+  
   /**
    * The number of years that pass for each step of erosion
    */
@@ -52,7 +53,6 @@ public class Lithosphere extends SurfaceMap<Crust> {
     mhFactory = new MinMaxHeightFactory(this);
     surfaceThreads.produceTasks(mhFactory);
     ageStamp = 0;
-    
     reset();
   }
 

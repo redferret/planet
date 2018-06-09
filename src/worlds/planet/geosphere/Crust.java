@@ -69,6 +69,11 @@ public class Crust extends Cell {
   public static float[][] heightMap;
 
   public final static int MAX_HEIGHT_INDEX = 17;
+  
+  private final AtomicFloat magma;
+  private final Vector2f magmaVelocity;
+  private final Vector2f magmaAcceleration;
+  
   /**
    * The ratio for indexing onto the height map array, by taking a cell height
    * and dividing it by this value will give the proper index to the height map.
@@ -95,6 +100,9 @@ public class Crust extends Cell {
     totalMass = new AtomicFloat(0);
     totalVolume = new AtomicFloat(0);
     curAmountSubmerged = new AtomicFloat(0);
+    magma = new AtomicFloat(0);
+    magmaVelocity = new Vector2f();
+    magmaAcceleration = new Vector2f();
     setup();
   }
 
@@ -112,6 +120,23 @@ public class Crust extends Cell {
     addToStrata(layer, true);
   }
 
+  public float getMagma() {
+    return magma.get();
+  }
+  
+  public Vector2f getMagmaVelocity() {
+    return magmaVelocity;
+  }
+  
+  public void applyForceToMagma(Vector2f acc) {
+    magmaAcceleration.add(acc);
+  }
+  
+  public void updateMagmaVelocity() {
+    magmaVelocity.add(magmaAcceleration);
+    magmaAcceleration.zero();
+  }
+  
   public void setVelocity(Vector2f vel) {
     velocity = new Vector2f(vel);
   }
