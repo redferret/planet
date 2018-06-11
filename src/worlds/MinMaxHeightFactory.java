@@ -1,9 +1,9 @@
 package worlds;
 
 import engine.util.Delay;
-import engine.util.concurrent.AtomicFloat;
-import engine.util.task.Task;
-import engine.util.task.TaskFactory;
+import engine.concurrent.AtomicFloat;
+import engine.task.Task;
+import engine.task.TaskFactory;
 import java.util.ArrayList;
 import java.util.List;
 import worlds.planet.PlanetCell;

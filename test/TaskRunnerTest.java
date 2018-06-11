@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit;
 import org.junit.After;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import engine.util.concurrent.TaskRunner;
+import engine.concurrent.TaskRunner;
 
 /**
  * Tests the TaskRunner class for certain expected behavior. The TaskRunner is a

@@ -3,9 +3,9 @@ import java.util.concurrent.CyclicBarrier;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import engine.util.task.Boundaries;
-import engine.util.concurrent.MThread;
-import engine.util.task.Task;
+import engine.task.Boundaries;
+import engine.concurrent.MThread;
+import engine.task.Task;
 import static org.junit.Assert.*;
 
 /**

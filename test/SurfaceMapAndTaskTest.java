@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import engine.surface.Cell;
 import engine.surface.SurfaceMap;
-import engine.util.task.TaskAdapter;
+import engine.task.TaskAdapter;
 import static org.junit.Assert.*;
 
 /**

@@ -1,8 +1,8 @@
 package engine.surface;
 
 import com.jme3.math.Vector2f;
-import engine.util.concurrent.MThread;
-import worlds.planet.geosphere.HeatConduction;
+import engine.concurrent.MThread;
+import worlds.planet.geosphere.CellProperties;
 
 /**
  * The cell is a base class for each cell contained in a SurfaceMap. The Cell
@@ -12,7 +12,7 @@ import worlds.planet.geosphere.HeatConduction;
  *
  * @author Richard DeSilvey
  */
-public abstract class Cell extends HeatConduction {
+public abstract class Cell extends CellProperties {
 
   private final Vector2f gridPosition, actualPosition;
   private MThread parentThread;

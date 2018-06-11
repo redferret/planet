@@ -1,9 +1,9 @@
-package engine.util.concurrent;
+package engine.concurrent;
 
 import java.util.concurrent.CyclicBarrier;
-import engine.util.task.Boundaries;
-import engine.util.task.Task;
-import engine.util.task.TaskManager;
+import engine.task.Boundaries;
+import engine.task.Task;
+import engine.task.TaskManager;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 /**

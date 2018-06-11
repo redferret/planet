@@ -2,7 +2,7 @@
 package worlds.planet.geosphere.tasks;
 
 import engine.surface.SurfaceMap;
-import engine.surface.SurfaceThreads;
+import engine.concurrent.SurfaceThreads;
 
 /**
  *

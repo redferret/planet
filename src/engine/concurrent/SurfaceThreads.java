@@ -1,10 +1,10 @@
 
-package engine.surface;
+package engine.concurrent;
 
-import engine.util.concurrent.MThread;
-import engine.util.task.Boundaries;
-import engine.util.task.Task;
-import engine.util.task.TaskFactory;
+import engine.concurrent.MThread;
+import engine.task.Boundaries;
+import engine.task.Task;
+import engine.task.TaskFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CyclicBarrier;

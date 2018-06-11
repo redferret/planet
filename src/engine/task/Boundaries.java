@@ -1,4 +1,4 @@
-package engine.util.task;
+package engine.task;
 
 /**
  * Boundaries define the bounds for each SurfaceThread running. It contains an

@@ -1,5 +1,6 @@
 package engine.surface;
 
+import engine.concurrent.SurfaceThreads;
 import com.jme3.math.Vector2f;
 import engine.surface.tasks.SetParentThreads;
 import java.util.ArrayList;

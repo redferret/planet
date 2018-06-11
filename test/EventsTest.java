@@ -1,7 +1,7 @@
 
 import engine.surface.Cell;
 import engine.surface.SurfaceMap;
-import engine.util.task.TaskAdapter;
+import engine.task.TaskAdapter;
 import java.util.List;
 import org.junit.*;
 import org.junit.Before;

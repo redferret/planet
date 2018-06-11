@@ -1,7 +1,7 @@
-package engine.util.task;
+package engine.task;
 
 import engine.surface.Cell;
-import engine.util.concurrent.MThread;
+import engine.concurrent.MThread;
 
 /**
  * A Task is something the simulation will perform given a condition.

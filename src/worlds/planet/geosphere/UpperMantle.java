@@ -1,8 +1,8 @@
 package worlds.planet.geosphere;
 
 import engine.surface.SurfaceMap;
-import engine.surface.SurfaceThreads;
-import engine.util.concurrent.AtomicFloat;
+import engine.concurrent.SurfaceThreads;
+import engine.concurrent.AtomicFloat;
 import java.util.concurrent.ThreadLocalRandom;
 import worlds.planet.PlanetCell;
 import worlds.planet.Util;

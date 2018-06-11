@@ -4,7 +4,7 @@ package worlds.planet.geosphere.tasks;
 import com.jme3.math.Vector2f;
 import engine.surface.Cell;
 import engine.util.Delay;
-import engine.util.task.TaskAdapter;
+import engine.task.TaskAdapter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;

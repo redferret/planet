@@ -1,7 +1,7 @@
 
 package worlds.planet.geosphere.tasks;
 
-import engine.util.task.TaskAdapter;
+import engine.task.TaskAdapter;
 import java.util.concurrent.ThreadLocalRandom;
 import worlds.planet.geosphere.Crust;
 import worlds.planet.geosphere.Lithosphere;

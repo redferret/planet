@@ -1,4 +1,4 @@
-package engine.util.task;
+package engine.task;
 
 /**
  * A BasicTask is a task performed without updating all the cells on a map and
