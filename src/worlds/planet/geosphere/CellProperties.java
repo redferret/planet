@@ -14,9 +14,9 @@ import worlds.planet.PlanetCell;
 public abstract class CellProperties {
   
   private final AtomicFloat magma;
-  private final float[] magmaVelocity;
-  private final float[] magmaOutflowFlux;
-  private final float[] magmaOutflowFluxBuffer;
+  private final float[] magmaVelocityField;
+  private final float[] magmaAccelerationField;
+  private final float[] magmaAccelerationFieldBuffer;
   
   private final AtomicFloat temperature;
   private float newTemperature;
@@ -25,9 +25,9 @@ public abstract class CellProperties {
     this.temperature = new AtomicFloat(initialTemp);
     newTemperature = NaN;
     magma = new AtomicFloat(0);
-    magmaOutflowFlux = new float[4];
-    magmaVelocity = new float[4];
-    magmaOutflowFluxBuffer = new float[4];
+    magmaAccelerationField = new float[4];
+    magmaVelocityField = new float[4];
+    magmaAccelerationFieldBuffer = new float[4];
   }
   
   /**
@@ -104,30 +104,34 @@ public abstract class CellProperties {
     return magma.get();
   }
   
-  public float[] getMagmaOutflowFlux() {
-    return magmaOutflowFlux;
+  public float[] getMagmaAccelerationField() {
+    return magmaAccelerationField;
   }
   
-  public void setOutflowFluxBuffer(float[] flux) {
-    System.arraycopy(flux, 0, magmaOutflowFlux, 0, 4);
+  public void setMagmaAccelerationFieldBuffer(float[] flux) {
+    System.arraycopy(flux, 0, magmaAccelerationFieldBuffer, 0, 4);
   }
   
   public void resetVelocityFieldTo(float[] velocities) {
-    System.arraycopy(velocities, 0, magmaVelocity, 0, 4);
+    System.arraycopy(velocities, 0, magmaVelocityField, 0, 4);
   }
   
   public void setVelocityAt(int index, float vel) {
-    magmaVelocity[index] = vel;
+    magmaVelocityField[index] = vel;
   }
   
   public void addToMagma(float amount) {
     magma.set(max(0, magma.get() + amount));
   }
   
+  public void applyAccelerationBuffer() {
+    System.arraycopy(magmaAccelerationFieldBuffer, 0, magmaAccelerationField, 0, 4);
+  }
+  
   public void updateVelocity() {
     for (int a = 0; a < 4; a++) {
-      magmaVelocity[a] += magmaOutflowFlux[a];
-      magmaOutflowFlux[a] = 0;
+      magmaVelocityField[a] += magmaAccelerationField[a];
+      magmaAccelerationField[a] = 0;
     }
   }
   
@@ -135,7 +139,7 @@ public abstract class CellProperties {
 
     float sumOfVelocities = 0;
     for (int a = 0; a < 4; a++) {
-      sumOfVelocities += magmaVelocity[a];
+      sumOfVelocities += magmaVelocityField[a];
     }
 
     float totalMagma = magma.get() + sumOfVelocities;
