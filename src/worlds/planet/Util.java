@@ -224,7 +224,14 @@ public class Util {
   }
 
   public static List<Vector2f> fillPoints(Vector2f center, int radius) {
+    
     List<Vector2f> points = new ArrayList<>();
+    
+    if (radius == 1) {
+      points.add(center);
+      return points;
+    }
+    
     List<Vector2f> circleList;
     int x = (int) center.getX();
     int y = (int) center.getY();
