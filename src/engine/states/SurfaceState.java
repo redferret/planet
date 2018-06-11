@@ -23,7 +23,8 @@ public class SurfaceState extends AbstractAppState {
   public static final String LITHOSPHERE = "lithosphere", 
           UPPER_MANTLE = "upperMantle",CORE = "core";
 
-  private TerrainSurface terrain;
+  private TerrainSurface temperatureTerrain;
+  private TerrainSurface magmaTerrain;
   private PlanetApp app;
   private Lithosphere lithosphere;
   private UpperMantle upperMantle;
@@ -46,11 +47,17 @@ public class SurfaceState extends AbstractAppState {
     lithosphere = world.getLithosphere();
     upperMantle = world.getUpperMantle();
     core = world.getCore();
+    
     attachedSurface = CORE;
-    terrain = world.getTerrain();
-    terrain.bindCameraForLODControl(app.getCamera());
-    terrain.bindTerrainToNode(((PlanetApp) app).getRootNode());
-    terrain.setMaterial(unshadedMat);
+    temperatureTerrain = new TerrainSurface(world.getTerrainWidth());
+    magmaTerrain = new TerrainSurface(world.getTerrainWidth());
+    
+//    temperatureTerrain.bindTerrainToNode(((PlanetApp) app).getRootNode());
+//    temperatureTerrain.setMaterial(unshadedMat);
+    
+    magmaTerrain.bindTerrainToNode(((PlanetApp) app).getRootNode());
+    magmaTerrain.setMaterial(unshadedMat);
+    
   }
 
   public boolean isWireFramed() {
@@ -59,7 +66,7 @@ public class SurfaceState extends AbstractAppState {
 
   public void negWireFramed() {
     wireframe = !wireframe;
-    terrain.getMaterial().getAdditionalRenderState().setWireframe(wireframe);
+    magmaTerrain.getMaterial().getAdditionalRenderState().setWireframe(wireframe);
   }
 
   @Override
@@ -77,11 +84,22 @@ public class SurfaceState extends AbstractAppState {
   }
 
   public void showTemperature(SurfaceMap map) {
-    terrain.updateTerrainHeight(0.01f,-2.73f, 50, map, (cell) -> {
-      return cell.getTemperature();
+//    temperatureTerrain.updateTerrainHeight(0.01f, -2.73f, 50, map, (cell) -> {
+//      return cell.getTemperature();
+//    });
+    
+    magmaTerrain.updateTerrainHeight(0.01f, 0, 50, map, (cell) ->{
+      return cell.getMagma();
     });
 
-    terrain.updateVertexColors(heatMap, (heightVal) -> {
+    
+//    temperatureTerrain.updateVertexColors(heatMap, (heightVal) -> {
+//      return (int) (heightVal < 0 ? 0
+//              : (heightVal > heatMap.length - 1 ? heatMap.length - 1
+//                      : heightVal));
+//    });
+    
+    magmaTerrain.updateVertexColors(heatMap, (heightVal) -> {
       return (int) (heightVal < 0 ? 0
               : (heightVal > heatMap.length - 1 ? heatMap.length - 1
                       : heightVal));
