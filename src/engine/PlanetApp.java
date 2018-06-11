@@ -1,6 +1,7 @@
 package engine;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.font.BitmapText;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
@@ -31,9 +32,9 @@ public class PlanetApp extends SimpleApplication {
   @Override
   public void simpleInitApp() {
     getViewPort().setBackgroundColor(ColorRGBA.Gray);
-    flyCam.setMoveSpeed(500f);
-    flyCam.setZoomSpeed(20f);
-    
+    flyCam.setMoveSpeed(200f);
+    flyCam.setZoomSpeed(10f);
+ 
     setDisplayStatView(false);
     inputManager.setCursorVisible(true);
     
