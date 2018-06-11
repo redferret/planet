@@ -52,8 +52,10 @@ public class MagmaFlow extends CompoundTask {
       float curMagma = mantleCell.getMagma();
       float[] accelerationField = new float[]{0, 0, 0, 0};
       
-      for(int a = 0; a < 4; a++) {
-        Mantle neighbor = mantle.getCellAt(x + HDIR_X_INDEX[a], y + HDIR_Y_INDEX[a]);
+      for(int flowIndex = 0; flowIndex < 4; flowIndex++) {
+        int nx = x + HDIR_X_INDEX[flowIndex];
+        int ny = y + HDIR_Y_INDEX[flowIndex];
+        Mantle neighbor = mantle.getCellAt(nx, ny);
         
         float neighborTemp = neighbor.getTemperature();
         float neighborMagma = neighbor.getMagma();
@@ -63,29 +65,24 @@ public class MagmaFlow extends CompoundTask {
           float curMagmaHeight = Util.calcHeight(curMagma, PlanetCell.area, 3.0f);
           float neighborMagmaHeight = Util.calcHeight(neighborMagma, PlanetCell.area, 3.0f);
           float h = mantleTemp + curMagmaHeight - neighborTemp - neighborMagmaHeight;
-          float t = mantleTemp - neighborTemp;
           
           float theta = (float) atan(h / PlanetCell.length);
-          float beta = (float) atan(t / PlanetCell.length);
-          float g = 9.8f;
-          float totalMassDisplacement = Util.calcMass(h, PlanetCell.area, 3.0f);
-          float flow = (float) (totalMassDisplacement * g * sin(theta));
-          float normalForce = (float) (flow * cos(beta));
-          float friction = normalForce * 0.95f;
+          float totalMassDisplacement = Util.calcMass(h, PlanetCell.area, 3.0f) / 0.1f;
+          float flow = (float) (totalMassDisplacement * sin(theta));
           
           if (h > 0) {
-            accelerationField[a] = -flow + friction;
+            accelerationField[flowIndex] = -flow;
           } else if (h < 0) {
-            accelerationField[a] = flow - friction;
+            accelerationField[flowIndex] = flow;
           } else {
-            accelerationField[a] = 0;
+            accelerationField[flowIndex] = 0;
           }
         } else if (curMagma == 0 && neighborMagma == 0){
-          accelerationField[a] = 0;
-          mantleCell.setVelocityAt(a, 0);
+          accelerationField[flowIndex] = 0;
+          mantleCell.setFlowAt(flowIndex, 0);
         }
       }
-      mantleCell.setMagmaAccelerationFieldBuffer(accelerationField);
+      mantleCell.setMagmaFlowBuffer(accelerationField);
     }
   }
 
@@ -97,8 +94,7 @@ public class MagmaFlow extends CompoundTask {
     @Override
     public void perform(int x, int y) throws Exception {
       Mantle mantleCell = mantle.getCellAt(x, y);
-      mantleCell.applyAccelerationBuffer();
-      mantleCell.updateVelocity();
+      mantleCell.applyFlowBuffer();
       mantleCell.updateMagma();
     }
   }

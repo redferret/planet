@@ -14,9 +14,9 @@ import worlds.planet.PlanetCell;
 public abstract class CellProperties {
   
   private final AtomicFloat magma;
-  private final float[] magmaVelocityField;
-  private final float[] magmaAccelerationField;
-  private final float[] magmaAccelerationFieldBuffer;
+//  private final float[] magmaVelocityField;
+  private final float[] magmaFlow;
+  private final float[] magmaFlowBuffer;
   
   private final AtomicFloat temperature;
   private float newTemperature;
@@ -25,9 +25,9 @@ public abstract class CellProperties {
     this.temperature = new AtomicFloat(initialTemp);
     newTemperature = NaN;
     magma = new AtomicFloat(0);
-    magmaAccelerationField = new float[4];
-    magmaVelocityField = new float[4];
-    magmaAccelerationFieldBuffer = new float[4];
+    magmaFlow = new float[4];
+//    magmaVelocityField = new float[4];
+    magmaFlowBuffer = new float[4];
   }
   
   /**
@@ -104,45 +104,30 @@ public abstract class CellProperties {
     return magma.get();
   }
   
-  public float[] getMagmaAccelerationField() {
-    return magmaAccelerationField;
+  public void setMagmaFlowBuffer(float[] flux) {
+    System.arraycopy(flux, 0, magmaFlowBuffer, 0, 4);
   }
   
-  public void setMagmaAccelerationFieldBuffer(float[] flux) {
-    System.arraycopy(flux, 0, magmaAccelerationFieldBuffer, 0, 4);
-  }
-  
-  public void resetVelocityFieldTo(float[] velocities) {
-    System.arraycopy(velocities, 0, magmaVelocityField, 0, 4);
-  }
-  
-  public void setVelocityAt(int index, float vel) {
-    magmaVelocityField[index] = vel;
+  public void setFlowAt(int index, float vel) {
+    magmaFlow[index] = vel;
   }
   
   public void addToMagma(float amount) {
     magma.set(max(0, magma.get() + amount));
   }
   
-  public void applyAccelerationBuffer() {
-    System.arraycopy(magmaAccelerationFieldBuffer, 0, magmaAccelerationField, 0, 4);
-  }
-  
-  public void updateVelocity() {
-    for (int a = 0; a < 4; a++) {
-      magmaVelocityField[a] += magmaAccelerationField[a];
-      magmaAccelerationField[a] = 0;
-    }
+  public void applyFlowBuffer() {
+    System.arraycopy(magmaFlowBuffer, 0, magmaFlow, 0, 4);
   }
   
   public void updateMagma() {
 
-    float sumOfVelocities = 0;
+    float sumOfFlows = 0;
     for (int a = 0; a < 4; a++) {
-      sumOfVelocities += magmaVelocityField[a];
+      sumOfFlows += magmaFlow[a];
     }
 
-    float totalMagma = magma.get() + sumOfVelocities;
+    float totalMagma = magma.get() + sumOfFlows;
     magma.set(max(0, totalMagma));
     
   }
