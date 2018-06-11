@@ -3,7 +3,7 @@ package worlds.planet.geosphere;
 
 import engine.surface.Cell;
 import engine.surface.SurfaceMap;
-import engine.surface.SurfaceThreads;
+import engine.concurrent.SurfaceThreads;
 import java.util.concurrent.ThreadLocalRandom;
 import worlds.planet.PlanetCell;
 import worlds.planet.Util;

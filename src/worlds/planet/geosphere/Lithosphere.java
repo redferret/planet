@@ -1,8 +1,8 @@
 package worlds.planet.geosphere;
 
 import engine.surface.SurfaceMap;
-import engine.surface.SurfaceThreads;
-import engine.util.concurrent.AtomicFloat;
+import engine.concurrent.SurfaceThreads;
+import engine.concurrent.AtomicFloat;
 import java.util.concurrent.atomic.AtomicLong;
 import worlds.MinMaxHeightFactory;
 import worlds.planet.geosphere.tasks.CrustConduction;

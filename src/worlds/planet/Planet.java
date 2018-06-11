@@ -1,11 +1,13 @@
 package worlds.planet;
 
+import com.jme3.math.Vector2f;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import engine.surface.SurfaceMap;
-import engine.surface.SurfaceThreads;
+import engine.concurrent.SurfaceThreads;
 import engine.surface.TerrainSurface;
+import java.util.List;
 import worlds.planet.geosphere.Core;
 import worlds.planet.geosphere.Lithosphere;
 import worlds.planet.geosphere.UpperMantle;
@@ -21,14 +23,14 @@ import worlds.planet.geosphere.tasks.RadioactiveDecay;
  */
 public abstract class Planet {
 
-  private final TerrainSurface terrain;
   protected TimeScale timescale;
   private static Planet current;
   private final SurfaceThreads surfaceThreads;
   private final Lithosphere lithosphere;
   private final UpperMantle upperMantle;
   private final Core core;
-
+  private final int terrainWidth;
+  
   public static enum TimeScale {
     Geological, Evolutionary, Civilization, None
   }
@@ -50,7 +52,7 @@ public abstract class Planet {
     current = this;
     PlanetCell.area = cellLength * cellLength;
     PlanetCell.length = cellLength;
-    terrain = new TerrainSurface(totalSize);
+    terrainWidth = totalSize;
     timescale = TimeScale.None;
     surfaceThreads = new SurfaceThreads();
     surfaceThreads.setupThreads(totalSize, threadCount, surfaceThreadsDelay);
@@ -74,18 +76,23 @@ public abstract class Planet {
     surfaceThreads.produceTasks(() -> {
       return new MagmaFlow(lithosphere);
     });
+    
+    List<Vector2f> positions = Util.fillPoints(new Vector2f(64, 64), 4);
+    positions.forEach(position -> {
+      lithosphere.getCellAt(position).addToMagma(2000);
+    });
   }
 
+  public int getTerrainWidth() {
+    return terrainWidth;
+  }
+  
   public final void applyTasks(SurfaceMap... surfaces) {
     for (SurfaceMap surface : surfaces) {
       surfaceThreads.produceTasks(() -> {
         return new ApplyNewTemperatures(surface);
       });
     }
-  }
-  
-  public TerrainSurface getTerrain() {
-    return terrain;
   }
   
   protected final void startThreads() {
