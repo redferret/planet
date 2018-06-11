@@ -5,10 +5,11 @@ import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
 import com.jme3.material.Material;
 import engine.PlanetApp;
-import engine.surface.Cell;
 import engine.surface.SurfaceMap;
 import engine.surface.TerrainSurface;
+import worlds.planet.PlanetCell;
 import worlds.planet.TestWorld;
+import worlds.planet.Util;
 import worlds.planet.geosphere.Lithosphere;
 import worlds.planet.geosphere.Core;
 import worlds.planet.geosphere.UpperMantle;
@@ -89,7 +90,7 @@ public class SurfaceState extends AbstractAppState {
 //    });
     
     magmaTerrain.updateTerrainHeight(0.01f, 0, 50, map, (cell) ->{
-      return cell.getMagma();
+      return Util.calcHeight(cell.getMagma(), PlanetCell.area, 3.0f);
     });
 
     
