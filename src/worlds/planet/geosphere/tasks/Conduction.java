@@ -5,9 +5,9 @@ import com.jme3.math.Vector2f;
 import engine.surface.Cell;
 import engine.surface.SurfaceMap;
 import engine.util.Delay;
-import engine.util.task.TaskAdapter;
+import engine.task.TaskAdapter;
 import worlds.planet.PlanetCell;
-import worlds.planet.geosphere.HeatConduction;
+import worlds.planet.geosphere.CellProperties;
 
 /**
  *
@@ -29,7 +29,7 @@ public abstract class Conduction<C extends Cell> extends TaskAdapter {
     return delay.check();
   }
   
-  public float[] getTemperatures(int x, int y, HeatConduction top, HeatConduction bottom) {
+  public float[] getTemperatures(int x, int y, CellProperties top, CellProperties bottom) {
     Vector2f left = new Vector2f(x + 1, y);
     Vector2f right = new Vector2f(x - 1, y);
     Vector2f forward = new Vector2f(x, y + 1);
@@ -38,7 +38,7 @@ public abstract class Conduction<C extends Cell> extends TaskAdapter {
     Cell center = surface.getCellAt(x, y);
     float T[] = new float[6];
     for (int t = 0; t < 4; t++) {
-      HeatConduction cell = surface.getCellAt(neighbors[t]);
+      CellProperties cell = surface.getCellAt(neighbors[t]);
       T[t] = cell.getTemperature();
     }
     T[4] = (top != null) ? top.getTemperature() : center.getTopNullTemperature();
@@ -47,9 +47,9 @@ public abstract class Conduction<C extends Cell> extends TaskAdapter {
     return T;
   } 
   
-  public float[] calculateHeatConductance(int x, int y,HeatConduction top, 
-          HeatConduction bottom) {
-    HeatConduction centerCell = surface.getCellAt(x, y);
+  public float[] calculateHeatConductance(int x, int y,CellProperties top, 
+          CellProperties bottom) {
+    CellProperties centerCell = surface.getCellAt(x, y);
     float h2Capacity = centerCell.getHeatCapacity();
     
     Vector2f left = new Vector2f(x + 1, y);
@@ -63,7 +63,7 @@ public abstract class Conduction<C extends Cell> extends TaskAdapter {
     float zLength1 = centerCell.getZLength();
     float neighboringArea = zLength1 * PlanetCell.length;
     for (int k = 0; k < 4; k++) {
-      HeatConduction neighbor = surface.getCellAt(neighbors[k]);
+      CellProperties neighbor = surface.getCellAt(neighbors[k]);
       float h1Capacity = neighbor.getHeatCapacity();
       float zLength2 = neighbor.getZLength();
       K_neighbors[k] = calculateConductance(neighboringArea, zLength1, zLength2, h2Capacity, 

@@ -3,7 +3,7 @@ package worlds.planet.geosphere.tasks;
 
 import engine.surface.Cell;
 import engine.surface.SurfaceMap;
-import engine.util.task.TaskAdapter;
+import engine.task.TaskAdapter;
 
 /**
  *

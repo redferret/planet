@@ -3,7 +3,7 @@ package engine.surface.tasks;
 
 import engine.surface.Cell;
 import engine.surface.SurfaceMap;
-import engine.util.task.TaskAdapter;
+import engine.task.TaskAdapter;
 
 /**
  * Sets up the surface further by setting each cell the parent thread.
