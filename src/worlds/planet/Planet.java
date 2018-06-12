@@ -74,12 +74,12 @@ public abstract class Planet {
       return new HotSpotManager(core);
     });
     surfaceThreads.produceTasks(() -> {
-      return new MagmaFlow(lithosphere);
+      return new MagmaFlow(upperMantle);
     });
     
-    List<Vector2f> positions = Util.fillPoints(new Vector2f(64, 64), 4);
+    List<Vector2f> positions = Util.fillPoints(new Vector2f(64, 64), 50);
     positions.forEach(position -> {
-      lithosphere.getCellAt(position).addToMagma(2000);
+      upperMantle.getCellAt(position).addToMagma(Util.calcMass(3000, PlanetCell.area, 3.0f));
     });
   }
 

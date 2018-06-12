@@ -6,6 +6,7 @@ import static java.lang.Float.NaN;
 import static java.lang.Float.max;
 import static java.lang.Float.min;
 import worlds.planet.PlanetCell;
+import worlds.planet.Util;
 
 /**
  * Additional properties of a cell that every cell would share
@@ -132,6 +133,17 @@ public abstract class CellProperties {
     for (int a = 0; a < 4; a++) {
       magmaVelocityField[a] += magmaAccelerationField[a];
       magmaAccelerationField[a] = 0;
+    }
+  }
+  
+  public void applyDrag() {
+    for (int v = 0; v < 4; v++) {
+      float vel = magmaVelocityField[v];
+      float mass = magma.get();
+      if (mass != 0){
+        float drag = -0.0015f * vel;
+        magmaVelocityField[v] += drag;
+      }
     }
   }
   
