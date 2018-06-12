@@ -1,7 +1,6 @@
 
 package engine.concurrent;
 
-import engine.concurrent.MThread;
 import engine.task.Boundaries;
 import engine.task.Task;
 import engine.task.TaskFactory;

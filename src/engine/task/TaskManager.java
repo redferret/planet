@@ -50,6 +50,10 @@ public class TaskManager {
     }
   }
 
+  /**
+   * Remove one-time tasks, called after performing all tasks. Otherwise 
+   * these one-time tasks will never be peformed.
+   */
   public void trimTasks() {
     tasks.removeIf(task -> task.isSingleTask());
   }
