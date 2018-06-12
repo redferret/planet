@@ -7,7 +7,7 @@ import engine.concurrent.SurfaceThreads;
 import java.util.concurrent.ThreadLocalRandom;
 import worlds.planet.PlanetCell;
 import worlds.planet.Util;
-import worlds.planet.geosphere.tasks.CoreConduction;
+import worlds.planet.geosphere.tasks.heatmanagement.conduction.CoreConduction;
 
 /**
  *

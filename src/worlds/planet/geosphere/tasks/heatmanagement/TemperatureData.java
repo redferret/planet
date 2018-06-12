@@ -1,5 +1,5 @@
 
-package worlds.planet.geosphere.tasks;
+package worlds.planet.geosphere.tasks.heatmanagement;
 
 import engine.surface.Cell;
 

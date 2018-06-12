@@ -5,7 +5,7 @@ import engine.concurrent.SurfaceThreads;
 import engine.concurrent.AtomicFloat;
 import java.util.concurrent.atomic.AtomicLong;
 import worlds.MinMaxHeightFactory;
-import worlds.planet.geosphere.tasks.CrustConduction;
+import worlds.planet.geosphere.tasks.heatmanagement.conduction.CrustConduction;
 
 /**
  * Contains all logic that works on the geology of the planet.

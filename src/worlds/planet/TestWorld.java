@@ -1,6 +1,5 @@
 package worlds.planet;
 
-import engine.surface.TerrainSurface;
 
 /**
  * This class is used for testing purposes.

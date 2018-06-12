@@ -1,5 +1,5 @@
 
-package worlds.planet.geosphere.tasks;
+package worlds.planet.geosphere.tasks.heatmanagement;
 
 import com.jme3.math.Vector2f;
 import engine.surface.Cell;

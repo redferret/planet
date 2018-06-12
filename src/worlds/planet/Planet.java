@@ -3,18 +3,16 @@ package worlds.planet;
 import com.jme3.math.Vector2f;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
+import java.util.List;
 import engine.surface.SurfaceMap;
 import engine.concurrent.SurfaceThreads;
-import engine.surface.TerrainSurface;
-import java.util.List;
 import worlds.planet.geosphere.Core;
 import worlds.planet.geosphere.Lithosphere;
 import worlds.planet.geosphere.UpperMantle;
-import worlds.planet.geosphere.tasks.ApplyNewTemperatures;
-import worlds.planet.geosphere.tasks.HotSpotManager;
-import worlds.planet.geosphere.tasks.MagmaFlow;
-import worlds.planet.geosphere.tasks.RadioactiveDecay;
+import worlds.planet.geosphere.tasks.heatmanagement.ApplyNewTemperatures;
+import worlds.planet.geosphere.tasks.heatmanagement.HotSpotManager;
+import worlds.planet.geosphere.tasks.heatmanagement.MagmaFlow;
+import worlds.planet.geosphere.tasks.heatmanagement.RadioactiveDecay;
 
 /**
  * The class that encapsulates a surface and keeps track of the timescale.
@@ -79,7 +77,7 @@ public abstract class Planet {
     
     List<Vector2f> positions = Util.fillPoints(new Vector2f(64, 64), 30);
     positions.forEach(position -> {
-      upperMantle.getCellAt(position).addToMagma(3000);
+      upperMantle.getCellAt(position).addToMagma(4000);
     });
   }
 

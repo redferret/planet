@@ -1,8 +1,7 @@
 
-package worlds.planet.geosphere.tasks;
+package worlds.planet.geosphere.tasks.heatmanagement.conduction;
 
 import engine.surface.SurfaceMap;
-import worlds.planet.Util;
 import worlds.planet.geosphere.Crust;
 import worlds.planet.geosphere.Mantle;
 import worlds.planet.geosphere.UpperMantle;

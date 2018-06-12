@@ -1,5 +1,5 @@
 
-package worlds.planet.geosphere.tasks;
+package worlds.planet.geosphere.tasks.heatmanagement;
 
 import engine.task.TaskAdapter;
 import java.util.concurrent.ThreadLocalRandom;

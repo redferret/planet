@@ -19,7 +19,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import static worlds.planet.Planet.instance;
 import static worlds.planet.geosphere.layer.LayerMaterial.getLayer;
-import static worlds.planet.geosphere.tasks.Conduction.calculateConductance;
+import static worlds.planet.geosphere.tasks.heatmanagement.conduction.Conduction.calculateConductance;
 
 /**
  * A Crust is a Cell representing land Geologically. The cell contains strata

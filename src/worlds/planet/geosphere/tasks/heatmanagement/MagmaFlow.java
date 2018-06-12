@@ -1,4 +1,4 @@
-package worlds.planet.geosphere.tasks;
+package worlds.planet.geosphere.tasks.heatmanagement;
 
 import engine.task.CompoundTask;
 import engine.task.TaskAdapter;

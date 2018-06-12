@@ -1,5 +1,5 @@
 
-package worlds.planet.geosphere.tasks;
+package worlds.planet.geosphere.tasks.heatmanagement.conduction;
 
 import engine.surface.Cell;
 import worlds.planet.geosphere.Lithosphere;

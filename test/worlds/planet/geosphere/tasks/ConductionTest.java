@@ -1,6 +1,7 @@
 
 package worlds.planet.geosphere.tasks;
 
+import worlds.planet.geosphere.tasks.heatmanagement.conduction.Conduction;
 import org.junit.Test;
 import worlds.planet.PlanetCell;
 import static org.junit.Assert.*;

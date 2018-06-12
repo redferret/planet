@@ -5,7 +5,7 @@ import engine.concurrent.SurfaceThreads;
 import java.util.concurrent.ThreadLocalRandom;// For future use
 import worlds.planet.PlanetCell;
 import worlds.planet.Util;
-import worlds.planet.geosphere.tasks.UpperMantleConduction;
+import worlds.planet.geosphere.tasks.heatmanagement.conduction.UpperMantleConduction;
 
 /**
  * The mantle is below the crust, heat and magma that build up to critical
