@@ -16,7 +16,7 @@ import worlds.planet.geosphere.tasks.CoreConduction;
 public class Core extends SurfaceMap {
 
   public static final float CORE_DEPTH = 1.22e6f;
-  public static final float CORE_MASS = Util.calcMass(CORE_DEPTH, PlanetCell.area, 7860f);
+  public static final float CORE_MASS = Util.calcMass(CORE_DEPTH, PlanetCell.area, 7.860f);
   
   public Core(int totalSize, SurfaceThreads surfaceThreads) {
     super("Core", totalSize, surfaceThreads);
@@ -44,17 +44,17 @@ public class Core extends SurfaceMap {
       }
       
       @Override
-      public float getBottomResistence() {
+      public float getBCR() {
         return 0;
       }
       
       @Override
-      public float getHorizontalResistence() {
+      public float getHCR() {
         return 0;
       }
 
       @Override
-      public float getTopResistence() {
+      public float getTCR() {
         return 0;
       }
       

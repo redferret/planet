@@ -28,17 +28,17 @@ public class Mantle extends Cell {
   }
 
   @Override
-  public float getBottomResistence() {
+  public float getBCR() {
     return 0;
   }
 
   @Override
-  public float getHorizontalResistence() {
+  public float getHCR() {
     return 0;
   }
 
   @Override
-  public float getTopResistence() {
+  public float getTCR() {
     return 0;
   }
 

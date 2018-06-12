@@ -127,22 +127,22 @@ public class Crust extends Cell {
   }
   
   @Override
-  public float getBottomResistence() {
+  public float getBCR() {
     return 0;
   }
   
   @Override
-  public float getTopResistence() {
+  public float getTCR() {
     return 0;
   }
   
   @Override
-  public float getHorizontalResistence() {
+  public float getHCR() {
     return 5e20f;
   }
 
   @Override
-  public float topNullConductance() {
+  public float getTNC() {
     return calculateConductance(PlanetCell.area, 0.25e6f, getZLength(), 
             1.05f, getHeatCapacity(), 0);
   }

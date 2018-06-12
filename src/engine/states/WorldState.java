@@ -31,11 +31,6 @@ public class WorldState extends AbstractAppState {
   }
   
   @Override
-  public void update(float tpf) {
-    //TODO: implement behavior during runtime
-  }
-  
-  @Override
   public void cleanup() {
     super.cleanup();
     world.shutdown();

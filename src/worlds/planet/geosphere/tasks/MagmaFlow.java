@@ -4,16 +4,9 @@ import engine.task.CompoundTask;
 import engine.task.TaskAdapter;
 import worlds.planet.geosphere.Mantle;
 import worlds.planet.PlanetCell;
-import worlds.planet.Util;
 import worlds.planet.geosphere.UpperMantle;
 import static engine.surface.SurfaceMap.HDIR_X_INDEX;
 import static engine.surface.SurfaceMap.HDIR_Y_INDEX;
-import static java.lang.Float.min;
-import static java.lang.Math.acos;
-import static java.lang.Math.atan;
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
-import static java.lang.Math.sqrt;
 
 /**
  *
@@ -67,7 +60,7 @@ public class MagmaFlow extends CompoundTask {
           mantleCell.setVelocityAt(a, 0); 
         } 
       }
-      mantleCell.setMagmaForces(accelerationField);
+      mantleCell.setMagmaAcceleration(accelerationField);
     }
   }
 

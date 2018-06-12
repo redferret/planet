@@ -23,6 +23,21 @@ public class MockCell extends Cell {
   }
 
   @Override
-  public float getBottomResistence() {return 0;}
+  public float getBCR() {return 0;}
+
+  @Override
+  public float getHCR() {
+    throw new UnsupportedOperationException("Not supported."); 
+  }
+
+  @Override
+  public float getTCR() {
+    throw new UnsupportedOperationException("Not supported.");
+  }
+
+  @Override
+  public float getZLength() {
+    throw new UnsupportedOperationException("Not supported."); 
+  }
 
 }

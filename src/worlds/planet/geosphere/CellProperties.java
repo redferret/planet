@@ -4,9 +4,6 @@ package worlds.planet.geosphere;
 import engine.concurrent.AtomicFloat;
 import static java.lang.Float.NaN;
 import static java.lang.Float.max;
-import static java.lang.Float.min;
-import worlds.planet.PlanetCell;
-import worlds.planet.Util;
 
 /**
  * Additional properties of a cell that every cell would share
@@ -26,53 +23,79 @@ public abstract class CellProperties {
     newTemperature = NaN;
     magma = new AtomicFloat(0);
     magmaVelocityField = new float[4];
-//    magmaVelocityField = new float[4];
     magmaAcceleration = new float[4];
   }
   
   /**
-   * The heat capacity of the cell
+   * The heat capacity of the cell. Higher values hold more heat.
    * @return 
    */
   public abstract float getHeatCapacity();
   
   /**
-   * How much resistence is applied horizontally
+   * Get the Horizontal Conductive Resistence of this cell. <br>
+   * How much conductive resistence is applied horizontally
    * @return 
    */
-  public abstract float getHorizontalResistence();
+  public abstract float getHCR();
   
   /**
-   * How much resistence is applied vertically
+   * Get the Bottom Conductive Resistence of this cell. <br>
+   * How much conductive resistence is applied to the bottom of the cell
    * @return 
    */
-  public abstract float getBottomResistence();
+  public abstract float getBCR();
   
-  public abstract float getTopResistence();
+  /**
+   * Get the Top Conductive Resistence of this cell. <br>
+   * How much conductive resistence is applied to the top of the cell
+   * @return 
+   */
+  public abstract float getTCR();
   
+  /**
+   * The true depth of this layer
+   * @return 
+   */
   public abstract float getZLength();
   
+  /**
+   * Get the Top Null Conduction. <br>
+   * If there is no top cell, use this default temperature. By default without
+   * overriding this method it will return -273
+   * @return By default without overriding this method it will return -273
+   */
   public float getTopNullTemperature() {
     return -273f;
   }
   
-  public float getBottomNullTemperature() {
+  /**
+   * Get the Bottom Null Temperature. <br>
+   * If there is no bottom cell, use this default temperature. By default without
+   * overriding this method it will return -273
+   * @return By default without overriding this method it will return -273
+   */
+  public float getBNT() {
     return -273f;
   }
   
   /**
-   * If there is no top cell for heat to conduct, then use this value.
-   * @return 
+   * Get the Top Null Temperature. <br>
+   * If there is no top cell for heat to conduct, then use this conduction
+   * value. By default this method returns 0
+   * @return By default this method returns 0
    */
-  public float topNullConductance() {
+  public float getTNC() {
     return 0;
   }
   
   /**
-   * If there is no bottom cell for heat to conduct, then use this value.
-   * @return 
+   * Get the Bottom Null Conduction. <br>
+   * If there is no bottom cell for heat to conduct, then use this conduction
+   * value. By default this method returns 0
+   * @return By default this method returns 0
    */
-  public float bottomNullConductance() {
+  public float getBNC() {
     return 0;
   }
   
@@ -104,7 +127,7 @@ public abstract class CellProperties {
     return magma.get();
   }
   
-  public void setMagmaForces(float[] flux) {
+  public void setMagmaAcceleration(float[] flux) {
     System.arraycopy(flux, 0, magmaAcceleration, 0, 4);
   }
   

@@ -106,7 +106,7 @@ public class SurfaceState extends AbstractAppState {
                       : heightVal));
     });
   }
-
+ 
   @Override
   public void cleanup() {
     super.cleanup();

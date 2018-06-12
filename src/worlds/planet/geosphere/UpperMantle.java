@@ -2,8 +2,7 @@ package worlds.planet.geosphere;
 
 import engine.surface.SurfaceMap;
 import engine.concurrent.SurfaceThreads;
-import engine.concurrent.AtomicFloat;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.ThreadLocalRandom;// For future use
 import worlds.planet.PlanetCell;
 import worlds.planet.Util;
 import worlds.planet.geosphere.tasks.UpperMantleConduction;

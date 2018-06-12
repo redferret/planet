@@ -42,7 +42,7 @@ public abstract class Conduction<C extends Cell> extends TaskAdapter {
       T[t] = cell.getTemperature();
     }
     T[4] = (top != null) ? top.getTemperature() : center.getTopNullTemperature();
-    T[5] = (bottom != null) ? bottom.getTemperature() : center.getBottomNullTemperature();
+    T[5] = (bottom != null) ? bottom.getTemperature() : center.getBNT();
     
     return T;
   } 
@@ -67,24 +67,24 @@ public abstract class Conduction<C extends Cell> extends TaskAdapter {
       float h1Capacity = neighbor.getHeatCapacity();
       float zLength2 = neighbor.getZLength();
       K_neighbors[k] = calculateConductance(neighboringArea, zLength1, zLength2, h2Capacity, 
-              h1Capacity, centerCell.getHorizontalResistence());
+              h1Capacity, centerCell.getHCR());
     }
     
     // Calculate the conductance of each top and bottom cell
     if (top != null) {
-      float totalResistenceToTop = top.getBottomResistence() + centerCell.getTopResistence();
+      float totalResistenceToTop = top.getBCR() + centerCell.getTCR();
       K_neighbors[4] = calculateConductance(PlanetCell.area, zLength1, top.getZLength(), h2Capacity,
               top.getHeatCapacity(), totalResistenceToTop);
-      centerCell.topNullConductance();
+      centerCell.getTNC();
     } else {
-      K_neighbors[4] = centerCell.topNullConductance();
+      K_neighbors[4] = centerCell.getTNC();
     }
     if (bottom != null) {
-      float totalResistenceToBottom = bottom.getTopResistence() + centerCell.getBottomResistence();
+      float totalResistenceToBottom = bottom.getTCR() + centerCell.getBCR();
       K_neighbors[5] = calculateConductance(PlanetCell.area, zLength1, bottom.getZLength(), h2Capacity,
               bottom.getHeatCapacity(), totalResistenceToBottom);
     } else {
-      K_neighbors[5] = centerCell.bottomNullConductance();
+      K_neighbors[5] = centerCell.getBNC();
     }
     return K_neighbors;
   }
