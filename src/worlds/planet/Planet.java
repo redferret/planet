@@ -77,9 +77,9 @@ public abstract class Planet {
       return new MagmaFlow(upperMantle);
     });
     
-    List<Vector2f> positions = Util.fillPoints(new Vector2f(64, 64), 50);
+    List<Vector2f> positions = Util.fillPoints(new Vector2f(64, 64), 30);
     positions.forEach(position -> {
-      upperMantle.getCellAt(position).addToMagma(Util.calcMass(3000, PlanetCell.area, 3.0f));
+      upperMantle.getCellAt(position).addToMagma(3000);
     });
   }
 

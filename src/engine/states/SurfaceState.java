@@ -90,7 +90,7 @@ public class SurfaceState extends AbstractAppState {
 //    });
     
     magmaTerrain.updateTerrainHeight(0.01f, 0, 50, map, (cell) ->{
-      return Util.calcHeight(cell.getMagma(), PlanetCell.area, 3.0f);
+      return cell.getMagma();
     });
 
     
