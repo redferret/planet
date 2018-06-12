@@ -15,9 +15,8 @@ import worlds.planet.Util;
 public abstract class CellProperties {
   
   private final AtomicFloat magma;
-//  private final float[] magmaVelocityField;
-  private final float[] magmaFlow;
-  private final float[] magmaFlowBuffer;
+  private final float[] magmaVelocityField;
+  private final float[] magmaAcceleration;
   
   private final AtomicFloat temperature;
   private float newTemperature;
@@ -26,9 +25,9 @@ public abstract class CellProperties {
     this.temperature = new AtomicFloat(initialTemp);
     newTemperature = NaN;
     magma = new AtomicFloat(0);
-    magmaFlow = new float[4];
+    magmaVelocityField = new float[4];
 //    magmaVelocityField = new float[4];
-    magmaFlowBuffer = new float[4];
+    magmaAcceleration = new float[4];
   }
   
   /**
@@ -105,20 +104,23 @@ public abstract class CellProperties {
     return magma.get();
   }
   
-  public void setMagmaFlowBuffer(float[] flux) {
-    System.arraycopy(flux, 0, magmaFlowBuffer, 0, 4);
+  public void setMagmaForces(float[] flux) {
+    System.arraycopy(flux, 0, magmaAcceleration, 0, 4);
   }
   
-  public void setFlowAt(int index, float vel) {
-    magmaFlow[index] = vel;
+  public void setVelocityAt(int index, float vel) {
+    magmaVelocityField[index] = vel;
   }
   
   public void addToMagma(float amount) {
     magma.set(max(0, magma.get() + amount));
   }
   
-  public void applyFlowBuffer() {
-    System.arraycopy(magmaFlowBuffer, 0, magmaFlow, 0, 4);
+  public void updateVelocity() {
+    for (int a = 0; a < 4; a++) {
+      magmaVelocityField[a] += magmaAcceleration[a];
+      magmaAcceleration[a] = 0;
+    }
   }
   
   public void applyDrag() {
@@ -136,7 +138,7 @@ public abstract class CellProperties {
 
     float sumOfFlows = 0;
     for (int a = 0; a < 4; a++) {
-      sumOfFlows += magmaFlow[a];
+      sumOfFlows += magmaVelocityField[a];
     }
 
     float totalMagma = magma.get() + sumOfFlows;

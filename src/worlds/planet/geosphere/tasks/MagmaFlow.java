@@ -67,7 +67,7 @@ public class MagmaFlow extends CompoundTask {
           mantleCell.setVelocityAt(a, 0); 
         } 
       }
-      mantleCell.setMagmaFlowBuffer(accelerationField);
+      mantleCell.setMagmaForces(accelerationField);
     }
   }
 
@@ -79,7 +79,6 @@ public class MagmaFlow extends CompoundTask {
     @Override
     public void perform(int x, int y) throws Exception {
       Mantle mantleCell = mantle.getCellAt(x, y);
-      mantleCell.applyAccelerationBuffer();
       mantleCell.updateVelocity();
       mantleCell.applyDrag();
       mantleCell.updateMagma();
