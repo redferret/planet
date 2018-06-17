@@ -149,11 +149,8 @@ public abstract class CellProperties {
   public void applyDrag() {
     for (int v = 0; v < 4; v++) {
       float vel = magmaVelocityField[v];
-      float mass = magma.get();
-      if (mass != 0){
-        float drag = -0.0015f * vel;
-        magmaVelocityField[v] += drag;
-      }
+      float drag = -0.05f * vel;
+      magmaVelocityField[v] += drag;
     }
   }
   

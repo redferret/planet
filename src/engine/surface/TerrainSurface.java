@@ -1,6 +1,8 @@
 
 package engine.surface;
 
+import com.jme3.asset.AssetManager;
+import com.jme3.material.Material;
 import com.jme3.math.Vector2f;
 import com.jme3.renderer.Camera;
 import com.jme3.scene.Node;
@@ -9,6 +11,10 @@ import com.jme3.terrain.geomipmap.TerrainLodControl;
 import com.jme3.terrain.geomipmap.TerrainPatch;
 import com.jme3.terrain.geomipmap.TerrainQuad;
 import com.jme3.terrain.geomipmap.lodcalc.DistanceLodCalculator;
+import com.jme3.texture.Image.Format;
+import com.jme3.texture.Texture;
+import com.jme3.texture.Texture2D;
+import com.jme3.texture.image.ImageRaster;
 import java.util.ArrayList;
 import java.util.List;
 import worlds.planet.Util;
@@ -24,6 +30,7 @@ public class TerrainSurface extends TerrainQuad {
   public TerrainSurface(int totalSize) {
     super("surface", 33, totalSize + 1, null);
   }
+  
   public void clearCameraControl() {
     removeControl(control);
   }
@@ -35,7 +42,6 @@ public class TerrainSurface extends TerrainQuad {
   }
   
   public void bindTerrainToNode(Node rootNode) {
-    setLocalTranslation(0, 200, 0);
     setLocalScale(2f, 1f, 2f);
     rootNode.attachChild(this);
   }

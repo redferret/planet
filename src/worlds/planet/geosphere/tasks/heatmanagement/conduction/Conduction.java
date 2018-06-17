@@ -118,7 +118,7 @@ public abstract class Conduction<C extends Cell> extends TaskAdapter {
     for (float K : K_conds) {
       sumOfK += K;
     }
-    return currentTemp + ((heatFlow / sumOfK) * 0.05f );
+    return currentTemp + ((heatFlow / sumOfK) * 0.005f );
   }
   
 }

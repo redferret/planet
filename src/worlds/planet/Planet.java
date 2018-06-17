@@ -1,9 +1,7 @@
 package worlds.planet;
 
-import com.jme3.math.Vector2f;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.List;
 import engine.surface.SurfaceMap;
 import engine.concurrent.SurfaceThreads;
 import worlds.planet.geosphere.Core;
@@ -75,10 +73,10 @@ public abstract class Planet {
       return new MagmaFlow(upperMantle);
     });
     
-    List<Vector2f> positions = Util.fillPoints(new Vector2f(64, 64), 30);
-    positions.forEach(position -> {
-      upperMantle.getCellAt(position).addToMagma(4000);
-    });
+//    List<Vector2f> positions = Util.fillPoints(new Vector2f(64, 64), 30);
+//    positions.forEach(position -> {
+//      upperMantle.getCellAt(position).addToMagma(4000);
+//    });
   }
 
   public int getTerrainWidth() {

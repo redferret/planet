@@ -111,7 +111,7 @@ public class LayerMaterial {
   public static LayerMaterial getLayer(String layerName, float initMass) {
     switch(layerName) {
       case BASALT:
-        return new LayerMaterial(layerName, initMass, 1.5f, 2.8f, 2.0f, 
+        return new LayerMaterial(layerName, initMass, 2.3f, 2.8f, 2.0f, 
                 new Vector4f(0.44f, 0.36f, 0.4f, 1.0f));
 
       default:

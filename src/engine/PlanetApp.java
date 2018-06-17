@@ -32,6 +32,7 @@ public class PlanetApp extends SimpleApplication {
   @Override
   public void simpleInitApp() {
     getViewPort().setBackgroundColor(ColorRGBA.DarkGray);
+//    flyCam.setEnabled(false);
     flyCam.setMoveSpeed(200f);
     flyCam.setZoomSpeed(10f);
  

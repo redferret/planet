@@ -13,8 +13,8 @@ import static worlds.planet.geosphere.UpperMantle.UPPER_MANTLE_SPECIFIC_HEAT;
 public class Mantle extends Cell {
   
   public Mantle(int x, int y) {
-    super(x, y, ThreadLocalRandom.current().nextInt(400, 1000));
-
+    super(x, y, ThreadLocalRandom.current().nextInt(600, 700));
+    addToMagma(ThreadLocalRandom.current().nextInt(400, 800));
   }
 
   @Override
@@ -34,7 +34,7 @@ public class Mantle extends Cell {
 
   @Override
   public float getHCR() {
-    return 0;
+    return 5e7f;
   }
 
   @Override

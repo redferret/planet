@@ -91,7 +91,7 @@ public class Crust extends Cell {
    * @param y The y coordinate
    */
   public Crust(int x, int y) {
-    super(x, y, 0);
+    super(x, y, 1000);
     totalStrataThickness = new AtomicFloat(0);
     totalMass = new AtomicFloat(0);
     totalVolume = new AtomicFloat(0);
@@ -105,7 +105,7 @@ public class Crust extends Cell {
     velocity = new Vector2f(0, 0);
     
     LayerMaterial m1 = getLayer("Basalt");
-    int height = ThreadLocalRandom.current().nextInt(1, 2);
+    int height = ThreadLocalRandom.current().nextInt(1, 25000);
     float mass = Util.calcMass(height, m1);
     m1.setMass(mass);
     Layer layer = new Layer();
@@ -133,12 +133,12 @@ public class Crust extends Cell {
   
   @Override
   public float getTCR() {
-    return 0;
+    return 5e35f;
   }
   
   @Override
   public float getHCR() {
-    return 5e20f;
+    return 5e2f;
   }
 
   @Override

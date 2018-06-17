@@ -32,7 +32,7 @@ public class Core extends SurfaceMap {
   
   @Override
   public Cell generateCell(int x, int y) {
-    return new Cell(x, y, ThreadLocalRandom.current().nextInt(2000, 3200)) {
+    return new Cell(x, y, ThreadLocalRandom.current().nextInt(2500, 3200)) {
       @Override
       public float getHeatCapacity() {
         return 45.0f;
@@ -50,7 +50,7 @@ public class Core extends SurfaceMap {
       
       @Override
       public float getHCR() {
-        return 0;
+        return 1e6f;
       }
 
       @Override
