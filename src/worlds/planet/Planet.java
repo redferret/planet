@@ -9,7 +9,7 @@ import worlds.planet.geosphere.Lithosphere;
 import worlds.planet.geosphere.UpperMantle;
 import worlds.planet.geosphere.tasks.heatmanagement.ApplyNewTemperatures;
 import worlds.planet.geosphere.tasks.heatmanagement.HotSpotManager;
-import worlds.planet.geosphere.tasks.heatmanagement.MagmaFlow;
+import worlds.planet.geosphere.tasks.heatmanagement.MagmaConvection;
 import worlds.planet.geosphere.tasks.heatmanagement.RadioactiveDecay;
 
 /**
@@ -70,7 +70,10 @@ public abstract class Planet {
       return new HotSpotManager(core);
     });
     surfaceThreads.produceTasks(() -> {
-      return new MagmaFlow(upperMantle);
+      return new MagmaConvection(upperMantle);
+    });
+    surfaceThreads.produceTasks(() -> {
+      return new MagmaConvection(core);
     });
     
 //    List<Vector2f> positions = Util.fillPoints(new Vector2f(64, 64), 30);

@@ -32,33 +32,7 @@ public class Core extends SurfaceMap {
   
   @Override
   public Cell generateCell(int x, int y) {
-    return new Cell(x, y, ThreadLocalRandom.current().nextInt(2500, 3200)) {
-      @Override
-      public float getHeatCapacity() {
-        return 45.0f;
-      }
-
-      @Override
-      public float getZLength() {
-        return CORE_DEPTH;
-      }
-      
-      @Override
-      public float getBCR() {
-        return 0;
-      }
-      
-      @Override
-      public float getHCR() {
-        return 1e6f;
-      }
-
-      @Override
-      public float getTCR() {
-        return 0;
-      }
-      
-    };
+    return new CoreCell(x, y);
   }
   
 }
